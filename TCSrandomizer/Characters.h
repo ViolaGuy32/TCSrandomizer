@@ -8,13 +8,13 @@
 struct Level;
 
 struct Playable {
-	std::string name;
-	std::string realName;
-	int pointString;
+	std::string name = "";
+	std::string realName = "";
+	int pointString = 0;
 
-	float speed;
+	float speed = 1.2;
 	Level* lev;
-	int price;
+	int price = 0;
 	bool hat = 0, lever = 0, build = 0, box = 0, jump = 0, doubleJump = 0,
 		highJump = 0, yodaJump = 0, extraHighJump = 0, realDoubleJump = 0,
 		gunganJump = 0, dive = 0, flop = 0, hovering = 0, fly = 0, flutter = 0,
@@ -29,8 +29,6 @@ struct Playable {
 
 		leiaAlt = 0, landoAlt = 0, lukeAlt = 0, defaultCharacter = 0, storyMode = 0;
 
-	
-	Playable(std::string myName, std::string myRealName, int myPrice, int myPointString = 0x0, double mySpeed = 1.2);
 };
 
 struct Level {

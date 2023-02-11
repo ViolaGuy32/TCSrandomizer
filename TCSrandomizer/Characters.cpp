@@ -234,6 +234,86 @@ extern Level* BHM;
 extern Level* defaultLevel;
 extern Level* allEpisodes;
 
+void charMaker() {
+	std::ifstream readCharacters("files/CHARACTERDATA.txt", std::ios::in);
+	std::ofstream loggering("files/log.txt");
+	if (readCharacters.is_open()) {
+		std::string line;
+		Playable* parse;
+		while (readCharacters.good()) {
+			parse = new Playable;
+			getline(readCharacters, parse->name);
+			getline(readCharacters, parse->realName);
+			readCharacters >> parse->price;
+			readCharacters >> std::hex >> parse->pointString;
+			readCharacters >> parse->speed;
+			getline(readCharacters, line);
+			getline(readCharacters, line);
+			while ( line != "") {
+				if (line == "hat") parse->hat = true;
+				else if (line == "lever") parse->lever = true;
+				else if (line == "build") parse->build = true;
+				else if (line == "box") parse->box = true;
+				else if (line == "jump") parse->jump = true;
+				else if (line == "doubleJump") parse->doubleJump = true;
+				else if (line == "highJump") parse->highJump = true;
+				else if (line == "yodaJump") parse->yodaJump = true;
+				else if (line == "extraHighJump") parse->extraHighJump = true;
+				else if (line == "realDoubleJump") parse->realDoubleJump = true;
+				else if (line == "gunganJump") parse->gunganJump = true;
+				else if (line == "dive") parse->dive = true;
+				else if (line == "flop") parse->flop = true;
+				else if (line == "hovering") parse->hovering = true;
+				else if (line == "fly") parse->fly = true;
+				else if (line == "flutter") parse->flutter = true;
+				else if (line == "fett") parse->fett = true;
+				else if (line == "attack") parse->attack = true;
+				else if (line == "shoot") parse->shoot = true;
+				else if (line == "grapple") parse->grapple = true;
+				else if (line == "fakeshoot") parse->fakeshoot = true;
+				else if (line == "zapper") parse->zapper = true;
+				else if (line == "astrozapper") parse->astrozapper = true;
+				else if (line == "jedi") parse->jedi = true;
+				else if (line == "sith") parse->sith = true;
+				else if (line == "choke") parse->choke = true;
+				else if (line == "ghost") parse->ghost = true;
+				else if (line == "saber") parse->saber = true;
+				else if (line == "deflect") parse->deflect = true;
+				else if (line == "imperial") parse->imperial = true;
+				else if (line == "astro") parse->astro = true;
+				else if (line == "proto") parse->proto = true;
+				else if (line == "droid") parse->droid = true;
+				else if (line == "passive") parse->passive = true;
+				else if (line == "gas") parse->gas = true;
+				else if (line == "bounty") parse->bounty = true;
+				else if (line == "hatch") parse->hatch = true;
+				else if (line == "tall") parse->tall = true;
+				else if (line == "extratoggle") parse->extratoggle = true;
+				else if (line == "pushable") parse->pushable = true;
+				else if (line == "chokeable") parse->chokeable = true;
+				else if (line == "trickable") parse->trickable = true;
+				else if (line == "zappable") parse->zappable = true;
+				else if (line == "storm") parse->storm = true;
+				else if (line == "slightlyBetterJump") parse->slightlyBetterJump = true;
+				else if (line == "vehicle") parse->vehicle = true;
+				else if (line == "tow") parse->tow = true;
+				else if (line == "tiedoor") parse->tiedoor = true;
+				else if (line == "vgreen") parse->vgreen = true;
+				else if (line == "leiaAlt") parse->leiaAlt = true;
+				else if (line == "landoAlt") parse->landoAlt = true;
+				else if (line == "lukeAlt") parse->lukeAlt = true;
+			#ifdef _DEBUG
+				else wxLogError((line + " is not an attribute.").c_str());
+			#endif
+				getline(readCharacters, line);
+
+			}
+			pls.push_back(parse);
+
+		}
+	}
+
+}
 
 void renamer(std::string oldName, std::string newName) {
 	int test = rename(oldName.c_str(), newName.c_str());
@@ -241,21 +321,12 @@ void renamer(std::string oldName, std::string newName) {
 		wxString err = "File name override failed: " + oldName + " -> " + newName;
 		wxGetApp().CallAfter([err]() {
 			wxLogError(err);
-			});
+		});
 	}
 }
 
-Playable::Playable(std::string myName, std::string myRealName, int myPrice, int myPointString, double mySpeed)
-	: name(myName), realName(myRealName), price(myPrice), speed(mySpeed), pointString(myPointString) {
-	pi = this;
-	lev = defaultLevel;
-	if (name != "")
-		pls.push_back(this);
-}
-
-
 Level::Level(std::string myFirstName, std::vector<Playable*> myVanillaParty, std::string myEpisode, std::vector<Playable*> myUnlocks, bool myVehicleLevel,
-	std::string myName, int myIsFake)
+						 std::string myName, int myIsFake)
 	: firstName(myFirstName), vanillaParty(myVanillaParty), episode(myEpisode), unlocks(myUnlocks), vehicleLevel(myVehicleLevel), isFake(myIsFake) {
 
 	if (myName == "") name = firstName;
@@ -268,8 +339,8 @@ void Level::mix() {
 #ifdef _DEBUG
 	wxString loggg = name;
 	wxGetApp().CallAfter([&loggg] {
-	wxLogStatus(loggg);
-		});
+		wxLogStatus(loggg);
+	});
 #endif
 
 	testing = {};
@@ -433,7 +504,7 @@ bool Jump(std::vector<Playable*> current) {
 bool DoubleTransitionSkip(bool (*ptr)(std::vector<Playable*>), std::vector<Playable*>current) {
 	for (Playable* p : current) {
 		for (Playable* q : current) {
-			if (p->saber && ptr({ q }) && !q->ghost) return true;
+			if (p->saber && ptr({q}) && !q->ghost) return true;
 		}
 	}
 	return false;
@@ -442,7 +513,7 @@ bool DoubleTransitionSkip(bool (*ptr)(std::vector<Playable*>), std::vector<Playa
 bool TransitionSkip(bool (*ptr)(std::vector<Playable*>), std::vector<Playable*>current) {
 	for (Playable* p : current) {
 		for (Playable* q : current) {
-			if (p->attack && ptr({ q }) && !q->ghost) return true;
+			if (p->attack && ptr({q}) && !q->ghost) return true;
 		}
 	}
 	return false;
@@ -695,11 +766,11 @@ bool PlansThing(std::vector<Playable*> current, Playable* shield, Playable* redG
 							}
 						}
 					}
-					if (Astro({ x, shield })) return true;
-					if (Proto({ x, otherX }) && Box({ x, otherX })) return true;
-					if (Proto({ redGuy }) &&
-						(Any({ DoubleJump, Fly }, { x, otherX }) || (Box({ x }) && Lever({ redGuy })))) return true;
-					//								not sure
+					if (Astro({x, shield})) return true;
+					if (Proto({x, otherX}) && Box({x, otherX})) return true;
+					if (Proto({redGuy}) &&
+							(Any({DoubleJump, Fly}, {x, otherX}) || (Box({x}) && Lever({redGuy})))) return true;
+						//								not sure
 				}
 			}
 		}
@@ -712,13 +783,13 @@ bool SuperJump(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Pl
 	for (Playable* x : current) {
 		for (Playable* y : current) {
 			if (x != y) {
-				if (x->landoAlt && y->leiaAlt && All(vec, { y })) return true;
-				if (x->zapper && y->zappable && All(vec, { y })) return true;
-				if (x->astrozapper && y->storm && All(vec, { y })) return true;
-				if (x->trickable && y->jedi && All(vec, { y })) return true;
-				if (x->pushable && y->jedi && All(vec, { y })) return true;
-				if (x->chokeable && y->choke && All(vec, { y })) return true;
-				if (x == gamorreanguard && y->lukeAlt && All(vec, { y })) return true;
+				if (x->landoAlt && y->leiaAlt && All(vec, {y})) return true;
+				if (x->zapper && y->zappable && All(vec, {y})) return true;
+				if (x->astrozapper && y->storm && All(vec, {y})) return true;
+				if (x->trickable && y->jedi && All(vec, {y})) return true;
+				if (x->pushable && y->jedi && All(vec, {y})) return true;
+				if (x->chokeable && y->choke && All(vec, {y})) return true;
+				if (x == gamorreanguard && y->lukeAlt && All(vec, {y})) return true;
 			}
 		}
 	}
@@ -731,9 +802,9 @@ bool InstantSuperJump(std::vector<bool (*)(std::vector<Playable*>)> vec, std::ve
 	for (Playable* x : current) {
 		for (Playable* y : current) {
 			if (x != y) {
-				if (x->pushable && y->jedi && All(vec, { y })) return true;
-				if (x->chokeable && y->choke && All(vec, { y })) return true;
-				if (x == gamorreanguard && y->lukeAlt && All(vec, { y })) return true;
+				if (x->pushable && y->jedi && All(vec, {y})) return true;
+				if (x->chokeable && y->choke && All(vec, {y})) return true;
+				if (x == gamorreanguard && y->lukeAlt && All(vec, {y})) return true;
 			}
 		}
 	}
@@ -757,9 +828,9 @@ float GetSlowest(std::vector<Playable*> current) {
 }
 
 int GetType(int pref, bool (*ptr)(std::vector<Playable*>), std::vector<Playable*> current) {
-	if (ptr({ current[pref] })) return pref;
+	if (ptr({current[pref]})) return pref;
 	for (int i = current.size() - 1; i >= 0; i--) {
-		if (ptr({ current[i] })) return i;
+		if (ptr({current[i]})) return i;
 	}
 	return -1;
 }
@@ -774,7 +845,7 @@ bool Any(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable
 bool All(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable*> current) {
 	for (Playable* p : current) {
 		for (int i = 0; i < vec.size(); i++) {
-			if (!vec[i]({ p })) break;
+			if (!vec[i]({p})) break;
 			if (i == vec.size() - 1) return true;
 		}
 	}
@@ -784,7 +855,7 @@ bool All(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable
 bool Multi(bool (*ptr)(std::vector<Playable*>), int n, std::vector<Playable*> current) {
 	int x = 0;
 	for (Playable* p : current) {
-		if (ptr({ p })) {
+		if (ptr({p})) {
 			x++;
 			if (x == n) {
 				return true;
@@ -798,7 +869,7 @@ bool MultiAny(std::vector<bool (*)(std::vector<Playable*>)> vec, int n, std::vec
 	int x = 0;
 	for (Playable* p : current) {
 		for (bool(*v)(std::vector<Playable*>) : vec) {
-			if (v({ p })) {
+			if (v({p})) {
 				x++;
 				if (x == n) {
 					return true;
@@ -1247,92 +1318,108 @@ void charMaker() {
 void levMaker() {
 
 	//name, characters, episode, unlocks, vehicle level, alt second name for Escape and Theed, characters not in party
-	Negotiations = new Level("NEGOTIATIONS", { quigon, obiwan, tc14 }, TPM,
-		{ quigon, obiwan, tc14, battledroid, battledroidSecurity, battledroidCommander, droideka });
-	Invasion = new Level("GUNGAN", { quigon, obiwan, jarjar }, TPM,
-		{ jarjar, tarpals, bossnass });
-	EscapeNaboo = new Level("PALACERESCUE", { amidala, panaka, quigon, obiwan }, TPM,
-		{ amidala, panaka, royalguard, padme }, false, "RESCUE");
-	Podrace = new Level("PODSPRINT", { anakinsPod, anakinsPodGreen }, TPM,
-		{ watto, pitdroid, anakinsPod, anakinsPodGreen, sebulbasPod }, true);
-	Theed = new Level("RETAKEPALACE", { obiwan, quigon, panaka, padmeBattle, r2d2, anakinBoy }, TPM,
-		{ padmeBattle, r2d2, anakinBoy }, false, "RETAKE");
-	Maul = new Level("MAUL", { obiwan, quigon }, TPM,
-		{ maul });
+	Negotiations = new Level("NEGOTIATIONS", {quigon, obiwan, tc14}, TPM,
+													 {quigon, obiwan, tc14, battledroid, battledroidSecurity, battledroidCommander, droideka});
+	Invasion = new Level("GUNGAN", {quigon, obiwan, jarjar}, TPM,
+											 {jarjar, tarpals, bossnass});
+	EscapeNaboo = new Level("PALACERESCUE", {amidala, panaka, quigon, obiwan}, TPM,
+													{amidala, panaka, royalguard, padme}, false, "RESCUE");
+	Podrace = new Level("PODSPRINT", {anakinsPod, anakinsPodGreen}, TPM,
+											{watto, pitdroid, anakinsPod, anakinsPodGreen, sebulbasPod}, true);
+	Theed = new Level("RETAKEPALACE", {obiwan, quigon, panaka, padmeBattle, r2d2, anakinBoy}, TPM,
+										{padmeBattle, r2d2, anakinBoy}, false, "RETAKE");
+	Maul = new Level("MAUL", {obiwan, quigon}, TPM,
+									 {maul});
 
-	BHP = new Level("PURSUIT", { anakinsSpeeder, anakinsSpeederGreen }, CLN,
-		{ zam, dexter, anakinsSpeeder, anakinsSpeederGreen, zamsAirspeeder }, true);
-	Kamino = new Level("KAMINO", { obiwanJedi, r4p17 }, CLN,
-		{ obiwanJedi, r4p17, clone, lamasu, taunwe });
-	Factory = new Level("FACTORY", { anakinPadawan, padmeGeonosis, r2d2, c3po, obiwanJedi }, CLN,
-		{ anakinPadawan, padmeGeonosis, c3po, geonosian, battledroidGeonosis, skeleton }, false, "", 4);
-	JediBattle = new Level("JEDI", { macewindu, r2d2, obiwanJedi, anakinPadawan, padmeClawed }, CLN,
-		{ macewindu, padmeClawed, superbattledroid, jango, bobafettBoy, luminara, kiadimundi, kitfisto, shaakti, aaylasecura, plokoon });
-	Gunship = new Level("GUNSHIP", { gunship, gunshipGreen }, CLN,
-		{ gunship, gunshipGreen }, true);
-	Dooku = new Level("DOOKU", { obiwanJedi, anakinPadawan, yoda }, CLN,
-		{ yoda });
+	BHP = new Level("PURSUIT", {anakinsSpeeder, anakinsSpeederGreen}, CLN,
+									{zam, dexter, anakinsSpeeder, anakinsSpeederGreen, zamsAirspeeder}, true);
+	Kamino = new Level("KAMINO", {obiwanJedi, r4p17}, CLN,
+										 {obiwanJedi, r4p17, clone, lamasu, taunwe});
+	Factory = new Level("FACTORY", {anakinPadawan, padmeGeonosis, r2d2, c3po, obiwanJedi}, CLN,
+											{anakinPadawan, padmeGeonosis, c3po, geonosian, battledroidGeonosis, skeleton}, false, "", 4);
+	JediBattle = new Level("JEDI", {macewindu, r2d2, obiwanJedi, anakinPadawan, padmeClawed}, CLN,
+												 {macewindu, padmeClawed, superbattledroid, jango, bobafettBoy, luminara, kiadimundi, kitfisto, shaakti, aaylasecura, plokoon});
+	Gunship = new Level("GUNSHIP", {gunship, gunshipGreen}, CLN,
+											{gunship, gunshipGreen}, true);
+	Dooku = new Level("DOOKU", {obiwanJedi, anakinPadawan, yoda}, CLN,
+										{yoda});
 
-	Coruscant = new Level("DOGFIGHT", { starfighterYellow, starfighterRed }, STH,
-		{ starfighterYellow, starfighterRed, droidTrifighter, vultureDroid, arcfighter }, true);
-	Chancellor = new Level("CRUISER", { obiwanEp3, anakinJedi, r2d2, palpatine }, STH,
-		{ obiwanEp3, anakinJedi, palpatine, dooku, magnaguard, buzzdroid });
-	Grievous = new Level("GRIEVOUS", { obiwanEp3, cody }, STH,
-		{ cody, grievous });
-	Kashyyyk = new Level("KASHYYYK", { yoda, chewbacca }, STH,
-		{ chewbacca, wookiee, cloneEp3, clonePilot, cloneSwamp, cloneWalker });
-	Ruin = new Level("TEMPLE", { obiwanEp3, yoda }, STH,
-		{ macewinduEp3, disguisedclone, trainingremote });
-	Vader = new Level("VADER", { obiwanEp3, anakinJedi }, STH);
+	Coruscant = new Level("DOGFIGHT", {starfighterYellow, starfighterRed}, STH,
+												{starfighterYellow, starfighterRed, droidTrifighter, vultureDroid, arcfighter}, true);
+	Chancellor = new Level("CRUISER", {obiwanEp3, anakinJedi, r2d2, palpatine}, STH,
+												 {obiwanEp3, anakinJedi, palpatine, dooku, magnaguard, buzzdroid});
+	Grievous = new Level("GRIEVOUS", {obiwanEp3, cody}, STH,
+											 {cody, grievous});
+	Kashyyyk = new Level("KASHYYYK", {yoda, chewbacca}, STH,
+											 {chewbacca, wookiee, cloneEp3, clonePilot, cloneSwamp, cloneWalker});
+	Ruin = new Level("TEMPLE", {obiwanEp3, yoda}, STH,
+									 {macewinduEp3, disguisedclone, trainingremote});
+	Vader = new Level("VADER", {obiwanEp3, anakinJedi}, STH);
 
-	SecretPlans = new Level("BLOCKADERUNNER", { leia, antilles, rebelFriend, c3po, r2d2 }, ANH,
-		{ leia, antilles, rebelFriend, rebeltrooper, stormtrooper, imperialshuttlepilot, rebelengineer });
-	Jundland = new Level("TATOOINE", { lukeTatooine, benKenobi, c3po, r2d2 }, ANH,
-		{ lukeTatooine, benKenobi, tuskenraider, jawa, droid1, droid2, droid3, droid4, womprat });
-	Spaceport = new Level("MOSEISLEY", { lukeTatooine, benKenobi, r2d2, c3po, han, chewbacca }, ANH,
-		{ han, sandtrooper, greedo, imperialspy });
-	Princess = new Level("DEATHSTARRESCUE", { hanStormtrooper, lukeStormtrooper, chewbacca, r2d2, c3po, benKenobi, leia }, ANH,
-		{ hanStormtrooper, lukeStormtrooper, beachtrooper, deathstartrooper, tiefighterpilot, imperialofficer, tarkin, mousedroid, imperialengineer }, false, "", 7);
-	DSE = new Level("DEATHSTARESCAPE", { han, chewbacca, leia, lukeTatooine, r2d2, c3po }, ANH);
-	RebelAttack = new Level("DEATHSTARBATTLE", { xwing, ywing }, ANH,
-		{ xwing, ywing, tiefighter, tieinterceptor, tiefighterVader }, true);
+	SecretPlans = new Level("BLOCKADERUNNER", {leia, antilles, rebelFriend, c3po, r2d2}, ANH,
+													{leia, antilles, rebelFriend, rebeltrooper, stormtrooper, imperialshuttlepilot, rebelengineer});
+	Jundland = new Level("TATOOINE", {lukeTatooine, benKenobi, c3po, r2d2}, ANH,
+											 {lukeTatooine, benKenobi, tuskenraider, jawa, droid1, droid2, droid3, droid4, womprat});
+	Spaceport = new Level("MOSEISLEY", {lukeTatooine, benKenobi, r2d2, c3po, han, chewbacca}, ANH,
+												{han, sandtrooper, greedo, imperialspy});
+	Princess = new Level("DEATHSTARRESCUE", {hanStormtrooper, lukeStormtrooper, chewbacca, r2d2, c3po, benKenobi, leia}, ANH,
+											 {hanStormtrooper, lukeStormtrooper, beachtrooper, deathstartrooper, tiefighterpilot, imperialofficer, tarkin, mousedroid, imperialengineer}, false, "", 7);
+	DSE = new Level("DEATHSTARESCAPE", {han, chewbacca, leia, lukeTatooine, r2d2, c3po}, ANH);
+	RebelAttack = new Level("DEATHSTARBATTLE", {xwing, ywing}, ANH,
+													{xwing, ywing, tiefighter, tieinterceptor, tiefighterVader}, true);
 
-	Hoth = new Level("HOTHBATTLE", { snowspeeder, snowspeeder }, EMP,
-		{ snowspeeder }, true);
-	EchoBase = new Level("HOTHESCAPE", { hanHoth, leiaHoth, c3po, chewbacca }, EMP,
-		{ hanHoth, leiaHoth , hanHood, rebelHoth, rebelPilot, snowtrooper, lukeHoth });
-	FalconFlight = new Level("ASTEROIDCHASE", { milleniumFalcon, xwing }, EMP,
-		{ milleniumFalcon, tiebomber, imperialshuttle }, true);
-	Dagobah = new Level("DAGOBAH", { lukePilot, r2d2, lukeDagobah, yoda }, EMP,
-		{ lukePilot, lukeDagobah });
-	CCT = new Level("CLOUDCITYTRAP", { lukeBespin, r2d2 }, EMP,
-		{ lukeBespin, hanCarbonite });
-	Bespin = new Level("CLOUDCITYESCAPE", { lando, leiaBespin, chewbacca, r2d2, c3po }, EMP,
-		{ lando, leiaBespin, lobot, ugnaught, bespinguard, leiaPrisoner });
+	Hoth = new Level("HOTHBATTLE", {snowspeeder, snowspeeder}, EMP,
+									 {snowspeeder}, true);
+	EchoBase = new Level("HOTHESCAPE", {hanHoth, leiaHoth, c3po, chewbacca}, EMP,
+											 {hanHoth, leiaHoth , hanHood, rebelHoth, rebelPilot, snowtrooper, lukeHoth});
+	FalconFlight = new Level("ASTEROIDCHASE", {milleniumFalcon, xwing}, EMP,
+													 {milleniumFalcon, tiebomber, imperialshuttle}, true);
+	Dagobah = new Level("DAGOBAH", {lukePilot, r2d2, lukeDagobah, yoda}, EMP,
+											{lukePilot, lukeDagobah});
+	CCT = new Level("CLOUDCITYTRAP", {lukeBespin, r2d2}, EMP,
+									{lukeBespin, hanCarbonite});
+	Bespin = new Level("CLOUDCITYESCAPE", {lando, leiaBespin, chewbacca, r2d2, c3po}, EMP,
+										 {lando, leiaBespin, lobot, ugnaught, bespinguard, leiaPrisoner});
 
-	Jabbas = new Level("JABBASPALACE", { leiaBoushh, chewbacca, lukeJedi, c3po, r2d2, hanSkiff }, JDI,
-		{ lukeJedi, leiaBoushh, hanSkiff, gamorreanguard, bibfortuna, palaceguard, bossk });
-	Carkoon = new Level("SARLACCPIT", { landoPalaceGuard, lukeJedi, chewbacca, hanSkiff, c3po, r2d2, leiaSlave }, JDI,
-		{ landoPalaceGuard, leiaSlave, skiffguard, boba });
-	Showdown = new Level("SPEEDERCHASE", { leiaEndor, lukeEndor }, JDI,
-		{ leiaEndor, lukeEndor, atatdriver, scouttrooper });
-	Endor = new Level("ENDORBATTLE", { hanEndor, leiaEndor, r2d2, chewbacca, c3po, wicket }, JDI,
-		{ hanEndor, wicket, ewok });
-	Destiny = new Level("EMPERORFIGHT", { lukeJedi, vader }, JDI,
-		{ vader, imperialguard, emperor });
-	ITDS = new Level("DEATHSTAR2BATTLE", { milleniumFalcon, xwing }, JDI,
-		{ ackbar }, true);
+	Jabbas = new Level("JABBASPALACE", {leiaBoushh, chewbacca, lukeJedi, c3po, r2d2, hanSkiff}, JDI,
+										 {lukeJedi, leiaBoushh, hanSkiff, gamorreanguard, bibfortuna, palaceguard, bossk});
+	Carkoon = new Level("SARLACCPIT", {landoPalaceGuard, lukeJedi, chewbacca, hanSkiff, c3po, r2d2, leiaSlave}, JDI,
+											{landoPalaceGuard, leiaSlave, skiffguard, boba});
+	Showdown = new Level("SPEEDERCHASE", {leiaEndor, lukeEndor}, JDI,
+											 {leiaEndor, lukeEndor, atatdriver, scouttrooper});
+	Endor = new Level("ENDORBATTLE", {hanEndor, leiaEndor, r2d2, chewbacca, c3po, wicket}, JDI,
+										{hanEndor, wicket, ewok});
+	Destiny = new Level("EMPERORFIGHT", {lukeJedi, vader}, JDI,
+											{vader, imperialguard, emperor});
+	ITDS = new Level("DEATHSTAR2BATTLE", {milleniumFalcon, xwing}, JDI,
+									 {ackbar}, true);
 
-	Anakinsflight = new Level("ANAKINSFLIGHT", { nabooStarfighter, nabooStarfighterGreen }, LEV,
-		{ nabooStarfighter, nabooStarfighterGreen }, true);
-	ANewHope = new Level("ANEWHOPE", { vader, stormtrooper, c3po }, STH);
+	Anakinsflight = new Level("ANAKINSFLIGHT", {nabooStarfighter, nabooStarfighterGreen}, LEV,
+														{nabooStarfighter, nabooStarfighterGreen}, true);
+	ANewHope = new Level("ANEWHOPE", {vader, stormtrooper, c3po}, STH);
 
-	BHM = new Level("", { boba, greedo, ig88, f4lom, bossk, dengar,
+	BHM = new Level("", {boba, greedo, ig88, f4lom, bossk, dengar,
 		quigon, amidala, jarjar, macewindu, kitfisto, luminara, kiadimundi, rebeltrooper, shaakti, cody,
-		r2d2, benKenobi, chewbacca, leia, ackbar, yoda, c3po, lando, lukeTatooine, han }, "", {}, false, "", -1);
+		r2d2, benKenobi, chewbacca, leia, ackbar, yoda, c3po, lando, lukeTatooine, han}, "", {}, false, "", -1);
 
-	defaultLevel = new Level("", {}, "", { gonk, pkdroid });
-	allEpisodes = new Level("", {}, "", { ig88, dengar, f4lom, benghost, anakinghost, yodaghost, r2q5, indianajones, slave1 });
+	defaultLevel = new Level("", {}, "", {gonk, pkdroid});
+	allEpisodes = new Level("", {}, "", {ig88, dengar, f4lom, benghost, anakinghost, yodaghost, r2q5, indianajones, slave1});
+
+
+	std::ofstream levelDat("files/LEVELDATA.txt");
+	for (Level* l : allLevels) {
+		levelDat << l->name << '\n';
+		levelDat << l->episode << l->firstName << '\n';
+		if (l->vehicleLevel) levelDat << "vehicle" << '\n';
+		else levelDat << "character" << '\n';
+
+		for (Playable* p : l->vanillaParty) levelDat << p->name << ' ';
+		levelDat << '\n';
+		for (Playable* p : l->unlocks) levelDat << p->name << ' ';
+
+		levelDat << '\n';
+	}
+
 
 	for (Level* l : allLevels) {
 		for (Playable* p : l->unlocks) {

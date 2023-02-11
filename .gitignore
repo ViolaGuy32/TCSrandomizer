@@ -9,6 +9,7 @@ wxWidgets
 data
 log.txt
 *.lib
+.vscode
 
 # User-specific files
 *.rsuser
