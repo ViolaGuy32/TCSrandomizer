@@ -42,7 +42,7 @@ struct Level {
 	std::string firstName;
 	std::string path;
 	//std::string episode;
-	bool vehicleLevel;
+	bool vehicleLevel = false;
 	//int isFake;
 	std::vector<Playable*> unlocks;
 	std::vector<char> collectables;
