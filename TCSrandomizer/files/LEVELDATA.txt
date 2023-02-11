@@ -4,11 +4,13 @@ character
 quigonjinn obiwankenobi tc14 
 quigonjinn obiwankenobi tc14 battledroid battledroid_security battledroid_commander destroyer 
 
+
 GUNGAN
 out/LEVELS/EPISODE_I/GUNGAN
 character
 quigonjinn obiwankenobi jarjarbinks 
 jarjarbinks captaintarpals bossnass 
+
 
 RESCUE
 out/LEVELS/EPISODE_I/PALACERESCUE
@@ -16,11 +18,13 @@ character
 amidala captainpanaka quigonjinn obiwankenobi 
 amidala captainpanaka royalguard padme 
 
+
 PODSPRINT
 out/LEVELS/EPISODE_I/PODSPRINT
 vehicle
 newanakinspod newanakinspod_green 
 watto pitdroid newanakinspod newanakinspod_green sebulbaspod 
+
 
 RETAKE
 out/LEVELS/EPISODE_I/RETAKEPALACE
@@ -28,11 +32,13 @@ character
 obiwankenobi quigonjinn captainpanaka padmebattle r2d2 anakin_boy 
 padmebattle r2d2 anakin_boy 
 
+
 MAUL
 out/LEVELS/EPISODE_I/MAUL
 character
 obiwankenobi quigonjinn 
 darthmaul 
+
 
 PURSUIT
 out/LEVELS/EPISODE_II/PURSUIT
@@ -40,17 +46,20 @@ vehicle
 anakinsspeeder anakinsspeeder_green 
 zamwesell dexter anakinsspeeder anakinsspeeder_green zamsspeeder 
 
+
 KAMINO
 out/LEVELS/EPISODE_II/KAMINO
 character
 obiwankenobi_jedimaster r4_p17 
 obiwankenobi_jedimaster r4_p17 clone lamasu taunwe 
 
+
 FACTORY
 out/LEVELS/EPISODE_II/FACTORY
 character
-anakin_padawan padmegeo r2d2 c3po obiwankenobi_jedimaster 
+anakin_padawan padmegeo r2d2 c3po 
 anakin_padawan padmegeo c3po geonosian battledroid_geonosian skeleton 
+obiwankenobi_jedimaster 
 
 JEDI
 out/LEVELS/EPISODE_II/JEDI
@@ -58,11 +67,13 @@ character
 macewindu r2d2 obiwankenobi_jedimaster anakin_padawan padmeclawed 
 macewindu padmeclawed superbattledroid jangofett bobafett_boy luminara kiadimundi kitfisto shaakti aylasecura plokoon 
 
+
 GUNSHIP
 out/LEVELS/EPISODE_II/GUNSHIP
 vehicle
 newrepublicgunship newrepublicgunship_green 
 newrepublicgunship newrepublicgunship_green 
+
 
 DOOKU
 out/LEVELS/EPISODE_II/DOOKU
@@ -70,11 +81,13 @@ character
 obiwankenobi_jedimaster anakin_padawan yoda 
 yoda 
 
+
 DOGFIGHT
 out/LEVELS/EPISODE_III/DOGFIGHT
 vehicle
 jedistarfighter_yellow_ep3 jedistarfighter_red_ep3 
 jedistarfighter_yellow_ep3 jedistarfighter_red_ep3 droidtrifighter vulturedroid clonearc 
+
 
 CRUISER
 out/LEVELS/EPISODE_III/CRUISER
@@ -82,11 +95,13 @@ character
 obiwankenobi_ep3 anakin_jedi r2d2 palpatine 
 obiwankenobi_ep3 anakin_jedi palpatine countdooku bodyguard buzzdroid 
 
+
 GRIEVOUS
 out/LEVELS/EPISODE_III/GRIEVOUS
 character
 obiwankenobi_ep3 clone_ep3_sand 
 clone_ep3_sand grievous 
+
 
 KASHYYYK
 out/LEVELS/EPISODE_III/KASHYYYK
@@ -94,16 +109,19 @@ character
 yoda chewbacca 
 chewbacca wookie clone_ep3 clone_ep3_pilot clone_ep3_swamp clone_ep3_walker 
 
+
 TEMPLE
 out/LEVELS/EPISODE_III/TEMPLE
 character
 obiwankenobi_ep3 yoda 
 macewindu_ep3 disguisedclone trainingremote 
 
+
 VADER
 out/LEVELS/EPISODE_III/VADER
 character
 obiwankenobi_ep3 anakin_jedi 
+
 
 
 BLOCKADERUNNER
@@ -112,11 +130,13 @@ character
 princessleia captainantilles rebelfriend c3po r2d2 
 princessleia captainantilles rebelfriend rebelscum stormtrooper imperialshuttlepilot engineer 
 
+
 TATOOINE
 out/LEVELS/EPISODE_IV/TATOOINE
 character
 lukeskywalker_tatooine benkenobi c3po r2d2 
 lukeskywalker_tatooine benkenobi tuskenraider jawa naffdroid1 naffdroid2 naffdroid3 naffdroid4 womprat 
+
 
 MOSEISLEY
 out/LEVELS/EPISODE_IV/MOSEISLEY
@@ -124,16 +144,19 @@ character
 lukeskywalker_tatooine benkenobi r2d2 c3po hansolo chewbacca 
 hansolo sandtrooper greedo imperialspy 
 
+
 DEATHSTARRESCUE
 out/LEVELS/EPISODE_IV/DEATHSTARRESCUE
 character
-hansolo_stormtrooper lukeskywalker_stormtrooper chewbacca r2d2 c3po benkenobi princessleia 
+hansolo_stormtrooper lukeskywalker_stormtrooper chewbacca r2d2 c3po benkenobi 
 hansolo_stormtrooper lukeskywalker_stormtrooper beachtrooper deathstartrooper tiefighterpilot imperialofficer grandmofftarkin mousedroid imperialengineer 
+princessleia 
 
 DEATHSTARESCAPE
 out/LEVELS/EPISODE_IV/DEATHSTARESCAPE
 character
 hansolo chewbacca princessleia lukeskywalker_tatooine r2d2 c3po 
+
 
 
 DEATHSTARBATTLE
@@ -142,11 +165,13 @@ vehicle
 xwing ywing 
 xwing ywing tiefighter tieinterceptor tiefighterdarth 
 
+
 HOTHBATTLE
 out/LEVELS/EPISODE_V/HOTHBATTLE
 vehicle
 snowspeeder snowspeeder 
 snowspeeder 
+
 
 HOTHESCAPE
 out/LEVELS/EPISODE_V/HOTHESCAPE
@@ -154,11 +179,87 @@ character
 hansolo_hoth princessleia_hoth c3po chewbacca 
 hansolo_hoth princessleia_hoth hansolo_hood rebelhoth rebelpilot snowtrooper lukeskywalker_hoth 
 
+
 ASTEROIDCHASE
 out/LEVELS/EPISODE_V/ASTEROIDCHASE
 vehicle
 millenniumfalcon xwing 
 millenniumfalcon tiebomber imperialshuttle 
 
+
 DAGOBAH
-out/LEVELS/EPISODE_V
+out/LEVELS/EPISODE_V/DAGOBAH
+character
+lukeskywalker_pilot r2d2 lukeskywalker_dagobah yoda 
+lukeskywalker_pilot lukeskywalker_dagobah 
+
+
+CLOUDCITYTRAP
+out/LEVELS/EPISODE_V/CLOUDCITYTRAP
+character
+lukeskywalker_bespin r2d2 
+lukeskywalker_bespin hanincarbonite 
+
+
+CLOUDCITYESCAPE
+out/LEVELS/EPISODE_V/CLOUDCITYESCAPE
+character
+landocalrissian princessleia_bespin chewbacca r2d2 c3po 
+landocalrissian princessleia_bespin lobot ugnaught bespinguard princessleia_prisoner 
+
+
+JABBASPALACE
+out/LEVELS/EPISODE_VI/JABBASPALACE
+character
+princessleia_boushh chewbacca lukeskywalker_jedi c3po r2d2 hansolo_skiff 
+lukeskywalker_jedi princessleia_boushh hansolo_skiff gamorreanguard bibfortuna palaceguard bossk 
+
+
+SARLACCPIT
+out/LEVELS/EPISODE_VI/SARLACCPIT
+character
+lando_palaceguard lukeskywalker_jedi chewbacca hansolo_skiff c3po r2d2 princessleia_slave 
+lando_palaceguard princessleia_slave skiffguard bobafett 
+
+
+SPEEDERCHASE
+out/LEVELS/EPISODE_VI/SPEEDERCHASE
+character
+princessleia_endor lukeskywalker_endor 
+princessleia_endor lukeskywalker_endor atat_driver scouttrooper 
+
+
+ENDORBATTLE
+out/LEVELS/EPISODE_VI/ENDORBATTLE
+character
+hansolo_endor princessleia_endor r2d2 chewbacca c3po wicket 
+hansolo_endor wicket ewok 
+
+
+EMPERORFIGHT
+out/LEVELS/EPISODE_VI/EMPERORFIGHT
+character
+lukeskywalker_jedi darthvader 
+darthvader imperialguard theemperor 
+
+
+DEATHSTAR2BATTLE
+out/LEVELS/EPISODE_VI/DEATHSTAR2BATTLE
+vehicle
+millenniumfalcon xwing 
+admiralackbar 
+
+
+ANAKINSFLIGHT
+out/LEVELS/ANAKINSFLIGHT
+vehicle
+naboostarfighter naboostarfighter_lime 
+naboostarfighter naboostarfighter_lime 
+
+
+ANEWHOPE
+out/LEVELS/EPISODE_III/ANEWHOPE
+character
+darthvader stormtrooper c3po 
+
+

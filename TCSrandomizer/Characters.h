@@ -7,6 +7,9 @@
 
 struct Level;
 
+void charMaker();
+void levMaker();
+
 struct Playable {
 	std::string name = "";
 	std::string realName = "";
@@ -34,20 +37,21 @@ struct Playable {
 struct Level {
 	std::vector<Playable*> party;
 	std::vector<Playable*> vanillaParty;
+	std::vector<Playable*> vanillaBonusCharacters;
 	std::string name;
 	std::string firstName;
-	std::string episode;
+	std::string path;
+	//std::string episode;
 	bool vehicleLevel;
-	int isFake;
+	//int isFake;
 	std::vector<Playable*> unlocks;
 	std::vector<char> collectables;
 
-	Level(std::string myFirstName, std::vector<Playable*> myVanillaParty, std::string myEpisode, std::vector<Playable*> myUnlocks = {}, bool myVehicleLevel = false,
-		  std::string myName = "", int myIsFake = 50);
-
+	/*
 	void mix();
 
 	void add(int n);
+	void log2();
 
 	std::string directory(char scene = '\0', std::string fileExtention = "");
 	std::string specialDirectory(char scene, std::string fileType);
@@ -62,7 +66,7 @@ struct Level {
 
 	void rename(std::string newText, std::string oldText, char scene = '\0');
 
-    void append(std::string appendix, char scene = '\0', std::string fileExtention = "");
+		void append(std::string appendix, char scene = '\0', std::string fileExtention = "");
 
 	void rename(int characterNumber, char scene = '\0');
 
@@ -70,21 +74,18 @@ struct Level {
 	void binWrite(int characterNumber, std::vector<int> address, char scene = '\0', std::string fileExtention = "");
 
 	void mixCollectables();
+	*/
 };
+/*
+extern std::vector<Playable*> testing; //current logic
+
 
 void renamer(std::string oldName, std::string newName);
 void characterPointer(Playable* play, int address);
 void multiPointer(Playable* play, std::vector<int> address);
 
-
-extern std::vector<Playable*> testing; //current logic
 extern Playable* defaultCharacter;
 
-void charMaker();
-
-void log2();
-
-void levMaker();
 
 bool AlwaysTrue(std::vector<Playable*>);
 
@@ -189,3 +190,5 @@ bool Multi(bool(*ptr)(std::vector<Playable*>), int n, std::vector<Playable*> cur
 bool MultiAny(std::vector<bool (*)(std::vector<Playable*>)> vec, int n, std::vector<Playable*> current = testing = testing);
 
 void logIt(Playable* ch, std::ofstream& log);
+
+	*/

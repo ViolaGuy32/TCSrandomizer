@@ -1,7 +1,9 @@
-#include <wx/wx.h>
 #include "Characters.h"
 #include "App.h"
 #include "Defines.h"
+#include <wx/wx.h>
+#include <sstream>
+#include <unordered_map>
 
 extern std::string out;
 extern bool extog;
@@ -16,227 +18,284 @@ extern LogicType logicType;
 extern std::vector<Playable*> pls; //Characters and Vehicles
 extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
+extern std::unordered_map<std::string, Playable*> nameList;
 
-extern Playable* quigon;
-extern Playable* obiwan;
-extern Playable* tc14;
-extern Playable* jarjar;
-extern Playable* amidala;
-extern Playable* panaka;
-extern Playable* padmeBattle;
-extern Playable* r2d2;
-extern Playable* anakinBoy;
-extern Playable* obiwanJedi;
-extern Playable* r4p17;
-extern Playable* anakinPadawan;
-extern Playable* padmeGeonosis;
-extern Playable* c3po;
-extern Playable* macewindu;
-extern Playable* padmeClawed;
-extern Playable* yoda;
-extern Playable* obiwanEp3;
-extern Playable* anakinJedi;
-extern Playable* palpatine;
-extern Playable* cody;
-extern Playable* chewbacca;
-extern Playable* leia;
-extern Playable* antilles;
-extern Playable* rebelFriend;
-extern Playable* lukeTatooine;
-extern Playable* benKenobi;
-extern Playable* han;
-extern Playable* hanStormtrooper;
-extern Playable* lukeStormtrooper;
-extern Playable* hanHoth;
-extern Playable* leiaHoth;
-extern Playable* lukePilot;
-extern Playable* lukeDagobah;
-extern Playable* lukeBespin;
-extern Playable* lando;
-extern Playable* leiaBespin;
-extern Playable* lukeJedi;
-extern Playable* leiaBoushh;
-extern Playable* landoPalaceGuard;
-extern Playable* hanSkiff;
-extern Playable* leiaSlave;
-extern Playable* leiaEndor;
-extern Playable* lukeEndor;
-extern Playable* hanEndor;
-extern Playable* wicket;
-extern Playable* vader;
-extern Playable* gonk;
-extern Playable* pkdroid;
-extern Playable* battledroid;
-extern Playable* battledroidSecurity;
-extern Playable* battledroidCommander;
-extern Playable* droideka;
-extern Playable* tarpals;
-extern Playable* bossnass;
-extern Playable* royalguard;
-extern Playable* padme;
-extern Playable* watto;
-extern Playable* pitdroid;
-extern Playable* maul;
-extern Playable* zam;
-extern Playable* dexter;
-extern Playable* clone;
-extern Playable* lamasu;
-extern Playable* taunwe;
-extern Playable* geonosian;
-extern Playable* battledroidGeonosis;
-extern Playable* superbattledroid;
-extern Playable* jango;
-extern Playable* bobafettBoy;
-extern Playable* luminara;
-extern Playable* kiadimundi;
-extern Playable* kitfisto;
-extern Playable* shaakti;
-extern Playable* aaylasecura;
-extern Playable* plokoon;
-extern Playable* dooku;
-extern Playable* magnaguard;
-extern Playable* grievous;
-extern Playable* wookiee;
-extern Playable* cloneEp3;
-extern Playable* clonePilot;
-extern Playable* cloneSwamp;
-extern Playable* cloneWalker;
-extern Playable* macewinduEp3;
-extern Playable* disguisedclone;
-extern Playable* rebeltrooper;
-extern Playable* stormtrooper;
-extern Playable* imperialshuttlepilot;
-extern Playable* tuskenraider;
-extern Playable* jawa;
-extern Playable* sandtrooper;
-extern Playable* greedo;
-extern Playable* imperialspy;
-extern Playable* beachtrooper;
-extern Playable* deathstartrooper;
-extern Playable* tiefighterpilot;
-extern Playable* imperialofficer;
-extern Playable* tarkin;
-extern Playable* hanHood;
-extern Playable* rebelHoth;
-extern Playable* rebelPilot;
-extern Playable* snowtrooper;
-extern Playable* lukeHoth;
-extern Playable* lobot;
-extern Playable* ugnaught;
-extern Playable* bespinguard;
-extern Playable* leiaPrisoner;
-extern Playable* gamorreanguard;
-extern Playable* bibfortuna;
-extern Playable* palaceguard;
-extern Playable* bossk;
-extern Playable* skiffguard;
-extern Playable* boba;
-extern Playable* ewok;
-extern Playable* imperialguard;
-extern Playable* emperor;
-extern Playable* ackbar;
-extern Playable* ig88;
-extern Playable* dengar;
-extern Playable* f4lom;
-extern Playable* benghost;
-extern Playable* anakinghost;
-extern Playable* yodaghost;
-extern Playable* r2q5;
-extern Playable* indianajones;
-extern Playable* trainingremote;
-extern Playable* buzzdroid;
-extern Playable* skeleton;
-extern Playable* mousedroid;
-extern Playable* womprat;
-extern Playable* rebelengineer;
-extern Playable* imperialengineer;
-extern Playable* atatdriver;
-extern Playable* scouttrooper;
-extern Playable* hanCarbonite;
-extern Playable* droid1;
-extern Playable* droid2;
-extern Playable* droid3;
-extern Playable* droid4;
-
-extern Playable* anakinsPod;
-extern Playable* nabooStarfighter;
-extern Playable* anakinsSpeeder;
-extern Playable* gunship;
-extern Playable* starfighterYellow;
-extern Playable* starfighterRed;
-extern Playable* xwing;
-extern Playable* ywing;
-extern Playable* snowspeeder;
-extern Playable* milleniumFalcon;
-extern Playable* sebulbasPod;
-extern Playable* zamsAirspeeder;
-extern Playable* droidTrifighter;
-extern Playable* vultureDroid;
-extern Playable* arcfighter;
-extern Playable* tiefighter;
-extern Playable* tieinterceptor;
-extern Playable* tiefighterVader;
-extern Playable* tiebomber;
-extern Playable* imperialshuttle;
-extern Playable* slave1;
-extern Playable* anakinsPodGreen;
-extern Playable* nabooStarfighterGreen;
-extern Playable* anakinsSpeederGreen;
-extern Playable* gunshipGreen;
-
-extern Level* Negotiations;
-extern Level* Invasion;
-extern Level* EscapeNaboo;
-extern Level* Podrace;
-extern Level* Theed;
-extern Level* Maul;
-
-extern Level* BHP;
-extern Level* Kamino;
-extern Level* Factory;
-extern Level* JediBattle;
-extern Level* Gunship;
-extern Level* Dooku;
-
-extern Level* Coruscant;
-extern Level* Chancellor;
-extern Level* Grievous;
-extern Level* Kashyyyk;
-extern Level* Ruin;
-extern Level* Vader;
-
-extern Level* SecretPlans;
-extern Level* Jundland;
-extern Level* Spaceport;
-extern Level* Princess;
-extern Level* DSE;
-extern Level* RebelAttack;
-
-extern Level* Hoth;
-extern Level* EchoBase;
-extern Level* FalconFlight;
-extern Level* Dagobah;
-extern Level* CCT;
-extern Level* Bespin;
-
-extern Level* Jabbas;
-extern Level* Carkoon;
-extern Level* Showdown;
-extern Level* Endor;
-extern Level* Destiny;
-extern Level* ITDS;
-
-extern Level* Anakinsflight;
-extern Level* ANewHope;
-
-extern Level* BHM;
-
-extern Level* defaultLevel;
-extern Level* allEpisodes;
+//enum charID {
+//	quigon,
+//	obiwan,
+//	tc14,
+//	jarjar,
+//	amidala,
+//	panaka,
+//	padmeBattle,
+//	r2d2,
+//	anakinBoy,
+//	obiwanJedi,
+//	r4p17,
+//	anakinPadawan,
+//	padmeGeonosis,
+//	c3po,
+//	macewindu,
+//	padmeClawed,
+//	yoda,
+//	obiwanEp3,
+//	anakinJedi,
+//	palpatine,
+//	cody,
+//	chewbacca,
+//	leia,
+//	antilles,
+//	rebelFriend,
+//	lukeTatooine,
+//	benKenobi,
+//	han,
+//	hanStormtrooper,
+//	lukeStormtrooper,
+//	hanHoth,
+//	leiaHoth,
+//	lukePilot,
+//	lukeDagobah,
+//	lukeBespin,
+//	lando,
+//	leiaBespin,
+//	lukeJedi,
+//	leiaBoushh,
+//	landoPalaceGuard,
+//	hanSkiff,
+//	leiaSlave,
+//	leiaEndor,
+//	lukeEndor,
+//	hanEndor,
+//	wicket,
+//	vader,
+//	gonk,
+//	pkdroid,
+//	battledroid,
+//	battledroidSecurity,
+//	battledroidCommander,
+//	droideka,
+//	tarpals,
+//	bossnass,
+//	royalguard,
+//	padme,
+//	watto,
+//	pitdroid,
+//	maul,
+//	zam,
+//	dexter,
+//	clone,
+//	lamasu,
+//	taunwe,
+//	geonosian,
+//	battledroidGeonosis,
+//	superbattledroid,
+//	jango,
+//	bobafettBoy,
+//	luminara,
+//	kiadimundi,
+//	kitfisto,
+//	shaakti,
+//	aaylasecura,
+//	plokoon,
+//	dooku,
+//	magnaguard,
+//	grievous,
+//	wookiee,
+//	cloneEp3,
+//	clonePilot,
+//	cloneSwamp,
+//	cloneWalker,
+//	macewinduEp3,
+//	disguisedclone,
+//	rebeltrooper,
+//	stormtrooper,
+//	imperialshuttlepilot,
+//	tuskenraider,
+//	jawa,
+//	sandtrooper,
+//	greedo,
+//	imperialspy,
+//	beachtrooper,
+//	deathstartrooper,
+//	tiefighterpilot,
+//	imperialofficer,
+//	tarkin,
+//	hanHood,
+//	rebelHoth,
+//	rebelPilot,
+//	snowtrooper,
+//	lukeHoth,
+//	lobot,
+//	ugnaught,
+//	bespinguard,
+//	leiaPrisoner,
+//	gamorreanguard,
+//	bibfortuna,
+//	palaceguard,
+//	bossk,
+//	skiffguard,
+//	boba,
+//	ewok,
+//	imperialguard,
+//	emperor,
+//	ackbar,
+//	ig88,
+//	dengar,
+//	f4lom,
+//	benghost,
+//	anakinghost,
+//	yodaghost,
+//	r2q5,
+//	indianajones,
+//	trainingremote,
+//	buzzdroid,
+//	skeleton,
+//	mousedroid,
+//	womprat,
+//	rebelengineer,
+//	imperialengineer,
+//	atatdriver,
+//	scouttrooper,
+//	hanCarbonite,
+//	droid1,
+//	droid2,
+//	droid3,
+//	droid4,
+//
+//	anakinsPod,
+//	nabooStarfighter,
+//	anakinsSpeeder,
+//	gunship,
+//	starfighterYellow,
+//	starfighterRed,
+//	xwing,
+//	ywing,
+//	snowspeeder,
+//	milleniumFalcon,
+//	sebulbasPod,
+//	zamsAirspeeder,
+//	droidTrifighter,
+//	vultureDroid,
+//	arcfighter,
+//	tiefighter,
+//	tieinterceptor,
+//	tiefighterVader,
+//	tiebomber,
+//	imperialshuttle,
+//	slave1,
+//	anakinsPodGreen,
+//	nabooStarfighterGreen,
+//	anakinsSpeederGreen,
+//	gunshipGreen,
+//};
+//
+//extern Level* Negotiations;
+//extern Level* Invasion;
+//extern Level* EscapeNaboo;
+//extern Level* Podrace;
+//extern Level* Theed;
+//extern Level* Maul;
+//
+//extern Level* BHP;
+//extern Level* Kamino;
+//extern Level* Factory;
+//extern Level* JediBattle;
+//extern Level* Gunship;
+//extern Level* Dooku;
+//
+//extern Level* Coruscant;
+//extern Level* Chancellor;
+//extern Level* Grievous;
+//extern Level* Kashyyyk;
+//extern Level* Ruin;
+//extern Level* Vader;
+//
+//extern Level* SecretPlans;
+//extern Level* Jundland;
+//extern Level* Spaceport;
+//extern Level* Princess;
+//extern Level* DSE;
+//extern Level* RebelAttack;
+//
+//extern Level* Hoth;
+//extern Level* EchoBase;
+//extern Level* FalconFlight;
+//extern Level* Dagobah;
+//extern Level* CCT;
+//extern Level* Bespin;
+//
+//extern Level* Jabbas;
+//extern Level* Carkoon;
+//extern Level* Showdown;
+//extern Level* Endor;
+//extern Level* Destiny;
+//extern Level* ITDS;
+//
+//extern Level* Anakinsflight;
+//extern Level* ANewHope;
+//
+//extern Level* BHM;
+//
+//extern Level* defaultLevel;
+//extern Level* allEpisodes;
 
 void charMaker() {
 	std::ifstream readCharacters("files/CHARACTERDATA.txt", std::ios::in);
-	std::ofstream loggering("files/log.txt");
+
+	std::unordered_map<std::string, bool(Playable::*)> attributes;
+	attributes["hat"] = &Playable::hat;
+	attributes["lever"] = &Playable::lever;
+	attributes["build"] = &Playable::build;
+	attributes["box"] = &Playable::box;
+	attributes["jump"] = &Playable::jump;
+	attributes["doubleJump"] = &Playable::doubleJump;
+	attributes["highJump"] = &Playable::highJump;
+	attributes["yodaJump"] = &Playable::yodaJump;
+	attributes["extraHighJump"] = &Playable::extraHighJump;
+	attributes["realDoubleJump"] = &Playable::realDoubleJump;
+	attributes["gunganJump"] = &Playable::gunganJump;
+	attributes["dive"] = &Playable::dive;
+	attributes["flop"] = &Playable::flop;
+	attributes["hovering"] = &Playable::hovering;
+	attributes["fly"] = &Playable::fly;
+	attributes["flutter"] = &Playable::flutter;
+	attributes["fett"] = &Playable::fett;
+	attributes["attack"] = &Playable::attack;
+	attributes["shoot"] = &Playable::shoot;
+	attributes["grapple"] = &Playable::grapple;
+	attributes["fakeshoot"] = &Playable::fakeshoot;
+	attributes["zapper"] = &Playable::zapper;
+	attributes["astrozapper"] = &Playable::astrozapper;
+	attributes["jedi"] = &Playable::jedi;
+	attributes["sith"] = &Playable::sith;
+	attributes["choke"] = &Playable::choke;
+	attributes["ghost"] = &Playable::ghost;
+	attributes["saber"] = &Playable::saber;
+	attributes["deflect"] = &Playable::deflect;
+	attributes["imperial"] = &Playable::imperial;
+	attributes["astro"] = &Playable::astro;
+	attributes["proto"] = &Playable::proto;
+	attributes["droid"] = &Playable::droid;
+	attributes["passive"] = &Playable::passive;
+	attributes["gas"] = &Playable::gas;
+	attributes["bounty"] = &Playable::bounty;
+	attributes["hatch"] = &Playable::hatch;
+	attributes["tall"] = &Playable::tall;
+	attributes["extratoggle"] = &Playable::extratoggle;
+	attributes["pushable"] = &Playable::pushable;
+	attributes["chokeable"] = &Playable::chokeable;
+	attributes["trickable"] = &Playable::trickable;
+	attributes["zappable"] = &Playable::zappable;
+	attributes["storm"] = &Playable::storm;
+	attributes["slightlyBetterJump"] = &Playable::slightlyBetterJump;
+	attributes["vehicle"] = &Playable::vehicle;
+	attributes["tow"] = &Playable::tow;
+	attributes["tiedoor"] = &Playable::tiedoor;
+	attributes["vgreen"] = &Playable::vgreen;
+	attributes["leiaAlt"] = &Playable::leiaAlt;
+	attributes["landoAlt"] = &Playable::landoAlt;
+	attributes["lukeAlt"] = &Playable::lukeAlt;
+
 	if (readCharacters.is_open()) {
 		std::string line;
 		Playable* parse;
@@ -249,72 +308,54 @@ void charMaker() {
 			readCharacters >> parse->speed;
 			getline(readCharacters, line);
 			getline(readCharacters, line);
-			while ( line != "") {
-				if (line == "hat") parse->hat = true;
-				else if (line == "lever") parse->lever = true;
-				else if (line == "build") parse->build = true;
-				else if (line == "box") parse->box = true;
-				else if (line == "jump") parse->jump = true;
-				else if (line == "doubleJump") parse->doubleJump = true;
-				else if (line == "highJump") parse->highJump = true;
-				else if (line == "yodaJump") parse->yodaJump = true;
-				else if (line == "extraHighJump") parse->extraHighJump = true;
-				else if (line == "realDoubleJump") parse->realDoubleJump = true;
-				else if (line == "gunganJump") parse->gunganJump = true;
-				else if (line == "dive") parse->dive = true;
-				else if (line == "flop") parse->flop = true;
-				else if (line == "hovering") parse->hovering = true;
-				else if (line == "fly") parse->fly = true;
-				else if (line == "flutter") parse->flutter = true;
-				else if (line == "fett") parse->fett = true;
-				else if (line == "attack") parse->attack = true;
-				else if (line == "shoot") parse->shoot = true;
-				else if (line == "grapple") parse->grapple = true;
-				else if (line == "fakeshoot") parse->fakeshoot = true;
-				else if (line == "zapper") parse->zapper = true;
-				else if (line == "astrozapper") parse->astrozapper = true;
-				else if (line == "jedi") parse->jedi = true;
-				else if (line == "sith") parse->sith = true;
-				else if (line == "choke") parse->choke = true;
-				else if (line == "ghost") parse->ghost = true;
-				else if (line == "saber") parse->saber = true;
-				else if (line == "deflect") parse->deflect = true;
-				else if (line == "imperial") parse->imperial = true;
-				else if (line == "astro") parse->astro = true;
-				else if (line == "proto") parse->proto = true;
-				else if (line == "droid") parse->droid = true;
-				else if (line == "passive") parse->passive = true;
-				else if (line == "gas") parse->gas = true;
-				else if (line == "bounty") parse->bounty = true;
-				else if (line == "hatch") parse->hatch = true;
-				else if (line == "tall") parse->tall = true;
-				else if (line == "extratoggle") parse->extratoggle = true;
-				else if (line == "pushable") parse->pushable = true;
-				else if (line == "chokeable") parse->chokeable = true;
-				else if (line == "trickable") parse->trickable = true;
-				else if (line == "zappable") parse->zappable = true;
-				else if (line == "storm") parse->storm = true;
-				else if (line == "slightlyBetterJump") parse->slightlyBetterJump = true;
-				else if (line == "vehicle") parse->vehicle = true;
-				else if (line == "tow") parse->tow = true;
-				else if (line == "tiedoor") parse->tiedoor = true;
-				else if (line == "vgreen") parse->vgreen = true;
-				else if (line == "leiaAlt") parse->leiaAlt = true;
-				else if (line == "landoAlt") parse->landoAlt = true;
-				else if (line == "lukeAlt") parse->lukeAlt = true;
-			#ifdef _DEBUG
-				else wxLogError((line + " is not an attribute.").c_str());
-			#endif
+
+			while (line != "") {
+				parse->*(attributes[line]) = true; //Don't you just love C syntax?
 				getline(readCharacters, line);
-
 			}
+			nameList[parse->name] = parse; //so I can reference them in the level data
 			pls.push_back(parse);
-
 		}
 	}
 
 }
 
+void levMaker() {
+	std::ifstream readLevels("files/LEVELDATA.txt", std::ios::in);
+	if (readLevels.is_open()) {
+		std::string line;
+		std::string charName;
+		std::istringstream iss(line);
+		Level* parse;
+		while (readLevels.good()) {
+			parse = new Level;
+			getline(readLevels, parse->name);
+			getline(readLevels, parse->path);
+			getline(readLevels, line);
+			if (line == "vehicle") parse->vehicleLevel = true;
+
+			getline(readLevels, line);
+			while (iss >> charName) {
+				parse->vanillaParty.push_back(nameList[charName]);
+			}
+
+			getline(readLevels, line);
+			while (iss >> charName) {
+				parse->unlocks.push_back(nameList[charName]);
+			}
+			
+			getline(readLevels, line);
+			while (iss >> charName) {
+				parse->vanillaBonusCharacters.push_back(nameList[charName]); //characters you rescue at ends of levels but don't play as
+			}
+
+			allLevels.push_back(parse);
+		}
+	}
+
+}
+/*
+#if (0)
 void renamer(std::string oldName, std::string newName) {
 	int test = rename(oldName.c_str(), newName.c_str());
 	if (test == -1) {
@@ -921,119 +962,7 @@ void multiPointer(Playable* play, std::vector<int> address) {
 }
 
 
-void levMaker() {
 
-	//name, characters, episode, unlocks, vehicle level, alt second name for Escape and Theed, characters not in party
-	Negotiations = new Level("NEGOTIATIONS", {quigon, obiwan, tc14}, TPM,
-													 {quigon, obiwan, tc14, battledroid, battledroidSecurity, battledroidCommander, droideka});
-	Invasion = new Level("GUNGAN", {quigon, obiwan, jarjar}, TPM,
-											 {jarjar, tarpals, bossnass});
-	EscapeNaboo = new Level("PALACERESCUE", {amidala, panaka, quigon, obiwan}, TPM,
-													{amidala, panaka, royalguard, padme}, false, "RESCUE");
-	Podrace = new Level("PODSPRINT", {anakinsPod, anakinsPodGreen}, TPM,
-											{watto, pitdroid, anakinsPod, anakinsPodGreen, sebulbasPod}, true);
-	Theed = new Level("RETAKEPALACE", {obiwan, quigon, panaka, padmeBattle, r2d2, anakinBoy}, TPM,
-										{padmeBattle, r2d2, anakinBoy}, false, "RETAKE");
-	Maul = new Level("MAUL", {obiwan, quigon}, TPM,
-									 {maul});
-
-	BHP = new Level("PURSUIT", {anakinsSpeeder, anakinsSpeederGreen}, CLN,
-									{zam, dexter, anakinsSpeeder, anakinsSpeederGreen, zamsAirspeeder}, true);
-	Kamino = new Level("KAMINO", {obiwanJedi, r4p17}, CLN,
-										 {obiwanJedi, r4p17, clone, lamasu, taunwe});
-	Factory = new Level("FACTORY", {anakinPadawan, padmeGeonosis, r2d2, c3po, obiwanJedi}, CLN,
-											{anakinPadawan, padmeGeonosis, c3po, geonosian, battledroidGeonosis, skeleton}, false, "", 4);
-	JediBattle = new Level("JEDI", {macewindu, r2d2, obiwanJedi, anakinPadawan, padmeClawed}, CLN,
-												 {macewindu, padmeClawed, superbattledroid, jango, bobafettBoy, luminara, kiadimundi, kitfisto, shaakti, aaylasecura, plokoon});
-	Gunship = new Level("GUNSHIP", {gunship, gunshipGreen}, CLN,
-											{gunship, gunshipGreen}, true);
-	Dooku = new Level("DOOKU", {obiwanJedi, anakinPadawan, yoda}, CLN,
-										{yoda});
-
-	Coruscant = new Level("DOGFIGHT", {starfighterYellow, starfighterRed}, STH,
-												{starfighterYellow, starfighterRed, droidTrifighter, vultureDroid, arcfighter}, true);
-	Chancellor = new Level("CRUISER", {obiwanEp3, anakinJedi, r2d2, palpatine}, STH,
-												 {obiwanEp3, anakinJedi, palpatine, dooku, magnaguard, buzzdroid});
-	Grievous = new Level("GRIEVOUS", {obiwanEp3, cody}, STH,
-											 {cody, grievous});
-	Kashyyyk = new Level("KASHYYYK", {yoda, chewbacca}, STH,
-											 {chewbacca, wookiee, cloneEp3, clonePilot, cloneSwamp, cloneWalker});
-	Ruin = new Level("TEMPLE", {obiwanEp3, yoda}, STH,
-									 {macewinduEp3, disguisedclone, trainingremote});
-	Vader = new Level("VADER", {obiwanEp3, anakinJedi}, STH);
-
-	SecretPlans = new Level("BLOCKADERUNNER", {leia, antilles, rebelFriend, c3po, r2d2}, ANH,
-													{leia, antilles, rebelFriend, rebeltrooper, stormtrooper, imperialshuttlepilot, rebelengineer});
-	Jundland = new Level("TATOOINE", {lukeTatooine, benKenobi, c3po, r2d2}, ANH,
-											 {lukeTatooine, benKenobi, tuskenraider, jawa, droid1, droid2, droid3, droid4, womprat});
-	Spaceport = new Level("MOSEISLEY", {lukeTatooine, benKenobi, r2d2, c3po, han, chewbacca}, ANH,
-												{han, sandtrooper, greedo, imperialspy});
-	Princess = new Level("DEATHSTARRESCUE", {hanStormtrooper, lukeStormtrooper, chewbacca, r2d2, c3po, benKenobi, leia}, ANH,
-											 {hanStormtrooper, lukeStormtrooper, beachtrooper, deathstartrooper, tiefighterpilot, imperialofficer, tarkin, mousedroid, imperialengineer}, false, "", 7);
-	DSE = new Level("DEATHSTARESCAPE", {han, chewbacca, leia, lukeTatooine, r2d2, c3po}, ANH);
-	RebelAttack = new Level("DEATHSTARBATTLE", {xwing, ywing}, ANH,
-													{xwing, ywing, tiefighter, tieinterceptor, tiefighterVader}, true);
-
-	Hoth = new Level("HOTHBATTLE", {snowspeeder, snowspeeder}, EMP,
-									 {snowspeeder}, true);
-	EchoBase = new Level("HOTHESCAPE", {hanHoth, leiaHoth, c3po, chewbacca}, EMP,
-											 {hanHoth, leiaHoth , hanHood, rebelHoth, rebelPilot, snowtrooper, lukeHoth});
-	FalconFlight = new Level("ASTEROIDCHASE", {milleniumFalcon, xwing}, EMP,
-													 {milleniumFalcon, tiebomber, imperialshuttle}, true);
-	Dagobah = new Level("DAGOBAH", {lukePilot, r2d2, lukeDagobah, yoda}, EMP,
-											{lukePilot, lukeDagobah});
-	CCT = new Level("CLOUDCITYTRAP", {lukeBespin, r2d2}, EMP,
-									{lukeBespin, hanCarbonite});
-	Bespin = new Level("CLOUDCITYESCAPE", {lando, leiaBespin, chewbacca, r2d2, c3po}, EMP,
-										 {lando, leiaBespin, lobot, ugnaught, bespinguard, leiaPrisoner});
-
-	Jabbas = new Level("JABBASPALACE", {leiaBoushh, chewbacca, lukeJedi, c3po, r2d2, hanSkiff}, JDI,
-										 {lukeJedi, leiaBoushh, hanSkiff, gamorreanguard, bibfortuna, palaceguard, bossk});
-	Carkoon = new Level("SARLACCPIT", {landoPalaceGuard, lukeJedi, chewbacca, hanSkiff, c3po, r2d2, leiaSlave}, JDI,
-											{landoPalaceGuard, leiaSlave, skiffguard, boba});
-	Showdown = new Level("SPEEDERCHASE", {leiaEndor, lukeEndor}, JDI,
-											 {leiaEndor, lukeEndor, atatdriver, scouttrooper});
-	Endor = new Level("ENDORBATTLE", {hanEndor, leiaEndor, r2d2, chewbacca, c3po, wicket}, JDI,
-										{hanEndor, wicket, ewok});
-	Destiny = new Level("EMPERORFIGHT", {lukeJedi, vader}, JDI,
-											{vader, imperialguard, emperor});
-	ITDS = new Level("DEATHSTAR2BATTLE", {milleniumFalcon, xwing}, JDI,
-									 {ackbar}, true);
-
-	Anakinsflight = new Level("ANAKINSFLIGHT", {nabooStarfighter, nabooStarfighterGreen}, LEV,
-														{nabooStarfighter, nabooStarfighterGreen}, true);
-	ANewHope = new Level("ANEWHOPE", {vader, stormtrooper, c3po}, STH);
-
-	BHM = new Level("", {boba, greedo, ig88, f4lom, bossk, dengar,
-		quigon, amidala, jarjar, macewindu, kitfisto, luminara, kiadimundi, rebeltrooper, shaakti, cody,
-		r2d2, benKenobi, chewbacca, leia, ackbar, yoda, c3po, lando, lukeTatooine, han}, "", {}, false, "", -1);
-
-	defaultLevel = new Level("", {}, "", {gonk, pkdroid});
-	allEpisodes = new Level("", {}, "", {ig88, dengar, f4lom, benghost, anakinghost, yodaghost, r2q5, indianajones, slave1});
-
-
-	std::ofstream levelDat("files/LEVELDATA.txt");
-	for (Level* l : allLevels) {
-		levelDat << l->name << '\n';
-		levelDat << l->episode << l->firstName << '\n';
-		if (l->vehicleLevel) levelDat << "vehicle" << '\n';
-		else levelDat << "character" << '\n';
-
-		for (Playable* p : l->vanillaParty) levelDat << p->name << ' ';
-		levelDat << '\n';
-		for (Playable* p : l->unlocks) levelDat << p->name << ' ';
-
-		levelDat << '\n';
-	}
-
-
-	for (Level* l : allLevels) {
-		for (Playable* p : l->unlocks) {
-			p->lev = l;
-		}
-	}
-
-}
 
 void logIt(Playable* ch, std::ofstream& log) {
 	log << (ch)->name << '\n';
@@ -1183,3 +1112,5 @@ for (Playable* y : vhs) {if (y->x) log2 << '\t' << y->realName << '\n'; }
 	log2 << "vgreen" << '\n'; tlog(vgreen);
 	log2.close();
 }
+#endif
+*/

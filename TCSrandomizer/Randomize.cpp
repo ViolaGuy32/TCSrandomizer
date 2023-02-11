@@ -20,180 +20,12 @@ extern bool enemy;
 extern bool colorOp;
 extern bool advanceMus;
 extern LogicType logicType;
+std::unordered_map<std::string, Playable*> nameList;
 
-std::vector<Playable*> pls;           // Characters and Vehicles
+std::vector<Playable*> pls; //Characters and Vehicles
 std::vector<Playable*> chs;           // Characters
 std::vector<Playable*> vhs;           // Vehicles
 std::vector<Playable*> testing = {};  // Current logic
-
-Playable* quigon;
-Playable* obiwan;
-Playable* tc14;
-Playable* jarjar;
-Playable* amidala;
-Playable* panaka;
-Playable* padmeBattle;
-Playable* r2d2;
-Playable* anakinBoy;
-Playable* obiwanJedi;
-Playable* r4p17;
-Playable* anakinPadawan;
-Playable* padmeGeonosis;
-Playable* c3po;
-Playable* macewindu;
-Playable* padmeClawed;
-Playable* yoda;
-Playable* obiwanEp3;
-Playable* anakinJedi;
-Playable* palpatine;
-Playable* cody;
-Playable* chewbacca;
-Playable* leia;
-Playable* antilles;
-Playable* rebelFriend;
-Playable* lukeTatooine;
-Playable* benKenobi;
-Playable* han;
-Playable* hanStormtrooper;
-Playable* lukeStormtrooper;
-Playable* hanHoth;
-Playable* leiaHoth;
-Playable* lukePilot;
-Playable* lukeDagobah;
-Playable* lukeBespin;
-Playable* lando;
-Playable* leiaBespin;
-Playable* lukeJedi;
-Playable* leiaBoushh;
-Playable* landoPalaceGuard;
-Playable* hanSkiff;
-Playable* leiaSlave;
-Playable* leiaEndor;
-Playable* lukeEndor;
-Playable* hanEndor;
-Playable* wicket;
-Playable* vader;
-Playable* gonk;
-Playable* pkdroid;
-Playable* battledroid;
-Playable* battledroidSecurity;
-Playable* battledroidCommander;
-Playable* droideka;
-Playable* tarpals;
-Playable* bossnass;
-Playable* royalguard;
-Playable* padme;
-Playable* watto;
-Playable* pitdroid;
-Playable* maul;
-Playable* zam;
-Playable* dexter;
-Playable* clone;
-Playable* lamasu;
-Playable* taunwe;
-Playable* geonosian;
-Playable* battledroidGeonosis;
-Playable* superbattledroid;
-Playable* jango;
-Playable* bobafettBoy;
-Playable* luminara;
-Playable* kiadimundi;
-Playable* kitfisto;
-Playable* shaakti;
-Playable* aaylasecura;
-Playable* plokoon;
-Playable* dooku;
-Playable* magnaguard;
-Playable* grievous;
-Playable* wookiee;
-Playable* cloneEp3;
-Playable* clonePilot;
-Playable* cloneSwamp;
-Playable* cloneWalker;
-Playable* macewinduEp3;
-Playable* disguisedclone;
-Playable* rebeltrooper;
-Playable* stormtrooper;
-Playable* imperialshuttlepilot;
-Playable* tuskenraider;
-Playable* jawa;
-Playable* sandtrooper;
-Playable* greedo;
-Playable* imperialspy;
-Playable* beachtrooper;
-Playable* deathstartrooper;
-Playable* tiefighterpilot;
-Playable* imperialofficer;
-Playable* tarkin;
-Playable* hanHood;
-Playable* rebelHoth;
-Playable* rebelPilot;
-Playable* snowtrooper;
-Playable* lukeHoth;
-Playable* lobot;
-Playable* ugnaught;
-Playable* bespinguard;
-Playable* leiaPrisoner;
-Playable* gamorreanguard;
-Playable* bibfortuna;
-Playable* palaceguard;
-Playable* bossk;
-Playable* skiffguard;
-Playable* boba;
-Playable* ewok;
-Playable* imperialguard;
-Playable* emperor;
-Playable* ackbar;
-Playable* ig88;
-Playable* dengar;
-Playable* f4lom;
-Playable* benghost;
-Playable* anakinghost;
-Playable* yodaghost;
-Playable* r2q5;
-Playable* indianajones;
-Playable* trainingremote;
-Playable* buzzdroid;
-Playable* skeleton;
-Playable* mousedroid;
-Playable* womprat;
-Playable* rebelengineer;
-Playable* imperialengineer;
-Playable* atatdriver;
-Playable* scouttrooper;
-Playable* hanCarbonite;
-Playable* droid1;
-Playable* droid2;
-Playable* droid3;
-Playable* droid4;
-
-Playable* anakinsPod;
-Playable* nabooStarfighter;
-Playable* anakinsSpeeder;
-Playable* gunship;
-Playable* starfighterYellow;
-Playable* starfighterRed;
-Playable* xwing;
-Playable* ywing;
-Playable* snowspeeder;
-Playable* milleniumFalcon;
-Playable* sebulbasPod;
-Playable* zamsAirspeeder;
-Playable* droidTrifighter;
-Playable* vultureDroid;
-Playable* arcfighter;
-Playable* tiefighter;
-Playable* tieinterceptor;
-Playable* tiefighterVader;
-Playable* tiebomber;
-Playable* imperialshuttle;
-Playable* slave1;
-Playable* anakinsPodGreen;
-Playable* nabooStarfighterGreen;
-Playable* anakinsSpeederGreen;
-Playable* gunshipGreen;
-
-Playable* defaultCharacter;
 
 Level* Negotiations;
 Level* Invasion;
@@ -638,16 +470,6 @@ void Randomize() {
 	levMaker();
 
 #if (0)
-#ifdef _DEBUG
-	std::remove("files/DONOTEDIT.txt");
-	std::ofstream chardat("files/DONOTEDIT.txt");
-	for (Playable* p : pls)
-		logIt(p, chardat);
-
-	return;
-#endif
-#endif
-
 	int blueColor = 0x00bfff;
 	int greenColor = 0x1ebf0f;
 	int redColor = 0xff1f00;
@@ -663,6 +485,7 @@ void Randomize() {
 	rgb blue;
 	rgb green;
 	rgb purple;
+#endif
 
 	std::vector<std::string> newEx;
 	std::vector<std::string> ext = {"supergonk",
@@ -717,10 +540,10 @@ void Randomize() {
 		}
 	}
 
-	Playable* cantina1 = quigon;
-	Playable* cantina2 = obiwan;
-	Playable* indy = indianajones;
-	Playable* allMinikitsCharacter = slave1;
+	Playable* cantina1 = nameList["quigonjinn"];
+	Playable* cantina2 = nameList["obiwankenobi"];
+	Playable* indy = nameList["hansolo_indy"];
+	Playable* allMinikitsCharacter = nameList["slave1"];
 
 	if (character) {
 	cantina:
@@ -1741,6 +1564,25 @@ void Randomize() {
 		BHM->mix();
 
 		// breaks if target is not unique
+		const Playable* battledroid = nameList["battledroid"];
+		const Playable* pkdroid = nameList["pkdroid"];
+		const Playable* geonosian = nameList["geonosian"];
+		const Playable* battledroidSecurity = nameList["battledroid_security"];
+		const Playable* droideka = nameList["destroyer"];
+		const Playable* cloneEp3 = nameList["clone_ep3"];
+		const Playable* cody = nameList["clone_ep3_sand"];
+		const Playable* cloneSwamp = nameList["clone_ep3_swamp"];
+		const Playable* disguisedclone = nameList["disguisedclone"];
+		const Playable* rebelengineer = nameList["engineer"];
+		const Playable* rebeltrooper = nameList["rebelscum"];
+		const Playable* jawa = nameList["jawa"];
+		const Playable* sandtrooper = nameList["sandtrooper"];
+		const Playable* mousedroid = nameList["mousedroid"];
+		const Playable* stormtrooper = nameList["stormtrooper"];
+		const Playable* imperialofficer = nameList["imperialofficer"];
+		const Playable* snowtrooper = nameList["snowtrooper"];
+		const Playable* ewok = nameList["ewok"];
+
 		if (BHM->party[6] == battledroid)
 			goto bhm;
 		if (BHM->party[6] == pkdroid)
@@ -1861,7 +1703,6 @@ void Randomize() {
 
 	for (Level* lev : allLevels) {
 		for (unsigned int i = 0; i < lev->party.size(); i++) {
-			if (i < lev->isFake)
 				lev->party[i]->storyMode = true;
 		}
 	}
@@ -3341,20 +3182,20 @@ void Randomize() {
 		if (extog) {
 			txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", "Nothing", {{839, 6}}, 12);
 
-			deleteLines(chfile(buzzdroid), {7});
-			deleteLines(chfile(hanCarbonite), {20});
-			deleteLines(chfile(mousedroid), {17});
-			deleteLines(chfile(droid1), {19});
-			deleteLines(chfile(droid2), {19});
-			deleteLines(chfile(droid3), {13});
-			deleteLines(chfile(droid4), {19});
+			deleteLines(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
+			deleteLines(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
+			deleteLines(CHR + "MOUSEDROID/MOUSEDROID.TXT", {17});
+			deleteLines(CHR + "NAFFDROID1/NAFFDROID1.TXT", {19});
+			deleteLines(CHR + "NAFFDROID2/NAFFDROID2.TXT", {19});
+			deleteLines(CHR + "NAFFDROID3/NAFFDROID3.TXT", {13});
+			deleteLines(CHR + "NAFFDROID4/NAFFDROID4.TXT", {19});
 			deleteLines(CHR + "REBELSCUM/ENGINEER.TXT", {5});
-			deleteLines(chfile(skeleton), {6});
+			deleteLines(CHR + "SKELETON/SKELETON.TXT", {6});
 			deleteLines(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", {4});
 			deleteLines(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", {7});
 			deleteLines(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", {6});
-			deleteLines(chfile(trainingremote), {4});
-			deleteLines(chfile(womprat), {18});
+			deleteLines(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", {4});
+			deleteLines(CHR + "WOMPRAT/WOMPRAT.TXT", {18});
 		}
 	}
 
@@ -3379,6 +3220,8 @@ void Randomize() {
 
 	3F483C
 	*/
+
+#if (0)
 	if (colorOp) {
 		// numWrite(EXE, blueColor, 0x3fb112);
 		// numWrite(EXE, greenColor, 0x3fb102);
@@ -3437,5 +3280,7 @@ void Randomize() {
 		//	rgbFloat(TNG, green, 0x31CC98 + (i * 0x2c4));
 		// }
 	}
+#endif
+
 	wxGetApp().CallAfter([] { wxLogStatus("Done."); });
 }

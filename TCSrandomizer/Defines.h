@@ -18,6 +18,31 @@ enum LogicType { casual, glitched, superGlitched };
 
 /*
 
+
+bounties
+
+character
+bobafett greedo ig88 4lom bossk dengar
+quigonjinn amidala jarjarbinks macewindu kitfisto luminara kiadimundi rebelscum shaakti clone_ep3_sand r2d2 benkenobi chewbacca princessleia admiralackbar yoda c3po landocalrissian lukeskywalker_tatooine hansolo
+
+
+noLevel
+
+character
+
+
+gonkdroid pkdroid
+
+allLevel
+
+character
+
+
+ig88 dengar 4lom ghostbenkenobi anakin_ghost yoda_ghost r2q5 hansolo_indy slave1
+
+
+
+
 	TODO
 	---fix Indiana Jones
 	make code to check stringPointer
@@ -89,6 +114,6 @@ enum LogicType { casual, glitched, superGlitched };
 	check playable attributes in log
 	fix name length limit for scp
 
-	bespin guard - slightly faster than 1.2 
+	bespin guard - slightly faster than 1.2
 
 	*/
