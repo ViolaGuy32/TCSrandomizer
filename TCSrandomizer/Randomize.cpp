@@ -11,6 +11,7 @@
 #include "Characters.h"
 #include "Defines.h"
 
+uint64_t seed = 0;
 extern bool character;
 extern bool extog;
 extern bool greenVeh;
@@ -467,7 +468,14 @@ void Randomize() {
 
 	//std::random_device rando;
 	//std::seed_seq rando(time(NULL));
-	srand(time(nullptr));
+	//srand(time(nullptr));
+
+
+	if (seed == 0) {
+		std::random_device rd;
+		seed = (rd());
+	}
+	std::mt19937_64 rando(seed);
 
 	charMaker();
 	levMaker();
@@ -528,12 +536,12 @@ void Randomize() {
 																	"infinitetorpedos" };
 
 	if (extra) {
-		std::shuffle(extras.begin(), extras.end(), rand);
+		std::shuffle(extras.begin(), extras.end(), rando);
 	}
 
 	if (collectable) {
 		for (int i = 0; i < 36; i++) {
-			std::shuffle(allLevels[i]->collectables.begin(), allLevels[i]->collectables.end(), rand);
+			std::shuffle(allLevels[i]->collectables.begin(), allLevels[i]->collectables.end(), rando);
 		}
 	}
 
