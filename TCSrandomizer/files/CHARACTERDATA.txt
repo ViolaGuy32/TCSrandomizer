@@ -57,6 +57,7 @@ jump
 doubleJump
 highJump
 realDoubleJump
+highDoubleJump
 gunganJump
 chokeable
 trickable
@@ -841,6 +842,7 @@ jump
 doubleJump
 highJump
 realDoubleJump
+highDoubleJump
 gunganJump
 attack
 chokeable
@@ -1204,6 +1206,7 @@ doubleJump
 highJump
 extraHighJump
 realDoubleJump
+highDoubleJump
 saber
 deflect
 

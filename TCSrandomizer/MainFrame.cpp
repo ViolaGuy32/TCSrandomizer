@@ -1,12 +1,11 @@
 #include <wx/filepicker.h>
-#include <filesystem>
 #include <fstream>
 #include <string>
 #include <thread>
 
 #include "Characters.h"
 #include "MainFrame.h"
-#include "Functions.h"
+#include "FilePatch.h"
 #include "Defines.h"
 #include "Randomize.h"
 
@@ -59,7 +58,7 @@ MainFrame::MainFrame(const wxString& title)
 	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 140));
 	//colorType = new wxCheckBox(panel, wxID_ANY, "Randomize Colors", wxPoint(165, 160));
 
-	// loads save data
+	//loads save data
 	std::ifstream saver("files/data");
 	if (saver.good()) {
 		std::string savedat;
@@ -106,7 +105,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 		break;
 	}
 
-	// saves options
+	//saves options
 	std::remove("files/data");
 	std::ofstream dat("files/data");
 	dat << vanilla << '\n';

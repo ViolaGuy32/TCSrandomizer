@@ -4,6 +4,7 @@
 #include <vector>
 //#include "Characters.h"
 
+void fileGen();
 
 struct rgb {
 	char r;

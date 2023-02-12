@@ -9,15 +9,20 @@ extern std::string out;
 extern bool extog;
 extern bool greenVeh;
 extern bool character;
-std::vector <Level*> allLevels;
+extern const std::mt19937_64* randoPTR;
 
-Playable* pi;
+std::vector <Level*> allLevels;
+Level* currentLev;
+
+extern Playable* defaultCharacter;
+extern Level* BHM;
 
 extern LogicType logicType;
 
 extern std::vector<Playable*> pls; //Characters and Vehicles
 extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
+extern std::vector<Playable*> testing;  //Current logic
 extern std::unordered_map<std::string, Playable*> nameList;
 
 //enum charID {
@@ -250,6 +255,7 @@ void charMaker() {
 	attributes["jump"] = &Playable::jump;
 	attributes["doubleJump"] = &Playable::doubleJump;
 	attributes["highJump"] = &Playable::highJump;
+	attributes["highDoubleJump"] = &Playable::highDoubleJump;
 	attributes["yodaJump"] = &Playable::yodaJump;
 	attributes["extraHighJump"] = &Playable::extraHighJump;
 	attributes["realDoubleJump"] = &Playable::realDoubleJump;
@@ -310,13 +316,24 @@ void charMaker() {
 			getline(readCharacters, line);
 
 			while (line != "") {
-				parse->*(attributes[line]) = true; //Don't you just love C syntax?
+				parse->*(attributes[line]) = true;
 				getline(readCharacters, line);
 			}
 			nameList[parse->name] = parse; //so I can reference them in the level data
 			pls.push_back(parse);
 		}
 	}
+
+	for (Playable* p : pls) {
+		if (p->vehicle) {
+			if (greenVeh || !p->vgreen) vhs.push_back(p);
+		} else {
+			if (extog || !p->extratoggle) chs.push_back(p);
+		}
+	}
+
+	defaultCharacter = new Playable;
+	defaultCharacter->defaultCharacter = true;
 
 }
 
@@ -330,6 +347,7 @@ void levMaker() {
 		while (readLevels.good()) {
 			parse = new Level;
 			getline(readLevels, parse->name);
+			getline(readLevels, parse->shortName);
 			getline(readLevels, parse->path);
 			getline(readLevels, line);
 			if (line == "vehicle") parse->vehicleLevel = true;
@@ -343,7 +361,7 @@ void levMaker() {
 			while (iss >> charName) {
 				parse->unlocks.push_back(nameList[charName]);
 			}
-			
+
 			getline(readLevels, line);
 			while (iss >> charName) {
 				parse->vanillaBonusCharacters.push_back(nameList[charName]); //characters you rescue at ends of levels but don't play as
@@ -351,10 +369,234 @@ void levMaker() {
 
 			allLevels.push_back(parse);
 		}
+
+		//Bounty Hunter Missions
+		BHM = new Level;
+		BHM->vanillaParty = {
+			nameList["bobafett"],
+			nameList["greedo"],
+			nameList["ig88"],
+			nameList["4lom"],
+			nameList["bossk"],
+			nameList["dengar"]
+		};
+		BHM->vanillaBonusCharacters = {
+			nameList["quigonjinn"],
+			nameList["amidala"],
+			nameList["jarjarbinks"],
+			nameList["macewindu"],
+			nameList["kitfisto"],
+			nameList["luminara"],
+			nameList["kiadimundi"],
+			nameList["rebelscum"],
+			nameList["shaakti"],
+			nameList["clone_ep3_sand"],
+
+			nameList["r2d2"],
+			nameList["benkenobi"],
+			nameList["chewbacca"],
+			nameList["princessleia"],
+			nameList["admiralackbar"],
+			nameList["yoda"],
+			nameList["c3po"],
+			nameList["landocalrissian"],
+			nameList["lukeskywalker_tatooine"],
+			nameList["hansolo"],
+		};
+
 	}
 
 }
 
+void add(const int a) {
+	testing.push_back(currentLev->party[a]);
+}
+
+void mix(Level* lev) {
+	//generates random characters for given level
+
+#ifdef _DEBUG
+	wxString loggg = lev->name;
+	wxGetApp().CallAfter([&loggg] {
+		wxLogStatus(loggg);
+	});
+#endif
+
+	testing = {};
+	currentLev = lev;
+
+	if (character) {
+		lev->party = {};
+
+		std::vector<Playable*>* menu;
+		if (lev->vehicleLevel)
+			menu = &vhs;
+		else menu = &chs;
+
+		std::uniform_int_distribution<int> distrib(0, menu->size() - 1);
+
+		std::unordered_map<Playable*, bool> duplicateFinder;
+		Playable* temp;
+		for (int i = 0; i < lev->vanillaParty.size(); i++) {
+			do { temp = (*menu)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+			duplicateFinder[temp] = true;
+			lev->party.push_back(temp);
+		}
+
+		for (int i = 0; i < lev->vanillaBonusCharacters.size(); i++) {
+			do { temp = (*menu)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+			duplicateFinder[temp] = true;
+			lev->bonusCharacters.push_back(temp);
+		}
+
+
+		add(0);
+		if (!lev->vehicleLevel || logicType != casual)
+			add(1); //Only checks P1 in casual vehicle levels because casual logic does not have 1p2c
+
+		//prevents duplicates
+		/*for (int i = 0; i < lev->vanillaParty.size() - 1; i++) {
+			for (int j = i + 1; j < lev->vanillaParty.size(); j++) {
+				if (lev->party[i] == lev->party[j]) goto label;
+			}
+		}*/
+	}
+}
+
+bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current) {
+	//checks if anyone in party has given attribute
+	for (const Playable* p : current) {
+		if (p->*atr) return true;
+	}
+	return false;
+}
+
+bool Any(const std::vector<bool Playable::*>& vec, const std::vector<Playable*>& current) {
+	//needs any of the given attributes
+	for (const Playable* p : current) {
+		for (int i = 0; i < vec.size(); ++i) {
+			if (p->*vec[i]) return true;
+		}
+	}
+	return false;
+}
+
+bool All(const std::vector<bool Playable::*>& vec, const std::vector<Playable*>& current) {
+	//needs all of the given attributes
+	for (const Playable* p : current) {
+		for (int i = 0; i < vec.size(); ++i) {
+			if (!(p->*vec[i])) break;
+			if (i == vec.size() - 1) return true;
+		}
+	}
+	return false;
+}
+
+bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>& current) {
+	//needs multiple with same attribute
+	int x = 0;
+	for (const Playable* p : current) {
+		if (p->*atr) {
+			x++;
+			if (x == n) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool MultiAny(const std::vector<bool Playable::*>& vec, const int n, const std::vector<Playable*>& current) {
+	//needs multiple who have any of given attributes
+	int x = 0;
+	for (const Playable* p : current) {
+		for (const bool(Playable::* atr) : vec) {
+			if (p->*atr) {
+				x++;
+				if (x == n) {
+					return true;
+				}
+				break;
+			}
+		}
+	}
+	return false;
+}
+
+
+bool SuperJump(const bool Playable::* atr, const std::vector<Playable*>& current) {
+	if (logicType != superGlitched) return false;
+	for (const Playable* x : current) {
+		for (const Playable* y : current) {
+			if (x != y) {
+				if (x->pushable && y->jedi && y->*atr) return true;
+				if (x->chokeable && y->choke && y->*atr) return true;
+				if (x->zapper && y->zappable && y->*atr) return true;
+				if (x->trickable && y->jedi && y->*atr) return true;
+				if (x->astrozapper && y->storm && y->*atr) return true;
+				if (x->landoAlt && y->leiaAlt && y->*atr) return true;
+				if (x == nameList["gamorreanguard"] && y->lukeAlt && y->*atr) return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool InstantSuperJump(const bool Playable::* atr, const std::vector<Playable*>& current) {
+	//can act immediatly after SJC
+	if (logicType != superGlitched) return false;
+	for (const Playable* x : current) {
+		for (const Playable* y : current) {
+			if (x != y) {
+				if (x->pushable && y->jedi && y->*atr) return true;
+				if (x->chokeable && y->choke && y->*atr) return true;
+				if (x == nameList["gamorreanguard"] && y->lukeAlt && y->*atr) return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool LivingJedi(const std::vector<Playable*>& current) {
+	//ghosts break some bosses
+	for (const Playable* p : current) {
+		if (p->jedi && !p->ghost) return true;
+	}
+	return false;
+}
+
+bool DoubleTransitionSkip(const bool Playable::* atr, std::vector<Playable*>current) {
+	for (Playable* p1 : current) {
+		for (Playable* p2 : current) {
+			if (p1->saber && p2->*atr && !p2->ghost) return true;
+		}
+	}
+	return false;
+}
+
+float GetFastest(std::vector<Playable*> current) {
+	float fastest = 0.0f;
+	for (Playable* p : current) {
+		if (p->speed > fastest) fastest = p->speed;
+	}
+	return fastest;
+}
+
+float GetSlowest(std::vector<Playable*> current) {
+	float slowest = 100.0f;
+	for (Playable* p : current) {
+		if (p->speed < slowest) slowest = p->speed;
+	}
+	return slowest;
+}
+
+std::string getGiz(Level* lev, char scene) {
+	return out + lev->path + lev->shortName + '_' + scene + ".GIZ";
+}
+
+std::string getGit(Level* lev, char scene) {
+	return out + lev->path + lev->shortName + '_' + scene + ".GIT";
+}
 
 /*
 #if (0)
@@ -940,7 +1182,7 @@ void characterPointer(Playable* play, int address) {
 
 		addressPointer += play->name.length() + 1;
 		junkCharacters += 0x8;
-		if (junkCharacters == 0x3f1bb4) junkCharacters += 0x8; // "whip" might not be unused
+		if (junkCharacters == 0x3f1bb4) junkCharacters += 0x8; //"whip" might not be unused
 	}
 }
 
@@ -959,7 +1201,7 @@ void multiPointer(Playable* play, std::vector<int> address) {
 		addressPointer += play->name.length() + 1;
 		junkCharacters += 0x8;
 		while (junkCharacters == 0x3f1bb4 || junkCharacters == 0x3f1b84 || junkCharacters == 0x3f1bac)
-			junkCharacters += 0x8; // "whip" might not be unused and others are weird
+			junkCharacters += 0x8; //"whip" might not be unused and others are weird
 	}
 }
 
