@@ -48,9 +48,9 @@ struct writeSingle {
 	const unsigned int len;
 	coord lnCol;
 
-	writeSingle(const std::string myStr, const unsigned int myLen, const coord myLnCol);
-	writeSingle(const int chNum, const coord myLnCol, const std::vector<Playable*> Level::* chType = &Level::party);
-	writeSingle(const int chNum, const unsigned int line, const std::vector<Playable*> Level::* chType = &Level::party);
+	writeSingle(const std::string myStr, const unsigned int myLen, coord myLnCol);
+	writeSingle(const int chNum, coord myLnCol, const std::vector<Playable*> Level::* chType = &Level::party);
+	writeSingle(const int chNum, unsigned int line, const std::vector<Playable*> Level::* chType = &Level::party);
 };
 
 //template <typename FUN, typename W>
@@ -83,12 +83,12 @@ void getfile(const std::string& file, std::vector<std::string>& contents);
 //void numWrite(const std::string& file, const int newWrite, const int address);
 
 void fileDeleter(const char scene, const int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
-
-std::string getGiz(const Level* lev, const char scene);
-
-std::string getGit(const Level* lev, const char scene);
-
-std::string getSCP(const Level* lev, const char scene, const std::string& script);
+//
+//std::string getGiz(const Level* lev, const char scene);
+//
+//std::string getGit(const Level* lev, const char scene);
+//
+//std::string getSCP(const Level* lev, const char scene, const std::string& script);
 
 std::string getScriptTxt(const Level* lev, const char scene);
 

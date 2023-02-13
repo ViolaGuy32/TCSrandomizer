@@ -379,21 +379,21 @@ std::string getBasePath(const Level* lev, const char scene, const std::string& f
 	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + "." + fileType;
 }
 
-std::string getMainTxt(const Level* lev) {
-	return out + lev->path + lev->name + ".TXT";
-}
-
-std::string getGiz(const Level* lev, const char scene) {
-	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIZ";
-}
-
-std::string getGit(const Level* lev, const const char scene) {
-	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIT";
-}
-
-std::string getSceneTxt(const Level* lev, const const char scene) {
-	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".TXT";
-}
+//std::string getMainTxt(const Level* lev) {
+//	return out + lev->path + lev->name + ".TXT";
+//}
+//
+//std::string getGiz(const Level* lev, const char scene) {
+//	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIZ";
+//}
+//
+//std::string getGit(const Level* lev, const const char scene) {
+//	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIT";
+//}
+//
+//std::string getSceneTxt(const Level* lev, const const char scene) {
+//	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".TXT";
+//}
 
 std::string getSCP(const Level* lev, const char scene, const std::string& script) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + script + ".SCP";
@@ -424,7 +424,8 @@ std::string getVanilla(const unsigned int characterNum, const std::vector<Playab
 	return currentLev->vanillaMap[currentLev->*chType][characterNum]->name;
 }
 
-void playerInit(std::initializer_list<writeSingle> writers) {
+template <int W>
+void playerInit(std::array<writeSingle, W> writers) {
 	//replaces characters in the main level txt
 	//std::vector<writeSingle> writ;
 	/*for (basicCh w : writers) {
