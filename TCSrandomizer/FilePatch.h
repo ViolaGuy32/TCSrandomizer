@@ -19,35 +19,46 @@ struct rgb {
 };
 
 struct coord {
-	int ln = 1;
-	int col = 1;
+	const int ln = 1;
+	const int col = 1;
 	coord();
-	coord(int myLn);
-	coord(int myLn, int myCol);
+	coord(const int myLn);
+	coord(const int myLn, const int myCol);
 };
 
 
-void getfile(std::string file, std::vector<std::string>& contents);
+void getfile(const std::string& file, std::vector<std::string>& contents);
 
-void rgbWrite(std::string file, rgb color, int address);
+void rgbWrite(const std::string& file, const rgb color, const int address);
 
-void binaryWrite(std::string file, char bin, int address);
+void binaryWrite(const std::string& file, char bin, const int address);
 
-void rgbBatch(std::string file, rgb color, std::vector<int> IDs);
+void rgbBatch(const std::string& file, const rgb color, const std::vector<int>& IDs);
 
-void rgbFloat(std::string file, rgb color, int address);
+void rgbFloat(const std::string& file, const rgb color, const int address);
 
-void hexWrite(std::string file, std::string newWrite, int address, int len = 0, bool trailingNull = true);
+void hexWrite(const std::string& file, const std::string& newWrite, const int address, const int len = 0, bool trailingNull = true);
 
-void binaryWrite(std::string file, std::string bin, int address);
+void binaryWrite(const std::string& file, const std::string& bin, const int address);
 
-int readEXE(int address);
+int readEXE(const int address);
 
-void numWrite(std::string file, int newWrite, int address);
+void numWrite(const std::string& file, const int newWrite, const int address);
 
-void deleteLines(std::string file, std::vector<int> lines);
+void deleteLines(const std::string& file, const std::initializer_list<int>& lines);
 
-void txtIns(std::string file, std::string newC, std::vector<coord> lnCol, int len = 0);
+void txtIns(const std::string& file, const std::string& newC, const std::initializer_list<coord>& lnCol, const int len = 0);
 
-void appendFile(std::string file, std::string appendix);
+void txtIns(const std::string& file, const std::string& newC, const coord lnCol, const int len = 0);
 
+void appendFile(const std::string& file, const std::string& appendix);
+
+std::string getGiz(const Level* lev, const char scene);
+
+std::string getGit(const Level* lev, const char scene);
+
+std::string getSCP(const Level* lev, const char scene, const std::string& script);
+
+std::string getScriptTxt(const Level* lev, const char scene);
+
+void renamer(const std::string& oldName, const std::string& newName);

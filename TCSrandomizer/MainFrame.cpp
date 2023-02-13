@@ -19,7 +19,7 @@ bool enemy = 0;
 bool colorOp = 0;
 bool advanceMus = 0;
 std::string out = "out";
-std::string vanilla = "";
+std::string vanillaDirectory = "";
 LogicType logicType = casual;
 
 wxStaticText* directoryLabel;
@@ -82,6 +82,8 @@ MainFrame::MainFrame(const wxString& title)
 	CreateStatusBar();
 }
 
+
+
 void MainFrame::StartRando(wxCommandEvent& evt) {
 	wxLogStatus("Randomizing. . .");
 
@@ -90,7 +92,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	greenVeh = greenType->GetValue();
 	extra = extraType->GetValue();
 	collectable = collectableType->GetValue();
-	vanilla = tcsFolder->GetPath();
+	vanillaDirectory = tcsFolder->GetPath();
 	//colorOp = colorType->GetValue();
 
 	switch (logType->GetSelection()) {
@@ -108,7 +110,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	//saves options
 	std::remove("files/data");
 	std::ofstream dat("files/data");
-	dat << vanilla << '\n';
+	dat << vanillaDirectory << '\n';
 	dat << std::to_string(logicType);
 	dat << std::to_string(character);
 	dat << std::to_string(extog);
@@ -122,5 +124,20 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 
 	std::thread randomize{ Randomize };
 	randomize.detach();
+}
+
+MainFrame::~MainFrame() {
+
+	delete directoryLabel;
+	delete tcsFolder;
+	delete start;
+	delete logType;
+	delete characterType;
+	delete etType;
+	delete greenType;
+	delete extraType;
+	delete collectableType;
+	delete colorType;
+
 }
 

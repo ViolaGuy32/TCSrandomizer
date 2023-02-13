@@ -5,9 +5,11 @@
 #include "FilePatch.h"
 #include "App.h"
 #include "Defines.h"
+#include "Characters.h"
 
 extern std::string out;
-extern std::string vanilla;
+extern std::string vanillaDirectory;
+extern Level* currentLev;
 
 void fileGen() {
 	//coppies the game files and removes cutscenes
@@ -15,7 +17,7 @@ void fileGen() {
 	wxGetApp().CallAfter([] { wxLogStatus("Generating files. . ."); });
 
 	std::filesystem::remove_all(out);
-	std::filesystem::copy(vanilla, out,
+	std::filesystem::copy(vanillaDirectory, out,
 		std::filesystem::copy_options::recursive
 		| std::filesystem::copy_options::overwrite_existing);
 
@@ -392,7 +394,8 @@ void fileGen() {
 	txtIns(JDI + "SPEEDERCHASE/SPEEDERCHASE_A/SPEEDERCHASE_A.GIT", "status",
 		{{4403, 40}}, 5);
 }
-void getfile(std::string file, std::vector<std::string>& contents) {
+
+void getfile(const std::string& file, std::vector<std::string>& contents) {
 
 	std::ifstream reader(file);
 	std::string s;
@@ -422,8 +425,7 @@ void getfile(std::string file, std::vector<std::string>& contents) {
 //
 //}
 
-
-void rgbWrite(std::string file, rgb color, int address) {
+void rgbWrite(const std::string& file, const rgb color, const int address) {
 	std::fstream fs(file, std::ios::in | std::ios::binary);
 	std::fstream lg;
 
@@ -455,7 +457,7 @@ void rgbWrite(std::string file, rgb color, int address) {
 	lg.close();
 }
 
-void rXgbWrite(std::string file, rgb color, int address) {
+void rXgbWrite(const std::string& file, rgb color, int address) {
 	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 	fs.seekp(address);
 	fs << color.r;
@@ -466,18 +468,18 @@ void rXgbWrite(std::string file, rgb color, int address) {
 	fs.close();
 }
 
-void binaryWrite(std::string file, char bin, int address) {
+void binaryWrite(const std::string& file, const char bin, const int address) {
 	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 	fs.seekp(address);
 	fs << bin;
 	fs.close();
 }
 
-void rgbBatch(std::string file, rgb color, std::vector<int> IDs) {
+void rgbBatch(const std::string& file, const rgb color, const std::vector<int>& IDs) {
 	for (int x : IDs) rgbWrite(file, color, x);
 }
 
-void rgbFloat(std::string file, rgb color, int address) {
+void rgbFloat(const std::string& file, const rgb color, const int address) {
 	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 	fs.seekp(address);
 	fs.write((char*)&color.rF, 4);
@@ -488,7 +490,7 @@ void rgbFloat(std::string file, rgb color, int address) {
 	fs.close();
 }
 
-void hexWrite(std::string file, std::string newWrite, int address, int len, bool trailingNull) {
+void hexWrite(const std::string& file, const std::string& newWrite, const int address, const int len, const bool trailingNull) {
 #ifdef _DEBUG
 	wxGetApp().CallAfter([&file, &newWrite, &address]() {
 		wxString log = file + " " + newWrite + " " + std::to_string(address);
@@ -516,19 +518,20 @@ void hexWrite(std::string file, std::string newWrite, int address, int len, bool
 }
 
 //for hex longer than 1 byte
-void binaryWrite(std::string file, std::string bin, int address) {
+void binaryWrite(const std::string& file, const std::string& bin, const int address) {
 	std::basic_string<uint8_t> bytes;
+	std::string nextByte;
 	for (int i = 0; i < bin.length(); i += 2) {
 		uint16_t cByte;
-		std::string nextByte = bin.substr(i, 2);
+		nextByte = bin.substr(i, 2);
 		std::istringstream(nextByte) >> std::hex >> cByte;
 		bytes.push_back(static_cast<uint8_t>(cByte));
 	}
-	std::string result(begin(bytes), end(bytes));
+	const std::string result(begin(bytes), end(bytes));
 	hexWrite(file, result, address, 0, false);
 }
 
-int readEXE(int address) {
+int readEXE(const int address) {
 	std::ifstream is(EXE, std::ios::in | std::ios::binary);
 	is.seekg(address);
 	int val = 0;
@@ -537,7 +540,7 @@ int readEXE(int address) {
 	return val;
 }
 
-void numWrite(std::string file, int newWrite, int address) {
+void numWrite(const std::string& file, const int newWrite, const int address) {
 	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 
 	fs.seekp(address);
@@ -545,7 +548,7 @@ void numWrite(std::string file, int newWrite, int address) {
 	fs.close();
 }
 
-void deleteLines(std::string file, std::vector<int> lines) {
+void deleteLines(const std::string& file, const std::initializer_list<int>& lines) {
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -562,14 +565,14 @@ void deleteLines(std::string file, std::vector<int> lines) {
 	}
 
 	std::ofstream fileout(file);
-	for (std::string y : contents) {
+	for (const std::string y : contents) {
 		fileout << y + "\n";
 	}
 	fileout.close();
 
 }
 
-void txtIns(std::string file, std::string newC, std::vector<coord> lnCol, int len) {
+void txtIns(const std::string& file, const std::string& newC, const std::initializer_list<coord>& lnCol, const int len) {
 #ifdef _DEBUG
 	wxGetApp().CallAfter([&file, &newC, &len]() {
 		wxString log = file + " " + newC + " " + std::to_string(len).c_str();
@@ -585,14 +588,17 @@ void txtIns(std::string file, std::string newC, std::vector<coord> lnCol, int le
 	}
 
 	std::ofstream fileout(file);
-	for (std::string y : contents) {
+	for (const std::string y : contents) {
 		fileout << y + "\n";
 	}
 	fileout.close();
 
 }
+void txtIns(const std::string& file, const std::string& newC, const coord lnCol, const int len) {
+	txtIns(file, newC, {lnCol}, len);
+}
 
-void appendFile(std::string file, std::string appendix) {
+void appendFile(const std::string& file, const std::string& appendix) {
 #ifdef _DEBUG
 	wxGetApp().CallAfter([file]() {
 		wxString log = "appending" + file;
@@ -605,16 +611,54 @@ void appendFile(std::string file, std::string appendix) {
 	contents.push_back(appendix);
 
 	std::ofstream fileout(file);
-	for (std::string y : contents) {
+	for (std::string& y : contents) {
 		fileout << y + "\n";
 	}
 	fileout.close();
 	
 }
 
+std::string getGiz(Level* lev, char scene) {
+	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIZ";
+}
 
+std::string getGit(const Level* lev, const  char scene) {
+	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIT";
+}
 
-//void OLDtxtIns(std::string file, std::string newC, std::vector<coord> lnCol, int len = 0) {
+std::string getSCP(const Level* lev, const char scene, const std::string& script) {
+	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + script + ".SCP";
+}
+
+std::string getScriptTxt(const Level* lev, const char scene) {
+	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + lev->shortName + '_' + scene + ".TXT";
+
+}
+
+void renamer(const std::string& oldName, const std::string& newName) {
+	int test = rename(oldName.c_str(), newName.c_str());
+	if (test == -1) {
+		wxString err = "File name override failed: " + oldName + " -> " + newName;
+		wxGetApp().CallAfter([err]() {
+			wxLogError(err);
+			});
+	}
+}
+
+/*
+
+void Level::rename(std::string newText, std::string oldText, char scene) {
+	std::string file = episode + firstName + '/' + name + '_' + scene + "/AI/";
+	renamer(file + oldText, file + newText);
+
+}
+
+void Level::rename(int characterNumber, char scene) {
+	rename(party[characterNumber]->name + ".SCP", vanillaParty[characterNumber]->name + ".SCP", scene); //FIX
+}
+*/
+
+//void OLDtxtIns(const std::string file, std::string newC, std::vector<coord> lnCol, int len = 0) {
 //	//lnCol must be in order
 //
 //	std::ifstream filein(file);

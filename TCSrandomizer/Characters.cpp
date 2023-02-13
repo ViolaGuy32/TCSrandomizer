@@ -3,7 +3,6 @@
 #include "Defines.h"
 #include <wx/wx.h>
 #include <sstream>
-#include <unordered_map>
 
 extern std::string out;
 extern bool extog;
@@ -11,8 +10,7 @@ extern bool greenVeh;
 extern bool character;
 extern const std::mt19937_64* randoPTR;
 
-std::vector <Level*> allLevels;
-Level* currentLev;
+extern std::vector <Level*> allLevels;
 
 extern Playable* defaultCharacter;
 extern Level* BHM;
@@ -22,9 +20,9 @@ extern LogicType logicType;
 extern std::vector<Playable*> pls; //Characters and Vehicles
 extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
-extern std::vector<Playable*> testing;  //Current logic
 extern std::unordered_map<std::string, Playable*> nameList;
 
+extern Level* currentLev;
 //enum charID {
 //	quigon,
 //	obiwan,
@@ -422,11 +420,11 @@ void mix(Level* lev) {
 	});
 #endif
 
-	testing = {};
+	testing.clear();
 	currentLev = lev;
 
 	if (character) {
-		lev->party = {};
+		lev->party.clear();
 
 		std::vector<Playable*>* menu;
 		if (lev->vehicleLevel)
@@ -471,22 +469,22 @@ bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current) {
 	return false;
 }
 
-bool Any(const std::vector<bool Playable::*>& vec, const std::vector<Playable*>& current) {
+bool Any(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
 	//needs any of the given attributes
 	for (const Playable* p : current) {
-		for (int i = 0; i < vec.size(); ++i) {
-			if (p->*vec[i]) return true;
+		for (bool Playable::* atr : atrs) {
+			if (p->*atr) return true;
 		}
 	}
 	return false;
 }
 
-bool All(const std::vector<bool Playable::*>& vec, const std::vector<Playable*>& current) {
+bool All(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
 	//needs all of the given attributes
 	for (const Playable* p : current) {
-		for (int i = 0; i < vec.size(); ++i) {
-			if (!(p->*vec[i])) break;
-			if (i == vec.size() - 1) return true;
+		for (int i = 0; i < atrs.size(); ++i) {
+			if (!(p->*atrs[i])) break;
+			if (i == atrs.size() - 1) return true;
 		}
 	}
 	return false;
@@ -506,11 +504,11 @@ bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>
 	return false;
 }
 
-bool MultiAny(const std::vector<bool Playable::*>& vec, const int n, const std::vector<Playable*>& current) {
+bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
 	//needs multiple who have any of given attributes
 	int x = 0;
 	for (const Playable* p : current) {
-		for (const bool(Playable::* atr) : vec) {
+		for (const bool(Playable::* atr) : atrs) {
 			if (p->*atr) {
 				x++;
 				if (x == n) {
@@ -590,14 +588,6 @@ float GetSlowest(std::vector<Playable*> current) {
 	return slowest;
 }
 
-std::string getGiz(Level* lev, char scene) {
-	return out + lev->path + lev->shortName + '_' + scene + ".GIZ";
-}
-
-std::string getGit(Level* lev, char scene) {
-	return out + lev->path + lev->shortName + '_' + scene + ".GIT";
-}
-
 /*
 #if (0)
 void renamer(std::string oldName, std::string newName) {
@@ -628,10 +618,10 @@ void Level::mix() {
 	});
 #endif
 
-	testing = {};
+	testing.clear();
 	if (character) {
 	label:
-		party = {};
+		party.clear();
 		for (int i = 0; i < vanillaParty.size(); i++) {
 			Playable* temp;
 			if (vehicleLevel)temp = vhs[rand() % vhs.size()];
@@ -653,7 +643,7 @@ void Level::mixCollectables() {
 		'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c',
 		'r'
 	};
-	collectables = {};
+	collectables.clear();
 
 	while (collectableList.size() > 0) {
 		int temp = rand() % collectableList.size();

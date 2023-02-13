@@ -4,6 +4,10 @@
 class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
+
+	~MainFrame();
+
 	void StartRando(wxCommandEvent& evt);
+
 };
 

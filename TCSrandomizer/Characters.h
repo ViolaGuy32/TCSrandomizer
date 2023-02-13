@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <random>
+#include <unordered_map>
 
 #include "FilePatch.h"
 //#include "Level.h"
@@ -20,7 +21,7 @@ struct Playable {
 	float speed = 1.2;
 	Level* lev;
 	int price = 0;
-	const bool alwaysTrue = true; //lol
+	const static bool alwaysTrue = true; //lol
 
 	bool hat = false, lever = false, build = false, box = false, jump = false, doubleJump = false,
 		highJump = false, yodaJump = false, extraHighJump = false, realDoubleJump = false, highDoubleJump = false,
@@ -51,7 +52,14 @@ struct Level {
 	//int isFake;
 	std::vector<Playable*> unlocks;
 	std::vector<char> collectables;
+
+	std::unordered_map<std::vector<Playable*>, std::vector<Playable*>> vanillaMap = {
+		{party, vanillaParty},
+		{bonusCharacters, vanillaBonusCharacters}
+	};
 };
+
+extern std::vector<Playable*> testing;
 
 void add(int a);
 
@@ -61,11 +69,11 @@ bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current = t
 
 bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>& current = testing);
 
-bool Any(const std::vector<bool Playable::*>& vec, const std::vector<Playable*>& current = testing);
+bool Any(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
 
-bool All(const std::vector<bool Playable::*>& vec, const std::vector<Playable*>& current = testing);
+bool All(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
 
-bool MultiAny(const std::vector<bool(Playable::*)> vec, const int n, const std::vector<Playable*>& current = testing);
+bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current = testing);
 
 bool SuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
 
@@ -78,7 +86,3 @@ bool DoubleTransitionSkip(const bool Playable::* atr = &Playable::alwaysTrue, st
 float GetFastest(std::vector<Playable*> current = testing);
 
 float GetSlowest(std::vector<Playable*> current = testing);
-
-std::string getGiz(Level* lev, char scene);
-
-std::string getGit(Level* lev, char scene);
