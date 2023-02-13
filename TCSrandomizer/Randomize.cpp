@@ -136,48 +136,48 @@ void Randomize() {
 
 	if (character) {
 		//makes code easier to read and debug
-#define Build &Playable::build
-#define Lever &Playable::lever
-#define Box &Playable::box //also for riding stuff
+	#define Build &Playable::build
+	#define Lever &Playable::lever
+	#define Box &Playable::box //also for riding stuff
 
-#define Jedi &Playable::jedi
-#define Sith &Playable::sith
-#define Saber &Playable::saber //includes magnaguard
-#define Deflect &Playable::deflect
+	#define Jedi &Playable::jedi
+	#define Sith &Playable::sith
+	#define Saber &Playable::saber //includes magnaguard
+	#define Deflect &Playable::deflect
 
-#define Attack &Playable::attack
-#define Grapple &Playable::grapple
-#define Shoot &Playable::shoot
-#define FakeShoot &Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
+	#define Attack &Playable::attack
+	#define Grapple &Playable::grapple
+	#define Shoot &Playable::shoot
+	#define FakeShoot &Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
 
-#define Jump &Playable::jump
-#define DoubleJump &Playable::doubleJump
-#define RealDoubleJump &Playable::realDoubleJump
-#define HighJump &Playable::highJump
-#define ExtraHighJump &Playable::extraHighJump
-#define HighDoubleJump &Playable::highDoubleJump
-#define Dive &Playable::dive
-#define YodaJump &Playable::yodaJump
+	#define Jump &Playable::jump
+	#define DoubleJump &Playable::doubleJump
+	#define RealDoubleJump &Playable::realDoubleJump
+	#define HighJump &Playable::highJump
+	#define ExtraHighJump &Playable::extraHighJump
+	#define HighDoubleJump &Playable::highDoubleJump
+	#define Dive &Playable::dive
+	#define YodaJump &Playable::yodaJump
 
-#define Fly &Playable::fly
-#define Flutter &Playable::flutter
-#define Hovering &Playable::hovering //trainingremote
-#define Fett &Playable::fett
-#define Zapper &Playable::zapper
-#define AstroZapper &Playable::astrozapper
+	#define Fly &Playable::fly
+	#define Flutter &Playable::flutter
+	#define Hovering &Playable::hovering //trainingremote
+	#define Fett &Playable::fett
+	#define Zapper &Playable::zapper
+	#define AstroZapper &Playable::astrozapper
 
-#define Hat &Playable::hat
-#define Proto &Playable::proto
-#define Astro &Playable::astro
-#define Imperial &Playable::imperial
-#define Bounty &Playable::bounty
+	#define Hat &Playable::hat
+	#define Proto &Playable::proto
+	#define Astro &Playable::astro
+	#define Imperial &Playable::imperial
+	#define Bounty &Playable::bounty
 
-#define Passive &Playable::passive
-#define Ghost &Playable::ghost
-#define Hatch &Playable::hatch
-#define Tall &Playable::tall //can walk in swamp
+	#define Passive &Playable::passive
+	#define Ghost &Playable::ghost
+	#define Hatch &Playable::hatch
+	#define Tall &Playable::tall //can walk in swamp
 
-#define Tow &Playable::tow
+	#define Tow &Playable::tow
 
 
 		cantina :
@@ -1308,9 +1308,9 @@ void Randomize() {
 	}
 
 	if (collectable) {
-#ifdef _DEBUG
+	#ifdef _DEBUG
 		wxGetApp().CallAfter([]() { wxLogStatus("Starting collectables"); });
-#endif
+	#endif
 		int x = 1;
 		auto collectableWrite
 			= [&x, &loggingIt](Level* lev, char scene, std::initializer_list<int> address) {
@@ -1319,13 +1319,13 @@ void Randomize() {
 			for (int cAddress : address) {
 				fs.seekg(cAddress);
 				char type = fs.get();
-#ifdef _DEBUG
+			#ifdef _DEBUG
 				if (type != 'c' && type != 'm' && type != 'r') {
 					std::stringstream st;
 					st << std::hex << cAddress;
 					loggingIt << st.str() + " " + file + " is not a collectable.\n";
 				}
-#endif
+			#endif
 				if (type == 'c') {  //some challenge kits have the same name, which
 					//breaks when changed to minikits
 					hexWrite(file, "c_pup" + std::to_string(x), cAddress - 0x14);
@@ -1348,13 +1348,13 @@ void Randomize() {
 			for (int cAddress : address) {
 				fs.seekg(cAddress);
 				char type = fs.get();
-#ifdef _DEBUG
+			#ifdef _DEBUG
 				if (type != 'c' && type != 'm' && type != 'r') {
 					std::stringstream st;
 					st << std::hex << cAddress;
 					loggingIt << st.str() + " " + file + " is not a collectable.\n";
 				}
-#endif
+			#endif
 				if (type == 'c') {  //some challenge kits have the same name, which
 					//breaks when changed to minikits
 					hexWrite(file, "c_pup" + std::to_string(x), cAddress - 0x14);
@@ -1708,7 +1708,7 @@ void Randomize() {
 		collectableWrite(ITDS, 'F', {0x1f3f, 0x1f28});
 		collectableWrite(ITDS, 'G', {0x30bc, 0x30a5});
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 		for (int i = 0; i < 36; i++) {
 			if (allLevels[i]->collectables.size() > 0) {
 				loggingIt << allLevels[i]->name + " has " +
@@ -1716,16 +1716,16 @@ void Randomize() {
 					" collectables left.\n";
 			}
 		}
-#endif
+	#endif
 
 		loggingIt.close();
 	}
 
 	if (extra) {
-#ifdef _DEBUG
+	#ifdef _DEBUG
 		wxGetApp().CallAfter([] { wxLogStatus("Starting extras"); });
 
-#endif
+	#endif
 		int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286,
 			332, 351, 363, 377, 392, 406, 468, 485, 505, 523, 540, 562,
 			615, 632, 652, 669, 684, 700, 749, 764, 777, 793, 806, 829};
@@ -1737,52 +1737,100 @@ void Randomize() {
 
 	//Patches levels with new characters
 	if (character) {
-#ifdef _DEBUG
+	#ifdef _DEBUG
 		wxGetApp().CallAfter([] { wxLogStatus("Patching Levels"); });
 
-#endif
+	#endif
 
-		auto playerInit = [](const int characterNum, const int line, std::vector<Playable*> Level::* chType = &Level::party) {
-			txtIns(currentLev->path + currentLev->name + ".TXT", (currentLev->*chType)[characterNum]->name,
-				{line, 12}, currentLev->vanillaMap[currentLev->*chType][characterNum]->name.length());
-
-		};
-
-		auto scpIns = [](const char scene, const std::string& script, const int characterNum,
-			const coord lncol, std::vector<Playable*> Level::* chType = &Level::party) {
-
-				txtIns(getSCP(currentLev, scene, script), (currentLev->*chType)[characterNum]->name,
-					lncol, currentLev->vanillaMap[currentLev->*chType][characterNum]->name.length());
-		};
-
-		auto scpBatch = [](const char scene, const std::string& script, const int characterNum,
+		auto scpXBatch = [](const char scene, const std::string& script, const int characterNum,
 			const std::initializer_list<coord>& lncol, std::vector<Playable*> Level::* chType = &Level::party) {
 
-				txtIns(getSCP(currentLev, scene, script), (currentLev->*chType)[characterNum]->name,
-					lncol, currentLev->vanillaMap[currentLev->*chType][characterNum]->name.length());
+			txtIns(getSCP(currentLev, scene, script), getVanilla(characterNum, chType),
+				lncol, getVanillaAlt(characterNum, chType).length());
 		};
 
-		auto scriptTxt = [](const char scene, const int characterNum, const int line, std::vector<Playable*> Level::* chType = &Level::party) {
-			txtIns(getScriptTxt(currentLev, scene), (currentLev->*chType)[characterNum]->name,
-
-				{line, 1}, currentLev->vanillaMap[currentLev->*chType][characterNum]->name.length());
-		};
-
-		auto scpRep = [](const char scene, const std::string& script, const std::string& newStr, const int len, const coord lncol) {
+		auto scXpRep = [](const char scene, const std::string& script, const std::string& newStr, const int len, const coord lncol) {
 			txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
 		};
 
-		auto scpRepBatch = [](const char scene, const std::string& script, const std::string& newStr,
+
+		auto scpRepXBatch = [](const char scene, const std::string& script, const std::string& newStr,
 			const int len, const std::initializer_list<coord>& lncol) {
 
-				txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
+			txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
+		};
+
+	
+		auto fileDeleter = [](const char scene, const int characterNum,
+			std::vector<Playable*> Level::* chType = &Level::party) {
+
+			std::remove(getSCP(currentLev, scene, getVanillaAlt(characterNum, chType)).c_str());
+		};
+		
+		struct basicCh {
+			const unsigned int chNum;
+			const unsigned int line;
+			const std::vector<Playable*> Level::* chType = &Level::party;
+		};
+		
+		struct advancedCh {
+			const unsigned int chNum;
+			std::initializer_list<coord> lnCol;
+			const std::vector<Playable*> Level::* chType = &Level::party;
+		};
+
+		auto playerInit = [](const std::initializer_list<basicCh> writers) {
+			std::vector<writeSingle> writ;
+			for (basicCh w : writers) {
+				writ.push_back(writeSingle{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), {w.line, 12}});
+			}
+			writer(multiWrite, currentLev->path + currentLev->name + ".TXT", writ);
 		};
 
 
-		auto scpName = [](const char scene, const int characterNum) {
-			renamer(getSCP(currentLev, scene, currentLev->vanillaParty[characterNum]->name),
-				getSCP(currentLev, scene, currentLev->party[characterNum]->name));
+		auto scpIns = [](const char scene, const std::string& script, const unsigned int chNum, const coord lnCol,
+			const std::vector<Playable*> Level::* chType = &Level::party) {
+			
+			writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(chNum, lnCol, chType));
 		};
+
+		auto scpRep = [](const char scene, const std::string& script, const std::string txt, const unsigned int len, const coord lnCol) {
+			writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(txt, len, lnCol));
+		};
+
+		auto scpBatch = [](const char scene, const std::string& script, const unsigned int chNum, const std::initializer_list<coord> lnCol,
+			const std::vector<Playable*> Level::* chType = &Level::party) {
+			writeSet writ = {getName(chNum, chType), getVanilla(chNum, chType).length(), lnCol};
+			writer(oneWrite, getSCP(currentLev, scene, script), writ);
+		};
+
+		auto scpMany = [](const char scene, const std::string& script, std::initializer_list<advancedCh> writers) {
+			std::vector<writeSet> writ;
+			for (advancedCh w : writers) {
+				writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), w.lnCol});
+			}
+			writer(manyWrite, currentLev->path + currentLev->name + ".TXT", writ);
+		};
+
+		auto scpName = [](const char scene, const unsigned  int characterNum, const std::vector<Playable*> Level::* chType = &Level::party) {
+			renamer(getSCP(currentLev, scene, getVanilla(characterNum, chType)),
+				getSCP(currentLev, scene, getName(characterNum, chType)));
+		};
+
+		auto scriptTxt = [&scpName](const char scene, const int characterNum, const unsigned int line,
+			std::vector<Playable*> Level::* chType = &Level::party) {
+
+			writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(characterNum, {line, 1}, chType));
+
+			scpName(scene, characterNum);
+		};
+
+		auto scriptTxtRep = [&scpName](const char scene, const std::string newStr, const std::string oldStr, const unsigned int line) {
+			writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(newStr, oldStr.length(), {line, 1}));
+			renamer(getSCP(currentLev, scene, oldStr),
+				getSCP(currentLev, scene, newStr));
+		};
+
 
 		//pointerWrite(EXE, cantina1->name, 0x3f1c30);
 		//pointerWrite(EXE, cantina2->name, 0x3f1c38);
@@ -1790,9 +1838,10 @@ void Randomize() {
 		characterPointer(cantina2, 0xca360);
 
 		currentLev = Negotiations;
-		playerInit(0, 1);
-		playerInit(1, 2);
-		playerInit(2, 3);
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
+		//playerInit(0, 1);
+		//playerInit(1, 2);
+		//playerInit(2, 3); //tc
 
 		scpIns('A', "LEVEL", 2, {18, 22});
 		scpBatch('A', "LEVEL1", 2, {{17, 22}, {21, 22}, {40, 22}});
@@ -1802,99 +1851,85 @@ void Randomize() {
 		deleteLines(getSCP(Negotiations, 'A', "TC14"), {39});
 
 		scriptTxt('A', 2, 5);
-		scpName('A', 2);
 
 		currentLev = Invasion;
-		Invasion->replace(0, {{1, 12}});
-		Invasion->replace(1, {{2, 12}});
-		Invasion->replace(2, {{3, 12}});
-		Invasion->replace(2, {2}, 'A', "SCRIPT.TXT");
-		Invasion->rename(2, 'A');
-		std::remove(
-			(out + "/LEVELS/EPISODE_I/GUNGAN/GUNGAN_B/AI/JARJARBINKS.SCP").c_str());
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
 
-		EscapeNaboo->replace(0, {{1, 12}});
-		EscapeNaboo->replace(1, {{2, 12}});
-		EscapeNaboo->replace(2, {{3, 12}});
-		EscapeNaboo->replace(3, {{4, 12}});
+		scriptTxt('A', 2, 2);
+		fileDeleter('B', 2);
 
-		EscapeNaboo->replace(
-			"if IAm \"" + EscapeNaboo->party[0]->name +
-			"\" == 1 goto Activate\n\t\tif IAm \"" +
-			EscapeNaboo->party[1]->name +
-			"\" == 1 goto Activate",
-			39, {{5, 3}}, 'A', "PARTY.SCP");
+		currentLev = EscapeNaboo;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
 
-		EscapeNaboo->replace(
-			"if IAm \"" + EscapeNaboo->party[0]->name +
-			"\" == 1 goto Activate\n\t\tif IAm \"" +
-			EscapeNaboo->party[1]->name +
-			"\" == 1 goto Activate",
-			39, {{5, 3}}, 'B', "PARTY.SCP");
+		//TCS checks if character is Jedi instead of who character is
+		scpRep('A', "PARTY",
+			"if IAm \"" + EscapeNaboo->party[0]->name + "\" == 1 goto Activate\n"
+			"\t\tif IAm \"" + EscapeNaboo->party[1]->name + "\" == 1 goto Activate",
+			39, {5, 3});
 
-		EscapeNaboo->replace(2, {{17, 26}}, 'B', "LEVEL.SCP");
-		EscapeNaboo->replace(3, {{16, 26}}, 'B', "LEVEL.SCP");
-		EscapeNaboo->replace(2, {{26, 28}}, 'C', "LEVEL.SCP");
-		EscapeNaboo->replace(3, {{25, 28}}, 'C', "LEVEL.SCP");
+		scpRep('B', "PARTY",
+			"if IAm \"" + EscapeNaboo->party[0]->name + "\" == 1 goto Activate\n"
+			"\t\tif IAm \"" + EscapeNaboo->party[1]->name + "\" == 1 goto Activate",
+			39, {5, 3});
 
-		Podrace->replace(0, {{1, 12}});
-		Podrace->replace(1, {{2, 12}});
+		scpIns('B', "LEVEL", 2, {17, 26});
+		scpIns('B', "LEVEL", 3, {16, 26});
+		scpIns('C', "LEVEL", 2, {26, 28});
+		scpIns('C', "LEVEL", 3, {25, 28});
 
+		currentLev = Podrace;
+		playerInit({{0, 1}, {1, 2}});
 		//fixes scaling problem
 		binaryWrite(EXE, 0x0f, 0xB5129);
 		binaryWrite(EXE, 0x0f, 0x35946);
 
-		Theed->replace(0, {{1, 12}});
-		Theed->replace(1, {{2, 12}});
-		Theed->replace(2, {{3, 12}});
-		Theed->replace(3, {{4, 12}});
-		Theed->replace(4, {{5, 12}});
-		Theed->replace(5, {{6, 12}});
-		Theed->replace(2, {{20, 25}, {21, 28}}, 'A', "LEVEL.SCP");
-		Theed->replace(3, {{18, 25}, {19, 28}}, 'A', "LEVEL.SCP");
-		Theed->replace(4, {{24, 25}, {25, 28}}, 'A', "LEVEL.SCP");
-		Theed->replace(5, {{22, 25}, {23, 28}}, 'A', "LEVEL.SCP");
+		currentLev = Theed;
+		playerInit({{0, 1}, {1, 2}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
+		scpBatch('A', "LEVEL", 2, {{20, 25}, {21, 28}});
 
-		Maul->replace(0, {{1, 12}});
-		Maul->replace(1, {{2, 12}});
-		Maul->replace(0, {{381, 21}}, 'F', "DARTHMAUL.SCP");
+		scpMany('A', "LEVEL", {
+			{2, {{20, 25}, {21, 28}}},
+			{3, {{18, 25}, {29, 28}}},
+			{4, {{24, 25}, {25, 28}}},
+			{5, {{22, 25}, {23, 28}}}});
+
+		currentLev = Maul;
+		playerInit({{0, 1}, {1, 2}});
+		scpIns('F', "DARTHMAUL", 0, {381, 21});
+
 		//fixes ditto problem
-		Maul->replace("dmaul", 9, {1}, 'A', "SCRIPT.TXT");
-		Maul->replace("dmaul", 9, {1}, 'D', "SCRIPT.TXT");
-		Maul->replace("dmaul", 9, {2}, 'E', "SCRIPT.TXT");
-		Maul->replace("dmaul", 9, {2}, 'F', "SCRIPT.TXT");
+		scriptTxtRep('A', "dmaul", "DARTHMAUL", 1);
+		scriptTxtRep('D', "dmaul", "DARTHMAUL", 1);
+		scriptTxtRep('E', "dmaul", "DARTHMAUL", 2);
+		scriptTxtRep('F', "dmaul", "DARTHMAUL", 2);
+
 		Maul->binWrite("dmaul", {0x26AE}, 'A', "MAUL_A.AI2");
 		Maul->binWrite("dmaul", {0x307B}, 'D', "MAUL_D.AI2");
 		Maul->binWrite("dmaul", {0x6F9}, 'E', "MAUL_E.AI2");
 		Maul->binWrite("dmaul", {0x96B}, 'F', "MAUL_F.AI2");
-		Maul->rename("dmaul.scp", "DARTHMAUL.SCP", 'A');
-		Maul->rename("dmaul.scp", "DARTHMAUL.SCP", 'D');
-		Maul->rename("dmaul.scp", "DARTHMAUL.SCP", 'E');
-		Maul->rename("dmaul.scp", "DARTHMAUL.SCP", 'F');
 
-		BHP->replace(0, {{1, 12}});
-		BHP->replace(1, {{2, 12}});
+		currentLev = BHP;
+		playerInit({{0, 1}, {1, 2}});
 
-		Kamino->replace(0, {{1, 12}});
-		Kamino->replace(1, {{2, 12}});
-		Kamino->replace(0, {{47, 28}, {83, 28}}, 'C', "LEVEL.SCP");
-		Kamino->replace(1, {{48, 28}, {84, 28}}, 'C', "LEVEL.SCP");
+		currentLev = Kamino;
+		playerInit({{0, 1}, {1, 2}});
+		scpMany('C', "LEVEL", {
+			{0, {{47, 28}, {83, 28}}},
+			{1, {{48, 28}, {84, 28}}},});
+
 		//ditto
-		Kamino->replace("ai_jango", 8, {1}, 'C', "SCRIPT.TXT");
+		scriptTxtRep('C', "ai_jango", "JANGOFETT", 1);
 		Kamino->binWrite("ai_jango", {0x1AFA}, 'C', "KAMINO_C.AI2");
-		Kamino->rename("ai_jango.scp", "JANGOFETT.SCP", 'C');
 
-		Factory->replace(0, {{1, 12}});
-		Factory->replace(1, {{2, 12}});
-		Factory->replace(2, {{3, 12}});
-		Factory->replace(3, {{4, 12}});
-		Factory->replace(4, {{10, 12}});
+		currentLev = Factory;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {0, 10, &Level::bonusCharacters}});
+
 		Factory->replace("if CategoryIs \"Astromech\" == 1", 18, {{12, 3}}, 'D',
 			"PARTY.SCP");
 		Factory->replace("if CategoryIs \"Astromech\" == 1", 18, {{12, 3}}, 'E',
 			"PARTY.SCP");
 
-		/*
+		/* Do not delete this yet.
 		if (!Proto({ Factory->party[3] })) Factory->replace("1", 3, { {34, 17} },
 		'E', "C3PO.SCP"); Factory->replace("\t\tif CategoryIs \"Protocol\" == 1 goto
 		ProtoUpdate\n", 0, { {12, 1} }, 'E', "PARTY.SCP"); Factory->append( "state
@@ -2621,8 +2656,8 @@ void Randomize() {
 
 			auto missionReplace2 = [](int c, int line, Level* lev, char scene,
 				std::string fileExtention) {
-					lev->replace(BHM->party[c]->name, BHM->vanillaParty[c]->name.length(),
-						{{line, 49}}, scene, fileExtention);
+				lev->replace(BHM->party[c]->name, BHM->vanillaParty[c]->name.length(),
+					{{line, 49}}, scene, fileExtention);
 			};
 
 			missionReplace2(6, 24, Negotiations, 'A', "LEVEL2.SCP");
@@ -2698,9 +2733,9 @@ void Randomize() {
 		}
 
 		//Character unlocks
-#ifdef _DEBUG
+	#ifdef _DEBUG
 		wxGetApp().CallAfter([] { wxLogStatus("starting collection"); });
-#endif
+	#endif
 
 		std::ofstream collect(out + "/CHARS/COLLECTION.TXT");
 
@@ -2721,12 +2756,12 @@ void Randomize() {
 					collect << " buy_in_shop ";
 					collect << std::to_string(p->price) << '\n';
 				}
-#ifdef _DEBUG
+			#ifdef _DEBUG
 				wxGetApp().CallAfter([&p] {
 					wxString collected = p->realName + " collected.";
 				wxLogStatus(collected);
-					});
-#endif
+				});
+			#endif
 			}
 		};
 
@@ -2791,8 +2826,8 @@ void Randomize() {
 		txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", indy->realName, {{1627, 7}}, 13);
 
 		//fixes ET characters
-#define CHR out + "/CHARS/"
-#define chfile(x) CHR + x->name + "/" + x->name + ".TXT"
+	#define CHR out + "/CHARS/"
+	#define chfile(x) CHR + x->name + "/" + x->name + ".TXT"
 		if (extog) {
 			txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", "Nothing", {{839, 6}}, 12);
 

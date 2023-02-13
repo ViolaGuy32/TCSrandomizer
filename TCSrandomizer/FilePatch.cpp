@@ -83,9 +83,9 @@ void fileGen() {
 		759,
 		783,  //endor
 		788, 799, 812, 820, 821, 877, 881, 882
-	});
+		});
 
-	//removes FP checks
+		//removes FP checks
 	binaryWrite(EXE, "0f", 0xe1ffe);  //kamino
 	binaryWrite(EXE, "0f", 0xdf0f2);  //jedi battle
 	binaryWrite(EXE, "0f", 0xe7c30);  //falconflight
@@ -394,6 +394,11 @@ void fileGen() {
 	txtIns(JDI + "SPEEDERCHASE/SPEEDERCHASE_A/SPEEDERCHASE_A.GIT", "status",
 		{{4403, 40}}, 5);
 }
+writeSingle::writeSingle(const std::string myStr, const unsigned int myLen, const coord myLnCol)
+: newStr(myStr), len(myLen), lnCol(myLnCol) {}
+
+writeSingle::writeSingle(const int chNum, const coord myLnCol, const std::vector<Playable*> Level::* chType = &Level::party) 
+	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {};
 
 void getfile(const std::string& file, std::vector<std::string>& contents) {
 
@@ -582,20 +587,121 @@ void txtIns(const std::string& file, const std::string& newC, const std::initial
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
-	for (coord x : lnCol) {
+	for (coord x : lnCol)
 		contents[x.ln - 1].replace(x.col - 1, len, newC);
 
-	}
 
 	std::ofstream fileout(file);
-	for (const std::string y : contents) {
+	for (const std::string y : contents)
 		fileout << y + "\n";
-	}
+
 	fileout.close();
 
 }
 void txtIns(const std::string& file, const std::string& newC, const coord lnCol, const int len) {
 	txtIns(file, newC, {lnCol}, len);
+}
+
+void batchTxt(const std::string& file, const std::initializer_list<writeSet> stuff) {
+	//this one is faster
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	for (writeSet thing : stuff)
+		for (coord x : thing.lnCol)
+			contents[x.ln - 1].replace(x.col - 1, thing.len, thing.newStr);
+
+
+	std::ofstream fileout(file);
+	for (const std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void batchPlayerTxt(const std::string& file, const std::initializer_list<writePlayerSet> stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	for (writePlayerSet thing : stuff) {
+		for (coord x : thing.lnCol) {
+			contents[x.ln - 1].replace(x.col - 1, currentLev->vanillaMap[currentLev->*thing.chType][thing.characterNum]->name.length(),
+				(currentLev->*thing.chType)[thing.characterNum]->name);
+		}
+	}
+
+	std::ofstream fileout(file);
+	for (const std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void batchSinglePlayerTxt(const std::string& file, const std::initializer_list<writePlayerSingle> stuff) {
+	//this one is faster
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	for (writePlayerSingle thing : stuff) {
+		contents[thing.lnCol.ln - 1].replace(thing.lnCol.col - 1, currentLev->vanillaMap[currentLev->*thing.chType][thing.characterNum]->name.length(),
+			(currentLev->*thing.chType)[thing.characterNum]->name);
+	}
+
+	std::ofstream fileout(file);
+	for (const std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+//template <typename C, typename W>
+//void writer(void(*fun)(std::initializer_list<C>&, std::vector<std::string>&),
+//	const std::string& file, const std::initializer_list<W> stuff) {
+//
+//	std::vector<std::string> contents;
+//	getfile(file, contents);
+//
+//	fun(stuff, contents);
+//
+//	std::ofstream fileout(file);
+//	for (const std::string y : contents)
+//		fileout << y + "\n";
+//
+//	fileout.close();
+//}
+
+template <typename FUN, typename W>
+void writer(FUN fun, const std::string& file, const W stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (const std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void multiWrite(const std::initializer_list<writeSingle>& stuff, std::vector<std::string>& contents) {
+	for (writeSingle thing : stuff)
+			contents[thing.lnCol.ln - 1].replace(thing.lnCol.col - 1, thing.len, thing.newStr);
+
+}
+
+void manyWrite(const std::initializer_list<writeSet>& stuff, std::vector<std::string>& contents) {
+	for (writeSet thing : stuff) {
+		for (coord lc : thing.lnCol) {
+			contents[lc.ln - 1].replace(lc.col - 1, thing.len, thing.newStr);
+		}
+	}
+}
+
+void oneWrite(const writeSingle& wrt, std::vector<std::string>& contents) {
+	contents[wrt.lnCol.ln - 1].replace(wrt.lnCol.ln - 1, wrt.len, wrt.newStr);
 }
 
 void appendFile(const std::string& file, const std::string& appendix) {
@@ -615,7 +721,7 @@ void appendFile(const std::string& file, const std::string& appendix) {
 		fileout << y + "\n";
 	}
 	fileout.close();
-	
+
 }
 
 std::string getGiz(Level* lev, char scene) {
@@ -641,8 +747,16 @@ void renamer(const std::string& oldName, const std::string& newName) {
 		wxString err = "File name override failed: " + oldName + " -> " + newName;
 		wxGetApp().CallAfter([err]() {
 			wxLogError(err);
-			});
+		});
 	}
+}
+
+std::string getName(const unsigned int characterNum, const std::vector<Playable*> Level::* chType) {
+	return (currentLev->*chType)[characterNum]->name;
+}
+
+std::string getVanilla(const unsigned int characterNum, const std::vector<Playable*> Level::* chType) {
+	return currentLev->vanillaMap[currentLev->*chType][characterNum]->name();
 }
 
 /*
@@ -739,7 +853,6 @@ rgb::rgb() {
 
 coord::coord() {}
 
-coord::coord(int myLn) : ln(myLn) {}
+coord::coord(const unsigned int myLn) : ln(myLn) {}
 
-coord::coord(int myLn, int myCol) : ln(myLn), col(myCol) {}
-
+coord::coord(const unsigned int myLn, const unsigned int myCol) : ln(myLn), col(myCol) {}
