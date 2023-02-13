@@ -24,7 +24,7 @@
     <ClCompile Include="Characters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FilePatch.cpp">
+    <ClCompile Include="OtherStuff.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Randomize.cpp">
@@ -41,7 +41,7 @@
     <ClInclude Include="Characters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FilePatch.h">
+    <ClInclude Include="OtherStuff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Defines.h">

@@ -1,6 +1,8 @@
 #include "Characters.h"
 #include "App.h"
 #include "Defines.h"
+#include "OtherStuff.h"
+
 #include <wx/wx.h>
 #include <sstream>
 

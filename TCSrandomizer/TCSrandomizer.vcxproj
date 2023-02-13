@@ -142,7 +142,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Characters.cpp" />
-    <ClCompile Include="FilePatch.cpp" />
+    <ClCompile Include="OtherStuff.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Randomize.cpp" />
   </ItemGroup>
@@ -150,7 +150,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="FilePatch.h" />
+    <ClInclude Include="OtherStuff.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Randomize.h" />
   </ItemGroup>

@@ -5,7 +5,6 @@
 #include <random>
 #include <unordered_map>
 
-#include "FilePatch.h"
 //#include "Level.h"
 
 struct Level;
@@ -21,7 +20,7 @@ struct Playable {
 	float speed = 1.2;
 	Level* lev;
 	int price = 0;
-	const static bool alwaysTrue = true; //lol
+	const bool alwaysTrue = true; //lol
 
 	bool hat = false, lever = false, build = false, box = false, jump = false, doubleJump = false,
 		highJump = false, yodaJump = false, extraHighJump = false, realDoubleJump = false, highDoubleJump = false,

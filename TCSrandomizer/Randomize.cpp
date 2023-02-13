@@ -8,9 +8,11 @@
 #include <array>
 #include <random>
 
+#include "FileGen.h"
 #include "App.h"
 #include "Characters.h"
 #include "Defines.h"
+#include "OtherStuff.h"
 
 extern bool character;
 extern bool extog;
@@ -1742,98 +1744,36 @@ void Randomize() {
 
 	#endif
 
-		auto scpXBatch = [](const char scene, const std::string& script, const int characterNum,
-			const std::initializer_list<coord>& lncol, std::vector<Playable*> Level::* chType = &Level::party) {
+		//auto scpXBatch = [](const char scene, const std::string& script, const int characterNum,
+		//	const std::initializer_list<coord>& lncol, std::vector<Playable*> Level::* chType = &Level::party) {
 
-			txtIns(getSCP(currentLev, scene, script), getVanilla(characterNum, chType),
-				lncol, getVanillaAlt(characterNum, chType).length());
-		};
+		//	txtIns(getSCP(currentLev, scene, script), getVanilla(characterNum, chType),
+		//		lncol, getVanillaAlt(characterNum, chType).length());
+		//};
 
-		auto scXpRep = [](const char scene, const std::string& script, const std::string& newStr, const int len, const coord lncol) {
-			txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
-		};
-
-
-		auto scpRepXBatch = [](const char scene, const std::string& script, const std::string& newStr,
-			const int len, const std::initializer_list<coord>& lncol) {
-
-			txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
-		};
-
-	
-		auto fileDeleter = [](const char scene, const int characterNum,
-			std::vector<Playable*> Level::* chType = &Level::party) {
-
-			std::remove(getSCP(currentLev, scene, getVanillaAlt(characterNum, chType)).c_str());
-		};
-		
-		struct basicCh {
-			const unsigned int chNum;
-			const unsigned int line;
-			const std::vector<Playable*> Level::* chType = &Level::party;
-		};
-		
-		struct advancedCh {
-			const unsigned int chNum;
-			std::initializer_list<coord> lnCol;
-			const std::vector<Playable*> Level::* chType = &Level::party;
-		};
-
-		auto playerInit = [](const std::initializer_list<basicCh> writers) {
-			std::vector<writeSingle> writ;
-			for (basicCh w : writers) {
-				writ.push_back(writeSingle{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), {w.line, 12}});
-			}
-			writer(multiWrite, currentLev->path + currentLev->name + ".TXT", writ);
-		};
+		//auto scXpRep = [](const char scene, const std::string& script, const std::string& newStr, const int len, const coord lncol) {
+		//	txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
+		//};
 
 
-		auto scpIns = [](const char scene, const std::string& script, const unsigned int chNum, const coord lnCol,
-			const std::vector<Playable*> Level::* chType = &Level::party) {
-			
-			writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(chNum, lnCol, chType));
-		};
+		//auto scpRepXBatch = [](const char scene, const std::string& script, const std::string& newStr,
+		//	const int len, const std::initializer_list<coord>& lncol) {
 
-		auto scpRep = [](const char scene, const std::string& script, const std::string txt, const unsigned int len, const coord lnCol) {
-			writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(txt, len, lnCol));
-		};
+		//	txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
+		//};
 
-		auto scpBatch = [](const char scene, const std::string& script, const unsigned int chNum, const std::initializer_list<coord> lnCol,
-			const std::vector<Playable*> Level::* chType = &Level::party) {
-			writeSet writ = {getName(chNum, chType), getVanilla(chNum, chType).length(), lnCol};
-			writer(oneWrite, getSCP(currentLev, scene, script), writ);
-		};
 
-		auto scpMany = [](const char scene, const std::string& script, std::initializer_list<advancedCh> writers) {
-			std::vector<writeSet> writ;
-			for (advancedCh w : writers) {
-				writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), w.lnCol});
-			}
-			writer(manyWrite, currentLev->path + currentLev->name + ".TXT", writ);
-		};
+		//auto fileDeleter = [](const char scene, const int characterNum,
+		//	std::vector<Playable*> Level::* chType = &Level::party) {
 
-		auto scpName = [](const char scene, const unsigned  int characterNum, const std::vector<Playable*> Level::* chType = &Level::party) {
-			renamer(getSCP(currentLev, scene, getVanilla(characterNum, chType)),
-				getSCP(currentLev, scene, getName(characterNum, chType)));
-		};
-
-		auto scriptTxt = [&scpName](const char scene, const int characterNum, const unsigned int line,
-			std::vector<Playable*> Level::* chType = &Level::party) {
-
-			writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(characterNum, {line, 1}, chType));
-
-			scpName(scene, characterNum);
-		};
-
-		auto scriptTxtRep = [&scpName](const char scene, const std::string newStr, const std::string oldStr, const unsigned int line) {
-			writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(newStr, oldStr.length(), {line, 1}));
-			renamer(getSCP(currentLev, scene, oldStr),
-				getSCP(currentLev, scene, newStr));
-		};
-
+		//	std::remove(getSCP(currentLev, scene, getVanillaAlt(characterNum, chType)).c_str());
+		//};
+		//
 
 		//pointerWrite(EXE, cantina1->name, 0x3f1c30);
 		//pointerWrite(EXE, cantina2->name, 0x3f1c38);
+	#define bonusCharacter &Level::bonusCharacters
+
 		characterPointer(cantina1, 0xca35a);
 		characterPointer(cantina2, 0xca360);
 
@@ -1844,7 +1784,7 @@ void Randomize() {
 		//playerInit(2, 3); //tc
 
 		scpIns('A', "LEVEL", 2, {18, 22});
-		scpBatch('A', "LEVEL1", 2, {{17, 22}, {21, 22}, {40, 22}});
+		scpMulti('A', "LEVEL1", 2, {{17, 22}, {21, 22}, {40, 22}});
 
 		//stops tc from going to panel
 		scpRep('A', "TC14", "alwaystrue", 26, {35, 6});
@@ -1885,7 +1825,7 @@ void Randomize() {
 
 		currentLev = Theed;
 		playerInit({{0, 1}, {1, 2}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
-		scpBatch('A', "LEVEL", 2, {{20, 25}, {21, 28}});
+		scpMulti('A', "LEVEL", 2, {{20, 25}, {21, 28}});
 
 		scpMany('A', "LEVEL", {
 			{2, {{20, 25}, {21, 28}}},
@@ -1921,13 +1861,12 @@ void Randomize() {
 		scriptTxtRep('C', "ai_jango", "JANGOFETT", 1);
 		Kamino->binWrite("ai_jango", {0x1AFA}, 'C', "KAMINO_C.AI2");
 
-		currentLev = Factory;
-		playerInit({{0, 1}, {1, 2}, {2, 3}, {0, 10, &Level::bonusCharacters}});
 
-		Factory->replace("if CategoryIs \"Astromech\" == 1", 18, {{12, 3}}, 'D',
-			"PARTY.SCP");
-		Factory->replace("if CategoryIs \"Astromech\" == 1", 18, {{12, 3}}, 'E',
-			"PARTY.SCP");
+		currentLev = Factory;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {0, 10, bonusCharacter}});
+
+		scpRep('D', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
+		scpRep('E', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
 
 		/* Do not delete this yet.
 		if (!Proto({ Factory->party[3] })) Factory->replace("1", 3, { {34, 17} },
@@ -1943,26 +1882,14 @@ void Randomize() {
 
 						'E', "PARTY.SCP");*/
 
-		Factory->replace("if CategoryIs \"noweapon\" == 1", 18, {{13, 3}}, 'F',
-			"PARTY.SCP");
-		deleteLines(Factory->directory('F', "PARTY.SCP"), {14});
-		Factory->replace(2, {2}, 'A', "SCRIPT.TXT");
-		Factory->replace(3, {3}, 'A', "SCRIPT.TXT");
+		scpRep('F', "PARTY", "if CategoryIs \"noweapon\" == 1", 18, {13, 3});
 
-		Factory->replace(2, {2}, 'B', "SCRIPT.TXT");
-		Factory->replace(3, {3}, 'B', "SCRIPT.TXT");
+		lineDeleterScp('F', "PARTY", {14});
 
-		Factory->replace(3, {1}, 'D', "SCRIPT.TXT");
-		Factory->replace(3, {2}, 'E', "SCRIPT.TXT");
-
-		Factory->rename(2, 'A');
-		Factory->rename(2, 'B');
-
-		Factory->rename(3, 'A');
-		Factory->rename(3, 'B');
-		Factory->rename(3, 'D');
-
-		Factory->rename(3, 'E');
+		multiScriptTxt('A', {{2, 2}, {3, 3}});
+		multiScriptTxt('B', {{2, 2}, {3, 3}});
+		scriptTxt('D', 3, 1);
+		scriptTxt('E', 3, 2);
 		//Makes sure protocol droid follows you onto the turn things
 		/*{
 						int turn = GetType(3, Proto, Factory->party);
@@ -2001,15 +1928,15 @@ void Randomize() {
 		Factory->binWrite(4, {0x972}, 'G', "FACTORY_G.AI2");
 		characterPointer(Factory->party[4], 0xE010F);
 
-		JediBattle->replace(0, {{1, 12}});
-		JediBattle->replace(1, {{2, 12}});
-		JediBattle->replace(2, {{3, 12}, {8, 12}});   //obiwan
-		JediBattle->replace(3, {{4, 12}, {9, 12}});   //anakin
-		JediBattle->replace(4, {{5, 12}, {10, 12}});  //padme
-		JediBattle->replace(2, {{15, 11}, {31, 11}}, 'B', "PARTY.SCP");
-		JediBattle->replace(3, {{11, 11}, {26, 11}}, 'B', "PARTY.SCP");
-		JediBattle->replace(4, {{7, 11}, {21, 11}}, 'B', "PARTY.SCP");
-		JediBattle->replace(4, {{7, 45}}, 'B', "LEVEL.SCP");
+		currentLev = JediBattle;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5},
+			{2, 8}, {3, 9}, {4, 10}}); //so they still spawn in FP
+
+		scpMany('B', "PARTY", {
+			{2, {{15, 11}, {31, 11}}},
+			{3, {{11, 11}, {26, 11}}},
+			{4, {{7, 11}, {21, 11}}}});
+		scpIns('B', "LEVEL", 7, {7, 45});
 
 		multiPointer(JediBattle->party[2], {0xDFABF, 0x3fffa4});
 		multiPointer(JediBattle->party[3], {0xDFAAB, 0x3fffa0});
@@ -2017,43 +1944,36 @@ void Randomize() {
 		//fixes green saber
 		//binaryWrite(EXE, 0x0f, 0x190E6);
 
-		Gunship->replace(0, {{1, 12}});
-		Gunship->replace(1, {{2, 12}});
+		currentLev = Gunship;
+		playerInit({{0, 1}, {1, 2}});
 
-		Dooku->replace(0, {{1, 12}});  //obiwan
-		Dooku->replace(1, {{2, 12}});  //anakin
-		Dooku->replace(2, {{3, 12}});  //yoda
-		Dooku->replace(0, {{209, 45}}, 'C', "DOOKU.SCP");
-		Dooku->replace(1, {{207, 26}, {214, 29}}, 'C', "DOOKU.SCP");
-		Dooku->replace(2, {{208, 43}}, 'C', "DOOKU.SCP");
-		Dooku->replace(2, {{6, 11}}, 'C', "PARTY.SCP");
-		Dooku->replace(2, {{18, 11}}, 'B', "PARTY.SCP");
+		currentLev = Dooku;
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
+		scpMany('C', "DOOKU", {
+			{0, {{209, 45}}},
+			{1, {{207, 26}, {214, 29}}},
+			{2, {{208, 43}}}});//Yoda
+		scpIns('C', "PARTY", 2, {6, 11});
+		scpIns('B', "PARTY", 2, {18, 11});
 
-		Coruscant->replace(0, {{1, 12}});
-		Coruscant->replace(1, {{2, 12}});
+		currentLev = Coruscant;
+		playerInit({{0, 1}, {1, 2}});
 
-		Chancellor->replace(0, {{1, 12}});
-		Chancellor->replace(1, {{2, 12}});
-		Chancellor->replace(2, {{3, 12}});  //r2
-		Chancellor->replace(3, {{4, 12}});  //palpatine
-		Chancellor->replace(0, {{29, 28}}, 'C', "DOOKU.SCP");
-		Chancellor->replace(1, {{28, 28}}, 'C', "DOOKU.SCP");
-		Chancellor->replace(2, {{38, 74}}, 'B', "R2D2.SCP");
+		currentLev = Chancellor;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
 
-		Chancellor->replace(2, {1}, 'A', "SCRIPT.TXT");
-		Chancellor->replace(2, {1}, 'B', "SCRIPT.TXT");
-		Chancellor->replace(2, {2}, 'C', "SCRIPT.TXT");
-		Chancellor->replace(2, {2}, 'G', "SCRIPT.TXT");
+		scpMany('C', "DOOKU", {
+			{0, {{29, 28}}},
+			{1, {{28, 28}}}});
+		scpIns('B', "R2D2", 2, {38, 74});
 
-		Chancellor->replace(3, {4}, 'A', "SCRIPT.TXT");
-		Chancellor->replace(3, {4}, 'B', "SCRIPT.TXT");
-		Chancellor->replace(3, {4}, 'C', "SCRIPT.TXT");
-		Chancellor->replace(3, {3}, 'G', "SCRIPT.TXT");
+		//tall room AI is stupid
+		if (!Chancellor->party[2]->astro) {
+			scpRep('B', "R2D2", "ReferenceScript", 16, {1, 1});
+		}
 
-		if (!Astro({Chancellor->party[2]}))
-			Chancellor->replace("ReferenceScript", 16, {{1, 1}}, 'B', "R2D2.SCP");
-
-		std::ofstream party(Chancellor->directory('B', "PARTY.SCP"));
+		//std::ofstream party(Chancellor->directory('B', "PARTY.SCP"));
+		std::ofstream party(getSCP(Chancellor, 'B', "PARTY"));
 		party << "state Base {\n"
 			<< "\tConditions {\n"
 			<< "\t\tif FreePlay == 1 goto NormalUpdate\n"
@@ -2083,217 +2003,166 @@ void Randomize() {
 			<< "\t\tFollowPlayer \"1\"\n"
 			<< "\t}\n"
 			<< "}\n";
-		Chancellor->append("party", 'B', "SCRIPT.TXT");
-		Chancellor->rename(2, 'A');
-		Chancellor->rename(2, 'B');
-		Chancellor->rename(2, 'C');
-		Chancellor->rename(2, 'G');
 
-		Chancellor->rename(3, 'A');
-		Chancellor->rename(3, 'B');
-		Chancellor->rename(3, 'C');
-		Chancellor->rename(3, 'G');
+		scriptTxtAppend('B', "party");
 
-		Chancellor->replace("if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}}, 'D',
-			"PARTY.SCP");  //test
+		scpRepMulti('D', "PARTY", "if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}}); //test
 
-		Grievous->replace(0, {{1, 12}});
-		Grievous->replace(1, {{2, 12}});
+		multiScriptTxt('A', {
+			{2, 1},
+			{3, 4},});
+		multiScriptTxt('B', {
+			{2, 1},
+			{3, 4},});
+		multiScriptTxt('C', {
+			{2, 2},
+			{3, 4},});
+		multiScriptTxt('G', {
+			{2, 2},
+			{3, 3},});
+
+		currentLev = Grievous;
+		playerInit({{0, 1}, {1, 2}});
 		//fixes ditto problem
-		Grievous->replace("ai_griev", 8, {3}, 'A', "SCRIPT.TXT");
+		scriptTxtRep('A', "ai_griev", "GRIEVOUS", 3);
 		Grievous->binWrite("ai_griev", {0x472D}, 'A', "GRIEVOUS_A.AI2");
-		Grievous->rename("ai_griev.scp", "GRIEVOUS.SCP", 'A');
 
-		Kashyyyk->replace(0, {{1, 12}});
-		Kashyyyk->replace(1, {{2, 12}});
-		Kashyyyk->replace(0, {{44, 28}}, 'A', "LEVEL.SCP");
-		Kashyyyk->replace(1, {{45, 28}}, 'A', "LEVEL.SCP");
+		currentLev = Kashyyyk;
+		playerInit({{0, 1}, {1, 2}});
+		scpMany('A', "LEVEL", {
+			{0, {{44, 28}}},
+			{1, {{45, 28}}}});
 
-		Ruin->replace(0, {{1, 12}});
-		Ruin->replace(1, {{2, 12}});
+		currentLev = Ruin;
+		playerInit({{0, 1}, {1, 2}});
 
-		Vader->replace(0, {{1, 12}});
-		Vader->replace(1, {{2, 12}});
-		Vader->replace("//", 0, {37}, 'C', "PARTY.SCP");
+		currentLev = Vader;
+		playerInit({{0, 1}, {1, 2}});
+		lineDeleterScp('B', "PARTY", {37});
 
-		SecretPlans->replace(0, {{3, 12}});  //leia
-		SecretPlans->replace(1, {{4, 12}});  //antilles
-		SecretPlans->replace(2, {{5, 12}});  //friend
-		SecretPlans->replace(3, {{6, 12}});  //3po
-		SecretPlans->replace(4, {{7, 12}});  //r2
+		currentLev = SecretPlans;
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}});
 
-		SecretPlans->replace(0, {{23, 11}}, 'A', "PARTY.SCP");
-		SecretPlans->replace(1, {{26, 11}}, 'A', "PARTY.SCP");
-		SecretPlans->replace(2, {{29, 11}, {14, 11}}, 'A', "PARTY.SCP");
-		SecretPlans->replace(3, {{17, 11}}, 'A', "PARTY.SCP");
-		SecretPlans->replace(4, {{20, 11}}, 'A', "PARTY.SCP");
+		scpMany('A', "PARTY", {
+			{0, {{23, 11}}},
+			{1, {{26, 11}}},
+			{2, {{29, 11}, {14, 11}}},
+			{3, {{17, 11}}},
+			{4, {{20, 11}}}});
+		scpMany('B', "PARTY", {
+			{0, {{23, 11}}},
+			{1, {{26, 11}}},
+			{2, {{29, 11}, {14, 11}}},
+			{3, {{17, 11}}},
+			{4, {{20, 11}}}});
+		scpMany('C', "PARTY", {
+			{0, {{7, 11}, {10, 11}}},
+			{2, {{34, 11}}},
+			{3, {{28, 11}, {53, 11}}},
+			{4, {{31, 11}}}});
+		scpMany('D', "PARTY", {
+			{0, {{38, 26}}},
+			{1, {{8, 11}}},
+			{2, {{9, 11}}},
+			{3, {{6, 11}}},
+			{4, {{7, 11}}}});
 
-		SecretPlans->replace(0, {{23, 11}}, 'B', "PARTY.SCP");
-		SecretPlans->replace(1, {{26, 11}}, 'B', "PARTY.SCP");
-		SecretPlans->replace(2, {{29, 11}, {14, 11}}, 'B', "PARTY.SCP");
-		SecretPlans->replace(3, {{17, 11}}, 'B', "PARTY.SCP");
-		SecretPlans->replace(4, {{20, 11}}, 'B', "PARTY.SCP");
+		scpMany('C', "LEVEL", {
+			{0, {{53, 26}, {54, 25}}},
+			{3, {{21, 22}, {36, 27}, {37, 27}, {38, 29}}},
+			{4, {{49, 27}, {50, 27}, {51, 29}}}});
+		scpIns('C', "LIFT_TROOPER", 2, {34, 25});
 
-		SecretPlans->replace(0, {{7, 11}, {10, 11}}, 'C', "PARTY.SCP");
-		SecretPlans->replace(2, {{34, 11}}, 'C', "PARTY.SCP");
-		SecretPlans->replace(3, {{28, 11}, {53, 11}}, 'C',
-			"PARTY.SCP");  //use categoryis for {53, 11}
-		SecretPlans->replace(4, {{31, 11}}, 'C', "PARTY.SCP");
+		currentLev = Jundland;
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}});
 
-		SecretPlans->replace(0, {{38, 26}}, 'D', "PARTY.SCP");
-		SecretPlans->replace(1, {{8, 11}}, 'D', "PARTY.SCP");
-		SecretPlans->replace(2, {{9, 11}}, 'D', "PARTY.SCP");
-		SecretPlans->replace(3, {{6, 11}}, 'D', "PARTY.SCP");
-		SecretPlans->replace(4, {{7, 11}}, 'D', "PARTY.SCP");
+		scpMany('A', "LEVEL", {
+			{0, {{51, 23}}},
+			{1, {{52, 23}}},
+			{2, {{54, 26}}},
+			{3, {{55, 26}}}});
 
-		SecretPlans->replace(0, {{53, 26}, {54, 25}}, 'C', "LEVEL.SCP");
-		SecretPlans->replace(3, {{21, 22}, {36, 27}, {37, 27}, {38, 29}}, 'C',
-			"LEVEL.SCP");
-		SecretPlans->replace(4, {{49, 27}, {50, 27}, {51, 29}}, 'C', "LEVEL.SCP");
+		scpMany('A', "PARTY", {
+			{2, {{16, 11}}},
+			{3, {{17, 11}}}});
+		scpMany('B', "PARTY", {
+			{2, {{6, 11}}},
+			{3, {{9, 11}}}});
+		scpMany('D', "PARTY", {
+			{2, {{6, 11}, {9, 11}, {32, 11}}},
+			{3, {{7, 11}, {12, 11}, {35, 11}}}});
 
-		SecretPlans->replace(2, {{34, 25}}, 'C', "LIFT_TROOPER.SCP");
+		currentLev = Spaceport;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
-		Jundland->replace(0, {{3, 12}});  //luke
-		Jundland->replace(1, {{4, 12}});  //ben
-		Jundland->replace(2, {{5, 12}});  //3po
-		Jundland->replace(3, {{6, 12}});  //r2
+		scpMany('A', "PARTY", {
+			{0, {{8, 11}}},
+			{1, {{11, 11}}},
+			{2, {{14, 11}}},
+			{3, {{17, 11}}},
+			{4, {{24, 11}}},
+			{5, {{21, 11}}}});
+		scpMany('B', "PARTY", {
+			{0, {{8, 11}}},
+			{1, {{11, 11}}},
+			{2, {{14, 11}}},
+			{3, {{17, 11}}},
+			{4, {{24, 11}}},
+			{5, {{21, 11}}}});
+		scpMany('C', "PARTY", {
+			{0, {{8, 11}}},
+			{1, {{11, 11}}},
+			{2, {{14, 11}}},
+			{3, {{17, 11}}},
+			{4, {{24, 11}}},
+			{5, {{21, 11}}}});
 
-		Jundland->replace(0, {{51, 23}}, 'A', "LEVEL.SCP");
-		Jundland->replace(1, {{52, 23}}, 'A', "LEVEL.SCP");
-		Jundland->replace(2, {{54, 26}}, 'A', "LEVEL.SCP");
-		Jundland->replace(3, {{55, 26}}, 'A', "LEVEL.SCP");
+		scpMany('C', "LEVEL", {
+			{0, {{100, 26}, {101, 25}}},
+			{1, {{103, 26}, {104, 25}}},
+			{2, {{106, 26}, {107, 25}}},
+			{3, {{109, 26}, {110, 25}}},
+			{4, {{97, 23}, {98, 28}}},
+			{5, {{94, 23}, {95, 28}}}});
 
-		Jundland->replace(2, {{16, 11}}, 'A', "PARTY.SCP");
-		Jundland->replace(3, {{17, 11}}, 'A', "PARTY.SCP");
+		scpMany('D', "LEVEL", {
+			{0, {{26, 26}, {27, 27}, {28, 27}, {29, 28}, {30, 29}, {108, 26}, {109, 27}, {110, 27}, {111, 29}}},
+			{1, {{32, 26}, {33, 27}, {34, 27}, {35, 28}, {36, 29}, {113, 26}, {114, 27}, {115, 27}, {116, 29}}},
+			{2, {{38, 26}, {39, 27}, {40, 27}, {41, 28}, {42, 29}, {118, 26}, {119, 27}, {120, 27}, {121, 29}}},
+			{3, {{44, 26}, {45, 27}, {46, 27}, {47, 28}, {48, 29}, {123, 26}, {124, 27}, {125, 27}, {126, 29}}}});
 
-		Jundland->replace(2, {{6, 11}}, 'B', "PARTY.SCP");
-		Jundland->replace(3, {{9, 11}}, 'B', "PARTY.SCP");
+		scpMany('E', "LEVEL", {
+			{0, {{16, 26}, {17, 27}, {18, 27}, {19, 26}}},
+			{1, {{21, 26}, {22, 27}, {23, 27}, {24, 26}}},
+			{2, {{26, 26}, {27, 27}, {28, 27}, {29, 26}}},
+			{3, {{31, 26}, {32, 27}, {33, 27}, {34, 26}}}});
 
-		Jundland->replace(2, {{6, 11}, {9, 11}, {32, 11}}, 'D', "PARTY.SCP");
-		Jundland->replace(3, {{7, 11}, {12, 11}, {35, 11}}, 'D', "PARTY.SCP");
+		currentLev = Princess;
+		playerInit({{0, 17}, {1, 18}, {2, 19}, {3, 20}, {4, 21}, {5, 22}, {0, 25, bonusCharacter}});
 
-		Spaceport->replace(0, {{1, 12}});  //luke
-		Spaceport->replace(1, {{2, 12}});  //ben
-		Spaceport->replace(2, {{3, 12}});  //r2
-		Spaceport->replace(3, {{4, 12}});  //3po
-		Spaceport->replace(4, {{5, 12}});  //han
-		Spaceport->replace(5, {{6, 12}});  //chewie
-
-		Spaceport->replace(0, {{8, 11}}, 'A', "PARTY.SCP");
-		Spaceport->replace(1, {{11, 11}}, 'A', "PARTY.SCP");
-		Spaceport->replace(2, {{14, 11}}, 'A', "PARTY.SCP");
-		Spaceport->replace(3, {{17, 11}}, 'A', "PARTY.SCP");
-		Spaceport->replace(4, {{24, 11}}, 'A', "PARTY.SCP");
-		Spaceport->replace(5, {{21, 11}}, 'A', "PARTY.SCP");
-
-		Spaceport->replace(0, {{8, 11}}, 'B', "PARTY.SCP");
-		Spaceport->replace(1, {{11, 11}}, 'B', "PARTY.SCP");
-		Spaceport->replace(2, {{14, 11}}, 'B', "PARTY.SCP");
-		Spaceport->replace(3, {{17, 11}}, 'B', "PARTY.SCP");
-		Spaceport->replace(4, {{24, 11}}, 'B', "PARTY.SCP");
-		Spaceport->replace(5, {{21, 11}}, 'B', "PARTY.SCP");
-
-		Spaceport->replace(0, {{8, 11}}, 'C', "PARTY.SCP");
-		Spaceport->replace(1, {{11, 11}}, 'C', "PARTY.SCP");
-		Spaceport->replace(2, {{14, 11}}, 'C', "PARTY.SCP");
-		Spaceport->replace(3, {{17, 11}}, 'C', "PARTY.SCP");
-		Spaceport->replace(4, {{24, 11}}, 'C', "PARTY.SCP");
-		Spaceport->replace(5, {{21, 11}}, 'C', "PARTY.SCP");
-
-		Spaceport->replace(0, {{100, 26}, {101, 25}}, 'C', "LEVEL.SCP");
-		Spaceport->replace(1, {{103, 26}, {104, 25}}, 'C', "LEVEL.SCP");
-		Spaceport->replace(2, {{106, 26}, {107, 25}}, 'C', "LEVEL.SCP");
-		Spaceport->replace(3, {{109, 26}, {110, 25}}, 'C', "LEVEL.SCP");
-		Spaceport->replace(4, {{97, 23}, {98, 28}}, 'C', "LEVEL.SCP");
-		Spaceport->replace(5, {{94, 23}, {95, 28}}, 'C', "LEVEL.SCP");
-
-		Spaceport->replace(0,
-			{{26, 26},
-			{27, 27},
-			{28, 27},
-			{29, 28},
-			{30, 29},
-			{108, 26},
-			{109, 27},
-			{110, 27},
-			{111, 29}},
-			'D', "LEVEL.SCP");
-		Spaceport->replace(1,
-			{{32, 26},
-			{33, 27},
-			{34, 27},
-			{35, 28},
-			{36, 29},
-			{113, 26},
-			{114, 27},
-			{115, 27},
-			{116, 29}},
-			'D', "LEVEL.SCP");
-		Spaceport->replace(2,
-			{{38, 26},
-			{39, 27},
-			{40, 27},
-			{41, 28},
-			{42, 29},
-			{118, 26},
-			{119, 27},
-			{120, 27},
-			{121, 29}},
-			'D', "LEVEL.SCP");
-		Spaceport->replace(3,
-			{{44, 26},
-			{45, 27},
-			{46, 27},
-			{47, 28},
-			{48, 29},
-			{123, 26},
-			{124, 27},
-			{125, 27},
-			{126, 29}},
-			'D', "LEVEL.SCP");
-
-		Spaceport->replace(0, {{16, 26}, {17, 27}, {18, 27}, {19, 26}}, 'E',
-			"LEVEL.SCP");
-		Spaceport->replace(1, {{21, 26}, {22, 27}, {23, 27}, {24, 26}}, 'E',
-			"LEVEL.SCP");
-		Spaceport->replace(2, {{26, 26}, {27, 27}, {28, 27}, {29, 26}}, 'E',
-			"LEVEL.SCP");
-		Spaceport->replace(3, {{31, 26}, {32, 27}, {33, 27}, {34, 26}}, 'E',
-			"LEVEL.SCP");
-
-		Princess->replace(0, {{17, 12}});  //han
-		Princess->replace(1, {{18, 12}});  //luke
-		Princess->replace(2, {{19, 12}});  //chewie
-		Princess->replace(3, {{20, 12}});  //r2
-		Princess->replace(4, {{21, 12}});  //3po
-		Princess->replace(5, {{22, 12}});  //ben
-		Princess->replace(6, {{25, 12}});  //leia
-
-		Princess->replace(3, {{35, 26}, {36, 25}}, 'A', "LEVEL.SCP");
-		Princess->replace(4, {{33, 26}, {34, 25}}, 'A', "LEVEL.SCP");
-		Princess->replace(5, {{37, 26}, {38, 25}}, 'A', "LEVEL.SCP");
-
-		Princess->replace(3, {{24, 26}}, 'B', "LEVEL.SCP");
-		Princess->replace(4, {{25, 26}}, 'B', "LEVEL.SCP");
-		Princess->replace(5, {{26, 26}}, 'B', "LEVEL.SCP");
-
-		Princess->replace(5, {6}, 'A', "SCRIPT.TXT");
-		Princess->replace(5, {9}, 'B', "SCRIPT.TXT");
-		Princess->replace(5, {3}, 'C', "SCRIPT.TXT");
-		Princess->replace(5, {1}, 'D', "SCRIPT.TXT");
-		Princess->replace(5, {4}, 'E', "SCRIPT.TXT");
+		scpMany('A', "LEVEL", {
+			{3, {{35, 26}, {36, 25}}},
+			{4, {{33, 26}, {34, 25}}},
+			{5, {{37, 26}, {38, 25}}}});
+		scpMany('B', "LEVEL", {
+			{3, {{24, 26}}},
+			{4, {{25, 26}}},
+			{5, {{26, 26}}}});
 
 		Princess->binWrite(5, {0x6825}, 'B', "DEATHSTARRESCUE_B.AI2");
+
 		//TCS stupidly checks weapon instead of character
-		Princess->replace(
+		scpRep('B', "LEVEL",
 			"\t\tdeactivate \"character=" + Princess->party[3]->name + "\"\n" +
 			"\t\tdeactivate \"character=" + Princess->party[4]->name +
 			"\"\n",  //+
 			//"\t\tdeactivate\"character=" + Princess->party[5]->name + "\"\n",
-			0, {27}, 'B', "LEVEL.SCP");
-		Princess->replace("\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n", 0,
-			{4}, 'C', "LEVEL.SCP");
-		Princess->append(std::string("state MakeSurePlayersNotDroids {\n"
+			0, {27, 1});
+
+		scpRep('C', "LEVEL", "\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n", 0, {4, 1});
+
+		scpAppend('C', "LEVEL",
+			"state MakeSurePlayersNotDroids {\n"
 			"\tConditions {\n"
 			"\t}\n"
 			"\tActions {\n"
@@ -2303,10 +2172,10 @@ void Randomize() {
 			Princess->party[4]->name + "\"\n" +
 			//"\t\tdeactivate \"character=" +
 			//Princess->party[5]->name + "\"\n" +
-			"\t}\n" + "}"),
-			'C', "LEVEL.SCP");
+			"\t}\n" + "}");
 
-		std::ofstream os(Princess->directory('D', "LEVEL.SCP"));
+
+		std::ofstream os(getSCP(Princess, 'D', "LEVEL"));
 		os << "state Base {\n"
 			<< "\tConditions {\n"
 			<< "\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n"
@@ -2324,180 +2193,131 @@ void Randomize() {
 			<< "}\n";
 		os.close();
 
-		Princess->replace("\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n", 0,
-			{4}, 'E', "LEVEL.SCP");
-		Princess->append(
-			std::string("state MakeSurePlayersNotDroids {\n"
-				"\tConditions {\n"
-				"\t}\n"
-				"\tActions {\n"
-				"\t\tdeactivate \"character=" +
-				Princess->party[3]->name + "\"\n" +
-				"\t\tdeactivate \"character=" + Princess->party[4]->name +
-				"\"\n" + "\t}\n" + "}"),
-			'E', "LEVEL.SCP");
+		scpRep('E', "LEVEL", "\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n", 0, {4, 1});
 
-		std::remove(Princess->directory('A', "NOWEAPON.SCP").c_str());
-		std::remove(Princess->directory('B', "NOWEAPON.SCP").c_str());
-		std::remove(Princess->directory('C', "NOWEAPON.SCP").c_str());
-		std::remove(Princess->directory('D', "NOWEAPON.SCP").c_str());
-		std::remove(Princess->directory('E', "NOWEAPON.SCP").c_str());
+		scpAppend('E', "LEVEL",
+			"state MakeSurePlayersNotDroids {\n"
+			"\tConditions {\n"
+			"\t}\n"
+			"\tActions {\n"
+			"\t\tdeactivate \"character=" +
+			Princess->party[3]->name + "\"\n" +
+			"\t\tdeactivate \"character=" + Princess->party[4]->name +
+			"\"\n" + "\t}\n" + "}");
 
-		Princess->rename(5, 'A');
-		Princess->rename(5, 'B');
-		Princess->rename(5, 'C');
-		Princess->rename(5, 'D');
-		Princess->rename(5, 'E');
-		Princess->binWrite(6, {0x3A9F}, 'C', "DEATHSTARRESCUE_C.AI2");
+		scpDeleter('A', "NOWEAPON");
+		scpDeleter('B', "NOWEAPON");
+		scpDeleter('C', "NOWEAPON");
+		scpDeleter('D', "NOWEAPON");
+		scpDeleter('E', "NOWEAPON");
 
-		DSE->replace(0, {{1, 12}});  //han
-		DSE->replace(1, {{2, 12}});  //chewie
-		DSE->replace(2, {{3, 12}});  //leia
-		DSE->replace(3, {{4, 12}});  //luke
-		DSE->replace(4, {{5, 12}});  //r2
-		DSE->replace(5, {{6, 12}});  //cpo
+		scriptTxt('A', 5, 6);
+		scriptTxt('B', 5, 9);
+		scriptTxt('C', 5, 3);
+		scriptTxt('D', 5, 1);
+		scriptTxt('E', 5, 4);
 
-		DSE->replace(4, {{15, 11}}, 'A', "PARTY.SCP");
-		DSE->replace(5, {{14, 11}}, 'A', "PARTY.SCP");
+		currentLev = DSE;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
-		DSE->replace(4, {{15, 11}}, 'B', "PARTY.SCP");
-		DSE->replace(5, {{14, 11}}, 'B', "PARTY.SCP");
+		scpMany('A', "PARTY", {
+			{4, {{15, 11}}},
+			{5, {{14, 11}}}});
+		scpMany('B', "PARTY", {
+			{4, {{15, 11}}},
+			{5, {{14, 11}}}});
+		scpMany('C', "PARTY", {
+			{4, {{12, 11}, {15, 11}}},
+			{5, {{6, 11}, {9, 11}}}});
 
-		DSE->replace(4, {{12, 11}, {15, 11}}, 'C', "PARTY.SCP");
-		DSE->replace(5, {{6, 11}, {9, 11}}, 'C', "PARTY.SCP");
+		currentLev = RebelAttack;
+		playerInit({{0, 1}, {1, 2}});
 
-		RebelAttack->replace(0, {{1, 12}});
-		RebelAttack->replace(1, {{2, 12}});
+		mainTxtIns("character \"" + Hoth->party[0]->name + "\" player\n"
+			"character \"" + Hoth->party[1]->name + "\" player",
+			32, {1, 1});
 
-		Hoth->replace("character \"" + Hoth->party[0]->name +
-			"\" player\ncharacter \"" + Hoth->party[1]->name +
-			"\" player",
-			32, {1});
+		currentLev = EchoBase;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
 
-		EchoBase->replace(0, {{1, 12}});
-		EchoBase->replace(1, {{2, 12}});
-		EchoBase->replace(2, {{3, 12}});  //3po
-		EchoBase->replace(3, {{4, 12}});  //chewbacca
+		scpMany('A', "PARTY", {
+			{2, {{24, 11}}},
+			{3, {{5, 11}}}});
 
-		EchoBase->replace(2, {{24, 11}}, 'A', "PARTY.SCP");
-		EchoBase->replace(3, {{5, 11}}, 'A', "PARTY.SCP");
+		scpRepMany('B', "PARTY", {
+			{"if CategoryIs \"protocol\"", 13, {{23, 3}}},
+			{"category=protocol", 14, {{111, 29}}},
+			{"protocol", 4, {{112, 60}}},
+			{3, {{5, 11}}}});
+		
+		scpIns('C', "Party", 3, {6, 11});
+		
+		currentLev = FalconFlight;
+		playerInit({{0, 3}, {1, 4}});
 
-		EchoBase->replace("if CategoryIs \"protocol\"", 13, {{23, 3}}, 'B',
-			"PARTY.SCP");
-		EchoBase->replace("category=protocol", 14, {{111, 29}}, 'B', "PARTY.SCP");
-		EchoBase->replace("protocol", 4, {{112, 60}}, 'B', "PARTY.SCP");
-		EchoBase->replace(3, {{5, 11}}, 'B', "PARTY.SCP");
+		currentLev = Dagobah;
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}});
 
-		EchoBase->replace(3, {{6, 11}}, 'C', "PARTY.SCP");
+		scpMany('A', "LEVEL", {
+			{0, {{21, 26}, {22, 27}, {23, 27}, {24, 25}}},
+			{2, {{34, 26}, {35, 27}, {36, 27}, {37, 25}}},
+			{3, {{39, 26}, {40, 27}, {41, 27}, {42, 25}}}});
+		scpMany('B', "LEVEL", {
+			{0, {{41, 26}, {42, 27}, {43, 27}, {44, 25}}},
+			{1, {{59, 28}, {65, 29}, {84, 29}}},
+			{2, {{57, 28}, {61, 59}, {63, 29}, {82, 29}, {96, 26}, {97, 27}, {98, 27}, {99, 25}}},
+			{3, {{58, 28}, {64, 29}, {83, 29}, {101, 26}, {102, 27}, {103, 27}, {104, 25}}}});
+		scpMany('C', "LEVEL", {
+			{0, {{25, 26}, {26, 27}, {27, 27}, {28, 25}}},
+			{2, {{38, 26}, {39, 27}, {40, 27}, {41, 25}}},
+			{3, {{43, 26}, {44, 27}, {45, 27}, {46, 25}}}});
+		scpMany('D', "LEVEL", {
+			{0, {{35, 26}, {36, 27}, {37, 27}, {38, 25}}},
+			{2, {{48, 26}, {49, 27}, {50, 27}, {51, 25}}},
+			{3, {{53, 26}, {54, 27}, {55, 27}, {56, 25}}}});
+		scpMany('E', "LEVEL.SCP", {
+			{0, {{33, 26}, {34, 27}, {35, 27}, {36, 25}, {54, 26}, {55, 27}, {56, 27}, {57, 25}}},
+			{3, {{38, 27}}}});
 
-		FalconFlight->replace(0, {{3, 12}});
-		FalconFlight->replace(1, {{4, 12}});
-
-		Dagobah->replace(0, {{3, 12}});  //luke pilot
-		Dagobah->replace(1, {{4, 12}});  //r2
-		Dagobah->replace(2, {{5, 12}});  //luke dagobah
-		Dagobah->replace(3, {{6, 12}});  //yoda
-
-		Dagobah->replace(0, {{21, 26}, {22, 27}, {23, 27}, {24, 25}}, 'A',
-			"LEVEL.SCP");
-		Dagobah->replace(2, {{34, 26}, {35, 27}, {36, 27}, {37, 25}}, 'A',
-			"LEVEL.SCP");
-		Dagobah->replace(3, {{39, 26}, {40, 27}, {41, 27}, {42, 25}}, 'A',
-			"LEVEL.SCP");
-
-		Dagobah->replace(0, {{41, 26}, {42, 27}, {43, 27}, {44, 25}}, 'B',
-			"LEVEL.SCP");
-		Dagobah->replace(1, {{59, 28}, {65, 29}, {84, 29}}, 'B', "LEVEL.SCP");
-		Dagobah->replace(2,
-			{{57, 28},
-			{61, 59},
-			{63, 29},
-			{82, 29},
-			{96, 26},
-			{97, 27},
-			{98, 27},
-			{99, 25}},
-			'B', "LEVEL.SCP");
-		Dagobah->replace(3,
-			{{58, 28},
-			{64, 29},
-			{83, 29},
-			{101, 26},
-			{102, 27},
-			{103, 27},
-			{104, 25}},
-			'B', "LEVEL.SCP");
-
-		Dagobah->replace(0, {{25, 26}, {26, 27}, {27, 27}, {28, 25}}, 'C',
-			"LEVEL.SCP");
-		Dagobah->replace(2, {{38, 26}, {39, 27}, {40, 27}, {41, 25}}, 'C',
-			"LEVEL.SCP");
-		Dagobah->replace(3, {{43, 26}, {44, 27}, {45, 27}, {46, 25}}, 'C',
-			"LEVEL.SCP");
-
-		Dagobah->replace(0, {{35, 26}, {36, 27}, {37, 27}, {38, 25}}, 'D',
-			"LEVEL.SCP");
-		Dagobah->replace(2, {{48, 26}, {49, 27}, {50, 27}, {51, 25}}, 'D',
-			"LEVEL.SCP");
-		Dagobah->replace(3, {{53, 26}, {54, 27}, {55, 27}, {56, 25}}, 'D',
-			"LEVEL.SCP");
-
-		Dagobah->replace(0,
-			{{33, 26},
-			{34, 27},
-			{35, 27},
-			{36, 25},
-			{54, 26},
-			{55, 27},
-			{56, 27},
-			{57, 25}},
-			'E', "LEVEL.SCP");
-		Dagobah->replace(3, {{38, 27}}, 'E', "LEVEL.SCP");
 		//fixes AI
-		Dagobah->replace("if CategoryIs \"Jedi\" == 0", 18, {{5, 3}}, 'C',
-			"PARTY.SCP");
+		scpRep('C', "PARTY", "if CategoryIs \"Jedi\" == 0", 18, {5, 3});
+		
+		scpMany('E', "PARTY", {
+			{2, {{9, 11}}},
+			{3, {{7, 11}, {170, 11}}}});
 
-		Dagobah->replace(2, {{9, 11}}, 'E', "PARTY.SCP");
-		Dagobah->replace(3, {{7, 11}, {170, 11}}, 'E', "PARTY.SCP");
 		hexWrite(EXE, "\0", 0x35E3A0);  //unrestricts xwing force
+
 		//training
-		if (Jedi({Dagobah->party[0]}))
-			multiPointer(Dagobah->party[0],
-				{0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
-		else if (Jedi({Dagobah->party[1]}))
-			multiPointer(Dagobah->party[1],
-				{0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
+		if (Dagobah->party[0]->jedi)
+			multiPointer(Dagobah->party[0], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
+		else if (Dagobah->party[1]->jedi)
+			multiPointer(Dagobah->party[1], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
 
-		CCT->replace(0, {{3, 12}});
-		CCT->replace(1, {{4, 12}});
-		CCT->replace("if CategoryIs \"Droid\" == 1", 18, {{5, 3}}, 'A',
-			"PARTY.SCP");
-		CCT->replace("if CategoryIs \"Droid\" == 1", 18, {{5, 3}}, 'B',
-			"PARTY.SCP");
-		CCT->replace("if CategoryIs \"Droid\" == 1", 18, {{5, 3}}, 'C',
-			"PARTY.SCP");
+		currentLev = CCT;
+		playerInit({{0, 3}, {1, 4}});
+		
+		scpRep('A', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
+		scpRep('B', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
+		scpRep('C', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
 
-		Bespin->replace(0, {{1, 12}});
-		Bespin->replace(1, {{2, 12}});
-		Bespin->replace(2, {{3, 12}});
-		Bespin->replace(3, {{4, 12}});  //r2
-		Bespin->replace(4, {{5, 12}});  //3po
+		currentLev = Bespin;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
 
-		Bespin->replace(3, {{14, 11}, {20, 11}}, 'A', "PARTY.SCP");
-		Bespin->replace(4, {{15, 11}, {17, 11}}, 'A', "PARTY.SCP");
+		scpMany('A', "PARTY", {
+			{3, {{14, 11}, {20, 11}}},
+			{4, {{15, 11}, {17, 11}}}});
+		scpMulti('B', "PARTY", 4, {{14, 11}, {16, 11}});
 
-		Bespin->replace(4, {{14, 11}, {16, 11}}, 'B', "PARTY.SCP");
-		Bespin->replace("if CategoryIs \"Protocol\"", 13, {{13, 3}, {24, 3}}, 'C',
-			"PARTY.SCP");
-		Bespin->replace("if CategoryIs \"Astromech\"", 13, {{18, 3}, {30, 3}}, 'C',
-			"PARTY.SCP");
+		scpRepMany('C', "PARTY", {
+			{"if CategoryIs \"Protocol\"", 13, {{13, 3}, {24, 3}}},
+			{"if CategoryIs \"Astromech\"", 13, {{18, 3}, {30, 3}}}});
+		
+		//buildable 3po
+		baseFile('A', "TXT", 4, {494, 13});
+		baseFile('A', "GIT", 4, {1598, 22});
 
-		Bespin->replace(4, {{494, 13}}, 'A');
-		Bespin->specialReplace(4, {{1598, 22}}, 'A', ".GIT");
-		//Bespin->replace(4, { 7 }, 'A', "SCRIPT.TXT");
-		//Bespin->rename("_" + Bespin->party[4]->name + ".SCP", "_C3PO.SCP", 'A');
-		////double check, might be supurfluous
-
+		currentLev = Jabbas;
 		Jabbas->replace(0, {{1, 12}});  //leia
 		Jabbas->replace(1, {{2, 12}});  //chewie
 		Jabbas->replace(2, {{3, 12}});  //luke

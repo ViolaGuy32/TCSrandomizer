@@ -5,7 +5,7 @@
 
 #include "Characters.h"
 #include "MainFrame.h"
-#include "FilePatch.h"
+#include "OtherStuff.h"
 #include "Defines.h"
 #include "Randomize.h"
 
