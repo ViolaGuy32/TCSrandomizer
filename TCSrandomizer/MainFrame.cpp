@@ -1,9 +1,6 @@
-#include <wx/filepicker.h>
-#include <fstream>
-#include <string>
-#include <thread>
 
 //#include "memHeader.h"
+#include "pch.h"
 
 #include "Characters.h"
 #include "MainFrame.h"
@@ -34,6 +31,8 @@ wxCheckBox* greenType;
 wxCheckBox* extraType;
 wxCheckBox* collectableType;
 wxCheckBox* colorType;
+
+//std::unique_ptr<std::ofstream> loggingIt;
 
 
 MainFrame::MainFrame(const wxString& title)
@@ -88,6 +87,12 @@ MainFrame::MainFrame(const wxString& title)
 
 
 void MainFrame::StartRando(wxCommandEvent& evt) {
+
+	std::remove("files/log.txt");
+	std::remove("files/log2.txt");
+	//loggingIt = std::make_unique<std::ofstream>("files/log.txt");
+
+	logR("\n\t\t\t\t\tRandomizing. . .");
 	wxLogStatus("Randomizing. . .");
 
 	character = characterType->GetValue();

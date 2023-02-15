@@ -1,5 +1,5 @@
 #pragma once
-#include <wx/wx.h>
+#include "pch.h"
 
 class App : public wxApp {
 public:

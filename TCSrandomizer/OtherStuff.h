@@ -1,7 +1,6 @@
 #pragma once
-#include <string>
-#include <fstream>
-#include <vector>
+#include "pch.h"
+
 #include "Characters.h"
 
 struct rgb {
@@ -51,7 +50,7 @@ struct writeSingle {
 //void manyWrite( std::initializer_list<writeSet>& stuff, std::vector<std::string>& contents);
 
 
-void logStatus(std::string log);
+void logR(std::string lg);
 
 void writer(void(*fun)(writeSingle, std::vector<std::string>&), std::string file, writeSingle stuff);
 

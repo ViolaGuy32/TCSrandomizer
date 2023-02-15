@@ -1,10 +1,9 @@
+#include "pch.h"
+
 #include "Characters.h"
 #include "App.h"
 #include "Defines.h"
-//#include "OtherStuff.h"
-
-#include <wx/wx.h>
-#include <sstream>
+#include "OtherStuff.h"
 
 extern std::string out;
 extern bool extog;
@@ -385,6 +384,8 @@ void levMaker() {
 
 		//Bounty Hunter Missions
 		BHM = std::make_shared<Level>();
+
+		BHM->name = "bounties";
 		BHM->vanillaParty = {
 			nameList["bobafett"],
 			nameList["greedo"],
@@ -419,25 +420,32 @@ void levMaker() {
 
 	}
 
+
 }
 
 void add(int a) {
+
+#ifdef _DEBUG
+	logR(currentLev->name + ' ' + currentLev->party[a]->name);
+#endif
+
 	testing.push_back(currentLev->party[a]);
 }
 
 void mix(std::shared_ptr<Level> lev) {
 	//generates random characters for given level
-
-#ifdef _DEBUG
-	wxString loggg = lev->name;
-	wxLogStatus(loggg);
-#endif
+//
+//#ifdef _DEBUG
+//	if (lev->name != currentLev->name)
+//		logR(lev->name);
+//#endif
 
 	testing.clear();
 	currentLev = lev;
+	lev->party.clear();
+	lev->bonusCharacters.clear();
 
 	if (character) {
-		lev->party.clear();
 
 		//std::array<std::shared_ptr<Playable>>* menu;
 		//if (lev->vehicleLevel)
@@ -448,15 +456,18 @@ void mix(std::shared_ptr<Level> lev) {
 			std::uniform_int_distribution<int> distrib(0, vhs.size() - 1);
 
 			std::map<std::shared_ptr<Playable>, bool> duplicateFinder;
+
+			for (std::shared_ptr<Playable> p : vhs) { duplicateFinder[p] = false; }
+
 			std::shared_ptr<Playable> temp;
 			for (int i = 0; i < lev->vanillaParty.size(); i++) {
-				do { temp = (vhs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				do { temp = (vhs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true);
 				duplicateFinder[temp] = true;
 				lev->party.push_back(temp);
 			}
 
 			for (int i = 0; i < lev->vanillaBonusCharacters.size(); i++) {
-				do { temp = (vhs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				do { temp = (vhs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true);
 				duplicateFinder[temp] = true;
 				lev->bonusCharacters.push_back(temp);
 			}
@@ -465,15 +476,18 @@ void mix(std::shared_ptr<Level> lev) {
 			std::uniform_int_distribution<int> distrib(0, chs.size() - 1);
 
 			std::map<std::shared_ptr<Playable>, bool> duplicateFinder;
+			for (std::shared_ptr<Playable> p : chs) { duplicateFinder[p] = false; }
+
+
 			std::shared_ptr<Playable> temp;
 			for (int i = 0; i < lev->vanillaParty.size(); i++) {
-				do { temp = (chs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				do { temp = (chs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true);
 				duplicateFinder[temp] = true;
 				lev->party.push_back(temp);
 			}
 
 			for (int i = 0; i < lev->vanillaBonusCharacters.size(); i++) {
-				do { temp = (chs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				do { temp = (chs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true);
 				duplicateFinder[temp] = true;
 				lev->bonusCharacters.push_back(temp);
 			}
@@ -654,7 +668,7 @@ void Level::mix() {
 #ifdef _DEBUG
 	wxString loggg = name;
 	wxGetApp().CallAfter([&loggg] {
-		wxLogStatus(loggg);
+		logR(loggg);
 	});
 #endif
 

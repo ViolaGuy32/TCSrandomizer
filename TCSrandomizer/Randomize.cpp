@@ -1,11 +1,4 @@
-#include <wx/log.h>
-
-#include <filesystem>
-#include <sstream>
-#include <vector>
-#include <array>
-#include <memory>
-#include <random>
+#include "pch.h"
 
 #include "FileGen.h"
 #include "App.h"
@@ -24,6 +17,8 @@ extern bool enemy;
 extern bool colorOp;
 extern bool advanceMus;
 extern LogicType logicType;
+//extern std::unique_ptr<std::ofstream> loggingIt;
+
 
 uint64_t seed = 0;
 std::mt19937_64* randoPTR;
@@ -90,9 +85,6 @@ std::shared_ptr<Level> BHM;
 void Randomize() {
 
 
-	std::remove("files/log.txt");
-	std::ofstream loggingIt("files/log.txt");
-
 	//std::random_device rando;
 	//std::seed_seq rando(time(NULL));
 	//srand(time(nullptr));
@@ -107,6 +99,7 @@ void Randomize() {
 
 	charMaker();
 	levMaker();
+	currentLev = BHM;
 
 #if (0)
 	int blueColor = 0x00bfff;
@@ -1183,21 +1176,16 @@ void Randomize() {
 				goto anewhope;
 		} else {
 			if (DoubleTransitionSkip())
-				goto bhm;
+				goto bhmPrep;
 			if (atrb(Attack) || atrb(FakeShoot)) {
 				add(2); //3po
 				if (atrb(Proto))
-					goto bhm;
+					goto bhmPrep;
 			}
 			goto anewhope;
 		}
 
-	bhm:
-		mix(BHM);
-		add(2);
-		add(3);
-		add(4);
-		add(5);
+	bhmPrep:
 
 		//breaks if target is not unique
 		std::shared_ptr<Playable> battledroid = nameList["battledroid"];
@@ -1218,6 +1206,23 @@ void Randomize() {
 		std::shared_ptr<Playable> imperialofficer = nameList["imperialofficer"];
 		std::shared_ptr<Playable> snowtrooper = nameList["snowtrooper"];
 		std::shared_ptr<Playable> ewok = nameList["ewok"];
+
+	bhm:
+		mix(BHM);
+
+		logR("BOUNTIES MIXED");
+		for (std::shared_ptr<Playable> p : BHM->party) {
+			logR(p->name + " player");
+		}
+
+		for (std::shared_ptr<Playable> p : BHM->bonusCharacters) {
+			logR(p->name + " target");
+		}
+
+		add(2);
+		add(3);
+		add(4);
+		add(5);
 
 		//check all bonus numbers
 		if (BHM->bonusCharacters[0] == battledroid)
@@ -1318,11 +1323,14 @@ void Randomize() {
 	}
 
 	if (character) {
+	#ifdef _DEBUG
+		logR("Cantina");
+	#endif
+
 		std::uniform_int_distribution<int> randPlayable(0, pls.size() - 1);
 		std::uniform_int_distribution<int> randCharacters(0, chs.size() - 1);
 
 	cantina:
-	//don't use rand
 		cantina1 = chs[randCharacters(rando)];
 		cantina2 = chs[randCharacters(rando)];
 		if (cantina1 == cantina2)
@@ -1364,14 +1372,14 @@ void Randomize() {
 
 	if (collectable) {
 	#ifdef _DEBUG
-		wxLogStatus("Starting collectables");
+		logR("Starting collectables");
 	#endif
 		int x = 1;
 
 		auto collectableWrite
-			= [&x, &loggingIt](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
+			= [&x](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
 		#ifdef _DEBUG
-			wxLogStatus((lev->name + " collectables").c_str());
+			logR((lev->name + " collectables").c_str());
 		#endif
 
 			std::string file = getBasePath(lev, scene, "GIZ");
@@ -1383,7 +1391,7 @@ void Randomize() {
 				if (type != 'c' && type != 'm' && type != 'r') {
 					std::stringstream st;
 					st << std::hex << cAddress;
-					loggingIt << st.str() + " " + file + " is not a collectable.\n";
+					logR(st.str() + " " + file + " is not a collectable.\n");
 				}
 			#endif
 				if (type == 'c') {  //some challenge kits have the same name, which
@@ -1401,9 +1409,9 @@ void Randomize() {
 
 		//minikits with multiple spawn points
 		auto specialCollectable
-			= [&x, &loggingIt](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
+			= [&x](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
 		#ifdef _DEBUG
-			wxLogStatus((lev->name + ' ' + scene + " collectables").c_str());
+			logR((lev->name + ' ' + scene + " collectables").c_str());
 		#endif
 			std::string file = getBasePath(lev, scene, "GIZ");
 			std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
@@ -1414,7 +1422,7 @@ void Randomize() {
 				if (type != 'c' && type != 'm' && type != 'r') {
 					std::stringstream st;
 					st << std::hex << cAddress;
-					loggingIt << st.str() + " " + file + " is not a collectable.\n";
+					logR(st.str() + " " + file + " is not a collectable.\n");
 				}
 			#endif
 				if (type == 'c') {  //some challenge kits have the same name, which
@@ -1701,35 +1709,35 @@ void Randomize() {
 		collectableWrite(CCT, 'C',
 			{0x163d, 0x1626, 0x15f8, 0x15e1, 0x15ca, 0x160f});
 
-		//collectableWrite(Bespin, 'A',
-		//	{0x4e34, 0x4e06, 0x4def, 0x4dd8, 0x4dc1, 0x4daa, 0x4d7c,
-		//	0x4d65, 0x4d4e});
-		//collectableWrite(Bespin, 'B', {0x14f, 0xdc});
-		//collectableWrite(Bespin, 'C',
-		//	{0x434c, 0x4335, 0x431e, 0x4307, 0x42f0, 0x424f, 0x4238,
-		//	0x4221, 0x420a});
-		////TOWERS
-		//roomA = {0x4d37, 0x4d93};
-		//roomB = {0x41f3};
-		//bhpFile = getBasePath(Bespin, 'A', "GIZ");
-		//fs.open(bhpFile, std::ios::in | std::ios::out | std::ios::binary);
-		//for (int cAddress : roomA) {
-		//	fs.seekg(cAddress);
-		//	char type = fs.get();
-		//	binaryWrite(bhpFile,
-		//		Bespin->collectables[Bespin->collectables.size() - 1],
-		//		cAddress);
-		//}
-		//bhpFile = getBasePath(Bespin, 'C', "GIZ");
-		//for (int cAddress : roomB) {
-		//	fs.seekg(cAddress);
-		//	char type = fs.get();
-		//	binaryWrite(bhpFile,
-		//		Bespin->collectables[Bespin->collectables.size() - 1],
-		//		cAddress);
-		//}
-		//fs.close();
-		//++Bespin->collectIt;
+		collectableWrite(Bespin, 'A',
+			{0x4e34, 0x4e06, 0x4def, 0x4dd8, 0x4dc1, 0x4daa, 0x4d7c,
+			0x4d65, 0x4d4e});
+		collectableWrite(Bespin, 'B', {0x14f, 0xdc});
+		collectableWrite(Bespin, 'C',
+			{0x434c, 0x4335, 0x431e, 0x4307, 0x42f0, 0x424f, 0x4238,
+			0x4221, 0x420a});
+		//TOWERS
+		roomA = {0x4d37, 0x4d93};
+		roomB = {0x41f3};
+		bhpFile = getBasePath(Bespin, 'A', "GIZ");
+		fs.open(bhpFile, std::ios::in | std::ios::out | std::ios::binary);
+		for (int cAddress : roomA) {
+			fs.seekg(cAddress);
+			char type = fs.get();
+			binaryWrite(bhpFile,
+				Bespin->collectables[Bespin->collectables.size() - 1],
+				cAddress);
+		}
+		bhpFile = getBasePath(Bespin, 'C', "GIZ");
+		for (int cAddress : roomB) {
+			fs.seekg(cAddress);
+			char type = fs.get();
+			binaryWrite(bhpFile,
+				Bespin->collectables[Bespin->collectables.size() - 1],
+				cAddress);
+		}
+		fs.close();
+		++Bespin->collectIt;
 
 		collectableWrite(Jabbas, 'A',
 			{0x4314, 0x42fd, 0x42e6, 0x42cf, 0x42b8, 0x42a1, 0x428a,
@@ -1773,22 +1781,21 @@ void Randomize() {
 		collectableWrite(ITDS, 'F', {0x1f3f, 0x1f28});
 		collectableWrite(ITDS, 'G', {0x30bc, 0x30a5});
 
-	#ifdef _DEBUG
-		for (int i = 0; i < 36; i++) {
-			if (allLevels[i]->collectables.size() > 0) {
-				loggingIt << allLevels[i]->name + " has " +
-					std::to_string(allLevels[i]->collectables.size()) +
-					" collectables left.\n";
-			}
-		}
-	#endif
+	//#ifdef _DEBUG
+	//	for (int i = 0; i < 36; i++) {
+	//		if (allLevels[i]->collectables.size() > 0) {
+	//			logR(allLevels[i]->name + " has " +
+	//				std::to_string(allLevels[i]->collectables.size()) +
+	//				" collectables left.\n");
+	//		}
+	//	}
+	//#endif
 
-		loggingIt.close();
 	}
 
 	if (extra) {
 	#ifdef _DEBUG
-		wxLogStatus("Starting extras");
+		logR("Starting extras");
 
 	#endif
 		unsigned int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286,
@@ -1807,7 +1814,7 @@ void Randomize() {
 	//Patches levels with new characters
 	if (character) {
 	#ifdef _DEBUG
-		wxLogStatus("Patching Levels");
+		logR("Patching Levels");
 
 	#endif
 
@@ -1896,11 +1903,11 @@ void Randomize() {
 
 		currentLev = Theed;
 		playerInit({{0, 1}, {1, 2}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
-		scpMulti('A', "LEVEL", {2, {{20, 25}, {21, 28}}});
+		//scpMulti('A', "LEVEL", {2, {{20, 25}, {21, 28}}});
 
 		scpMany('A', "LEVEL", {
 			{2, {{20, 25}, {21, 28}}},
-			{3, {{18, 25}, {29, 28}}},
+			{3, {{18, 25}, {19, 28}}},
 			{4, {{24, 25}, {25, 28}}},
 			{5, {{22, 25}, {23, 28}}}});
 
@@ -2006,7 +2013,7 @@ void Randomize() {
 			{2, {{15, 11}, {31, 11}}},
 			{3, {{11, 11}, {26, 11}}},
 			{4, {{7, 11}, {21, 11}}}});
-		scpIns('B', "LEVEL", 7, {7, 45});
+		scpIns('B', "LEVEL", 4, {7, 45});
 
 		multiPointer(JediBattle->party[2], {0xDFABF, 0x3fffa4});
 		multiPointer(JediBattle->party[3], {0xDFAAB, 0x3fffa0});
@@ -2345,7 +2352,7 @@ void Randomize() {
 			{0, {{35, 26}, {36, 27}, {37, 27}, {38, 25}}},
 			{2, {{48, 26}, {49, 27}, {50, 27}, {51, 25}}},
 			{3, {{53, 26}, {54, 27}, {55, 27}, {56, 25}}}});
-		scpMany('E', "LEVEL.SCP", {
+		scpMany('E', "LEVEL", {
 			{0, {{33, 26}, {34, 27}, {35, 27}, {36, 25}, {54, 26}, {55, 27}, {56, 27}, {57, 25}}},
 			{3, {{38, 27}}}});
 
@@ -2522,7 +2529,9 @@ void Randomize() {
 
 
 			auto missionReplace2 = [](unsigned int c, unsigned int line, std::shared_ptr<Level> lev, char scene, std::string script) {
-				scpIns(scene, script, c, {line, 49}, bonusCharacter);
+				writer(oneWrite, getSCP(lev, scene, script),
+					{BHM->bonusCharacters[c]->name, BHM->vanillaBonusCharacters[c]->name.length(), {line, 49}});
+				//scpIns(scene, script, c, {line, 49}, bonusCharacter);
 			};
 
 			missionReplace2(0, 24, Negotiations, 'A', "LEVEL2");
@@ -2554,27 +2563,27 @@ void Randomize() {
 
 			};
 
-			missionNames(6, {266, 18}, 12);
-			missionNames(7, {267, 18}, 13);
-			missionNames(8, {268, 18}, 13);
-			missionNames(9, {269, 18}, 10);
-			missionNames(10, {270, 18}, 9);
-			missionNames(11, {271, 18}, 8);
-			missionNames(12, {272, 18}, 12);
-			missionNames(13, {273, 18}, 13);
-			missionNames(14, {274, 18}, 7);
-			missionNames(15, {275, 19}, 14);
+			missionNames(0, {266, 18}, 12);
+			missionNames(1, {267, 18}, 13);
+			missionNames(2, {268, 18}, 13);
+			missionNames(3, {269, 18}, 10);
+			missionNames(4, {270, 18}, 9);
+			missionNames(5, {271, 18}, 8);
+			missionNames(6, {272, 18}, 12);
+			missionNames(7, {273, 18}, 13);
+			missionNames(8, {274, 18}, 7);
+			missionNames(9, {275, 19}, 14);
 
-			missionNames(16, {9, 17}, 5);
-			missionNames(17, {10, 17}, 14);
-			missionNames(18, {11, 17}, 9);
-			missionNames(19, {12, 17}, 13);
-			missionNames(20, {13, 17}, 14);
-			missionNames(21, {14, 17}, 4);
-			missionNames(22, {15, 17}, 5);
-			missionNames(23, {16, 17}, 16);
-			missionNames(24, {17, 17}, 14);
-			missionNames(25, {18, 17}, 8);
+			missionNames(10, {9, 17}, 5);
+			missionNames(11, {10, 17}, 14);
+			missionNames(12, {11, 17}, 9);
+			missionNames(13, {12, 17}, 13);
+			missionNames(14, {13, 17}, 14);
+			missionNames(15, {14, 17}, 4);
+			missionNames(16, {15, 17}, 5);
+			missionNames(17, {16, 17}, 16);
+			missionNames(18, {17, 17}, 14);
+			missionNames(19, {18, 17}, 8);
 
 			batchAnywhere(ENGLISH, bounties);
 
@@ -2582,7 +2591,7 @@ void Randomize() {
 
 		//Character unlocks
 	#ifdef _DEBUG
-		wxLogStatus("starting collection");
+		logR("starting collection");
 	#endif
 
 		std::ofstream collect(out + "/CHARS/COLLECTION.TXT");
@@ -2605,8 +2614,7 @@ void Randomize() {
 					collect << std::to_string(p->price) << '\n';
 				}
 			#ifdef _DEBUG
-				wxString collected = p->realName + " collected.";
-				wxLogStatus(collected);
+				logR(p->realName + " collected.");
 			#endif
 			}
 		};
@@ -2676,8 +2684,6 @@ void Randomize() {
 		//writer(oneWrite, ENGLISH, writeSingle{indy->realName, 13, {1627, 7}});
 
 		//fixes ET characters
-	#define CHR out + "/CHARS/"
-	#define chfile(x) CHR + x->name + "/" + x->name + ".TXT"
 		if (extog) {
 			//UNCOMMENT THIS
 			//writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
@@ -2779,7 +2785,7 @@ void Randomize() {
 		//for (int i = 0; i < 340; i++) {
 		//	rgbFloat(TNG, green, 0x31CC98 + (i * 0x2c4));
 		//}
-	}
+}
 #endif
 
 
@@ -2797,5 +2803,8 @@ void Randomize() {
 	//delete BHM;
 
 
-	wxLogStatus("Done.");
+
+	logR("\n\t\t\t\t\tDone.");
+	//loggingIt->close();
+	wxLogStatus("Done");
 }

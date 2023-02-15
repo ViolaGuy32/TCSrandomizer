@@ -1,10 +1,5 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <array>
-#include <fstream>
-#include <random>
-#include <map>
+#include "pch.h"
 
 //#include "Level.h"
 
@@ -57,10 +52,6 @@ struct Level {
 		{'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
 		'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
 
-	std::map<std::vector<std::shared_ptr<Playable>>, std::vector<std::shared_ptr<Playable>>> vanillaMap = {
-		{party, vanillaParty},
-		{bonusCharacters, vanillaBonusCharacters}
-	};
 };
 
 extern std::vector<std::shared_ptr<Playable>> testing;

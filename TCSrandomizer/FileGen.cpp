@@ -1,5 +1,5 @@
-#include <wx/wx.h>
-#include <filesystem>
+#include "pch.h"
+
 #include "Defines.h"
 #include "FileGen.h"
 #include "OtherStuff.h"
@@ -11,6 +11,7 @@ extern std::string vanillaDirectory;
 void fileGen() {
 	//coppies the game files and removes cutscenes
 
+	logR("\n\t\t\t\t\tGenerating files. . .");
 	wxLogStatus("Generating files. . .");
 
 	std::filesystem::remove_all(out);
@@ -42,6 +43,7 @@ void fileGen() {
 	std::filesystem::copy("files/LEGOStarWarsSaga.exe", out,
 		std::filesystem::copy_options::overwrite_existing);
 
+	logR("\n\t\t\t\t\tPatching. . .");
 	wxLogStatus("Patching. . .");
 
 	//removes cutscenes

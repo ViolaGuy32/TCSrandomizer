@@ -11,6 +11,7 @@
 
 #define EXE out + "/LEGOStarWarsSaga.exe"
 #define ENGLISH out + "/STUFF/TEXT/ENGLISH.TXT"
+#define CHR out + "/CHARS/"
 
 
 #define TNG out + "/STUFF/THINGS_PC.GSC"
@@ -41,7 +42,7 @@
 #define Vader allLevels[17]
 
 #define SecretPlans allLevels[18]
-#define Jundland allLevels[29]
+#define Jundland allLevels[19]
 #define Spaceport allLevels[20]
 #define Princess allLevels[21]
 #define DSE allLevels[22]

@@ -1,7 +1,5 @@
-#include <wx/wx.h>
-#include <array>
-#include <sstream>
-#include <filesystem>
+#include "pch.h"
+
 #include "OtherStuff.h"
 #include "App.h"
 #include "Defines.h"
@@ -9,10 +7,24 @@
 
 extern std::shared_ptr<Level> currentLev;
 extern std::string out;
+//extern std::unique_ptr<std::ofstream> loggingIt;
 
 
+void logR(std::string lg) {
+#ifdef _DEBUG
+	//(*loggingIt) << lg << '\n';
 
-void writer(void(* fun)(writeSingle, std::vector<std::string>&), std::string file, writeSingle stuff) {
+	std::ofstream log2("files/log2.txt", std::ios_base::out | std::ios_base::app);
+	log2 << lg << std::endl;
+	//wxLogStatus(lg.c_str());
+#endif 
+}
+
+void writer(void(*fun)(writeSingle, std::vector<std::string>&), std::string file, writeSingle stuff) {
+
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -26,7 +38,10 @@ void writer(void(* fun)(writeSingle, std::vector<std::string>&), std::string fil
 	fileout.close();
 }
 
-void writer(void(* fun)(std::string, std::vector<std::string>&), std::string file, std::string stuff) {
+void writer(void(*fun)(std::string, std::vector<std::string>&), std::string file, std::string stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -41,6 +56,9 @@ void writer(void(* fun)(std::string, std::vector<std::string>&), std::string fil
 }
 
 void writer(void(*fun)(writeSet, std::vector<std::string>&), std::string file, writeSet stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -55,6 +73,9 @@ void writer(void(*fun)(writeSet, std::vector<std::string>&), std::string file, w
 }
 
 void writer(void(*fun)(coord, std::vector<std::string>&), std::string file, coord stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -69,6 +90,9 @@ void writer(void(*fun)(coord, std::vector<std::string>&), std::string file, coor
 }
 
 void writer(void(*fun)(unsigned int, std::vector<std::string>&), std::string file, unsigned int stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -83,6 +107,9 @@ void writer(void(*fun)(unsigned int, std::vector<std::string>&), std::string fil
 }
 
 void writer(void(*fun)(std::vector<unsigned int>, std::vector<std::string>&), std::string file, std::vector<unsigned int> stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -97,6 +124,9 @@ void writer(void(*fun)(std::vector<unsigned int>, std::vector<std::string>&), st
 }
 
 void writer(void(*fun)(std::vector<writeSet>, std::vector<std::string>&), std::string file, std::vector<writeSet> stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -111,6 +141,9 @@ void writer(void(*fun)(std::vector<writeSet>, std::vector<std::string>&), std::s
 }
 
 void writer(void(*fun)(std::vector<coord>, std::vector<std::string>&), std::string file, std::vector<coord> stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -125,6 +158,9 @@ void writer(void(*fun)(std::vector<coord>, std::vector<std::string>&), std::stri
 }
 
 void writer(void(*fun)(std::vector<writeSingle>, std::vector<std::string>&), std::string file, std::vector<writeSingle> stuff) {
+#ifdef _DEBUG
+	logR(file);
+#endif
 
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -144,14 +180,21 @@ void getfile(std::string file, std::vector<std::string>& contents) {
 	std::string s;
 
 	if (reader.fail()) {
-			wxString err = "File not found: " + file;
-		wxLogStatus(err);
+		logR("File not found: " + file);
 	}
 	while (getline(reader, s)) {
 		contents.push_back(s);
 	}
 	return;
 }
+
+std::string cdstr(coord cd) {
+	return ("(" + std::to_string(cd.ln) + ", " + std::to_string(cd.col) + ")");
+}
+//
+//std::ostream operator<<(coord lncol, std::ostream& os) {
+//	os << "(" + std::to_string(lncol.ln) + ", " + std::to_string(lncol.col) + ")";
+//}
 
 writeSingle::writeSingle(std::string myStr, unsigned int myLen, coord myLnCol)
 	: newStr(myStr), len(myLen), lnCol(myLnCol) {
@@ -250,8 +293,8 @@ void binaryWrite(std::string file, char bin, int address) {
 }
 void hexWrite(std::string file, std::string newWrite, int address, int len, bool trailingNull) {
 #ifdef _DEBUG
-		wxString log = file + " " + newWrite + " " + std::to_string(address);
-	wxLogStatus(log);
+	if (trailingNull)
+		logR(file + " " + newWrite + " " + std::to_string(address));
 #endif
 
 	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
@@ -275,6 +318,9 @@ void hexWrite(std::string file, std::string newWrite, int address, int len, bool
 
 //for hex longer than 1 byte
 void binaryWrite(std::string file, std::string bin, int address) {
+#ifdef _DEBUG
+	logR(file + " 0x" + bin + " " + std::to_string(address));
+#endif
 	std::basic_string<uint8_t> bytes;
 	std::string nextByte;
 	for (int i = 0; i < bin.length(); i += 2) {
@@ -365,7 +411,7 @@ void multiPointer(std::shared_ptr<Playable> play, std::vector<int> address) {
 //	#ifdef _DEBUG
 //		wxGetApp().CallAfter([&file, &x]() {
 //			wxString log = "deleting " + file + " " + std::to_string(x).c_str();
-//		wxLogStatus(log);
+//		logR(log);
 //		});
 //	#endif
 //
@@ -380,10 +426,9 @@ void multiPointer(std::shared_ptr<Playable> play, std::vector<int> address) {
 //	fileout.close();
 //}
 
-void txtIns( std::string file,  std::string newC, const std::initializer_list<coord>& lnCol, const int len) {
+void txtIns(std::string file, std::string newC, const std::initializer_list<coord>& lnCol, const int len) {
 #ifdef _DEBUG
-		wxString log = file + " " + newC + " " + std::to_string(len).c_str();
-	wxLogStatus(log);
+	logR(file + " " + newC + " " + std::to_string(len).c_str());
 #endif
 
 	std::vector<std::string> contents;
@@ -393,18 +438,17 @@ void txtIns( std::string file,  std::string newC, const std::initializer_list<co
 
 
 	std::ofstream fileout(file);
-	for ( std::string y : contents)
+	for (std::string y : contents)
 		fileout << y + "\n";
 
 	fileout.close();
 
 }
 
-void txtIns( std::string file,  std::string newC, const std::initializer_list<unsigned int>& lnCol, const int len) {
+void txtIns(std::string file, std::string newC, const std::initializer_list<unsigned int>& lnCol, const int len) {
 #ifdef _DEBUG
 
-		wxString log = file + " " + newC + " " + std::to_string(len).c_str();
-	wxLogStatus(log);
+	logR(file + " " + newC + " " + std::to_string(len).c_str());
 
 #endif
 
@@ -415,7 +459,7 @@ void txtIns( std::string file,  std::string newC, const std::initializer_list<un
 
 
 	std::ofstream fileout(file);
-	for ( std::string y : contents)
+	for (std::string y : contents)
 		fileout << y + "\n";
 
 	fileout.close();
@@ -497,22 +541,33 @@ void txtIns( std::string file,  std::string newC, coord lnCol, const int len) {
 //}
 
 
-
 void oneWrite(writeSingle wrt, std::vector<std::string>& contents) {
 	//alters one line in file
-	contents[wrt.lnCol.ln - 1].replace(wrt.lnCol.ln - 1, wrt.len, wrt.newStr);
+#ifdef _DEBUG
+	logR(wrt.newStr + ' ' + cdstr(wrt.lnCol) + ' ' + contents[wrt.lnCol.ln - 1]);
+#endif
+
+	contents[wrt.lnCol.ln - 1].replace(wrt.lnCol.col - 1, wrt.len, wrt.newStr);
 }
 
 void multiWrite(std::vector<writeSingle> stuff, std::vector<std::string>& contents) {
 	//alters multiple parts of file without repeats
-	for (writeSingle thing : stuff)
-		contents[thing.lnCol.ln - 1].replace(thing.lnCol.col - 1, thing.len, thing.newStr);
+	for (writeSingle thing : stuff) {
+	#ifdef _DEBUG
+		logR(thing.newStr + ' ' + cdstr(thing.lnCol) + ' ' + contents[thing.lnCol.ln - 1]);
+	#endif
 
+		contents[thing.lnCol.ln - 1].replace(thing.lnCol.col - 1, thing.len, thing.newStr);
+	}
 }
 
 void weirdWrite(writeSet stuff, std::vector<std::string>& contents) {
 	//alters multiple parts of file without repeats
 	for (coord lc : stuff.lnCol) {
+	#ifdef _DEBUG
+		logR(stuff.newStr + ' ' + cdstr(lc) + ' ' + contents[lc.ln - 1]);
+	#endif
+
 		contents[lc.ln - 1].replace(lc.col - 1, stuff.len, stuff.newStr);
 	}
 }
@@ -521,6 +576,10 @@ void manyWrite(std::vector<writeSet> stuff, std::vector<std::string>& contents) 
 	//alters multiple parts of file with repeats
 	for (writeSet thing : stuff) {
 		for (coord lc : thing.lnCol) {
+		#ifdef _DEBUG
+			logR(thing.newStr + ' ' + cdstr(lc) + ' ' + contents[lc.ln - 1]);
+		#endif
+
 			contents[lc.ln - 1].replace(lc.col - 1, thing.len, thing.newStr);
 		}
 	}
@@ -528,17 +587,28 @@ void manyWrite(std::vector<writeSet> stuff, std::vector<std::string>& contents) 
 
 void appender(std::string appendix, std::vector<std::string>& contents) {
 	//appends file with more text
+#ifdef _DEBUG
+	logR(appendix + " appended");
+#endif
+
 	contents.push_back(appendix);
 
 };
 
 void lineDel(std::vector< unsigned int>lines, std::vector<std::string>& contents) {
 	//sets line to empty string; actually deleting them would offset coordinates
-	for (unsigned int ln : lines) contents[ln - 1] = "";
+	for (unsigned int ln : lines) {
+	#ifdef _DEBUG
+		logR(std::to_string(ln) + ' ' + contents[ln - 1] + ' ' + " deleted.");
+	#endif
+
+		contents[ln - 1] = "";
+	}
 }
 
 void fileDeleter(char scene, int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
 	//deletes file
+
 	std::remove(getSCP(currentLev, scene, getVanilla(characterNum, chType)).c_str());
 };
 //
@@ -546,7 +616,7 @@ void fileDeleter(char scene, int characterNum, std::vector<std::shared_ptr<Playa
 //#ifdef _DEBUG
 //	wxGetApp().CallAfter([file]() {
 //		wxString log = "appending" + file;
-//	wxLogStatus(log);
+//	logR(log);
 //	});
 //#endif
 //
@@ -593,7 +663,7 @@ std::string getAI2(std::shared_ptr<Level> lev, char scene) {
 }
 
 std::string getScriptTxt(std::shared_ptr<Level> lev, char scene) {
-	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + lev->shortName + '_' + scene + ".TXT";
+	return out + lev->path + lev->shortName + '_' + scene + "/AI/SCRIPT.TXT";
 }
 
 void renamer(std::string oldName, std::string newName) {
@@ -601,7 +671,7 @@ void renamer(std::string oldName, std::string newName) {
 	int test = rename(oldName.c_str(), newName.c_str());
 	if (test == -1) {
 		wxString err = "File name override failed: " + oldName + " -> " + newName;
-			wxLogError(err);
+		wxLogError(err);
 	}
 }
 
@@ -612,7 +682,11 @@ std::string getName(unsigned int characterNum, std::vector<std::shared_ptr<Playa
 
 std::string getVanilla(unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
 	//gets name of character to be replaced
-	return currentLev->vanillaMap[*currentLev.*chType][characterNum]->name;
+	if (chType == &Level::bonusCharacters) {
+		return currentLev->vanillaBonusCharacters[characterNum]->name;
+	} else {
+		return currentLev->vanillaParty[characterNum]->name;
+	}
 }
 
 
@@ -624,7 +698,7 @@ void playerInit(std::vector<writeSingle> writ) {
 	}*/
 	writ[0].lnCol.col = 5;
 
-	for (writeSingle x : writ) x.lnCol.col = 12;
+	for (writeSingle& x : writ) x.lnCol.col = 12;
 
 	writer(multiWrite, getMainTxt(currentLev), writ);
 };
@@ -761,7 +835,7 @@ void Level::rename(int characterNumber, char scene) {
 //
 //		if (i < contents.size()) {
 //			//wxstd::string temp = (wxstd::string) file + " " + to_std::string(i) + ", " + to_std::string(j) + " " + newC;
-//			//wxLogStatus(temp);
+//			//logR(temp);
 //			while (j < lnCol.size() && i == lnCol[j].ln) {
 //				x.replace(lnCol[j].col - 1, len, newC);
 //
@@ -782,7 +856,7 @@ void Level::rename(int characterNumber, char scene) {
 //}
 //void txtIns(std::string file, std::string newC, int* coord, int len = 0) {
 //	//coord must be in order
-//	wxLogStatus("txtIns");
+//	logR("txtIns");
 //
 //	std::ifstream filein(file);
 //
@@ -793,7 +867,7 @@ void Level::rename(int characterNumber, char scene) {
 //	unsigned int j = 0;
 //	for (std::string x : contents) {
 //		wxstd::string temp = to_std::string(i);
-//		wxLogStatus(temp);
+//		logR(temp);
 //
 //		if (i < contents.size()) {
 //			if (i == coord[j]) {
