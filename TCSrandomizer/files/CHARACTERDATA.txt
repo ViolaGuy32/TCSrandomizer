@@ -772,6 +772,7 @@ passive
 gas
 pushable
 zappable
+noLevel
 
 pkdroid
 PK Droid
@@ -783,6 +784,7 @@ passive
 gas
 pushable
 zappable
+noLevel
 
 battledroid
 Battle Droid
@@ -1866,6 +1868,7 @@ gas
 pushable
 chokeable
 zappable
+allEpisodes
 
 dengar
 Dengar
@@ -1883,6 +1886,7 @@ grapple
 bounty
 chokeable
 trickable
+allEpisodes
 
 4lom
 4-LOM
@@ -1902,6 +1906,7 @@ gas
 pushable
 chokeable
 zappable
+allEpisodes
 
 ghostbenkenobi
 Ben Kenobi (Ghost)
@@ -1921,6 +1926,7 @@ jedi
 passive
 gas
 chokeable
+allEpisodes
 
 anakin_ghost
 Anakin Skywalker (Ghost)
@@ -1940,6 +1946,7 @@ jedi
 passive
 gas
 chokeable
+allEpisodes
 
 yoda_ghost
 Yoda (Ghost)
@@ -1959,6 +1966,7 @@ jedi
 passive
 gas
 chokeable
+allEpisodes
 
 r2q5
 R2-Q5
@@ -1974,6 +1982,7 @@ passive
 gas
 pushable
 zappable
+allEpisodes
 
 hansolo_indy
 Indiana Jones
@@ -1990,6 +1999,7 @@ attack
 shoot
 grapple
 chokeable
+allEpisodes
 
 skeleton
 Skeleton
@@ -2365,6 +2375,7 @@ Slave 1
 vehicle
 attack
 shoot
+allEpisodes
 
 newanakinspod_green
 Anakin's Pod (Green)

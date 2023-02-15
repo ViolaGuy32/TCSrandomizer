@@ -1,7 +1,7 @@
 #include "Characters.h"
 #include "App.h"
 #include "Defines.h"
-#include "OtherStuff.h"
+//#include "OtherStuff.h"
 
 #include <wx/wx.h>
 #include <sstream>
@@ -10,21 +10,21 @@ extern std::string out;
 extern bool extog;
 extern bool greenVeh;
 extern bool character;
-extern const std::mt19937_64* randoPTR;
+extern  std::mt19937_64* randoPTR;
 
-extern std::vector <Level*> allLevels;
+extern std::vector<std::shared_ptr<Level>> allLevels;
 
-extern Playable* defaultCharacter;
-extern Level* BHM;
+extern std::shared_ptr<Playable> defaultCharacter;
+extern std::shared_ptr<Level> BHM;
 
 extern LogicType logicType;
 
-extern std::vector<Playable*> pls; //Characters and Vehicles
-extern std::vector<Playable*> chs; //Characters
-extern std::vector<Playable*> vhs; //Vehicles
-extern std::unordered_map<std::string, Playable*> nameList;
+extern std::vector<std::shared_ptr<Playable>> pls; //Characters and Vehicles
+extern std::vector<std::shared_ptr<Playable>> chs; //Characters
+extern std::vector<std::shared_ptr<Playable>> vhs; //Vehicles
+extern std::map<std::string, std::shared_ptr<Playable>> nameList;
 
-extern Level* currentLev;
+extern std::shared_ptr<Level> currentLev;
 //enum charID {
 //	quigon,
 //	obiwan,
@@ -194,60 +194,60 @@ extern Level* currentLev;
 //	gunshipGreen,
 //};
 //
-//extern Level* Negotiations;
-//extern Level* Invasion;
-//extern Level* EscapeNaboo;
-//extern Level* Podrace;
-//extern Level* Theed;
-//extern Level* Maul;
+//extern std::shared_ptr<Level> Negotiations;
+//extern std::shared_ptr<Level> Invasion;
+//extern std::shared_ptr<Level> EscapeNaboo;
+//extern std::shared_ptr<Level> Podrace;
+//extern std::shared_ptr<Level> Theed;
+//extern std::shared_ptr<Level> Maul;
 //
-//extern Level* BHP;
-//extern Level* Kamino;
-//extern Level* Factory;
-//extern Level* JediBattle;
-//extern Level* Gunship;
-//extern Level* Dooku;
+//extern std::shared_ptr<Level> BHP;
+//extern std::shared_ptr<Level> Kamino;
+//extern std::shared_ptr<Level> Factory;
+//extern std::shared_ptr<Level> JediBattle;
+//extern std::shared_ptr<Level> Gunship;
+//extern std::shared_ptr<Level> Dooku;
 //
-//extern Level* Coruscant;
-//extern Level* Chancellor;
-//extern Level* Grievous;
-//extern Level* Kashyyyk;
-//extern Level* Ruin;
-//extern Level* Vader;
+//extern std::shared_ptr<Level> Coruscant;
+//extern std::shared_ptr<Level> Chancellor;
+//extern std::shared_ptr<Level> Grievous;
+//extern std::shared_ptr<Level> Kashyyyk;
+//extern std::shared_ptr<Level> Ruin;
+//extern std::shared_ptr<Level> Vader;
 //
-//extern Level* SecretPlans;
-//extern Level* Jundland;
-//extern Level* Spaceport;
-//extern Level* Princess;
-//extern Level* DSE;
-//extern Level* RebelAttack;
+//extern std::shared_ptr<Level> SecretPlans;
+//extern std::shared_ptr<Level> Jundland;
+//extern std::shared_ptr<Level> Spaceport;
+//extern std::shared_ptr<Level> Princess;
+//extern std::shared_ptr<Level> DSE;
+//extern std::shared_ptr<Level> RebelAttack;
 //
-//extern Level* Hoth;
-//extern Level* EchoBase;
-//extern Level* FalconFlight;
-//extern Level* Dagobah;
-//extern Level* CCT;
-//extern Level* Bespin;
+//extern std::shared_ptr<Level> Hoth;
+//extern std::shared_ptr<Level> EchoBase;
+//extern std::shared_ptr<Level> FalconFlight;
+//extern std::shared_ptr<Level> Dagobah;
+//extern std::shared_ptr<Level> CCT;
+//extern std::shared_ptr<Level> Bespin;
 //
-//extern Level* Jabbas;
-//extern Level* Carkoon;
-//extern Level* Showdown;
-//extern Level* Endor;
-//extern Level* Destiny;
-//extern Level* ITDS;
+//extern std::shared_ptr<Level> Jabbas;
+//extern std::shared_ptr<Level> Carkoon;
+//extern std::shared_ptr<Level> Showdown;
+//extern std::shared_ptr<Level> Endor;
+//extern std::shared_ptr<Level> Destiny;
+//extern std::shared_ptr<Level> ITDS;
 //
-//extern Level* Anakinsflight;
-//extern Level* ANewHope;
+//extern std::shared_ptr<Level> Anakinsflight;
+//extern std::shared_ptr<Level> ANewHope;
 //
-//extern Level* BHM;
+//extern std::shared_ptr<Level> BHM;
 //
-//extern Level* defaultLevel;
-//extern Level* allEpisodes;
+//extern std::shared_ptr<Level> defaultLevel;
+//extern std::shared_ptr<Level> allEpisodes;
 
 void charMaker() {
 	std::ifstream readCharacters("files/CHARACTERDATA.txt", std::ios::in);
 
-	std::unordered_map<std::string, bool(Playable::*)> attributes;
+	std::map<std::string, bool(Playable::*)> attributes;
 	attributes["hat"] = &Playable::hat;
 	attributes["lever"] = &Playable::lever;
 	attributes["build"] = &Playable::build;
@@ -301,12 +301,14 @@ void charMaker() {
 	attributes["leiaAlt"] = &Playable::leiaAlt;
 	attributes["landoAlt"] = &Playable::landoAlt;
 	attributes["lukeAlt"] = &Playable::lukeAlt;
+	attributes["noLevel"] = &Playable::noLevel;
+	attributes["allEpisodes"] = &Playable::allEpisodes;
 
 	if (readCharacters.is_open()) {
 		std::string line;
-		Playable* parse;
+		std::shared_ptr<Playable> parse;
 		while (readCharacters.good()) {
-			parse = new Playable;
+			parse = std::make_shared<Playable>();
 			getline(readCharacters, parse->name);
 			getline(readCharacters, parse->realName);
 			readCharacters >> parse->price;
@@ -316,7 +318,7 @@ void charMaker() {
 			getline(readCharacters, line);
 
 			while (line != "") {
-				parse->*(attributes[line]) = true;
+				*parse.*(attributes[line]) = true;
 				getline(readCharacters, line);
 			}
 			nameList[parse->name] = parse; //so I can reference them in the level data
@@ -324,15 +326,21 @@ void charMaker() {
 		}
 	}
 
-	for (Playable* p : pls) {
+	for (std::shared_ptr<Playable> p : pls) {
 		if (p->vehicle) {
-			if (greenVeh || !p->vgreen) vhs.push_back(p);
+			if (greenVeh || !p->vgreen) {
+				vhs.push_back(p);
+
+			}
 		} else {
-			if (extog || !p->extratoggle) chs.push_back(p);
+			if (extog || !p->extratoggle) {
+				chs.push_back(p);
+
+			}
 		}
 	}
 
-	defaultCharacter = new Playable;
+	defaultCharacter = std::make_shared<Playable>();
 	defaultCharacter->defaultCharacter = true;
 
 }
@@ -342,10 +350,10 @@ void levMaker() {
 	if (readLevels.is_open()) {
 		std::string line;
 		std::string charName;
-		std::istringstream iss(line);
-		Level* parse;
+		std::shared_ptr<Level> parse;
+		unsigned int levIt = 0;
 		while (readLevels.good()) {
-			parse = new Level;
+			parse = std::make_shared<Level>();
 			getline(readLevels, parse->name);
 			getline(readLevels, parse->shortName);
 			getline(readLevels, parse->path);
@@ -353,25 +361,30 @@ void levMaker() {
 			if (line == "vehicle") parse->vehicleLevel = true;
 
 			getline(readLevels, line);
+			std::istringstream iss(line);
 			while (iss >> charName) {
 				parse->vanillaParty.push_back(nameList[charName]);
 			}
 
 			getline(readLevels, line);
-			while (iss >> charName) {
+			std::istringstream is2(line);
+
+			while (is2 >> charName) {
 				parse->unlocks.push_back(nameList[charName]);
 			}
 
 			getline(readLevels, line);
-			while (iss >> charName) {
+			std::istringstream is3(line);
+			while (is3 >> charName) {
 				parse->vanillaBonusCharacters.push_back(nameList[charName]); //characters you rescue at ends of levels but don't play as
 			}
 
+			getline(readLevels, line);
 			allLevels.push_back(parse);
 		}
 
 		//Bounty Hunter Missions
-		BHM = new Level;
+		BHM = std::make_shared<Level>();
 		BHM->vanillaParty = {
 			nameList["bobafett"],
 			nameList["greedo"],
@@ -408,18 +421,16 @@ void levMaker() {
 
 }
 
-void add(const int a) {
+void add(int a) {
 	testing.push_back(currentLev->party[a]);
 }
 
-void mix(Level* lev) {
+void mix(std::shared_ptr<Level> lev) {
 	//generates random characters for given level
 
 #ifdef _DEBUG
 	wxString loggg = lev->name;
-	wxGetApp().CallAfter([&loggg] {
-		wxLogStatus(loggg);
-	});
+	wxLogStatus(loggg);
 #endif
 
 	testing.clear();
@@ -428,27 +439,45 @@ void mix(Level* lev) {
 	if (character) {
 		lev->party.clear();
 
-		std::vector<Playable*>* menu;
-		if (lev->vehicleLevel)
-			menu = &vhs;
-		else menu = &chs;
+		//std::array<std::shared_ptr<Playable>>* menu;
+		//if (lev->vehicleLevel)
+		//	menu = &vhs;
+		//else menu = &chs;
 
-		std::uniform_int_distribution<int> distrib(0, menu->size() - 1);
+		if (lev->vehicleLevel) {
+			std::uniform_int_distribution<int> distrib(0, vhs.size() - 1);
 
-		std::unordered_map<Playable*, bool> duplicateFinder;
-		Playable* temp;
-		for (int i = 0; i < lev->vanillaParty.size(); i++) {
-			do { temp = (*menu)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
-			duplicateFinder[temp] = true;
-			lev->party.push_back(temp);
+			std::map<std::shared_ptr<Playable>, bool> duplicateFinder;
+			std::shared_ptr<Playable> temp;
+			for (int i = 0; i < lev->vanillaParty.size(); i++) {
+				do { temp = (vhs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				duplicateFinder[temp] = true;
+				lev->party.push_back(temp);
+			}
+
+			for (int i = 0; i < lev->vanillaBonusCharacters.size(); i++) {
+				do { temp = (vhs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				duplicateFinder[temp] = true;
+				lev->bonusCharacters.push_back(temp);
+			}
+
+		} else {
+			std::uniform_int_distribution<int> distrib(0, chs.size() - 1);
+
+			std::map<std::shared_ptr<Playable>, bool> duplicateFinder;
+			std::shared_ptr<Playable> temp;
+			for (int i = 0; i < lev->vanillaParty.size(); i++) {
+				do { temp = (chs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				duplicateFinder[temp] = true;
+				lev->party.push_back(temp);
+			}
+
+			for (int i = 0; i < lev->vanillaBonusCharacters.size(); i++) {
+				do { temp = (chs)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
+				duplicateFinder[temp] = true;
+				lev->bonusCharacters.push_back(temp);
+			}
 		}
-
-		for (int i = 0; i < lev->vanillaBonusCharacters.size(); i++) {
-			do { temp = (*menu)[distrib(*randoPTR)]; } while (duplicateFinder[temp] == true); //prevents duplicates
-			duplicateFinder[temp] = true;
-			lev->bonusCharacters.push_back(temp);
-		}
-
 
 		add(0);
 		if (!lev->vehicleLevel || logicType != casual)
@@ -463,40 +492,49 @@ void mix(Level* lev) {
 	}
 }
 
-bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current) {
+bool atrb(const bool(Playable::* atr), const   std::vector<std::shared_ptr<Playable>>& current) {
 	//checks if anyone in party has given attribute
-	for (const Playable* p : current) {
-		if (p->*atr) return true;
+	for (std::shared_ptr<Playable> p : current) {
+		if (*p.*atr) return true;
 	}
 	return false;
 }
 
-bool Any(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
+bool Any(const std::initializer_list<bool Playable::*>& atrs, const   std::vector<std::shared_ptr<Playable>>& current) {
 	//needs any of the given attributes
-	for (const Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		for (bool Playable::* atr : atrs) {
-			if (p->*atr) return true;
+			if (*p.*atr) return true;
 		}
 	}
 	return false;
 }
 
-bool All(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
+bool All(const std::initializer_list<bool Playable::*>& atrs, const  std::vector<std::shared_ptr<Playable>>& current) {
 	//needs all of the given attributes
-	for (const Playable* p : current) {
+	/*for ( std::shared_ptr<Playable> p : current) {
 		for (int i = 0; i < atrs.size(); ++i) {
 			if (!(p->*atrs[i])) break;
 			if (i == atrs.size() - 1) return true;
 		}
+	}*/
+	int i = 0;
+	//needs all of the given attributes
+	for (std::shared_ptr<Playable> p : current) {
+		for (bool Playable::* at : atrs) {
+			if (!(*p.*at)) break;
+			if (i == atrs.size() - 1) return true;
+			i++;
+		}
 	}
 	return false;
 }
 
-bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>& current) {
+bool Multi(const bool Playable::* atr, const int n, const   std::vector<std::shared_ptr<Playable>>& current) {
 	//needs multiple with same attribute
 	int x = 0;
-	for (const Playable* p : current) {
-		if (p->*atr) {
+	for (std::shared_ptr<Playable> p : current) {
+		if (*p.*atr) {
 			x++;
 			if (x == n) {
 				return true;
@@ -506,12 +544,12 @@ bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>
 	return false;
 }
 
-bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
+bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const  std::vector<std::shared_ptr<Playable>>& current) {
 	//needs multiple who have any of given attributes
 	int x = 0;
-	for (const Playable* p : current) {
-		for (const bool(Playable::* atr) : atrs) {
-			if (p->*atr) {
+	for (std::shared_ptr<Playable> p : current) {
+		for (bool(Playable::* atr) : atrs) {
+			if (*p.*atr) {
 				x++;
 				if (x == n) {
 					return true;
@@ -524,67 +562,67 @@ bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, 
 }
 
 
-bool SuperJump(const bool Playable::* atr, const std::vector<Playable*>& current) {
+bool SuperJump(const bool Playable::* atr, const  std::vector<std::shared_ptr<Playable>>& current) {
 	if (logicType != superGlitched) return false;
-	for (const Playable* x : current) {
-		for (const Playable* y : current) {
+	for (std::shared_ptr<Playable> x : current) {
+		for (std::shared_ptr<Playable> y : current) {
 			if (x != y) {
-				if (x->pushable && y->jedi && y->*atr) return true;
-				if (x->chokeable && y->choke && y->*atr) return true;
-				if (x->zapper && y->zappable && y->*atr) return true;
-				if (x->trickable && y->jedi && y->*atr) return true;
-				if (x->astrozapper && y->storm && y->*atr) return true;
-				if (x->landoAlt && y->leiaAlt && y->*atr) return true;
-				if (x == nameList["gamorreanguard"] && y->lukeAlt && y->*atr) return true;
+				if (x->pushable && y->jedi && *y.*atr) return true;
+				if (x->chokeable && y->choke && *y.*atr) return true;
+				if (x->zapper && y->zappable && *y.*atr) return true;
+				if (x->trickable && y->jedi && *y.*atr) return true;
+				if (x->astrozapper && y->storm && *y.*atr) return true;
+				if (x->landoAlt && y->leiaAlt && *y.*atr) return true;
+				if (x == nameList["gamorreanguard"] && y->lukeAlt && *y.*atr) return true;
 			}
 		}
 	}
 	return false;
 }
 
-bool InstantSuperJump(const bool Playable::* atr, const std::vector<Playable*>& current) {
+bool InstantSuperJump(const bool Playable::* atr, const  std::vector<std::shared_ptr<Playable>>& current) {
 	//can act immediatly after SJC
 	if (logicType != superGlitched) return false;
-	for (const Playable* x : current) {
-		for (const Playable* y : current) {
+	for (std::shared_ptr<Playable> x : current) {
+		for (std::shared_ptr<Playable> y : current) {
 			if (x != y) {
-				if (x->pushable && y->jedi && y->*atr) return true;
-				if (x->chokeable && y->choke && y->*atr) return true;
-				if (x == nameList["gamorreanguard"] && y->lukeAlt && y->*atr) return true;
+				if (x->pushable && y->jedi && *y.*atr) return true;
+				if (x->chokeable && y->choke && *y.*atr) return true;
+				if (x == nameList["gamorreanguard"] && y->lukeAlt && *y.*atr) return true;
 			}
 		}
 	}
 	return false;
 }
 
-bool LivingJedi(const std::vector<Playable*>& current) {
+bool LivingJedi(const std::vector<std::shared_ptr<Playable>>& current) {
 	//ghosts break some bosses
-	for (const Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->jedi && !p->ghost) return true;
 	}
 	return false;
 }
 
-bool DoubleTransitionSkip(const bool Playable::* atr, std::vector<Playable*>current) {
-	for (Playable* p1 : current) {
-		for (Playable* p2 : current) {
-			if (p1->saber && p2->*atr && !p2->ghost) return true;
+bool DoubleTransitionSkip(const bool Playable::* atr, const std::vector<std::shared_ptr<Playable>>current) {
+	for (std::shared_ptr<Playable> p1 : current) {
+		for (std::shared_ptr<Playable> p2 : current) {
+			if (p1->saber && *p2.*atr && !p2->ghost) return true;
 		}
 	}
 	return false;
 }
 
-float GetFastest(std::vector<Playable*> current) {
+float GetFastest(const std::vector<std::shared_ptr<Playable>> current) {
 	float fastest = 0.0f;
-	for (Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->speed > fastest) fastest = p->speed;
 	}
 	return fastest;
 }
 
-float GetSlowest(std::vector<Playable*> current) {
+float GetSlowest(const std::vector<std::shared_ptr<Playable>> current) {
 	float slowest = 100.0f;
-	for (Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->speed < slowest) slowest = p->speed;
 	}
 	return slowest;
@@ -602,7 +640,7 @@ void renamer(std::string oldName, std::string newName) {
 	}
 }
 
-Level::Level(std::string myFirstName, std::vector<Playable*> myVanillaParty, std::string myEpisode, std::vector<Playable*> myUnlocks, bool myVehicleLevel,
+Level::Level(std::string myFirstName, std::vector<std::shared_ptr<Playable>> myVanillaParty, std::string myEpisode, std::vector<std::shared_ptr<Playable>> myUnlocks, bool myVehicleLevel,
 						 std::string myName, int myIsFake)
 	: firstName(myFirstName), vanillaParty(myVanillaParty), episode(myEpisode), unlocks(myUnlocks), vehicleLevel(myVehicleLevel), isFake(myIsFake) {
 
@@ -625,7 +663,7 @@ void Level::mix() {
 	label:
 		party.clear();
 		for (int i = 0; i < vanillaParty.size(); i++) {
-			Playable* temp;
+			std::shared_ptr<Playable> temp;
 			if (vehicleLevel)temp = vhs[rand() % vhs.size()];
 			else temp = chs[rand() % chs.size()];
 			party.push_back(temp);
@@ -718,282 +756,282 @@ void Level::binWrite(int characterNumber, std::vector<int> address, char scene, 
 	binWrite(party[characterNumber]->name, address, scene, fileExtention, vanillaParty[characterNumber]->name.length());
 }
 
-bool AlwaysTrue(std::vector<Playable*>) {
+bool AlwaysTrue(std::vector<std::shared_ptr<Playable>>) {
 	return true;
 }
 
-bool Jedi(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Jedi(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->jedi) return true;
 	}
 	return false;
 }
 
-bool Sith(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Sith(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->sith) return true;
 	}
 	return false;
 }
 
-bool Saber(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Saber(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->saber) return true;
 	}
 	return false;
 }
 
-bool LivingJedi(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool LivingJedi(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->jedi && !p->ghost) return true;
 	}
 	return false;
 }
 
-bool Deflect(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Deflect(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->deflect) return true;
 	}
 	return false;
 }
 
-bool Ghost(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Ghost(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->ghost) return true;
 	}
 	return false;
 }
 
-bool Passive(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Passive(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->passive) return true;
 	}
 	return false;
 }
 
-bool Jump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Jump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->jump) return true;
 	}
 	return false;
 }
 
-bool DoubleTransitionSkip(bool (*ptr)(std::vector<Playable*>), std::vector<Playable*>current) {
-	for (Playable* p : current) {
-		for (Playable* q : current) {
+bool DoubleTransitionSkip(bool (*ptr)(std::vector<std::shared_ptr<Playable>>), std::vector<std::shared_ptr<Playable>>current) {
+	for (std::shared_ptr<Playable> p : current) {
+		for (std::shared_ptr<Playable> q : current) {
 			if (p->saber && ptr({q}) && !q->ghost) return true;
 		}
 	}
 	return false;
 }
 
-bool TransitionSkip(bool (*ptr)(std::vector<Playable*>), std::vector<Playable*>current) {
-	for (Playable* p : current) {
-		for (Playable* q : current) {
+bool TransitionSkip(bool (*ptr)(std::vector<std::shared_ptr<Playable>>), std::vector<std::shared_ptr<Playable>>current) {
+	for (std::shared_ptr<Playable> p : current) {
+		for (std::shared_ptr<Playable> q : current) {
 			if (p->attack && ptr({q}) && !q->ghost) return true;
 		}
 	}
 	return false;
 }
 
-bool Build(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Build(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->build) return true;
 	}
 	return false;
 }
 
-bool Box(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Box(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->box) return true;
 	}
 	return false;
 }
 
-bool Lever(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Lever(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->lever) return true;
 	}
 	return false;
 }
 
-bool DoubleJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool DoubleJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->doubleJump) return true;
 	}
 	return false;
 }
 
-bool RealDoubleJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool RealDoubleJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->realDoubleJump) return true;
 	}
 	return false;
 }
 
-bool HighJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool HighJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->highJump) return true;
 	}
 	return false;
 }
 
-bool Tall(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Tall(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->tall) return true;
 	}
 	return false;
 }
 
-bool ExtraHighJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool ExtraHighJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->extraHighJump) return true;
 	}
 	return false;
 }
 
-bool GunganJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool GunganJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->gunganJump) return true;
 	}
 	return false;
 }
 
-bool YodaJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool YodaJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->yodaJump) return true;
 	}
 	return false;
 }
 
-bool Grapple(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Grapple(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->grapple) return true;
 	}
 	return false;
 }
 
-bool Shoot(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Shoot(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->shoot) return true;
 	}
 	return false;
 }
 
-bool FakeShoot(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool FakeShoot(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->fakeshoot) return true;
 	}
 	return false;
 }
 
-bool Attack(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Attack(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->attack) return true;
 	}
 	return false;
 }
 
-bool Hatch(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Hatch(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->hatch) return true;
 	}
 	return false;
 }
 
-bool Fly(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Fly(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->fly) return true;
 	}
 	return false;
 }
 
-bool Dive(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Dive(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->dive) return true;
 	}
 	return false;
 }
 
-bool Flop(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Flop(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->flop) return true;
 	}
 	return false;
 }
 
-bool Flutter(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Flutter(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->flutter) return true;
 	}
 	return false;
 }
 
-bool Hovering(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Hovering(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->hovering) return true;
 	}
 	return false;
 }
 
-bool Fett(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Fett(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->fett) return true;
 	}
 	return false;
 }
 
-bool Bounty(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Bounty(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->bounty) return true;
 	}
 	return false;
 }
 
-bool Imperial(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Imperial(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->imperial) return true;
 	}
 	return false;
 }
 
-bool Hat(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Hat(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->hat) return true;
 	}
 	return false;
 }
 
-bool Proto(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Proto(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->proto) return true;
 	}
 	return false;
 }
 
-bool Astro(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Astro(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->astro) return true;
 	}
 	return false;
 }
 
-bool Zapper(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Zapper(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->zapper) return true;
 	}
 	return false;
 }
 
-bool Droid(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Droid(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->droid) return true;
 	}
 	return false;
 }
 
-bool FalconJump(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool FalconJump(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->doubleJump) return true;
 		if (p->dive) return true;
 		if (p->flop) return true;
@@ -1003,18 +1041,18 @@ bool FalconJump(std::vector<Playable*> current) {
 }
 
 
-bool Tow(std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool Tow(std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->tow) return true;
 	}
 	return false;
 }
 
-bool PlansThing(std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
+bool PlansThing(std::vector<std::shared_ptr<Playable>> current, std::shared_ptr<Playable> shield, std::shared_ptr<Playable> redGuy) {
 	if (logicType != superGlitched) return false;
 
-	for (Playable* x : current) {
-		for (Playable* y : current) {
+	for (std::shared_ptr<Playable> x : current) {
+		for (std::shared_ptr<Playable> y : current) {
 			bool OOB = false;
 			bool OOB2 = false;
 
@@ -1027,10 +1065,10 @@ bool PlansThing(std::vector<Playable*> current, Playable* shield, Playable* redG
 				if (x->chokeable && y->choke) OOB = true;
 				if (x == gamorreanguard && y->lukeAlt) OOB = true;
 
-				Playable* otherX = defaultCharacter;
+				std::shared_ptr<Playable> otherX = defaultCharacter;
 				if (OOB) {
-					for (Playable* x2 : current) {
-						for (Playable* y2 : current) {
+					for (std::shared_ptr<Playable> x2 : current) {
+						for (std::shared_ptr<Playable> y2 : current) {
 							if (x2 != y2 && x2 != x) {
 								if (x2->landoAlt && y2->leiaAlt) OOB2 = true;
 								if (x2->zapper && y2->zappable) OOB2 = true;
@@ -1055,10 +1093,10 @@ bool PlansThing(std::vector<Playable*> current, Playable* shield, Playable* redG
 	return false;
 }
 
-bool SuperJump(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable*> current) {
+bool SuperJump(std::vector<bool (*)(std::vector<std::shared_ptr<Playable>>)> vec, std::vector<std::shared_ptr<Playable>> current) {
 	if (logicType != superGlitched) return false;
-	for (Playable* x : current) {
-		for (Playable* y : current) {
+	for (std::shared_ptr<Playable> x : current) {
+		for (std::shared_ptr<Playable> y : current) {
 			if (x != y) {
 				if (x->landoAlt && y->leiaAlt && All(vec, {y})) return true;
 				if (x->zapper && y->zappable && All(vec, {y})) return true;
@@ -1074,10 +1112,10 @@ bool SuperJump(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Pl
 }
 
 
-bool InstantSuperJump(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable*> current) {
+bool InstantSuperJump(std::vector<bool (*)(std::vector<std::shared_ptr<Playable>>)> vec, std::vector<std::shared_ptr<Playable>> current) {
 	if (logicType != superGlitched) return false;
-	for (Playable* x : current) {
-		for (Playable* y : current) {
+	for (std::shared_ptr<Playable> x : current) {
+		for (std::shared_ptr<Playable> y : current) {
 			if (x != y) {
 				if (x->pushable && y->jedi && All(vec, {y})) return true;
 				if (x->chokeable && y->choke && All(vec, {y})) return true;
@@ -1088,23 +1126,23 @@ bool InstantSuperJump(std::vector<bool (*)(std::vector<Playable*>)> vec, std::ve
 	return false;
 }
 
-float GetFastest(std::vector<Playable*> current) {
+float GetFastest(std::vector<std::shared_ptr<Playable>> current) {
 	float fastest = 0.0;
-	for (Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->speed > fastest) fastest = p->speed;
 	}
 	return fastest;
 }
 
-float GetSlowest(std::vector<Playable*> current) {
+float GetSlowest(std::vector<std::shared_ptr<Playable>> current) {
 	float slowest = 100.0;
-	for (Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (p->speed < slowest) slowest = p->speed;
 	}
 	return slowest;
 }
 
-int GetType(int pref, bool (*ptr)(std::vector<Playable*>), std::vector<Playable*> current) {
+int GetType(int pref, bool (*ptr)(std::vector<std::shared_ptr<Playable>>), std::vector<std::shared_ptr<Playable>> current) {
 	if (ptr({current[pref]})) return pref;
 	for (int i = current.size() - 1; i >= 0; i--) {
 		if (ptr({current[i]})) return i;
@@ -1112,15 +1150,15 @@ int GetType(int pref, bool (*ptr)(std::vector<Playable*>), std::vector<Playable*
 	return -1;
 }
 
-bool Any(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable*> current) {
-	for (bool(*v)(std::vector<Playable*>) : vec) {
+bool Any(std::vector<bool (*)(std::vector<std::shared_ptr<Playable>>)> vec, std::vector<std::shared_ptr<Playable>> current) {
+	for (bool(*v)(std::vector<std::shared_ptr<Playable>>) : vec) {
 		if (v(current)) return true;
 	}
 	return false;
 }
 
-bool All(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable*> current) {
-	for (Playable* p : current) {
+bool All(std::vector<bool (*)(std::vector<std::shared_ptr<Playable>>)> vec, std::vector<std::shared_ptr<Playable>> current) {
+	for (std::shared_ptr<Playable> p : current) {
 		for (int i = 0; i < vec.size(); i++) {
 			if (!vec[i]({p})) break;
 			if (i == vec.size() - 1) return true;
@@ -1129,9 +1167,9 @@ bool All(std::vector<bool (*)(std::vector<Playable*>)> vec, std::vector<Playable
 	return false;
 }
 
-bool Multi(bool (*ptr)(std::vector<Playable*>), int n, std::vector<Playable*> current) {
+bool Multi(bool (*ptr)(std::vector<std::shared_ptr<Playable>>), int n, std::vector<std::shared_ptr<Playable>> current) {
 	int x = 0;
-	for (Playable* p : current) {
+	for (std::shared_ptr<Playable> p : current) {
 		if (ptr({p})) {
 			x++;
 			if (x == n) {
@@ -1142,10 +1180,10 @@ bool Multi(bool (*ptr)(std::vector<Playable*>), int n, std::vector<Playable*> cu
 	return false;
 }
 
-bool MultiAny(std::vector<bool (*)(std::vector<Playable*>)> vec, int n, std::vector<Playable*> current) {
+bool MultiAny(std::vector<bool (*)(std::vector<std::shared_ptr<Playable>>)> vec, int n, std::vector<std::shared_ptr<Playable>> current) {
 	int x = 0;
-	for (Playable* p : current) {
-		for (bool(*v)(std::vector<Playable*>) : vec) {
+	for (std::shared_ptr<Playable> p : current) {
+		for (bool(*v)(std::vector<std::shared_ptr<Playable>>) : vec) {
 			if (v({p})) {
 				x++;
 				if (x == n) {
@@ -1158,49 +1196,10 @@ bool MultiAny(std::vector<bool (*)(std::vector<Playable*>)> vec, int n, std::vec
 	return false;
 }
 
-//0xca35a
-int addressPointer = 0x2B0;
-int junkCharacters = 0x3f1b6c;
-
-void characterPointer(Playable* play, int address) {
-	if (play->pointString != 0x0) {
-		numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), address);
-	} else {
-		hexWrite(EXE, play->name, addressPointer);
-		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
-		play->pointString = junkCharacters + 0x400000 - 0x4;
-
-		numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), address);
-
-		addressPointer += play->name.length() + 1;
-		junkCharacters += 0x8;
-		if (junkCharacters == 0x3f1bb4) junkCharacters += 0x8; //"whip" might not be unused
-	}
-}
-
-void multiPointer(Playable* play, std::vector<int> address) {
-	if (play->pointString != 0x0) {
-		for (int ad : address)
-			numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), ad);
-	} else {
-		hexWrite(EXE, play->name, addressPointer);
-		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
-		play->pointString = junkCharacters + 0x400000 - 0x4;
-
-		for (int ad : address)
-			numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), ad);
-
-		addressPointer += play->name.length() + 1;
-		junkCharacters += 0x8;
-		while (junkCharacters == 0x3f1bb4 || junkCharacters == 0x3f1b84 || junkCharacters == 0x3f1bac)
-			junkCharacters += 0x8; //"whip" might not be unused and others are weird
-	}
-}
 
 
 
-
-void logIt(Playable* ch, std::ofstream& log) {
+void logIt(std::shared_ptr<Playable> ch, std::ofstream& log) {
 	log << (ch)->name << '\n';
 	log << (ch)->realName << '\n';
 	log << ch->price << '\n';
@@ -1291,8 +1290,8 @@ void log2() {
 	log2 << vhs.size() << '\n';
 
 #define tlog(x)\
-for (Playable* y : chs) {if (y->x) log2 << '\t' << y->realName << '\n'; }\
-for (Playable* y : vhs) {if (y->x) log2 << '\t' << y->realName << '\n'; }
+for (std::shared_ptr<Playable> y : chs) {if (y->x) log2 << '\t' << y->realName << '\n'; }\
+for (std::shared_ptr<Playable> y : vhs) {if (y->x) log2 << '\t' << y->realName << '\n'; }
 
 	log2 << "hat" << '\n'; tlog(hat);
 	log2 << "lever" << '\n'; tlog(lever);

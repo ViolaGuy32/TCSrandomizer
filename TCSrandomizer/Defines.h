@@ -10,6 +10,9 @@
 #define JDI LEV + "EPISODE_VI/"
 
 #define EXE out + "/LEGOStarWarsSaga.exe"
+#define ENGLISH out + "/STUFF/TEXT/ENGLISH.TXT"
+
+
 #define TNG out + "/STUFF/THINGS_PC.GSC"
 #define PTL out + "/STUFF/GENERAL.PTL"
 #define PT1 out + "/STUFF/GENERAL_LSW1.PTL"
@@ -62,6 +65,8 @@
 #define ANewHope allLevels[37]
 
 enum LogicType { casual, glitched, superGlitched };
+
+
 
 /*
 

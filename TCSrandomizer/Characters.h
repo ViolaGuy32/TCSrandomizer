@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <array>
 #include <fstream>
 #include <random>
-#include <unordered_map>
+#include <map>
 
 //#include "Level.h"
 
@@ -18,9 +19,9 @@ struct Playable {
 	int pointString = 0;
 
 	float speed = 1.2;
-	Level* lev;
+	std::shared_ptr<Level> lev;
 	int price = 0;
-	const bool alwaysTrue = true; //lol
+	bool alwaysTrue = true; //lol
 
 	bool hat = false, lever = false, build = false, box = false, jump = false, doubleJump = false,
 		highJump = false, yodaJump = false, extraHighJump = false, realDoubleJump = false, highDoubleJump = false,
@@ -34,54 +35,58 @@ struct Playable {
 
 		vehicle = false, tow = false, tiedoor = false, vgreen = false,
 
-		leiaAlt = false, landoAlt = false, lukeAlt = false, defaultCharacter = false, storyMode = false;
+		leiaAlt = false, landoAlt = false, lukeAlt = false,
+		defaultCharacter = false, storyMode = false, noLevel = false, allEpisodes = true;
 
 };
 
 struct Level {
-	std::vector<Playable*> party;
-	std::vector<Playable*> bonusCharacters; //characters you rescue but do not play as
-	std::vector<Playable*> vanillaParty;
-	std::vector<Playable*> vanillaBonusCharacters;
+	std::vector<std::shared_ptr<Playable>> party;
+	std::vector<std::shared_ptr<Playable>> bonusCharacters; //characters you rescue but do not play as
+	std::vector<std::shared_ptr<Playable>> vanillaParty;
+	std::vector<std::shared_ptr<Playable>> vanillaBonusCharacters;
 	std::string name;
 	std::string shortName;
 	std::string path;
 	//std::string episode;
 	bool vehicleLevel = false;
 	//int isFake;
-	std::vector<Playable*> unlocks;
-	std::vector<char> collectables;
+	std::vector<std::shared_ptr<Playable>> unlocks;
+	unsigned int collectIt = 0;
+	std::array<char, 21> collectables =
+		{'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
+		'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
 
-	std::unordered_map<std::vector<Playable*>, std::vector<Playable*>> vanillaMap = {
+	std::map<std::vector<std::shared_ptr<Playable>>, std::vector<std::shared_ptr<Playable>>> vanillaMap = {
 		{party, vanillaParty},
 		{bonusCharacters, vanillaBonusCharacters}
 	};
 };
 
-extern std::vector<Playable*> testing;
+extern std::vector<std::shared_ptr<Playable>> testing;
 
 void add(int a);
 
-void mix(Level* lev);
+void mix(std::shared_ptr<Level> lev);
 
-bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current = testing);
+bool atrb(const bool(Playable::* atr), const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>& current = testing);
+bool Multi(const bool Playable::* atr, const  int n, const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool Any(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
+bool Any(const std::initializer_list<bool Playable::*>& atrs, const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool All(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
+bool All(const std::initializer_list<bool Playable::*>& atrs, const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current = testing);
+bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool SuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
+bool SuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool InstantSuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
+bool InstantSuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool LivingJedi(const std::vector<Playable*>& current = testing);
+bool LivingJedi(const std::vector<std::shared_ptr<Playable>>& current = testing);
 
-bool DoubleTransitionSkip(const bool Playable::* atr = &Playable::alwaysTrue, std::vector<Playable*>current = testing);
+bool DoubleTransitionSkip(const bool Playable::* atr = &Playable::alwaysTrue, const  std::vector<std::shared_ptr<Playable>>current = testing);
 
-float GetFastest(std::vector<Playable*> current = testing);
+float GetFastest(const std::vector<std::shared_ptr<Playable>> current = testing);
 
-float GetSlowest(std::vector<Playable*> current = testing);
+float GetSlowest(const std::vector<std::shared_ptr<Playable>> current = testing);

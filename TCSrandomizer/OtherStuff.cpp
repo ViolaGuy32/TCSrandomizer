@@ -7,19 +7,145 @@
 #include "Defines.h"
 #include "Characters.h"
 
-extern Level* currentLev;
+extern std::shared_ptr<Level> currentLev;
 extern std::string out;
 
-void getfile(const std::string& file, std::vector<std::string>& contents) {
+
+
+void writer(void(* fun)(writeSingle, std::vector<std::string>&), std::string file, writeSingle stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(* fun)(std::string, std::vector<std::string>&), std::string file, std::string stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(writeSet, std::vector<std::string>&), std::string file, writeSet stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(coord, std::vector<std::string>&), std::string file, coord stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(unsigned int, std::vector<std::string>&), std::string file, unsigned int stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(std::vector<unsigned int>, std::vector<std::string>&), std::string file, std::vector<unsigned int> stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(std::vector<writeSet>, std::vector<std::string>&), std::string file, std::vector<writeSet> stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(std::vector<coord>, std::vector<std::string>&), std::string file, std::vector<coord> stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void writer(void(*fun)(std::vector<writeSingle>, std::vector<std::string>&), std::string file, std::vector<writeSingle> stuff) {
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+
+	fun(stuff, contents);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+}
+
+void getfile(std::string file, std::vector<std::string>& contents) {
 
 	std::ifstream reader(file);
 	std::string s;
 
 	if (reader.fail()) {
-		wxGetApp().CallAfter([file]() {
 			wxString err = "File not found: " + file;
 		wxLogStatus(err);
-		});
 	}
 	while (getline(reader, s)) {
 		contents.push_back(s);
@@ -27,21 +153,21 @@ void getfile(const std::string& file, std::vector<std::string>& contents) {
 	return;
 }
 
-writeSingle::writeSingle(const std::string myStr, const unsigned int myLen, const coord myLnCol)
+writeSingle::writeSingle(std::string myStr, unsigned int myLen, coord myLnCol)
 	: newStr(myStr), len(myLen), lnCol(myLnCol) {
 }
-writeSingle::writeSingle(const int chNum, const coord myLnCol, const std::vector<Playable*> Level::* chType)
+writeSingle::writeSingle(unsigned int chNum, coord myLnCol, std::vector<std::shared_ptr<Playable>> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {
 }
-writeSingle::writeSingle(const int chNum, const unsigned int line, const std::vector<Playable*> Level::* chType)
+writeSingle::writeSingle(unsigned int chNum, unsigned int line, std::vector<std::shared_ptr<Playable>> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol({line, 1}) {
 }
 
-writeSet::writeSet(const std::string myStr, const unsigned int myLen, const std::initializer_list<const coord> myLnCol)
+writeSet::writeSet(std::string myStr, unsigned int myLen, std::vector< coord> myLnCol)
 	: newStr(myStr), len(myLen), lnCol(myLnCol) {
 }
 
-writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myLnCol, const std::vector<Playable*> Level::* chType)
+writeSet::writeSet(unsigned int chNum, std::vector< coord> myLnCol, std::vector<std::shared_ptr<Playable>> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {
 };
 //
@@ -58,7 +184,7 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 ////
 ////}
 //
-//void rgbWrite(const std::string& file, const rgb color, const int address) {
+//void rgbWrite( std::string file,  rgb color,  int address) {
 //	std::fstream fs(file, std::ios::in | std::ios::binary);
 //	std::fstream lg;
 //
@@ -90,7 +216,7 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	lg.close();
 //}
 //
-//void rXgbWrite(const std::string& file, rgb color, int address) {
+//void rXgbWrite( std::string file, rgb color, int address) {
 //	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 //	fs.seekp(address);
 //	fs << color.r;
@@ -101,18 +227,11 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	fs.close();
 //}
 //
-//void binaryWrite(const std::string& file, const char bin, const int address) {
-//	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
-//	fs.seekp(address);
-//	fs << bin;
-//	fs.close();
-//}
-//
-//void rgbBatch(const std::string& file, const rgb color, const std::vector<int>& IDs) {
+//void rgbBatch( std::string file,  rgb color,  std::vector<int>& IDs) {
 //	for (int x : IDs) rgbWrite(file, color, x);
 //}
 //
-//void rgbFloat(const std::string& file, const rgb color, const int address) {
+//void rgbFloat( std::string file,  rgb color,  int address) {
 //	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 //	fs.seekp(address);
 //	fs.write((char*)&color.rF, 4);
@@ -122,67 +241,122 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	fs.write((char*)&color.bF, 4);
 //	fs.close();
 //}
-//
-//void hexWrite(const std::string& file, const std::string& newWrite, const int address, const int len, const bool trailingNull) {
-//#ifdef _DEBUG
-//	wxGetApp().CallAfter([&file, &newWrite, &address]() {
-//		wxString log = file + " " + newWrite + " " + std::to_string(address);
-//	wxLogStatus(log);
-//	});
-//#endif
-//
-//	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
-//	unsigned int i = 0;
-//	while (i < newWrite.length()) {
-//		fs.seekp(address + i);
-//		fs << char(newWrite[i]);
-//		i++;
-//	}
-//	while (i < len) {
-//		fs.seekp(address + i);
-//		fs << char('\0');
-//		i++;
-//	}
-//	if (trailingNull) {
-//		fs.seekp(address + i);
-//		fs << char('\0');
-//	}
-//	fs.close();
-//}
-//
-////for hex longer than 1 byte
-//void binaryWrite(const std::string& file, const std::string& bin, const int address) {
-//	std::basic_string<uint8_t> bytes;
-//	std::string nextByte;
-//	for (int i = 0; i < bin.length(); i += 2) {
-//		uint16_t cByte;
-//		nextByte = bin.substr(i, 2);
-//		std::istringstream(nextByte) >> std::hex >> cByte;
-//		bytes.push_back(static_cast<uint8_t>(cByte));
-//	}
-//	const std::string result(begin(bytes), end(bytes));
-//	hexWrite(file, result, address, 0, false);
-//}
-//
-//int readEXE(const int address) {
-//	std::ifstream is(EXE, std::ios::in | std::ios::binary);
-//	is.seekg(address);
-//	int val = 0;
-//	is.read((char*)&val, sizeof(val));
-//	//is.get(val, 4);
-//	return val;
-//}
-//
-//void numWrite(const std::string& file, const int newWrite, const int address) {
-//	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
-//
-//	fs.seekp(address);
-//	fs.write((char*)&newWrite, sizeof(newWrite));
-//	fs.close();
-//}
+
+void binaryWrite(std::string file, char bin, int address) {
+	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
+	fs.seekp(address);
+	fs << bin;
+	fs.close();
+}
+void hexWrite(std::string file, std::string newWrite, int address, int len, bool trailingNull) {
+#ifdef _DEBUG
+		wxString log = file + " " + newWrite + " " + std::to_string(address);
+	wxLogStatus(log);
+#endif
+
+	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
+	unsigned int i = 0;
+	while (i < newWrite.length()) {
+		fs.seekp(address + i);
+		fs << char(newWrite[i]);
+		i++;
+	}
+	while (i < len) {
+		fs.seekp(address + i);
+		fs << char('\0');
+		i++;
+	}
+	if (trailingNull) {
+		fs.seekp(address + i);
+		fs << char('\0');
+	}
+	fs.close();
+}
+
+//for hex longer than 1 byte
+void binaryWrite(std::string file, std::string bin, int address) {
+	std::basic_string<uint8_t> bytes;
+	std::string nextByte;
+	for (int i = 0; i < bin.length(); i += 2) {
+		uint16_t cByte;
+		nextByte = bin.substr(i, 2);
+		std::istringstream(nextByte) >> std::hex >> cByte;
+		bytes.push_back(static_cast<uint8_t>(cByte));
+	}
+	std::string result(begin(bytes), end(bytes));
+	hexWrite(file, result, address, 0, false);
+}
+
+int readEXE(int address) {
+	std::ifstream is(EXE, std::ios::in | std::ios::binary);
+	is.seekg(address);
+	int val = 0;
+	is.read((char*)&val, sizeof(val));
+	//is.get(val, 4);
+	return val;
+}
+
+void numWrite(std::string file, int newWrite, int address) {
+	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
+
+	fs.seekp(address);
+	fs.write((char*)&newWrite, sizeof(newWrite));
+	fs.close();
+}
+
+void ai2Write(char scene, std::string writ, std::initializer_list<unsigned int> address) {
+	for (unsigned int a : address)
+		hexWrite(getAI2(currentLev, scene), writ, a);
+}
+
+void ai2Write(char scene, unsigned int chNum, std::initializer_list<unsigned int> address,
+	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	for (unsigned int a : address)
+		hexWrite(getAI2(currentLev, scene), getName(chNum, chType), a);
+}
+
+//0xca35a
+int addressPointer = 0x2B0;
+int junkCharacters = 0x3f1b6c;
+
+void characterPointer(std::shared_ptr<Playable> play, int address) {
+	if (play->pointString != 0x0) {
+		numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), address);
+	} else {
+		hexWrite(EXE, play->name, addressPointer);
+		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
+		play->pointString = junkCharacters + 0x400000 - 0x4;
+
+		numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), address);
+
+		addressPointer += play->name.length() + 1;
+		junkCharacters += 0x8;
+		if (junkCharacters == 0x3f1bb4) junkCharacters += 0x8; //"whip" might not be unused
+	}
+}
+
+void multiPointer(std::shared_ptr<Playable> play, std::vector<int> address) {
+	if (play->pointString != 0x0) {
+		for (int ad : address)
+			numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), ad);
+	} else {
+		hexWrite(EXE, play->name, addressPointer);
+		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
+		play->pointString = junkCharacters + 0x400000 - 0x4;
+
+		for (int ad : address)
+			numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), ad);
+
+		addressPointer += play->name.length() + 1;
+		junkCharacters += 0x8;
+		while (junkCharacters == 0x3f1bb4 || junkCharacters == 0x3f1b84 || junkCharacters == 0x3f1bac)
+			junkCharacters += 0x8; //"whip" might not be unused and others are weird
+	}
+}
 
 
-//void deleteLines(const std::string& file, const std::initializer_list<const unsigned int>& lines) {
+
+//void deleteLines( std::string file,  std::initializer_list< unsigned int>& lines) {
 //	//deletes lines from file
 //	std::vector<std::string> contents;
 //	getfile(file, contents);
@@ -200,38 +374,60 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	}
 //
 //	std::ofstream fileout(file);
-//	for (const std::string y : contents) {
+//	for ( std::string y : contents) {
 //		fileout << y + "\n";
 //	}
 //	fileout.close();
 //}
-//
-//void txtIns(const std::string& file, const std::string& newC, const std::initializer_list<coord>& lnCol, const int len) {
-//#ifdef _DEBUG
-//	wxGetApp().CallAfter([&file, &newC, &len]() {
-//		wxString log = file + " " + newC + " " + std::to_string(len).c_str();
-//	wxLogStatus(log);
-//	});
-//#endif
-//
-//	std::vector<std::string> contents;
-//	getfile(file, contents);
-//	for (coord x : lnCol)
-//		contents[x.ln - 1].replace(x.col - 1, len, newC);
-//
-//
-//	std::ofstream fileout(file);
-//	for (const std::string y : contents)
-//		fileout << y + "\n";
-//
-//	fileout.close();
-//
-//}
-//void txtIns(const std::string& file, const std::string& newC, const coord lnCol, const int len) {
-//	txtIns(file, newC, {lnCol}, len);
-//}
-//
-//void batchTxt(const std::string& file, const std::initializer_list<writeSet> stuff) {
+
+void txtIns( std::string file,  std::string newC, const std::initializer_list<coord>& lnCol, const int len) {
+#ifdef _DEBUG
+		wxString log = file + " " + newC + " " + std::to_string(len).c_str();
+	wxLogStatus(log);
+#endif
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+	for (coord x : lnCol)
+		contents[x.ln - 1].replace(x.col - 1, len, newC);
+
+
+	std::ofstream fileout(file);
+	for ( std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+
+}
+
+void txtIns( std::string file,  std::string newC, const std::initializer_list<unsigned int>& lnCol, const int len) {
+#ifdef _DEBUG
+
+		wxString log = file + " " + newC + " " + std::to_string(len).c_str();
+	wxLogStatus(log);
+
+#endif
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+	for (unsigned int x : lnCol)
+		contents[x - 1].replace(1, len, newC);
+
+
+	std::ofstream fileout(file);
+	for ( std::string y : contents)
+		fileout << y + "\n";
+
+	fileout.close();
+
+}
+
+/*
+void txtIns( std::string file,  std::string newC, coord lnCol, const int len) {
+	txtIns(file, newC, {lnCol}, len);
+}*/
+
+//void batchTxt( std::string file,  std::initializer_list<writeSet> stuff) {
 //	//this one is faster
 //	std::vector<std::string> contents;
 //	getfile(file, contents);
@@ -242,13 +438,13 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //
 //
 //	std::ofstream fileout(file);
-//	for (const std::string y : contents)
+//	for ( std::string y : contents)
 //		fileout << y + "\n";
 //
 //	fileout.close();
 //}
 //
-//void batchPlayerTxt(const std::string& file, const std::initializer_list<writePlayerSet> stuff) {
+//void batchPlayerTxt( std::string file,  std::initializer_list<writePlayerSet> stuff) {
 //
 //	std::vector<std::string> contents;
 //	getfile(file, contents);
@@ -261,13 +457,13 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	}
 //
 //	std::ofstream fileout(file);
-//	for (const std::string y : contents)
+//	for ( std::string y : contents)
 //		fileout << y + "\n";
 //
 //	fileout.close();
 //}
 //
-//void batchSinglePlayerTxt(const std::string& file, const std::initializer_list<writePlayerSingle> stuff) {
+//void batchSinglePlayerTxt( std::string file,  std::initializer_list<writePlayerSingle> stuff) {
 //	//this one is faster
 //	std::vector<std::string> contents;
 //	getfile(file, contents);
@@ -278,7 +474,7 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	}
 //
 //	std::ofstream fileout(file);
-//	for (const std::string y : contents)
+//	for ( std::string y : contents)
 //		fileout << y + "\n";
 //
 //	fileout.close();
@@ -286,7 +482,7 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 
 //template <typename C, typename W>
 //void writer(void(*fun)(std::initializer_list<C>&, std::vector<std::string>&),
-//	const std::string& file, const std::initializer_list<W> stuff) {
+//	 std::string file,  std::initializer_list<W> stuff) {
 //
 //	std::vector<std::string> contents;
 //	getfile(file, contents);
@@ -294,45 +490,34 @@ writeSet::writeSet(const int chNum, const std::initializer_list<const coord> myL
 //	fun(stuff, contents);
 //
 //	std::ofstream fileout(file);
-//	for (const std::string y : contents)
+//	for ( std::string y : contents)
 //		fileout << y + "\n";
 //
 //	fileout.close();
 //}
 
-template <typename FUN, typename W>
-void writer(const FUN fun, const std::string& file, const W stuff) {
 
-	std::vector<std::string> contents;
-	getfile(file, contents);
 
-	fun(stuff, contents);
-
-	std::ofstream fileout(file);
-	for (const std::string y : contents)
-		fileout << y + "\n";
-
-	fileout.close();
-}
-
-void fileDeleter(const char scene, const int characterNum, std::vector<Playable*> Level::* chType) {
-	//deletes file
-	std::remove(getSCP(currentLev, scene, getVanilla(characterNum, chType)).c_str());
-};
-
-void oneWrite(const writeSingle& wrt, std::vector<std::string>& contents) {
+void oneWrite(writeSingle wrt, std::vector<std::string>& contents) {
 	//alters one line in file
 	contents[wrt.lnCol.ln - 1].replace(wrt.lnCol.ln - 1, wrt.len, wrt.newStr);
 }
 
-void multiWrite(std::initializer_list<writeSingle>& stuff, std::vector<std::string>& contents) {
+void multiWrite(std::vector<writeSingle> stuff, std::vector<std::string>& contents) {
 	//alters multiple parts of file without repeats
 	for (writeSingle thing : stuff)
 		contents[thing.lnCol.ln - 1].replace(thing.lnCol.col - 1, thing.len, thing.newStr);
 
 }
 
-void manyWrite(std::initializer_list<writeSet>& stuff, std::vector<std::string>& contents) {
+void weirdWrite(writeSet stuff, std::vector<std::string>& contents) {
+	//alters multiple parts of file without repeats
+	for (coord lc : stuff.lnCol) {
+		contents[lc.ln - 1].replace(lc.col - 1, stuff.len, stuff.newStr);
+	}
+}
+
+void manyWrite(std::vector<writeSet> stuff, std::vector<std::string>& contents) {
 	//alters multiple parts of file with repeats
 	for (writeSet thing : stuff) {
 		for (coord lc : thing.lnCol) {
@@ -341,19 +526,23 @@ void manyWrite(std::initializer_list<writeSet>& stuff, std::vector<std::string>&
 	}
 }
 
-void appender(const std::string& appendix, std::vector<std::string>& contents) {
+void appender(std::string appendix, std::vector<std::string>& contents) {
 	//appends file with more text
 	contents.push_back(appendix);
 
 };
 
-void lineDel(const std::initializer_list<const unsigned int>lines, std::vector<std::string>& contents) {
+void lineDel(std::vector< unsigned int>lines, std::vector<std::string>& contents) {
 	//sets line to empty string; actually deleting them would offset coordinates
-	for (const unsigned int& ln : lines) contents[ln - 1] = "";
+	for (unsigned int ln : lines) contents[ln - 1] = "";
 }
 
+void fileDeleter(char scene, int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	//deletes file
+	std::remove(getSCP(currentLev, scene, getVanilla(characterNum, chType)).c_str());
+};
 //
-//void appendFile(const std::string& file, const std::string& appendix) {
+//void appendFile( std::string file,  std::string appendix) {
 //#ifdef _DEBUG
 //	wxGetApp().CallAfter([file]() {
 //		wxString log = "appending" + file;
@@ -366,7 +555,7 @@ void lineDel(const std::initializer_list<const unsigned int>lines, std::vector<s
 //	contents.push_back(appendix);
 //
 //	std::ofstream fileout(file);
-//	for (std::string& y : contents) {
+//	for (std::string y : contents) {
 //		fileout << y + "\n";
 //	}
 //	fileout.close();
@@ -375,163 +564,173 @@ void lineDel(const std::initializer_list<const unsigned int>lines, std::vector<s
 
 //gets path for various types of files
 
-std::string getBasePath(const Level* lev, const char scene, const std::string& fileType) {
+std::string getBasePath(std::shared_ptr<Level> lev, char scene, std::string fileType) {
 	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + "." + fileType;
 }
 
-//std::string getMainTxt(const Level* lev) {
-//	return out + lev->path + lev->name + ".TXT";
-//}
-//
-//std::string getGiz(const Level* lev, const char scene) {
+std::string getMainTxt(std::shared_ptr<Level> lev) {
+	return out + lev->path + lev->name + ".TXT";
+}
+
+//std::string getGiz( std::shared_ptr<Level> lev,  char scene) {
 //	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIZ";
 //}
 //
-//std::string getGit(const Level* lev, const const char scene) {
+//std::string getGit( std::shared_ptr<Level> lev,   char scene) {
 //	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIT";
 //}
 //
-//std::string getSceneTxt(const Level* lev, const const char scene) {
+//std::string getSceneTxt( std::shared_ptr<Level> lev,   char scene) {
 //	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".TXT";
 //}
 
-std::string getSCP(const Level* lev, const char scene, const std::string& script) {
+std::string getSCP(std::shared_ptr<Level> lev, char scene, std::string script) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + script + ".SCP";
 }
 
-std::string getScriptTxt(const Level* lev, const char scene) {
+std::string getAI2(std::shared_ptr<Level> lev, char scene) {
+	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + lev->shortName + '_' + scene + ".AI2";
+}
+
+std::string getScriptTxt(std::shared_ptr<Level> lev, char scene) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + lev->shortName + '_' + scene + ".TXT";
 }
 
-void renamer(const std::string& oldName, const std::string& newName) {
+void renamer(std::string oldName, std::string newName) {
 	//renames file
 	int test = rename(oldName.c_str(), newName.c_str());
 	if (test == -1) {
 		wxString err = "File name override failed: " + oldName + " -> " + newName;
-		wxGetApp().CallAfter([err]() {
 			wxLogError(err);
-		});
 	}
 }
 
-std::string getName(const unsigned int characterNum, const std::vector<Playable*> Level::* chType) {
+std::string getName(unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
 	//gets name of character
-	return (currentLev->*chType)[characterNum]->name;
+	return (*currentLev.*chType)[characterNum]->name;
 }
 
-std::string getVanilla(const unsigned int characterNum, const std::vector<Playable*> Level::* chType) {
+std::string getVanilla(unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
 	//gets name of character to be replaced
-	return currentLev->vanillaMap[currentLev->*chType][characterNum]->name;
+	return currentLev->vanillaMap[*currentLev.*chType][characterNum]->name;
 }
 
-template <int W>
-void playerInit(std::array<writeSingle, W> writers) {
+
+void playerInit(std::vector<writeSingle> writ) {
 	//replaces characters in the main level txt
 	//std::vector<writeSingle> writ;
 	/*for (basicCh w : writers) {
 		writ.push_back(writeSingle{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), {w.line, 12}});
 	}*/
+	writ[0].lnCol.col = 5;
 
-	for (writeSingle& x : writers) x.lnCol.col = 12;
+	for (writeSingle x : writ) x.lnCol.col = 12;
 
-	writer(multiWrite, getMainTxt(currentLev), writers);
+	writer(multiWrite, getMainTxt(currentLev), writ);
 };
 
-void mainTxtIns(const std::string& txt, const unsigned int len, const coord lnCol) {
+
+void mainTxtIns(std::string txt, unsigned int len, coord lnCol) {
 	writer(oneWrite, getMainTxt(currentLev), writeSingle(txt, len, lnCol));
 }
 
-void scpIns(const char scene, const std::string& script, const unsigned int chNum, const coord lnCol,
-	const std::vector<Playable*> Level::* chType) {
-	//replaces character in scp file
-
+void scpIns(char scene, std::string script, unsigned int chNum, coord lnCol,
+	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+ //replaces string in scp file
 	writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(chNum, lnCol, chType));
 };
 
-void scpRep(const char scene, const std::string& script, const std::string txt, const unsigned int len, const coord lnCol) {
+void scpRep(char scene, std::string script, std::string txt, unsigned int len, coord lnCol) {
 	//replaces text in scp file
 	writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(txt, len, lnCol));
 };
 
-void scpRepMulti(const char scene, const std::string& script, const std::string txt, const unsigned int len,
-	const std::initializer_list<const coord> lnCol) {
-	//replaces text in scp file multiple times
-	writer(oneWrite, getSCP(currentLev, scene, script), writeSet(txt, len, lnCol));
+//void scpRepMulti( char scene,  std::string script,  std::string txt,  unsigned int len,
+//	 std::initializer_list< coord> lnCol) {
+//	//replaces text in scp file multiple times
+//	writer(oneWrite, getSCP(currentLev, scene, script), writeSet(txt, len, lnCol));
+//};
+//
+//void scpRepMany( char scene,  std::string script,  std::initializer_list< writeSet> writ) {
+//	writer(manyWrite, getSCP(currentLev, scene, script), writ);
+//}
+
+void scpMulti(char scene, std::string script, writeSet writ) {
+	//replaces string with multiple instances in same scp file
+	writer(weirdWrite, getSCP(currentLev, scene, script), writ);
 };
 
-void scpRepMany(const char scene, const std::string& script, const std::initializer_list<const writeSet> writ) {
-	writer(manyWrite, getSCP(currentLev, scene, script), writ);
-}
-
-void scpMulti(const char scene, const std::string& script, const unsigned int chNum, const std::initializer_list<const coord> lnCol,
-	const std::vector<Playable*> Level::* chType) {
-	//replaces character with multiple instances in same scp file
-	writeSet writ(getName(chNum, chType), getVanilla(chNum, chType).length(), lnCol);
-	writer(oneWrite, getSCP(currentLev, scene, script), writ);
+void scpMany(char scene, std::string script, std::vector<writeSet> writers) {
+	//replaces multiple strings which each have multiple instances in scp file
+	//std::vector<writeSet> writ;
+	//for (advancedCh w : writers) {
+	//	writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), w.lnCol});
+	//}
+	writer(manyWrite, getSCP(currentLev, scene, script), writers);
 };
 
-void scpMany(const char scene, const std::string& script, std::initializer_list<advancedCh> writers) {
-	//replaces multiple characters which each have multiple instances in scp file
-	std::vector<writeSet> writ;
-	for (advancedCh w : writers) {
-		writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), w.lnCol});
-	}
-	writer(manyWrite, getSCP(currentLev, scene, script), writ);
+void batchAnywhere(std::string file, std::vector<writeSet> writers) {
+
+	writer(manyWrite, file, writers);
 };
 
-void scpName(const char scene, const unsigned int characterNum, const std::vector<Playable*> Level::* chType = &Level::party) {
+void scpName(char scene, unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party) {
 	//renames scp file
 	renamer(getSCP(currentLev, scene, getVanilla(characterNum, chType)),
 		getSCP(currentLev, scene, getName(characterNum, chType)));
 };
 
-void scpAppend(const char scene, const std::string& script, const std::string& appendix) {
+void scpAppend(char scene, std::string script, std::string appendix) {
 	//appends scp file
 	writer(appender, getSCP(currentLev, scene, script), appendix);
 }
 
-void scriptTxtAppend(const char scene, const std::string& appendix) {
+void scriptTxtAppend(char scene, std::string appendix) {
 	//appends script.txt
 	writer(appender, getScriptTxt(currentLev, scene), appendix);
 }
 
-void scriptTxt(const char scene, const int characterNum, const unsigned int line,
-	std::vector<Playable*> Level::* chType) {
+void scriptTxt(char scene, int characterNum, unsigned int line,
+	std::vector<std::shared_ptr<Playable>> Level::* chType) {
 	//updates script.txt
 	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(characterNum, {line, 1}, chType));
 
 	scpName(scene, characterNum);
 };
 
-void multiScriptTxt(const char scene, const std::initializer_list<const basicCh> write) {
+void multiScriptTxt(char scene, std::vector< writeSingle> write) {
 	//updates script.txt
-	std::vector<writeSet> writ;
-	for (basicCh w : write) {
-		writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), {w.line, 1}});
-		scpName(scene, w.chNum);
-	}
-	writer(manyWrite, getScriptTxt(currentLev, scene), writ);
+	//std::vector<writeSet> writ;
+	//for (basicCh w : write) {
+	//	writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), {w.line, 1}});
+	//	scpName(scene, w.chNum);
+	//}
+	writer(multiWrite, getScriptTxt(currentLev, scene), write);
 
 };
 
-void scriptTxtRep(const char scene, const std::string newStr, const std::string oldStr, const unsigned int line) {
+void scriptTxtRep(char scene, std::string newStr, std::string oldStr, unsigned int line) {
 	//replaces text in script.txt
 	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(newStr, oldStr.length(), {line, 1}));
 	renamer(getSCP(currentLev, scene, oldStr),
 		getSCP(currentLev, scene, newStr));
 };
 
-void lineDeleterScp(const char scene, const std::string& script, std::initializer_list<const unsigned int> lines) {
+void lineDeleterScp(char scene, std::string script, std::vector< unsigned int> lines) {
 	writer(lineDel, getSCP(currentLev, scene, script), lines);
 }
 
-void scpDeleter(const char scene, const std::string& script) {
+void lineDeleter(std::string file, std::vector<unsigned int> lines) {
+	writer(lineDel, file, lines);
+}
+
+void scpDeleter(char scene, std::string script) {
 	std::remove(getSCP(currentLev, scene, script).c_str());
 }
 
-void baseFile(const char scene, const std::string& fileType, const unsigned int chNum, const coord lnCol,
-	const std::vector<Playable*> Level::* chType) {
-	writer(oneWrite, getBasePath(currentLev, scene, fileType), lnCol);
+void baseFile(char scene, std::string fileType, unsigned int chNum, coord lnCol,
+	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	writer(oneWrite, getBasePath(currentLev, scene, fileType), {chNum, lnCol, chType});
 }
 
 /*
@@ -547,7 +746,7 @@ void Level::rename(int characterNumber, char scene) {
 }
 */
 
-//void OLDtxtIns(const std::string file, std::string newC, std::vector<coord> lnCol, int len = 0) {
+//void OLDtxtIns( std::string file, std::string newC, std::vector<coord> lnCol, int len = 0) {
 //	//lnCol must be in order
 //
 //	std::ifstream filein(file);
@@ -628,6 +827,6 @@ rgb::rgb() {
 
 //coord::coord() {}
 //
-//coord::coord(const unsigned int myLn) : ln(myLn) {}
+//coord::coord( unsigned int myLn) : ln(myLn) {}
 //
-//coord::coord(const unsigned int myLn, const unsigned int myCol) : ln(myLn), col(myCol) {}
+//coord::coord( unsigned int myLn,  unsigned int myCol) : ln(myLn), col(myCol) {}

@@ -1,6 +1,9 @@
-#include "FileGen.h"
 #include <wx/wx.h>
 #include <filesystem>
+#include "Defines.h"
+#include "FileGen.h"
+#include "OtherStuff.h"
+#include "App.h"
 
 extern std::string out;
 extern std::string vanillaDirectory;
@@ -8,7 +11,7 @@ extern std::string vanillaDirectory;
 void fileGen() {
 	//coppies the game files and removes cutscenes
 
-	wxGetApp().CallAfter([] { wxLogStatus("Generating files. . ."); });
+	wxLogStatus("Generating files. . .");
 
 	std::filesystem::remove_all(out);
 	std::filesystem::copy(vanillaDirectory, out,
@@ -39,7 +42,7 @@ void fileGen() {
 	std::filesystem::copy("files/LEGOStarWarsSaga.exe", out,
 		std::filesystem::copy_options::overwrite_existing);
 
-	wxGetApp().CallAfter([] { wxLogStatus("Patching. . ."); });
+	wxLogStatus("Patching. . .");
 
 	//removes cutscenes
 
@@ -48,7 +51,7 @@ void fileGen() {
 	//SPACEPORT MIDTRO?
 	//---ep5 finish story
 	//test princess midtro
-	txtIns(LEV + "AREAS.txt", "//", {
+	lineDeleter(LEV + "AREAS.TXT", {
 		//29, 30, //negotiations
 		34, 45, 46, 52, 63, 64, 65, 70, 94, 95, 96, 97, 98, 102, 103, 114,
 		115, 116, 123, 134, 182, 188, 201, 202, 208, 209, 220, 221,

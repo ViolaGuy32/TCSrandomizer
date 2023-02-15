@@ -3,6 +3,8 @@
 #include <string>
 #include <thread>
 
+//#include "memHeader.h"
+
 #include "Characters.h"
 #include "MainFrame.h"
 #include "OtherStuff.h"
@@ -32,6 +34,7 @@ wxCheckBox* greenType;
 wxCheckBox* extraType;
 wxCheckBox* collectableType;
 wxCheckBox* colorType;
+
 
 MainFrame::MainFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title) {
@@ -122,22 +125,9 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 
 	dat.close();
 
-	std::thread randomize{ Randomize };
-	randomize.detach();
+	Randomize();
+	//std::thread randomize{ Randomize };
+	//randomize.detach();
 }
 
-MainFrame::~MainFrame() {
-
-	delete directoryLabel;
-	delete tcsFolder;
-	delete start;
-	delete logType;
-	delete characterType;
-	delete etType;
-	delete greenType;
-	delete extraType;
-	delete collectableType;
-	delete colorType;
-
-}
 

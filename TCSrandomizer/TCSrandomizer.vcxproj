@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Characters.cpp" />
+    <ClCompile Include="FileGen.cpp" />
     <ClCompile Include="OtherStuff.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Randomize.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="FileGen.h" />
     <ClInclude Include="OtherStuff.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Randomize.h" />

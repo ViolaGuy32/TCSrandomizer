@@ -1,11 +1,10 @@
-#include "Randomize.h"
-
 #include <wx/log.h>
 
 #include <filesystem>
 #include <sstream>
 #include <vector>
 #include <array>
+#include <memory>
 #include <random>
 
 #include "FileGen.h"
@@ -13,6 +12,7 @@
 #include "Characters.h"
 #include "Defines.h"
 #include "OtherStuff.h"
+#include "Randomize.h"
 
 extern bool character;
 extern bool extog;
@@ -26,23 +26,70 @@ extern bool advanceMus;
 extern LogicType logicType;
 
 uint64_t seed = 0;
-const std::mt19937_64* randoPTR;
+std::mt19937_64* randoPTR;
 
 extern std::string out;
 extern std::string vanillaDirectory;
 
-std::vector<Level*> allLevels;
-std::vector<Playable*> pls;			//Characters and Vehicles
-std::vector<Playable*> chs;     //Characters
-std::vector<Playable*> vhs;     //Vehicles
-std::vector<Playable*> testing = {}; //Current logic
-Level* currentLev;
+std::vector<std::shared_ptr<Level>> allLevels;
 
-std::unordered_map<std::string, Playable*> nameList;
-Playable* defaultCharacter;
-Level* BHM;
+std::vector<std::shared_ptr<Playable>> pls;			//Characters and Vehicles
+std::vector<std::shared_ptr<Playable>> chs;     //Characters
+std::vector<std::shared_ptr<Playable>> vhs;     //Vehicles
+std::vector<std::shared_ptr<Playable>> testing = {}; //Current logic
+std::shared_ptr<Level> currentLev;
+
+std::map<std::string, std::shared_ptr<Playable>> nameList;
+std::shared_ptr<Playable> defaultCharacter;
+std::shared_ptr<Level> BHM;
+//
+//struct currentMem {
+//	uint32_t alloc = 0;
+//	uint32_t freed = 0
+//
+//	uint32_t current() { return alloc - freed; }
+//};
+//
+//currentMem curM;
+//
+//void printMem() {
+//	std::ofstream mem("files/memory.txt", std::ios_base::out | std::ios_base::app);
+//
+//	mem <<"\t\t\t\t\t" << curM.current() << " bytes in use.\n";
+//	mem.close();
+//
+//}
+//
+//void* operator new(size_t size) {
+//
+//	std::ofstream mem("files/memory.txt", std::ios_base::out | std::ios_base::app);
+//
+//	curM.alloc += size;
+//
+//	mem << size << " bytes allocated.\n";
+//
+//	mem.close();
+//
+//
+//	printMem();
+//
+//	return malloc(size);
+//}
+//
+//void operator delete(void* memory, size_t size) {
+//	std::ofstream mem("files/memory.txt", std::ios_base::out | std::ios_base::app);
+//
+//	curM.alloc += size;
+//
+//	mem << size << " bytes freed.\n";
+//	mem.close();
+//
+//	free(memory);
+//}
 
 void Randomize() {
+
+
 	std::remove("files/log.txt");
 	std::ofstream loggingIt("files/log.txt");
 
@@ -55,7 +102,7 @@ void Randomize() {
 		std::random_device rd;
 		seed = rd();
 	}
-	const std::mt19937_64 rando(seed);
+	std::mt19937_64 rando(seed);
 	randoPTR = &rando;
 
 	charMaker();
@@ -127,14 +174,15 @@ void Randomize() {
 
 	if (collectable) {
 		for (int i = 0; i < 36; i++) {
+
 			std::shuffle(allLevels[i]->collectables.begin(), allLevels[i]->collectables.end(), rando);
 		}
 	}
 
-	Playable* cantina1 = nameList["quigonjinn"];
-	Playable* cantina2 = nameList["obiwankenobi"];
-	Playable* indy = nameList["hansolo_indy"];
-	Playable* allMinikitsCharacter = nameList["slave1"];
+	std::shared_ptr<Playable> cantina1 = nameList["quigonjinn"];
+	std::shared_ptr<Playable> cantina2 = nameList["obiwankenobi"];
+	std::shared_ptr<Playable> indy = nameList["hansolo_indy"];
+	std::shared_ptr<Playable> allMinikitsCharacter = nameList["slave1"];
 
 	if (character) {
 		//makes code easier to read and debug
@@ -182,13 +230,7 @@ void Randomize() {
 	#define Tow &Playable::tow
 
 
-		cantina :
-		cantina1 = chs[rand() % chs.size()];
-		cantina2 = chs[rand() % chs.size()];
-		if (cantina1 == cantina2)
-			goto cantina;
-
-	negotiations:
+		negotiations :
 		mix(Negotiations);
 
 		if (!atrb(Jedi)) goto negotiations;
@@ -330,7 +372,7 @@ void Randomize() {
 
 	factory2:
 		add(3); //3po
-		if (All({Astro, Proto})) goto factory;
+		//if (All({Astro, Proto})) goto factory;
 		if (!atrb(Jedi)) goto factory;
 		if (!atrb(Proto)) goto factory;
 
@@ -452,12 +494,12 @@ void Randomize() {
 
 	secretplans:
 
-		auto plansthing = [](std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
+		auto plansthing = [](std::vector<std::shared_ptr<Playable>> current, std::shared_ptr<Playable> shield, std::shared_ptr<Playable> redGuy) {
 			//This is for scene 3 super jump
 			if (logicType != superGlitched) return false;
 
-			for (Playable* x : current) {
-				for (Playable* y : current) {
+			for (std::shared_ptr<Playable> x : current) {
+				for (std::shared_ptr<Playable> y : current) {
 					bool OOB = false;
 					bool OOB2 = false;
 
@@ -470,10 +512,10 @@ void Randomize() {
 						else if (x->landoAlt && y->leiaAlt) OOB = true;
 						else if (x == nameList["gamorreanguard"] && y->lukeAlt) OOB = true;
 
-						Playable* otherX = defaultCharacter;
+						std::shared_ptr<Playable> otherX = defaultCharacter;
 						if (OOB) {
-							for (Playable* x2 : current) {
-								for (Playable* y2 : current) {
+							for (std::shared_ptr<Playable> x2 : current) {
+								for (std::shared_ptr<Playable> y2 : current) {
 									if (x2 != y2 && x2 != x) {
 										if (x2->pushable && y2->jedi) OOB2 = true;
 										else if (x2->chokeable && y2->choke) OOB2 = true;
@@ -621,7 +663,7 @@ void Randomize() {
 		add(3);
 		//cantina buttons
 		if (!atrb(Shoot) && !atrb(FakeShoot)) {
-			for (Playable* p : testing)
+			for (std::shared_ptr<Playable> p : testing)
 				if (p->droid && !p->jump)
 					goto spaceport3;
 			goto spaceport;
@@ -760,7 +802,7 @@ void Randomize() {
 		if (logicType != casual) {
 			if (SuperJump(Build)) //everyone who can build can jump or flutter
 				goto falconflight;
-			for (Playable* p : testing) {
+			for (std::shared_ptr<Playable> p : testing) {
 				if (p->doubleJump && p->build) goto falconflight;
 				if (p->dive && p->build) goto falconflight;
 				if (p->flop && p->build) goto falconflight;
@@ -921,8 +963,8 @@ void Randomize() {
 		if (logicType == casual) {
 			if (!atrb(Jedi))
 				goto jabbas;
-			std::vector<Playable*> droidRoom;
-			for (Playable* t : testing)
+			std::vector<std::shared_ptr<Playable>> droidRoom;
+			for (std::shared_ptr<Playable> t : testing)
 				if (Any({Jump, Fly, Flutter}, {t})) //can get into droid room
 					droidRoom.push_back(t);
 			droidRoom.push_back(Jabbas->party[3]);
@@ -1158,89 +1200,90 @@ void Randomize() {
 		add(5);
 
 		//breaks if target is not unique
-		const Playable* battledroid = nameList["battledroid"];
-		const Playable* pkdroid = nameList["pkdroid"];
-		const Playable* geonosian = nameList["geonosian"];
-		const Playable* battledroidSecurity = nameList["battledroid_security"];
-		const Playable* droideka = nameList["destroyer"];
-		const Playable* cloneEp3 = nameList["clone_ep3"];
-		const Playable* cody = nameList["clone_ep3_sand"];
-		const Playable* cloneSwamp = nameList["clone_ep3_swamp"];
-		const Playable* disguisedclone = nameList["disguisedclone"];
-		const Playable* rebelengineer = nameList["engineer"];
-		const Playable* rebeltrooper = nameList["rebelscum"];
-		const Playable* jawa = nameList["jawa"];
-		const Playable* sandtrooper = nameList["sandtrooper"];
-		const Playable* mousedroid = nameList["mousedroid"];
-		const Playable* stormtrooper = nameList["stormtrooper"];
-		const Playable* imperialofficer = nameList["imperialofficer"];
-		const Playable* snowtrooper = nameList["snowtrooper"];
-		const Playable* ewok = nameList["ewok"];
+		std::shared_ptr<Playable> battledroid = nameList["battledroid"];
+		std::shared_ptr<Playable> pkdroid = nameList["pkdroid"];
+		std::shared_ptr<Playable> geonosian = nameList["geonosian"];
+		std::shared_ptr<Playable> battledroidSecurity = nameList["battledroid_security"];
+		std::shared_ptr<Playable> droideka = nameList["destroyer"];
+		std::shared_ptr<Playable> cloneEp3 = nameList["clone_ep3"];
+		std::shared_ptr<Playable> cody = nameList["clone_ep3_sand"];
+		std::shared_ptr<Playable> cloneSwamp = nameList["clone_ep3_swamp"];
+		std::shared_ptr<Playable> disguisedclone = nameList["disguisedclone"];
+		std::shared_ptr<Playable> rebelengineer = nameList["engineer"];
+		std::shared_ptr<Playable> rebeltrooper = nameList["rebelscum"];
+		std::shared_ptr<Playable> jawa = nameList["jawa"];
+		std::shared_ptr<Playable> sandtrooper = nameList["sandtrooper"];
+		std::shared_ptr<Playable> mousedroid = nameList["mousedroid"];
+		std::shared_ptr<Playable> stormtrooper = nameList["stormtrooper"];
+		std::shared_ptr<Playable> imperialofficer = nameList["imperialofficer"];
+		std::shared_ptr<Playable> snowtrooper = nameList["snowtrooper"];
+		std::shared_ptr<Playable> ewok = nameList["ewok"];
 
-		if (BHM->party[6] == battledroid)
+		//check all bonus numbers
+		if (BHM->bonusCharacters[0] == battledroid)
 			goto bhm;
-		if (BHM->party[6] == pkdroid)
+		if (BHM->bonusCharacters[0] == pkdroid)
 			goto bhm;
-		if (BHM->party[7] == battledroid)
+		if (BHM->bonusCharacters[1] == battledroid)
 			goto bhm;
-		if (BHM->party[8] == battledroid)
+		if (BHM->bonusCharacters[2] == battledroid)
 			goto bhm;
-		//if (BHM->party[8] == gungan) goto bhm;
-		if (BHM->party[9] == geonosian)
+		//if (BHM->bonusCharacters[8] == gungan) goto bhm;
+		if (BHM->bonusCharacters[3] == geonosian)
 			goto bhm;
-		//if (BHM->party[10] == kaminodroid) goto bhm;
-		if (BHM->party[11] == battledroidSecurity)
+		//if (BHM->bonusCharacters[10] == kaminodroid) goto bhm;
+		if (BHM->bonusCharacters[5] == battledroidSecurity)
 			goto bhm;
-		if (BHM->party[12] == battledroid)
+		if (BHM->bonusCharacters[6] == battledroid)
 			goto bhm;
-		if (BHM->party[12] == droideka)
+		if (BHM->bonusCharacters[6] == droideka)
 			goto bhm;
-		if (BHM->party[13] == battledroid)
+		if (BHM->bonusCharacters[7] == battledroid)
 			goto bhm;
-		if (BHM->party[13] == cloneEp3)
+		if (BHM->bonusCharacters[7] == cloneEp3)
 			goto bhm;
-		if (BHM->party[13] == cody)
+		if (BHM->bonusCharacters[7] == cody)
 			goto bhm;
-		if (BHM->party[13] == cloneSwamp)
+		if (BHM->bonusCharacters[7] == cloneSwamp)
 			goto bhm;
-		if (BHM->party[14] == cloneEp3)
+		if (BHM->bonusCharacters[8] == cloneEp3)
 			goto bhm;
-		if (BHM->party[14] == cody)
+		if (BHM->bonusCharacters[8] == cody)
 			goto bhm;
-		if (BHM->party[14] == disguisedclone)
+		if (BHM->bonusCharacters[8] == disguisedclone)
 			goto bhm;
-		if (BHM->party[15] == battledroid)
+		if (BHM->bonusCharacters[9] == battledroid)
 			goto bhm;
-		if (BHM->party[16] == rebelengineer)
+		if (BHM->bonusCharacters[10] == rebelengineer)
 			goto bhm;
-		if (BHM->party[16] == rebeltrooper)
+		if (BHM->bonusCharacters[10] == rebeltrooper)
 			goto bhm;
-		if (BHM->party[17] == jawa)
+		if (BHM->bonusCharacters[11] == jawa)
 			goto bhm;
-		if (BHM->party[17] == sandtrooper)
+		if (BHM->bonusCharacters[11] == sandtrooper)
 			goto bhm;
-		//if (BHM->party[18] == scoundrel) goto bhm;
-		if (BHM->party[18] == sandtrooper)
+		//if (BHM->bonusCharacters[12] == scoundrel) goto bhm;
+		if (BHM->bonusCharacters[12] == sandtrooper)
 			goto bhm;
-		if (BHM->party[19] == mousedroid)
+		if (BHM->bonusCharacters[13] == mousedroid)
 			goto bhm;
-		if (BHM->party[19] == stormtrooper)
+		if (BHM->bonusCharacters[13] == stormtrooper)
 			goto bhm;
-		if (BHM->party[19] == imperialofficer)
+		if (BHM->bonusCharacters[13] == imperialofficer)
 			goto bhm;
-		if (BHM->party[20] == snowtrooper)
+		if (BHM->bonusCharacters[14] == snowtrooper)
 			goto bhm;
-		if (BHM->party[21] == ewok)
+		if (BHM->bonusCharacters[15] == ewok)
 			goto bhm;
-		//if (BHM->party[22] == civillian) goto bhm;
-		if (BHM->party[22] == stormtrooper)
+		//if (BHM->bonusCharacters[16] == civillian) goto bhm;
+		if (BHM->bonusCharacters[16] == stormtrooper)
 			goto bhm;
-		//if (BHM->party[23] == civillian) goto bhm;
-		if (BHM->party[23] == stormtrooper)
+		//if (BHM->bonusCharacters[17] == civillian) goto bhm;
+		if (BHM->bonusCharacters[17] == stormtrooper)
 			goto bhm;
-		if (BHM->party[24] == sandtrooper)
+		if (BHM->bonusCharacters[18] == sandtrooper)
 			goto bhm;
-		if (BHM->party[25] == snowtrooper)
+		if (BHM->bonusCharacters[19] == snowtrooper)
 			goto bhm;
 
 
@@ -1268,14 +1311,22 @@ void Randomize() {
 		if (atrb(Ghost, BHM->bonusCharacters)) goto bhm;
 	}
 
-	for (Level* lev : allLevels) {
-		for (Playable* p : lev->party) {
+	for (std::shared_ptr<Level> lev : allLevels) {
+		for (std::shared_ptr<Playable> p : lev->party) {
 			p->storyMode = true;
 		}
 	}
 
 	if (character) {
 		std::uniform_int_distribution<int> randPlayable(0, pls.size() - 1);
+		std::uniform_int_distribution<int> randCharacters(0, chs.size() - 1);
+
+	cantina:
+	//don't use rand
+		cantina1 = chs[randCharacters(rando)];
+		cantina2 = chs[randCharacters(rando)];
+		if (cantina1 == cantina2)
+			goto cantina;
 
 	indy:
 		indy = pls[randPlayable(rando)];
@@ -1295,6 +1346,8 @@ void Randomize() {
 	//FILE GEN IS HERE
 	fileGen();
 	//FILE GEN IS HERE
+
+
 	{
 		//Diverts references for nonexistent characters to dummy character so I can
 		//use override said characters.
@@ -1311,14 +1364,19 @@ void Randomize() {
 
 	if (collectable) {
 	#ifdef _DEBUG
-		wxGetApp().CallAfter([]() { wxLogStatus("Starting collectables"); });
+		wxLogStatus("Starting collectables");
 	#endif
 		int x = 1;
+
 		auto collectableWrite
-			= [&x, &loggingIt](Level* lev, char scene, std::initializer_list<int> address) {
-			std::string file = getGiz(lev, scene);
+			= [&x, &loggingIt](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
+		#ifdef _DEBUG
+			wxLogStatus((lev->name + " collectables").c_str());
+		#endif
+
+			std::string file = getBasePath(lev, scene, "GIZ");
 			std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
-			for (int cAddress : address) {
+			for (unsigned int cAddress : address) {
 				fs.seekg(cAddress);
 				char type = fs.get();
 			#ifdef _DEBUG
@@ -1336,18 +1394,20 @@ void Randomize() {
 						x = 1;
 				}
 
-				binaryWrite(file, lev->collectables[lev->collectables.size() - 1],
-					cAddress);
-				lev->collectables.pop_back();
+				binaryWrite(file, lev->collectables[lev->collectIt], cAddress);
+				++lev->collectIt;
 			}
 		};
 
 		//minikits with multiple spawn points
 		auto specialCollectable
-			= [&x, &loggingIt](Level* lev, char scene, std::initializer_list<int> address) {
-			std::string file = getGiz(lev, scene);
+			= [&x, &loggingIt](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
+		#ifdef _DEBUG
+			wxLogStatus((lev->name + ' ' + scene + " collectables").c_str());
+		#endif
+			std::string file = getBasePath(lev, scene, "GIZ");
 			std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
-			for (int cAddress : address) {
+			for (unsigned int cAddress : address) {
 				fs.seekg(cAddress);
 				char type = fs.get();
 			#ifdef _DEBUG
@@ -1365,10 +1425,10 @@ void Randomize() {
 						x = 1;
 				}
 
-				binaryWrite(file, lev->collectables[lev->collectables.size() - 1],
+				binaryWrite(file, lev->collectables[lev->collectIt],
 					cAddress);
 			}
-			lev->collectables.pop_back();
+			++lev->collectIt;
 		};
 
 		collectableWrite(Negotiations, 'A',
@@ -1434,7 +1494,7 @@ void Randomize() {
 		//banners
 		std::vector<int> roomA = {0x5742, 0x572b, 0x5714, 0x56fd, 0x56e6, 0x56cf};
 		std::vector<int> roomB = {0x427c, 0x4265, 0x424e, 0x4237};
-		std::string bhpFile = getGiz(BHP, 'A');
+		std::string bhpFile = getBasePath(BHP, 'A', "GIZ");
 		std::fstream fs(bhpFile, std::ios::in | std::ios::out | std::ios::binary);
 		for (int cAddress : roomA) {
 			fs.seekg(cAddress);
@@ -1442,7 +1502,7 @@ void Randomize() {
 			binaryWrite(bhpFile, BHP->collectables[BHP->collectables.size() - 1],
 				cAddress);
 		}
-		bhpFile = getGit(BHP, 'C');
+		bhpFile = getBasePath(BHP, 'C', "GIT");
 		for (int cAddress : roomB) {
 			fs.seekg(cAddress);
 			char type = fs.get();
@@ -1451,7 +1511,7 @@ void Randomize() {
 		}
 		fs.close();
 
-		BHP->collectables.pop_back();
+		++BHP->collectIt;
 
 		collectableWrite(Kamino, 'A', {0x1f52, 0x1f3b, 0x1781, 0x1542});
 		collectableWrite(Kamino, 'C', {0x3ce1, 0x3cca, 0x3bfb, 0x3be4, 0x3bcd});
@@ -1488,8 +1548,11 @@ void Randomize() {
 			0x1d10, 0x1cf9, 0x1ce2});
 
 		//allows spinners to work in challenge mode
-		deleteLines(getGit(Coruscant, 'A'),
+
+		//deleteLines(getGit(Coruscant, 'A'),
+		lineDeleter(getBasePath(Coruscant, 'A', "GIT"),
 			{274, 302, 330, 358, 386, 414, 442, 470, 498, 526});
+
 		collectableWrite(Coruscant, 'A',
 			{0x2cbc, 0x2ca5, 0x2c8e, 0x2c77, 0x2c60, 0x2c49, 0x2c32,
 			0x2c1b, 0x2c04, 0x2bed, 0x2bd6, 0x2bbf, 0x2ba8, 0x2b91,
@@ -1510,7 +1573,7 @@ void Randomize() {
 			0x361f, 0x3608, 0x35f1, 0x35da, 0x35c3, 0x35ac, 0x3595});
 
 		//allows carrot camerapan to work in challenge mode
-		deleteLines(getGit(Kashyyyk, 'B'), {170});
+		lineDeleter(getBasePath(Kashyyyk, 'B', "GIT"), {170});
 		collectableWrite(Kashyyyk, 'A',
 			{0x6157, 0x6140, 0x6129, 0x6112, 0x5fb9, 0x5dd6, 0x5dbf});
 		collectableWrite(Kashyyyk, 'B', {0x3374, 0x335d, 0x3346, 0x3204});
@@ -1537,7 +1600,7 @@ void Randomize() {
 			{0x28b2, 0x2884, 0x286d, 0x2856, 0x1ffb, 0x1fe4, 0x1fcd});
 
 		//fixes camera pan in challenge
-		deleteLines(getGit(SecretPlans, 'B'), {1830});
+		lineDeleter(getBasePath(SecretPlans, 'B', "GIT"), {1830});
 		collectableWrite(SecretPlans, 'A', {0x6d3f, 0x6d28, 0x6d11, 0x6cfa});
 		collectableWrite(SecretPlans, 'B',
 			{0x11033, 0x1101c, 0x11005, 0x10fee, 0x10eac, 0x10e95,
@@ -1559,8 +1622,8 @@ void Randomize() {
 		collectableWrite(Jundland, 'D', {0x3a14, 0x39fd, 0x39e6});
 		collectableWrite(Jundland, 'E', {0x4ad2, 0x4abb});
 
-		deleteLines(getGit(Spaceport, 'A'), {2228});
-		deleteLines(getGit(Spaceport, 'D'), {1430});
+		lineDeleter(getBasePath(Spaceport, 'A', "GIT"), {2228});
+		lineDeleter(getBasePath(Spaceport, 'D', "GIT"), {1430});
 
 		collectableWrite(Spaceport, 'A', {0x80d9, 0x80c2, 0x80ab, 0x6eb3, 0x6e57});
 		specialCollectable(Spaceport,
@@ -1638,35 +1701,35 @@ void Randomize() {
 		collectableWrite(CCT, 'C',
 			{0x163d, 0x1626, 0x15f8, 0x15e1, 0x15ca, 0x160f});
 
-		collectableWrite(Bespin, 'A',
-			{0x4e34, 0x4e06, 0x4def, 0x4dd8, 0x4dc1, 0x4daa, 0x4d7c,
-			0x4d65, 0x4d4e});
-		collectableWrite(Bespin, 'B', {0x14f, 0xdc});
-		collectableWrite(Bespin, 'C',
-			{0x434c, 0x4335, 0x431e, 0x4307, 0x42f0, 0x424f, 0x4238,
-			0x4221, 0x420a});
-		//TOWERS
-		roomA = {0x4d37, 0x4d93};
-		roomB = {0x41f3};
-		bhpFile = getGiz(Bespin, 'A');
-		fs.open(bhpFile, std::ios::in | std::ios::out | std::ios::binary);
-		for (int cAddress : roomA) {
-			fs.seekg(cAddress);
-			char type = fs.get();
-			binaryWrite(bhpFile,
-				Bespin->collectables[Bespin->collectables.size() - 1],
-				cAddress);
-		}
-		bhpFile = getGiz(Bespin, 'C');
-		for (int cAddress : roomB) {
-			fs.seekg(cAddress);
-			char type = fs.get();
-			binaryWrite(bhpFile,
-				Bespin->collectables[Bespin->collectables.size() - 1],
-				cAddress);
-		}
-		fs.close();
-		Bespin->collectables.pop_back();
+		//collectableWrite(Bespin, 'A',
+		//	{0x4e34, 0x4e06, 0x4def, 0x4dd8, 0x4dc1, 0x4daa, 0x4d7c,
+		//	0x4d65, 0x4d4e});
+		//collectableWrite(Bespin, 'B', {0x14f, 0xdc});
+		//collectableWrite(Bespin, 'C',
+		//	{0x434c, 0x4335, 0x431e, 0x4307, 0x42f0, 0x424f, 0x4238,
+		//	0x4221, 0x420a});
+		////TOWERS
+		//roomA = {0x4d37, 0x4d93};
+		//roomB = {0x41f3};
+		//bhpFile = getBasePath(Bespin, 'A', "GIZ");
+		//fs.open(bhpFile, std::ios::in | std::ios::out | std::ios::binary);
+		//for (int cAddress : roomA) {
+		//	fs.seekg(cAddress);
+		//	char type = fs.get();
+		//	binaryWrite(bhpFile,
+		//		Bespin->collectables[Bespin->collectables.size() - 1],
+		//		cAddress);
+		//}
+		//bhpFile = getBasePath(Bespin, 'C', "GIZ");
+		//for (int cAddress : roomB) {
+		//	fs.seekg(cAddress);
+		//	char type = fs.get();
+		//	binaryWrite(bhpFile,
+		//		Bespin->collectables[Bespin->collectables.size() - 1],
+		//		cAddress);
+		//}
+		//fs.close();
+		//++Bespin->collectIt;
 
 		collectableWrite(Jabbas, 'A',
 			{0x4314, 0x42fd, 0x42e6, 0x42cf, 0x42b8, 0x42a1, 0x428a,
@@ -1725,46 +1788,54 @@ void Randomize() {
 
 	if (extra) {
 	#ifdef _DEBUG
-		wxGetApp().CallAfter([] { wxLogStatus("Starting extras"); });
+		wxLogStatus("Starting extras");
 
 	#endif
-		int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286,
+		unsigned int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286,
 			332, 351, 363, 377, 392, 406, 468, 485, 505, 523, 540, 562,
 			615, 632, 652, 669, 684, 700, 749, 764, 777, 793, 806, 829};
 
+		std::vector<writeSet> ex;
 		for (unsigned int i = 0; i < extras.size(); i++) {
-			txtIns(LEV + "AREAS.TXT", extras[i], {{lines[i], 18}}, vanillaExtras[i].length());
+			ex.push_back({extras[i], vanillaExtras[i].length(), {{lines[i], 18}}});
+
 		}
+
+		batchAnywhere(LEV + "AREAS.TXT", ex);
 	}
 
 	//Patches levels with new characters
 	if (character) {
 	#ifdef _DEBUG
-		wxGetApp().CallAfter([] { wxLogStatus("Patching Levels"); });
+		wxLogStatus("Patching Levels");
 
 	#endif
 
-		//auto scpXBatch = [](const char scene, const std::string& script, const int characterNum,
-		//	const std::initializer_list<coord>& lncol, std::vector<Playable*> Level::* chType = &Level::party) {
+		//auto scpXBatch = []( char scene,  std::string& script,  int characterNum,
+		//	 std::initializer_list<coord>& lncol, std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party) {
 
-		//	txtIns(getSCP(currentLev, scene, script), getVanilla(characterNum, chType),
+		//	
+
+
+
+		//(getSCP(currentLev, scene, script), getVanilla(characterNum, chType),
 		//		lncol, getVanillaAlt(characterNum, chType).length());
 		//};
 
-		//auto scXpRep = [](const char scene, const std::string& script, const std::string& newStr, const int len, const coord lncol) {
+		//auto scXpRep = []( char scene,  std::string& script,  std::string& newStr,  int len,  coord lncol) {
 		//	txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
 		//};
 
 
-		//auto scpRepXBatch = [](const char scene, const std::string& script, const std::string& newStr,
-		//	const int len, const std::initializer_list<coord>& lncol) {
+		//auto scpRepXBatch = []( char scene,  std::string& script,  std::string& newStr,
+		//	 int len,  std::initializer_list<coord>& lncol) {
 
 		//	txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
 		//};
 
 
-		//auto fileDeleter = [](const char scene, const int characterNum,
-		//	std::vector<Playable*> Level::* chType = &Level::party) {
+		//auto fileDeleter = []( char scene,  int characterNum,
+		//	std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party) {
 
 		//	std::remove(getSCP(currentLev, scene, getVanillaAlt(characterNum, chType)).c_str());
 		//};
@@ -1784,11 +1855,11 @@ void Randomize() {
 		//playerInit(2, 3); //tc
 
 		scpIns('A', "LEVEL", 2, {18, 22});
-		scpMulti('A', "LEVEL1", 2, {{17, 22}, {21, 22}, {40, 22}});
+		scpMulti('A', "LEVEL1", {2, {{17, 22}, {21, 22}, {40, 22}}});
 
 		//stops tc from going to panel
 		scpRep('A', "TC14", "alwaystrue", 26, {35, 6});
-		deleteLines(getSCP(Negotiations, 'A', "TC14"), {39});
+		lineDeleterScp('A', "TC14", {39});
 
 		scriptTxt('A', 2, 5);
 
@@ -1825,7 +1896,7 @@ void Randomize() {
 
 		currentLev = Theed;
 		playerInit({{0, 1}, {1, 2}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
-		scpMulti('A', "LEVEL", 2, {{20, 25}, {21, 28}});
+		scpMulti('A', "LEVEL", {2, {{20, 25}, {21, 28}}});
 
 		scpMany('A', "LEVEL", {
 			{2, {{20, 25}, {21, 28}}},
@@ -1843,10 +1914,10 @@ void Randomize() {
 		scriptTxtRep('E', "dmaul", "DARTHMAUL", 2);
 		scriptTxtRep('F', "dmaul", "DARTHMAUL", 2);
 
-		Maul->binWrite("dmaul", {0x26AE}, 'A', "MAUL_A.AI2");
-		Maul->binWrite("dmaul", {0x307B}, 'D', "MAUL_D.AI2");
-		Maul->binWrite("dmaul", {0x6F9}, 'E', "MAUL_E.AI2");
-		Maul->binWrite("dmaul", {0x96B}, 'F', "MAUL_F.AI2");
+		ai2Write('A', "dmaul", {0x26ae});
+		ai2Write('D', "dmaul", {0x307B});
+		ai2Write('E', "dmaul", {0x6F9});
+		ai2Write('F', "dmaul", {0x96B});
 
 		currentLev = BHP;
 		playerInit({{0, 1}, {1, 2}});
@@ -1859,8 +1930,7 @@ void Randomize() {
 
 		//ditto
 		scriptTxtRep('C', "ai_jango", "JANGOFETT", 1);
-		Kamino->binWrite("ai_jango", {0x1AFA}, 'C', "KAMINO_C.AI2");
-
+		ai2Write('C', "ai_jango", {0x1afa});
 
 		currentLev = Factory;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {0, 10, bonusCharacter}});
@@ -1897,36 +1967,36 @@ void Randomize() {
 
 		}*/
 
-		//these two don't follow
-		auto uLength = [](int ch, int address) {
-			std::string name = Factory->party[ch]->name;
-			char c = name.length() + 1;
-			//binaryWrite(Factory->directory('E', "FACTORY_E.AI2"), c, address - 1);
-			std::fstream fs(Factory->directory('E', "FACTORY_E.AI2"),
-				std::ios::in | std::ios::out);
-			fs.seekp(address - 1);
-			fs << c;
+		////these two don't follow
+		//auto uLength = [](int ch, int address) {
+		//	std::string name = Factory->party[ch]->name;
+		//	char c = name.length() + 1;
+		//	//binaryWrite(Factory->directory('E', "FACTORY_E.AI2"), c, address - 1);
+		//	std::fstream fs(getAI2(Factory, 'E'),
+		//		std::ios::in | std::ios::out);
+		//	fs.seekp(address - 1);
+		//	fs << c;
 
-			fs.seekp(address);
-			//fs.write(name.c_str(), name.length());
-			unsigned int i = 0;
-			while (i < name.length()) {
-				fs.seekp(address + i);
-				fs << char(name[i]);
+		//	fs.seekp(address);
+		//	//fs.write(name.c_str(), name.length());
+		//	unsigned int i = 0;
+		//	while (i < name.length()) {
+		//		fs.seekp(address + i);
+		//		fs << char(name[i]);
 
-				i++;
-			}
-			fs.seekp(address + 1);
-			fs << '\0';
-		};
+		//		i++;
+		//	}
+		//	fs.seekp(address + 1);
+		//	fs << '\0';
+		//};
 		//uLength(1, 0x181a);
 		//uLength(2, 0x143d);
 
 		//Factory->binWrite(1, { 0x181A }, 'E', "FACTORY_E.AI2");
 		//Factory->binWrite(2, { 0x143D }, 'E', "FACTORY_E.AI2");
 
-		Factory->binWrite(4, {0x972}, 'G', "FACTORY_G.AI2");
-		characterPointer(Factory->party[4], 0xE010F);
+		ai2Write('G', 0, {0x972}, bonusCharacter);
+		characterPointer(Factory->party[0], 0xE010F);
 
 		currentLev = JediBattle;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5},
@@ -2006,7 +2076,7 @@ void Randomize() {
 
 		scriptTxtAppend('B', "party");
 
-		scpRepMulti('D', "PARTY", "if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}}); //test
+		scpMulti('D', "PARTY", {"if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}}}); //test
 
 		multiScriptTxt('A', {
 			{2, 1},
@@ -2025,7 +2095,7 @@ void Randomize() {
 		playerInit({{0, 1}, {1, 2}});
 		//fixes ditto problem
 		scriptTxtRep('A', "ai_griev", "GRIEVOUS", 3);
-		Grievous->binWrite("ai_griev", {0x472D}, 'A', "GRIEVOUS_A.AI2");
+		ai2Write('G', "ai_griev", {0x472d});
 
 		currentLev = Kashyyyk;
 		playerInit({{0, 1}, {1, 2}});
@@ -2149,7 +2219,7 @@ void Randomize() {
 			{4, {{25, 26}}},
 			{5, {{26, 26}}}});
 
-		Princess->binWrite(5, {0x6825}, 'B', "DEATHSTARRESCUE_B.AI2");
+		ai2Write('B', 0, {0x6825}, bonusCharacter);
 
 		//TCS stupidly checks weapon instead of character
 		scpRep('B', "LEVEL",
@@ -2244,14 +2314,14 @@ void Randomize() {
 			{2, {{24, 11}}},
 			{3, {{5, 11}}}});
 
-		scpRepMany('B', "PARTY", {
+		scpMany('B', "PARTY", {
 			{"if CategoryIs \"protocol\"", 13, {{23, 3}}},
 			{"category=protocol", 14, {{111, 29}}},
 			{"protocol", 4, {{112, 60}}},
 			{3, {{5, 11}}}});
-		
+
 		scpIns('C', "Party", 3, {6, 11});
-		
+
 		currentLev = FalconFlight;
 		playerInit({{0, 3}, {1, 4}});
 
@@ -2281,7 +2351,7 @@ void Randomize() {
 
 		//fixes AI
 		scpRep('C', "PARTY", "if CategoryIs \"Jedi\" == 0", 18, {5, 3});
-		
+
 		scpMany('E', "PARTY", {
 			{2, {{9, 11}}},
 			{3, {{7, 11}, {170, 11}}}});
@@ -2296,10 +2366,11 @@ void Randomize() {
 
 		currentLev = CCT;
 		playerInit({{0, 3}, {1, 4}});
-		
+
 		scpRep('A', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
 		scpRep('B', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
 		scpRep('C', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
+
 
 		currentLev = Bespin;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
@@ -2307,204 +2378,180 @@ void Randomize() {
 		scpMany('A', "PARTY", {
 			{3, {{14, 11}, {20, 11}}},
 			{4, {{15, 11}, {17, 11}}}});
-		scpMulti('B', "PARTY", 4, {{14, 11}, {16, 11}});
+		scpMulti('B', "PARTY", {4, {{14, 11}, {16, 11}}});
 
-		scpRepMany('C', "PARTY", {
+		scpMany('C', "PARTY", {
 			{"if CategoryIs \"Protocol\"", 13, {{13, 3}, {24, 3}}},
 			{"if CategoryIs \"Astromech\"", 13, {{18, 3}, {30, 3}}}});
-		
+
 		//buildable 3po
 		baseFile('A', "TXT", 4, {494, 13});
 		baseFile('A', "GIT", 4, {1598, 22});
 
 		currentLev = Jabbas;
-		Jabbas->replace(0, {{1, 12}});  //leia
-		Jabbas->replace(1, {{2, 12}});  //chewie
-		Jabbas->replace(2, {{3, 12}});  //luke
-		Jabbas->replace(3, {{4, 12}});  //3po
-		Jabbas->replace(4, {{5, 12}});  //r2
-		Jabbas->replace(5, {{6, 12}});  //han
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
-		Jabbas->replace(0, {{17, 26}, {18, 25}}, 'E', "LEVEL.SCP");
+		scpMulti('E', "LEVEL", {0, {{17, 26}, {18, 25}}});
 
-		Jabbas->replace(2, {{28, 11}}, 'A', "PARTY.SCP");
-		Jabbas->replace(3, {{7, 11}}, 'A', "PARTY.SCP");
-		Jabbas->replace(4, {{8, 11}, {10, 11}}, 'A', "PARTY.SCP");
-		Jabbas->replace(5, {{6, 11}}, 'A', "PARTY.SCP");
+		scpMany('A', "PARTY", {
+			{2, {{28, 11}}},
+			{3, {{7, 11}}},
+			{4, {{8, 11}, {10, 11}}},
+			{5, {{6, 11}}}});
 
-		Jabbas->replace(3, {{27, 11}, {30, 11}}, 'B', "PARTY.SCP");
-		Jabbas->replace(4, {{35, 11}}, 'B', "PARTY.SCP");
-		Jabbas->replace(5, {{9, 11}}, 'B', "PARTY.SCP");
+		scpMany('B', "PARTY", {
+			{3, {{27, 11}, {30, 11}}},
+			{4, {{35, 11}}},
+			{5, {{9, 11}}},
+			});
+
 		//fixes AI
-		Jabbas->replace("if CategoryIs \"Jedi\"", 27, {{49, 3}, {38, 3}}, 'B',
-			"PARTY.SCP");
-		int leverGuy = -1;
-		if (!Jedi({Jabbas->party[1]}) && Lever({Jabbas->party[1]}))
+		scpMulti('B', "PARTY", {"if CategoryIs \"Jedi\"", 27, {{49, 3}, {38, 3}}});
+
+		unsigned int leverGuy = -1;
+		if (!Jabbas->party[1]->jedi && Jabbas->party[1]->lever)
 			leverGuy = 1;
-		else if (!Jedi({Jabbas->party[0]}) && Lever({Jabbas->party[0]}))
+		else if (!Jabbas->party[0]->jedi && Jabbas->party[0]->lever)
 			leverGuy = 0;
-		else if (!Jedi({Jabbas->party[2]}) && Lever({Jabbas->party[2]}))
+		else if (!Jabbas->party[2]->jedi && Jabbas->party[2]->lever)
 			leverGuy = 2;
 
 		if (leverGuy != -1)
-			Jabbas->replace(Jabbas->party[leverGuy]->name, 9, {{39, 11}, {50, 11}},
-				'B', "PARTY.SCP");
+			scpMulti('B', "PARTY", {leverGuy, {{39, 11}, {50, 11}}});
 
-		Jabbas->replace(5, {{6, 11}}, 'D', "PARTY.SCP");
-		Jabbas->replace("if CategoryIs \"Astromech\"", 13, {{6, 3}}, 'E',
-			"PARTY.SCP");
-		Jabbas->replace("if CategoryIs \"Protocol\"", 13, {{8, 3}}, 'E',
-			"PARTY.SCP");
+		scpIns('D', "PARTY", 5, {6, 11});
 
-		Carkoon->replace(0, {{1, 12}});
-		Carkoon->replace(1, {{2, 12}});
-		Carkoon->replace(2, {{3, 12}});  //chewie
-		Carkoon->replace(3, {{4, 12}});  //han
-		Carkoon->replace(4, {{5, 12}});  //3po
-		Carkoon->replace(5, {{6, 12}});  //r2
-		Carkoon->replace(6, {{7, 12}});  //leia
+		scpMany('E', "PARTY", {
+			{"if CategoryIs \"Astromech\"", 13, {{6, 3}}},
+			{"if CategoryIs \"Protocol\"", 13, {{8, 3}}}});
 
-		Carkoon->replace(2, {{132, 27}, {133, 27}, {134, 29}}, 'A', "LEVEL.SCP");
-		Carkoon->replace(3, {{130, 59}, {136, 27}, {137, 27}, {138, 29}}, 'A',
-			"LEVEL.SCP");
+		currentLev = Carkoon;
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}});
 
-		Carkoon->replace(4, {{56, 27}, {57, 27}, {58, 26}, {59, 29}}, 'B',
-			"LEVEL.SCP");
-		Carkoon->replace(5, {{61, 27}, {62, 27}, {63, 26}, {64, 29}}, 'B',
-			"LEVEL.SCP");
+		scpMany('A', "LEVEL", {
+			{2, {{132, 27}, {133, 27}, {134, 29}}},
+			{3, {{130, 59}, {136, 27}, {137, 27}}}});
+		scpMany('B', "LEVEL", {
+			{4, {{56, 27}, {57, 27}, {58, 26}, {59, 29}}},
+			{5, {{61, 27}, {62, 27}, {63, 26}, {64, 29}}}});
 
-		Carkoon->replace(2, {{36, 11}}, 'A', "PARTY.SCP");
-		Carkoon->replace(3, {{39, 11}}, 'A', "PARTY.SCP");
-		Carkoon->replace(4, {{8, 11}, {11, 11}}, 'A', "PARTY.SCP");
-		Carkoon->replace(5, {{9, 11}, {14, 11}}, 'A', "PARTY.SCP");
-		Carkoon->replace(6, {{7, 11}, {17, 11}}, 'A', "PARTY.SCP");
+		scpMany('A', "PARTY", {
+			{2, {{36, 11}}},
+			{3, {{39, 11}}},
+			{4, {{8, 11}, {11, 11}}},
+			{5, {{9, 11}, {14, 11}}},
+			{6, {{7, 11}, {17, 11}}}});
+		scpMany('B', "PARTY", {
+			{4, {{30, 11}}},
+			{5, {{27, 11}}},
+			{6, {{6, 11}, {8, 11}}}});
 
-		Carkoon->replace(4, {{30, 11}}, 'B', "PARTY.SCP");
-		Carkoon->replace(5, {{27, 11}}, 'B', "PARTY.SCP");
-		Carkoon->replace(6, {{6, 11}, {8, 11}}, 'B', "PARTY.SCP");
+		currentLev = Showdown;
+		playerInit({{0, 3}, {1, 4}});
 
-		Showdown->replace(0, {{3, 12}});
-		Showdown->replace(1, {{4, 12}});
+		currentLev = Endor;
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}, {5, 8}});
 
-		Endor->replace(0, {{3, 12}});
-		Endor->replace(1, {{4, 12}});
-		Endor->replace(2, {{5, 12}});
-		Endor->replace(3, {{6, 12}});
-		Endor->replace(4, {{7, 12}});
-		Endor->replace(5, {{8, 12}});
-		if (Grapple({Endor->party[0]}))
+		if (Endor->party[0]->grapple)
 			leverGuy = 0;
-		else if (Grapple({Endor->party[1]}))
+		else if ((Endor->party[1]->grapple))
 			leverGuy = 1;
-		else if (Grapple({Endor->party[2]}))
+		else if ((Endor->party[2]->grapple))
 			leverGuy = 2;
-		else if (Grapple({Endor->party[3]}))
+		else if ((Endor->party[3]->grapple))
 			leverGuy = 3;
-		else if (Grapple({Endor->party[4]}))
+		else if ((Endor->party[4]->grapple))
 			leverGuy = 4;
-		else if (Grapple({Endor->party[5]}))
+		else if ((Endor->party[5]->grapple))
 			leverGuy = 5;
-		Endor->replace(leverGuy, {{5, 11}}, 'B', "PARTY.SCP");
 
-		Destiny->replace(0, {{1, 12}});
-		Destiny->replace(1, {{2, 12}});
+		scpIns('B', "PARTY", leverGuy, {5, 11});
 
-		ITDS->replace(0, {{1, 12}});
-		ITDS->replace(1, {{2, 12}});
 
-		Anakinsflight->replace(0, {{1, 12}});
-		Anakinsflight->replace(1, {{2, 12}});
+		currentLev = Destiny;
+		playerInit({{0, 1}, {1, 2}});
 
-		ANewHope->replace(0, {{1, 12}});
-		ANewHope->replace(1, {{2, 12}});
-		ANewHope->replace(2, {{3, 12}});  //3po
-		ANewHope->replace(2, {1}, 'A', "SCRIPT.TXT");
-		ANewHope->replace(2, {1}, 'B', "SCRIPT.TXT");
-		ANewHope->rename(2, 'A');
-		ANewHope->rename(2, 'B');
+		currentLev = ITDS;
+		playerInit({{0, 1}, {1, 2}});
+
+		currentLev = Anakinsflight;
+		playerInit({{0, 1}, {1, 2}});
+
+		currentLev = ANewHope;
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
+
+		scriptTxt('A', 2, 1);
+		scriptTxt('B', 2, 1);
 
 		//takeover speeder?
 
 		//bounty hunter missions
 		{
-			deleteLines(LEV + "MISSIONS.TXT", {1});
-			txtIns(LEV + "MISSIONS.TXT",
-				"party \"" + BHM->party[0]->name +
-				"\ "
-				"\"" +
-				BHM->party[1]->name +
-				"\ "
-				"\"" +
-				BHM->party[2]->name +
-				"\ "
-				"\"" +
-				BHM->party[3]->name +
-				"\ "
-				"\"" +
-				BHM->party[4]->name +
-				"\ "
-				"\"" +
+			currentLev = BHM;
+
+			batchAnywhere(LEV + "MISSIONS.TXT", {
+				{"party \"" + BHM->party[0]->name + "\ \"" +
+				BHM->party[1]->name + "\ \"" +
+				BHM->party[2]->name + "\ \"" +
+				BHM->party[3]->name + "\ \"" +
+				BHM->party[4]->name + "\ \"" +
 				BHM->party[5]->name + "\ ",
-				{1}, 0);
+				56, {{1, 1}}},
 
-			auto missionReplace = [](int c, int line) {
-				txtIns(LEV + "MISSIONS.TXT", BHM->party[c]->name, {{line, 15}},
-					BHM->vanillaParty[c]->name.length());
+				{0, {{5, 15}}, bonusCharacter},
+				{1, {{6, 15}}, bonusCharacter},
+				{2, {{7, 15}}, bonusCharacter},
+				{3, {{8, 15}}, bonusCharacter},
+				{4, {{9, 15}}, bonusCharacter},
+				{5, {{10, 15}}, bonusCharacter},
+				{6, {{11, 15}}, bonusCharacter},
+				{7, {{12, 15}}, bonusCharacter},
+				{8, {{13, 15}}, bonusCharacter},
+				{9, {{14, 15}}, bonusCharacter},
+
+				{10, {{17, 15}}, bonusCharacter},
+				{11, {{18, 15}}, bonusCharacter},
+				{12, {{19, 15}}, bonusCharacter},
+				{13, {{20, 15}}, bonusCharacter},
+				{14, {{21, 15}}, bonusCharacter},
+				{15, {{22, 15}}, bonusCharacter},
+				{16, {{23, 15}}, bonusCharacter},
+				{17, {{24, 15}}, bonusCharacter},
+				{18, {{25, 15}}, bonusCharacter},
+				{19, {{26, 15}}, bonusCharacter}});
+
+
+			auto missionReplace2 = [](unsigned int c, unsigned int line, std::shared_ptr<Level> lev, char scene, std::string script) {
+				scpIns(scene, script, c, {line, 49}, bonusCharacter);
 			};
 
-			missionReplace(6, 5);
-			missionReplace(7, 6);
-			missionReplace(8, 7);
-			missionReplace(9, 8);
-			missionReplace(10, 9);
-			missionReplace(11, 10);
-			missionReplace(12, 11);
-			missionReplace(13, 12);
-			missionReplace(14, 13);
-			missionReplace(15, 14);
+			missionReplace2(0, 24, Negotiations, 'A', "LEVEL2");
+			missionReplace2(1, 24, EscapeNaboo, 'C', "LEVEL1");
+			missionReplace2(2, 24, Invasion, 'C', "LEVEL1");
+			missionReplace2(3, 24, Factory, 'F', "LEVEL1");
+			missionReplace2(4, 24, Kamino, 'F', "LEVEL1");
+			missionReplace2(5, 25, JediBattle, 'B', "LEVEL1");
+			missionReplace2(6, 25, Chancellor, 'B', "LEVEL1");
+			missionReplace2(7, 24, Kashyyyk, 'A', "LEVEL2");
+			missionReplace2(8, 24, Ruin, 'A', "LEVEL");
+			missionReplace2(9, 25, Grievous, 'A', "LEVEL2");
 
-			missionReplace(16, 17);
-			missionReplace(17, 18);
-			missionReplace(18, 19);
-			missionReplace(19, 20);
-			missionReplace(20, 21);
-			missionReplace(21, 22);
-			missionReplace(22, 23);
-			missionReplace(23, 24);
-			missionReplace(24, 25);
-			missionReplace(25, 26);
+			missionReplace2(10, 30, SecretPlans, 'B', "LEVEL1");
+			missionReplace2(11, 24, Jundland, 'B', "LEVEL2");
+			missionReplace2(12, 28, Spaceport, 'D', "LEVEL3");
+			missionReplace2(13, 30, Princess, 'C', "LEVEL4");
+			missionReplace2(14, 25, EchoBase, 'C', "LEVEL1");
+			missionReplace2(15, 20, Endor, 'A', "LEVEL2");
+			missionReplace2(16, 23, Bespin, 'A', "LEVEL2");
+			missionReplace2(17, 26, Bespin, 'C', "LEVEL1");
+			missionReplace2(18, 21, Spaceport, 'B', "LEVEL4");
+			missionReplace2(19, 19, EchoBase, 'A', "LEVEL2");
 
-			auto missionReplace2 = [](int c, int line, Level* lev, char scene,
-				std::string fileExtention) {
-				lev->replace(BHM->party[c]->name, BHM->vanillaParty[c]->name.length(),
-					{{line, 49}}, scene, fileExtention);
-			};
+			std::vector<writeSet> bounties;
 
-			missionReplace2(6, 24, Negotiations, 'A', "LEVEL2.SCP");
-			missionReplace2(7, 24, EscapeNaboo, 'C', "LEVEL1.SCP");
-			missionReplace2(8, 24, Invasion, 'C', "LEVEL1.SCP");
-			missionReplace2(9, 24, Factory, 'F', "LEVEL1.SCP");
-			missionReplace2(10, 24, Kamino, 'F', "LEVEL1.SCP");
-			missionReplace2(11, 25, JediBattle, 'B', "LEVEL1.SCP");
-			missionReplace2(12, 25, Chancellor, 'B', "LEVEL1.SCP");
-			missionReplace2(13, 24, Kashyyyk, 'A', "LEVEL2.SCP");
-			missionReplace2(14, 24, Ruin, 'A', "LEVEL.SCP");
-			missionReplace2(15, 25, Grievous, 'A', "LEVEL2.SCP");
+			auto missionNames = [&bounties](unsigned int c, coord lc, unsigned int len) {
+				bounties.push_back({BHM->bonusCharacters[c]->name, len, {lc}});
 
-			missionReplace2(16, 30, SecretPlans, 'B', "LEVEL1.SCP");
-			missionReplace2(17, 24, Jundland, 'B', "LEVEL2.SCP");
-			missionReplace2(18, 28, Spaceport, 'D', "LEVEL3.SCP");
-			missionReplace2(19, 30, Princess, 'C', "LEVEL4.SCP");
-			missionReplace2(20, 25, EchoBase, 'C', "LEVEL1.SCP");
-			missionReplace2(21, 20, Endor, 'A', "LEVEL2.SCP");
-			missionReplace2(22, 23, Bespin, 'A', "LEVEL2.SCP");
-			missionReplace2(23, 26, Bespin, 'C', "LEVEL1.SCP");
-			missionReplace2(24, 21, Spaceport, 'B', "LEVEL4.SCP");
-			missionReplace2(25, 19, EchoBase, 'A', "LEVEL2.SCP");
-
-			auto missionNames = [](int c, coord lc, int len) {
-				txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", BHM->party[c]->realName, {lc},
-					len);
 			};
 
 			missionNames(6, {266, 18}, 12);
@@ -2529,58 +2576,37 @@ void Randomize() {
 			missionNames(24, {17, 17}, 14);
 			missionNames(25, {18, 17}, 8);
 
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[6]->name, { {5, 15} }, 10);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[7]->name, { {6, 15} }, 7);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[8]->name, { {7, 15} }, 11);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[9]->name, { {8, 15} }, 9);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[10]->name, { {9, 15} }, 8);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[11]->name, { {10, 15} }, 8);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[12]->name, { {11, 15} }, 10);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[13]->name, { {12, 15} }, 9);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[14]->name, { {13, 15} }, 7);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[15]->name, { {14, 15} }, 14);
+			batchAnywhere(ENGLISH, bounties);
 
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[16]->name, { {17, 15} }, 4);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[17]->name, { {18, 15} }, 9);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[18]->name, { {19, 15} }, 9);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[19]->name, { {20, 15} }, 12);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[20]->name, { {21, 15} }, 13);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[21]->name, { {22, 15} }, 4);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[22]->name, { {23, 15} }, 4);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[23]->name, { {24, 15} }, 15);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[24]->name, { {25, 15} }, 22);
-			//txtIns(LEV + "MISSIONS.TXT", BHM->party[25]->name, { {26, 15} }, 7);
 		}
 
 		//Character unlocks
 	#ifdef _DEBUG
-		wxGetApp().CallAfter([] { wxLogStatus("starting collection"); });
+		wxLogStatus("starting collection");
 	#endif
 
 		std::ofstream collect(out + "/CHARS/COLLECTION.TXT");
 
-		auto collectWrite = [&](std::vector<Playable*>& vec) {
-			for (Playable* p : vec) {
+		auto collectWrite = [&](std::vector<std::shared_ptr<Playable>>& vec) {
+			for (std::shared_ptr<Playable> p : vec) {
 				collect << "collect \"" + p->name + "\" ";
 				if (p == allMinikitsCharacter)
 					collect << "all_minikits_complete" << '\n';
 				else if (p->storyMode)
 					collect << "story" << '\n';
 				else {
-					if (p->lev == allEpisodes)
+					if (p->allEpisodes)
 						collect << "all_episodes_complete";
-					else if (p->lev != defaultLevel) {
+					else if (!p->noLevel) {
 						collect << "area_complete \"";
-						collect << p->lev->firstName << "\"";
+						collect << p->lev->name << "\"";
 					}
 					collect << " buy_in_shop ";
 					collect << std::to_string(p->price) << '\n';
 				}
 			#ifdef _DEBUG
-				wxGetApp().CallAfter([&p] {
-					wxString collected = p->realName + " collected.";
+				wxString collected = p->realName + " collected.";
 				wxLogStatus(collected);
-				});
 			#endif
 			}
 		};
@@ -2591,6 +2617,7 @@ void Randomize() {
 		collect << "collect \"weirdo2\"" << '\n';
 
 		collectWrite(vhs);
+
 		std::string minis[] = {"mini_republic_cruiser",
 			"mini_gungan_bongo",
 			"mini_royal_starship",
@@ -2643,28 +2670,32 @@ void Randomize() {
 		multiPointer(indy, {0x2e585, 0x86969, 0x86982, 0xc1053, 0x83b24, 0xc5098,
 			0xc50d0, 0xc65b1});
 		numWrite(EXE, indy->price, 0x2e5c7);
-		txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", indy->realName, {{1627, 7}}, 13);
+		//txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", indy->realName, {{1627, 7}}, 13);
+
+		//UNCOMMENT THIS
+		//writer(oneWrite, ENGLISH, writeSingle{indy->realName, 13, {1627, 7}});
 
 		//fixes ET characters
 	#define CHR out + "/CHARS/"
 	#define chfile(x) CHR + x->name + "/" + x->name + ".TXT"
 		if (extog) {
-			txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", "Nothing", {{839, 6}}, 12);
+			//UNCOMMENT THIS
+			//writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
 
-			deleteLines(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
-			deleteLines(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
-			deleteLines(CHR + "MOUSEDROID/MOUSEDROID.TXT", {17});
-			deleteLines(CHR + "NAFFDROID1/NAFFDROID1.TXT", {19});
-			deleteLines(CHR + "NAFFDROID2/NAFFDROID2.TXT", {19});
-			deleteLines(CHR + "NAFFDROID3/NAFFDROID3.TXT", {13});
-			deleteLines(CHR + "NAFFDROID4/NAFFDROID4.TXT", {19});
-			deleteLines(CHR + "REBELSCUM/ENGINEER.TXT", {5});
-			deleteLines(CHR + "SKELETON/SKELETON.TXT", {6});
-			deleteLines(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", {4});
-			deleteLines(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", {7});
-			deleteLines(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", {6});
-			deleteLines(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", {4});
-			deleteLines(CHR + "WOMPRAT/WOMPRAT.TXT", {18});
+			lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
+			lineDeleter(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
+			lineDeleter(CHR + "MOUSEDROID/MOUSEDROID.TXT", {17});
+			lineDeleter(CHR + "NAFFDROID1/NAFFDROID1.TXT", {19});
+			lineDeleter(CHR + "NAFFDROID2/NAFFDROID2.TXT", {19});
+			lineDeleter(CHR + "NAFFDROID3/NAFFDROID3.TXT", {13});
+			lineDeleter(CHR + "NAFFDROID4/NAFFDROID4.TXT", {19});
+			lineDeleter(CHR + "REBELSCUM/ENGINEER.TXT", {5});
+			lineDeleter(CHR + "SKELETON/SKELETON.TXT", {6});
+			lineDeleter(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", {4});
+			lineDeleter(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", {7});
+			lineDeleter(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", {6});
+			lineDeleter(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", {4});
+			lineDeleter(CHR + "WOMPRAT/WOMPRAT.TXT", {18});
 		}
 	}
 
@@ -2748,22 +2779,23 @@ void Randomize() {
 		//for (int i = 0; i < 340; i++) {
 		//	rgbFloat(TNG, green, 0x31CC98 + (i * 0x2c4));
 		//}
-}
+	}
 #endif
 
 
 	//free memory
-	for (Playable* p : pls) delete p;
-	for (Level* lev : allLevels) delete lev;
-	pls.clear();
+	//for (std::shared_ptr<Playable> p : pls) delete p;
+//	for (std::shared_ptr<Level> lev : allLevels) delete lev;
+	/*pls.clear();
 	chs.clear();
-	vhs.clear();
+	vhs.clear();*/
 	testing.clear();
 	nameList.clear();
 
-	delete defaultCharacter;
-	delete BHM;
+
+//	delete defaultCharacter;
+	//delete BHM;
 
 
-	wxGetApp().CallAfter([] { wxLogStatus("Done."); });
+	wxLogStatus("Done.");
 }
