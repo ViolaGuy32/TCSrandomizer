@@ -259,7 +259,7 @@ SPEEDERCHASE
 /LEVELS/EPISODE_VI/SPEEDERCHASE/
 character
 princessleia_endor lukeskywalker_endor 
-princessleia_endor lukeskywalker_endor atat_driver sctrooper 
+princessleia_endor lukeskywalker_endor atat_driver scouttrooper 
 
 
 ENDORBATTLE

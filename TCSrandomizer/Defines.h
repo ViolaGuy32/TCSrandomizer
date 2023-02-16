@@ -102,7 +102,7 @@ ig88 dengar 4lom ghostbenkenobi anakin_ghost yoda_ghost r2q5 hansolo_indy slave1
 	make special function for TR
 
 	1-1:
-	record 50hz jump
+	tc STILL faces panel
 	AI gets stuck on force ledge
 
 	1-2:

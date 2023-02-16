@@ -31,7 +31,7 @@ struct Playable {
 		vehicle = false, tow = false, tiedoor = false, vgreen = false,
 
 		leiaAlt = false, landoAlt = false, lukeAlt = false,
-		defaultCharacter = false, storyMode = false, noLevel = false, allEpisodes = true;
+		defaultCharacter = false, storyMode = false, noLevel = false, allEpisodes = false;
 
 };
 

@@ -20,6 +20,11 @@ struct coord {
 	unsigned int col = 1;
 };
 
+struct twoNum {
+	unsigned int chNum;
+	unsigned int line;
+};
+
 struct writeSet {
 	std::string newStr;
 	unsigned int len;
@@ -139,7 +144,7 @@ void scpMany(char scene, std::string script, std::vector<writeSet> writers);
 
 void batchAnywhere(std::string file, std::vector<writeSet> writers);
 
-void scpName(char scene, unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType);
+void scpName(char scene, unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party);
 
 void scpAppend(char scene, std::string script, std::string appendix);
 
@@ -148,7 +153,8 @@ void scriptTxtAppend(char scene, std::string appendix);
 void scriptTxt(char scene, int characterNum, unsigned int line,
 	std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party);
 
-void multiScriptTxt(char scene, std::vector<writeSingle> write);
+//void multiScriptTxt(char scene, std::vector<writeSingle> write);
+void multiScriptTxt(char scene, std::vector< twoNum> pairs);
 
 void scriptTxtRep(char scene, std::string newStr, std::string oldStr, unsigned int line);
 

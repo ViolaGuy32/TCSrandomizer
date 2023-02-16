@@ -46,6 +46,35 @@ void fileGen() {
 	logR("\n\t\t\t\t\tPatching. . .");
 	wxLogStatus("Patching. . .");
 
+	//int freePlay[] = {
+	//	//cutscene=
+	//	0x55f21,
+	//	0x56041,
+	//	0x653d5,
+	//	0x654c0,
+	//	//0x55f4c,
+
+	//	//status
+	//	0x175d2e,
+	//	0x17a5cf,
+
+	//	//level
+	//	//0x14c85,
+	//	0x15c696, //breaks invasion cs
+
+	//	//loadlevel
+	//	//0xe5636,
+
+	//	//negotiations in-game intro
+	//	0x14c85
+
+	//	//0xe0137
+	//};
+
+	//for (int i : freePlay)
+	//	binaryWrite(EXE, "0f", i);  
+
+
 	//removes cutscenes
 
 	//---DOOKU OUTRO
@@ -53,7 +82,7 @@ void fileGen() {
 	//SPACEPORT MIDTRO?
 	//---ep5 finish story
 	//test princess midtro
-	lineDeleter(LEV + "AREAS.TXT", {
+	txtIns(LEV + "AREAS.TXT", "//", {
 		//29, 30, //negotiations
 		34, 45, 46, 52, 63, 64, 65, 70, 94, 95, 96, 97, 98, 102, 103, 114,
 		115, 116, 123, 134, 182, 188, 201, 202, 208, 209, 220, 221,
@@ -116,7 +145,7 @@ void fileGen() {
 		{1});
 
 	txtIns(out + "/CUT/EPISODEIV/MOSEISLEY_MIDTRO.TXT", "//", {1});
-	txtIns(out + "/CUT/EPISODEIV/MOSEISLEY_MIDTRO.TXT", "fpsec 500000\n", {1});
+	txtIns(out + "/CUT/EPISODEIV/MOSEISLEY_MIDTRO.TXT", "fpsec 500000\n", {2});
 
 	//finish story
 	txtIns(out + "/CUT/EPISODEI/EP1_EPISODECOMPLETE_CELEBRATIONS.TXT", "//",
@@ -138,10 +167,10 @@ void fileGen() {
 		{1});
 
 	txtIns(out + "/CUT/EPISODEIV/EPISODE4ENDING.TXT", "//", {1});
-	txtIns(out + "/CUT/EPISODEIV/EPISODE4ENDING.TXT", "fpsec 500000\n", {1});
+	txtIns(out + "/CUT/EPISODEIV/EPISODE4ENDING.TXT", "fpsec 500000\n", {4});
 
 	txtIns(out + "/CUT/EPISODEV/HOTHESCAPE_INTRO.TXT", "//", {1});
-	txtIns(out + "/CUT/EPISODEV/HOTHESCAPE_INTRO.TXT", "fpsec 500000\n", {1});
+	txtIns(out + "/CUT/EPISODEV/HOTHESCAPE_INTRO.TXT", "fpsec 500000\n", {2});
 
 	txtIns(out + "/CUT/EPISODEV/EPISODE5ENDING.TXT", "//", {4});
 	txtIns(out + "/CUT/EPISODEV/EPISODE5ENDING.TXT", "fpsec 500000\n", {1});
@@ -176,10 +205,8 @@ void fileGen() {
 	txtIns(LEV + "ANAKINSFLIGHT/ANAKINSFLIGHT_C/ANAKINSFLIGHT_C.GIT", "status",
 		{{1602, 41}}, 6);
 
-	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_A/BONUS_GUNSHIP_A.TXT", "//",
-		{5, 6});
-	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_B/BONUS_GUNSHIP_B.TXT", "//",
-		{7, 8, 9});
+	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_A/BONUS_GUNSHIP_A.TXT", "//", {5, 6});
+	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_B/BONUS_GUNSHIP_B.TXT", "//", {7, 8, 9});
 	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_B/BONUS_GUNSHIP_B.GIT",
 		"newlevel=bonus_gunship_status", {{743, 18}}, 34);
 
@@ -190,8 +217,7 @@ void fileGen() {
 	txtIns(TPM + "GUNGAN/GUNGAN_E/GUNGAN_E.TXT", "//", {34, 58});
 
 	txtIns(TPM + "MAUL/MAUL_F/MAUL_F.TXT", "//", {1});
-	txtIns(TPM + "MAUL/MAUL_F/AI/DARTHMAUL.SCP", "newlevel=maul_status",
-		{{427, 18}}, 28);
+	txtIns(TPM + "MAUL/MAUL_F/AI/DARTHMAUL.SCP", "newlevel=maul_status", {{427, 18}}, 28);
 
 	txtIns(TPM + "NEGOTIATIONS/NEGOTIATIONS_A/NEGOTIATIONS_A.TXT", "//", {7});
 	txtIns(TPM + "NEGOTIATIONS/NEGOTIATIONS_C/NEGOTIATIONS_C.TXT",
@@ -218,13 +244,13 @@ void fileGen() {
 
 	txtIns(CLN + "DOOKU/DOOKU_C/DOOKU_C.TXT", "//", {4});
 	txtIns(CLN + "DOOKU/DOOKU_C/AI/DOOKU.SCP", "//", {215});
-	//txtIns(CLN + "DOOKU/DOOKU_C/AI/DOOKU.SCP", "//", { 5, 8 });
+	//txtIns(CLN + "DOOKU/DOOKU_C/AI/DOOKU.SCP", { 5, 8 });
 	txtIns(CLN + "DOOKU/DOOKU_C/AI/DOOKU.SCP", "alwaystrue == 1", {{222, 6}}, 56);
 	//txtIns(CLN + "DOOKU/DOOKU_C/AI/DOOKU.SCP", "alwaystrue == 1", { {7, 6} },
 	//48); txtIns(CLN + "DOOKU/DOOKU_C/AI/DOOKU.SCP", "\t\tsetstate
 	//\"normalintrocomplete\"\n", { 18 });
 
-	//txtIns(CLN + "FACTORY/FACTORY_G/FACTORY_G.TXT", "//", { 1 });
+	//txtIns(CLN + "FACTORY/FACTORY_G/FACTORY_G.TXT", { 1 });
 	txtIns(CLN + "FACTORY/FACTORY_G/FACTORY_G.GIT", "Action", {{286, 2}}, 9);
 	txtIns(CLN + "FACTORY/FACTORY_G/FACTORY_G.GIT",
 		"completelevel \"newlevel=factory_status\"", {{287, 3}}, 8);
@@ -241,7 +267,7 @@ void fileGen() {
 	txtIns(CLN + "KAMINO/KAMINO_A/AI/KAMINO.SCP", "//", {69});
 	txtIns(CLN + "KAMINO/KAMINO_A/AI/TAUNWE.SCP", "//", {23});
 	txtIns(CLN + "KAMINO/KAMINO_A/AI/TAUNWE2.SCP", "//", {23});
-	//txtIns(CLN + "KAMINO/KAMINO_C/KAMINO_C.TXT", "//", { 1, 1181 }); //discover
+	//txtIns(CLN + "KAMINO/KAMINO_C/KAMINO_C.TXT", { 1, 1181 }); //discover
 	//jango txtIns(CLN + "KAMINO/KAMINO_C/AI/LEVEL.SCP",
 	//"EitherPlayerInTriggerArea \"Jango\" == 1", { {13, 6 } }, 48);
 	txtIns(CLN + "KAMINO/KAMINO_D/KAMINO_D.TXT", "//", {1});
@@ -282,8 +308,7 @@ void fileGen() {
 	txtIns(STH + "DOGFIGHT/DOGFIGHT_A/DOGFIGHT_B.TXT", "//", {197});
 
 	//?????
-	txtIns(STH + "E3CHARACTERBONUS/E3CHARACTERBONUS_A/E3CHARACTERBONUS_A.TXT",
-		"//", {4, 5});
+	txtIns(STH + "E3CHARACTERBONUS/E3CHARACTERBONUS_A/E3CHARACTERBONUS_A.TXT", "//", {4, 5});
 
 	txtIns(STH + "GRIEVOUS/GRIEVOUS_A/GRIEVOUS_A.TXT", "//", {1, 2});
 
@@ -335,7 +360,7 @@ void fileGen() {
 	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_C/DEATHSTARRESCUE_C.GIT",
 		"newlevel=deathstarrescue_status", {{2525, 18}}, 30);
 
-	//txtIns(ANH + "MOSEISLEY/MOSEISLEY_C/MOSEISLEY_C.TXT", "//", { 31, 32, 33,
+	//txtIns(ANH + "MOSEISLEY/MOSEISLEY_C/MOSEISLEY_C.TXT", { 31, 32, 33,
 	//114 }); txtIns(ANH + "MOSEISLEY/MOSEISLEY_C/AI/LEVEL.SCP", "alwaystrue ==
 	//1", { {48, 6} }, 40);
 	txtIns(ANH + "MOSEISLEY/MOSEISLEY_D/MOSEISLEY_D.TXT", "status", {{233, 19}},
@@ -355,13 +380,12 @@ void fileGen() {
 
 	txtIns(EMP + "DAGOBAH/DAGOBAH_B/DAGOBAH_B.TXT", "//", {40, 41, 42});
 	txtIns(EMP + "DAGOBAH/DAGOBAH_B/AI/LEVEL.SCP", "//", {37});
-	txtIns(EMP + "DAGOBAH/DAGOBAH_B/AI/LEVEL.SCP",
-		"gotonewlevel \"level=dagobah_e\"", {{129, 3}}, 35);
+	txtIns(EMP + "DAGOBAH/DAGOBAH_B/AI/LEVEL.SCP", "gotonewlevel \"level=dagobah_e\"", {{129, 3}}, 35);
 	txtIns(EMP + "DAGOBAH/DAGOBAH_C/DAGOBAH_C.TXT", "//", {38, 39, 40});
 	txtIns(EMP + "DAGOBAH/DAGOBAH_C/DAGOBAH_C.GIT", "status", {{747, 35}}, 5);
 	txtIns(EMP + "DAGOBAH/DAGOBAH_D/DAGOBAH_D.TXT", "//", {32});
 
-	//txtIns(EMP + "ENDING/EPISODE5ENDING_A/EPISODE5ENDING_A.TXT", "//", { 2 });
+	//txtIns(EMP + "ENDING/EPISODE5ENDING_A/EPISODE5ENDING_A.TXT", { 2 });
 
 	txtIns(EMP + "HOTHESCAPE/HOTHESCAPE_C/HOTHESCAPE_C.TXT", "status",
 		{{162, 20}}, 6);
@@ -371,7 +395,7 @@ void fileGen() {
 	txtIns(JDI + "DEATHSTAR2BATTLE/DEATHSTAR2BATTLE_G/DEATHSTAR2BATTLE_G.TXT",
 		"status", {{72, 26}}, 5);
 
-	//txtIns(JDI + "EMPERORFIGHT/EMPERORFIGHT_A/EMPERORFIGHT_A.TXT", "//", { 28,
+	//txtIns(JDI + "EMPERORFIGHT/EMPERORFIGHT_A/EMPERORFIGHT_A.TXT", { 28,
 	//29, 30 });
 
 	txtIns(JDI + "ENDORBATTLE/ENDORBATTLE_D/ENDORBATTLE_D.GIT", "status",

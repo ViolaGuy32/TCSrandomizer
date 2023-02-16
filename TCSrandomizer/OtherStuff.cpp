@@ -748,7 +748,7 @@ void batchAnywhere(std::string file, std::vector<writeSet> writers) {
 	writer(manyWrite, file, writers);
 };
 
-void scpName(char scene, unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party) {
+void scpName(char scene, unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
 	//renames scp file
 	renamer(getSCP(currentLev, scene, getVanilla(characterNum, chType)),
 		getSCP(currentLev, scene, getName(characterNum, chType)));
@@ -772,15 +772,23 @@ void scriptTxt(char scene, int characterNum, unsigned int line,
 	scpName(scene, characterNum);
 };
 
-void multiScriptTxt(char scene, std::vector< writeSingle> write) {
+void multiScriptTxt(char scene, std::vector< twoNum> pairs) {
 	//updates script.txt
 	//std::vector<writeSet> writ;
 	//for (basicCh w : write) {
 	//	writ.push_back(writeSet{getName(w.chNum, w.chType), getVanilla(w.chNum, w.chType).length(), {w.line, 1}});
 	//	scpName(scene, w.chNum);
 	//}
-	writer(multiWrite, getScriptTxt(currentLev, scene), write);
+	std::vector<writeSingle> writ;
+	for (twoNum p : pairs)
+		writ.push_back({p.chNum, p.line});
 
+
+	writer(multiWrite, getScriptTxt(currentLev, scene), writ);
+
+	for (twoNum w : pairs) {
+		scpName(scene, w.chNum);
+	}
 };
 
 void scriptTxtRep(char scene, std::string newStr, std::string oldStr, unsigned int line) {

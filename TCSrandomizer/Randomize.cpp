@@ -1902,7 +1902,7 @@ void Randomize() {
 		binaryWrite(EXE, 0x0f, 0x35946);
 
 		currentLev = Theed;
-		playerInit({{0, 1}, {1, 2}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
 		//scpMulti('A', "LEVEL", {2, {{20, 25}, {21, 28}}});
 
 		scpMany('A', "LEVEL", {
@@ -1940,7 +1940,7 @@ void Randomize() {
 		ai2Write('C', "ai_jango", {0x1afa});
 
 		currentLev = Factory;
-		playerInit({{0, 1}, {1, 2}, {2, 3}, {0, 10, bonusCharacter}});
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, { 0, 10, bonusCharacter }});
 
 		scpRep('D', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
 		scpRep('E', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
@@ -1965,6 +1965,11 @@ void Randomize() {
 
 		multiScriptTxt('A', {{2, 2}, {3, 3}});
 		multiScriptTxt('B', {{2, 2}, {3, 3}});
+		/*scpName('A', 2);
+		scpName('A', 3);
+		scpName('B', 2);
+		scpName('B', 3);*/
+
 		scriptTxt('D', 3, 1);
 		scriptTxt('E', 3, 2);
 		//Makes sure protocol droid follows you onto the turn things
@@ -2604,9 +2609,9 @@ void Randomize() {
 				else if (p->storyMode)
 					collect << "story" << '\n';
 				else {
-					if (p->allEpisodes)
+					if (p->allEpisodes) {
 						collect << "all_episodes_complete";
-					else if (!p->noLevel) {
+					} else if (!p->noLevel) {
 						collect << "area_complete \"";
 						collect << p->lev->name << "\"";
 					}
@@ -2686,7 +2691,7 @@ void Randomize() {
 		//fixes ET characters
 		if (extog) {
 			//UNCOMMENT THIS
-			//writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
+			writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
 
 			lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
 			lineDeleter(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
@@ -2806,5 +2811,5 @@ void Randomize() {
 
 	logR("\n\t\t\t\t\tDone.");
 	//loggingIt->close();
-	wxLogStatus("Done");
+	wxLogStatus("Done.");
 }

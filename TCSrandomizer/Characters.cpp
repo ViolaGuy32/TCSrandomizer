@@ -321,7 +321,7 @@ void charMaker() {
 				getline(readCharacters, line);
 			}
 			nameList[parse->name] = parse; //so I can reference them in the level data
-			pls.push_back(parse);
+			if (parse->name != "") pls.push_back(parse); //fixes bug where blank character is added to the end
 		}
 	}
 
@@ -346,7 +346,6 @@ void charMaker() {
 
 void levMaker() {
 	std::ifstream readLevels("files/LEVELDATA.txt", std::ios::in);
-	if (readLevels.is_open()) {
 		std::string line;
 		std::string charName;
 		std::shared_ptr<Level> parse;
@@ -379,6 +378,10 @@ void levMaker() {
 			}
 
 			getline(readLevels, line);
+
+			for (std::shared_ptr<Playable> p : parse->unlocks) {
+				p->lev = parse;
+			}
 			allLevels.push_back(parse);
 		}
 
@@ -418,7 +421,6 @@ void levMaker() {
 			nameList["hansolo"],
 		};
 
-	}
 
 
 }
