@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="CharacterData.cpp" />
     <ClCompile Include="Characters.cpp" />
     <ClCompile Include="FileGen.cpp" />
     <ClCompile Include="OtherStuff.cpp" />

@@ -89,52 +89,53 @@
 
 #define NoLevel &Playable::noLevel
 #define AllEpisodes &Playable::allEpisodes
-
-#define Negotiations allLevels[0]
-#define Invasion allLevels[1]
-#define EscapeNaboo allLevels[2]
-#define Podrace allLevels[3]
-#define Theed allLevels[4]
-#define Maul allLevels[5]
-
-#define BHP allLevels[6]
-#define Kamino allLevels[7]
-#define Factory allLevels[8]
-#define JediBattle allLevels[9]
-#define Gunship allLevels[10]
-#define Dooku allLevels[11]
-
-#define Coruscant allLevels[12]
-#define Chancellor allLevels[13]
-#define Grievous allLevels[14]
-#define Kashyyyk allLevels[15]
-#define Ruin allLevels[16]
-#define Vader allLevels[17]
-
-#define SecretPlans allLevels[18]
-#define Jundland allLevels[19]
-#define Spaceport allLevels[20]
-#define Princess allLevels[21]
-#define DSE allLevels[22]
-#define RebelAttack allLevels[23]
-
-#define Hoth allLevels[24]
-#define EchoBase allLevels[25]
-#define FalconFlight allLevels[26]
-#define Dagobah allLevels[27]
-#define CCT allLevels[28]
-#define Bespin allLevels[29]
-
-#define Jabbas allLevels[30]
-#define Carkoon allLevels[31]
-#define Showdown allLevels[32]
-#define Endor allLevels[33]
-#define Destiny allLevels[34]
-#define ITDS allLevels[35]
-
-#define PodraceOriginal allLevels[36]
-#define Anakinsflight allLevels[37]
-#define ANewHope allLevels[38]
+#define Fake &Playable::fake
+//
+//#define Negotiations allLevels[0]
+//#define Invasion allLevels[1]
+//#define EscapeNaboo allLevels[2]
+//#define Podrace allLevels[3]
+//#define Theed allLevels[4]
+//#define Maul allLevels[5]
+//
+//#define BHP allLevels[6]
+//#define Kamino allLevels[7]
+//#define Factory allLevels[8]
+//#define JediBattle allLevels[9]
+//#define Gunship allLevels[10]
+//#define Dooku allLevels[11]
+//
+//#define Coruscant allLevels[12]
+//#define Chancellor allLevels[13]
+//#define Grievous allLevels[14]
+//#define Kashyyyk allLevels[15]
+//#define Ruin allLevels[16]
+//#define Vader allLevels[17]
+//
+//#define SecretPlans allLevels[18]
+//#define Jundland allLevels[19]
+//#define Spaceport allLevels[20]
+//#define Princess allLevels[21]
+//#define DSE allLevels[22]
+//#define RebelAttack allLevels[23]
+//
+//#define Hoth allLevels[24]
+//#define EchoBase allLevels[25]
+//#define FalconFlight allLevels[26]
+//#define Dagobah allLevels[27]
+//#define CCT allLevels[28]
+//#define Bespin allLevels[29]
+//
+//#define Jabbas allLevels[30]
+//#define Carkoon allLevels[31]
+//#define Showdown allLevels[32]
+//#define Endor allLevels[33]
+//#define Destiny allLevels[34]
+//#define ITDS allLevels[35]
+//
+//#define PodraceOriginal allLevels[36]
+//#define Anakinsflight allLevels[37]
+//#define ANewHope allLevels[38]
 
 enum LogicType { casual, glitched, superGlitched };
 

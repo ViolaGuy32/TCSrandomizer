@@ -6,7 +6,7 @@
 #include "Defines.h"
 #include "OtherStuff.h"
 #include "Randomize.h"
-#include "CharacterData.h"
+#include "externData.h"
 
 extern bool character;
 extern bool extog;
@@ -27,17 +27,13 @@ std::mt19937_64* randoPTR;
 extern std::string out;
 extern std::string vanillaDirectory;
 
-std::vector<std::shared_ptr<Level>> allLevels;
+std::vector<Level*> allLevels;
 
-std::vector<std::shared_ptr<Playable>> pls;			//Characters and Vehicles
-std::vector<std::shared_ptr<Playable>> chs;     //Characters
-std::vector<std::shared_ptr<Playable>> vhs;     //Vehicles
-std::vector<std::shared_ptr<Playable>> testing = {}; //Current logic
-std::shared_ptr<Level> currentLev;
-
-std::map<std::string, std::shared_ptr<Playable>> nameList;
-std::shared_ptr<Playable> defaultCharacter;
-std::shared_ptr<Level> BHM;
+std::vector<Playable*> pls;			//Characters and Vehicles
+std::vector<Playable*> chs;     //Characters
+std::vector<Playable*> vhs;     //Vehicles
+std::vector<Playable*> testing = {}; //Current logic
+Level* currentLev;
 
 
 void Randomize() {
@@ -57,7 +53,8 @@ void Randomize() {
 
 	//charStuff();
 	//charMaker();
-	levMaker();
+	//levMaker();
+
 	currentLev = BHM;
 
 #if (0)
@@ -131,14 +128,14 @@ void Randomize() {
 		}
 	}
 
-	std::shared_ptr<Playable> cantina1 = nameList["quigonjinn"];
-	std::shared_ptr<Playable> cantina2 = nameList["obiwankenobi"];
-	std::shared_ptr<Playable> indy = nameList["hansolo_indy"];
-	std::shared_ptr<Playable> allMinikitsCharacter = nameList["slave1"];
+	Playable* cantina1 = quigonjinn;
+	Playable* cantina2 = obiwankenobi;
+	Playable* indy = hansolo_indy;
+	Playable* allMinikitsCharacter = slave1;
 
 	if (character) {
 
-		negotiations :
+	negotiations:
 		mix(Negotiations);
 
 		if (!atrb(Jedi)) goto negotiations;
@@ -402,12 +399,12 @@ void Randomize() {
 
 	secretplans:
 
-		auto plansthing = [](std::vector<std::shared_ptr<Playable>> current, std::shared_ptr<Playable> shield, std::shared_ptr<Playable> redGuy) {
+		auto plansthing = [](std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
 			//This is for scene 3 super jump
 			if (logicType != superGlitched) return false;
 
-			for (std::shared_ptr<Playable> x : current) {
-				for (std::shared_ptr<Playable> y : current) {
+			for (Playable* x : current) {
+				for (Playable* y : current) {
 					bool OOB = false;
 					bool OOB2 = false;
 
@@ -418,12 +415,12 @@ void Randomize() {
 						else if (x->zappable && y->zapper) OOB = true;
 						else if (x->storm && y->astrozapper) OOB = true;
 						else if (x->leiaAlt && y->landoAlt) OOB = true;
-						else if (x == nameList["gamorreanguard"] && y->lukeAlt) OOB = true;
+						else if (x == gamorreanguard && y->lukeAlt) OOB = true;
 
-						std::shared_ptr<Playable> otherX = defaultCharacter;
+						Playable* otherX = defaultCharacter;
 						if (OOB) {
-							for (std::shared_ptr<Playable> x2 : current) {
-								for (std::shared_ptr<Playable> y2 : current) {
+							for (Playable* x2 : current) {
+								for (Playable* y2 : current) {
 									if (x2 != y2 && x2 != x) {
 										if (x2->pushable && y2->jedi) OOB2 = true;
 										else if (x2->chokeable && y2->choke) OOB2 = true;
@@ -431,7 +428,7 @@ void Randomize() {
 										else if (x2->zappable && y2->zapper) OOB2 = true;
 										else if (x2->storm && y2->astrozapper) OOB2 = true;
 										else if (x2->leiaAlt && y2->landoAlt) OOB2 = true;
-										else if (x2 == nameList["gamorreanguard"] && y2->lukeAlt) OOB2 = true;
+										else if (x2 == gamorreanguard && y2->lukeAlt) OOB2 = true;
 
 										if (OOB2) otherX = x2;
 									}
@@ -571,7 +568,7 @@ void Randomize() {
 		add(3);
 		//cantina buttons
 		if (!atrb(Shoot) && !atrb(FakeShoot)) {
-			for (std::shared_ptr<Playable> p : testing)
+			for (Playable* p : testing)
 				if (p->droid && !p->jump)
 					goto spaceport3;
 			goto spaceport;
@@ -710,7 +707,7 @@ void Randomize() {
 		if (logicType != casual) {
 			if (SuperJump(Build)) //everyone who can build can jump or flutter
 				goto falconflight;
-			for (std::shared_ptr<Playable> p : testing) {
+			for (Playable* p : testing) {
 				if (p->doubleJump && p->build) goto falconflight;
 				if (p->dive && p->build) goto falconflight;
 				if (p->flop && p->build) goto falconflight;
@@ -871,8 +868,8 @@ void Randomize() {
 		if (logicType == casual) {
 			if (!atrb(Jedi))
 				goto jabbas;
-			std::vector<std::shared_ptr<Playable>> droidRoom;
-			for (std::shared_ptr<Playable> t : testing)
+			std::vector<Playable*> droidRoom;
+			for (Playable* t : testing)
 				if (Any({Jump, Fly, Flutter}, {t})) //can get into droid room
 					droidRoom.push_back(t);
 			droidRoom.push_back(Jabbas->party[3]);
@@ -1106,34 +1103,16 @@ void Randomize() {
 	bhmPrep:
 
 		//breaks if target is not unique
-		std::shared_ptr<Playable> battledroid = nameList["battledroid"];
-		std::shared_ptr<Playable> pkdroid = nameList["pkdroid"];
-		std::shared_ptr<Playable> geonosian = nameList["geonosian"];
-		std::shared_ptr<Playable> battledroidSecurity = nameList["battledroid_security"];
-		std::shared_ptr<Playable> droideka = nameList["destroyer"];
-		std::shared_ptr<Playable> cloneEp3 = nameList["clone_ep3"];
-		std::shared_ptr<Playable> cody = nameList["clone_ep3_sand"];
-		std::shared_ptr<Playable> cloneSwamp = nameList["clone_ep3_swamp"];
-		std::shared_ptr<Playable> disguisedclone = nameList["disguisedclone"];
-		std::shared_ptr<Playable> rebelengineer = nameList["engineer"];
-		std::shared_ptr<Playable> rebeltrooper = nameList["rebelscum"];
-		std::shared_ptr<Playable> jawa = nameList["jawa"];
-		std::shared_ptr<Playable> sandtrooper = nameList["sandtrooper"];
-		std::shared_ptr<Playable> mousedroid = nameList["mousedroid"];
-		std::shared_ptr<Playable> stormtrooper = nameList["stormtrooper"];
-		std::shared_ptr<Playable> imperialofficer = nameList["imperialofficer"];
-		std::shared_ptr<Playable> snowtrooper = nameList["snowtrooper"];
-		std::shared_ptr<Playable> ewok = nameList["ewok"];
 
 	bhm:
 		mix(BHM);
 
 		logR("BOUNTIES MIXED");
-		for (std::shared_ptr<Playable> p : BHM->party) {
+		for (Playable* p : BHM->party) {
 			logR(p->name + " player");
 		}
 
-		for (std::shared_ptr<Playable> p : BHM->bonusCharacters) {
+		for (Playable* p : BHM->bonusCharacters) {
 			logR(p->name + " target");
 		}
 
@@ -1155,31 +1134,31 @@ void Randomize() {
 		if (BHM->bonusCharacters[3] == geonosian)
 			goto bhm;
 		//if (BHM->bonusCharacters[10] == kaminodroid) goto bhm;
-		if (BHM->bonusCharacters[5] == battledroidSecurity)
+		if (BHM->bonusCharacters[5] == battledroid_security)
 			goto bhm;
 		if (BHM->bonusCharacters[6] == battledroid)
 			goto bhm;
-		if (BHM->bonusCharacters[6] == droideka)
+		if (BHM->bonusCharacters[6] == destroyer)
 			goto bhm;
 		if (BHM->bonusCharacters[7] == battledroid)
 			goto bhm;
-		if (BHM->bonusCharacters[7] == cloneEp3)
+		if (BHM->bonusCharacters[7] == clone_ep3)
 			goto bhm;
-		if (BHM->bonusCharacters[7] == cody)
+		if (BHM->bonusCharacters[7] == clone_ep3_sand)
 			goto bhm;
-		if (BHM->bonusCharacters[7] == cloneSwamp)
+		if (BHM->bonusCharacters[7] == clone_ep3_swamp)
 			goto bhm;
-		if (BHM->bonusCharacters[8] == cloneEp3)
+		if (BHM->bonusCharacters[8] == clone_ep3)
 			goto bhm;
-		if (BHM->bonusCharacters[8] == cody)
+		if (BHM->bonusCharacters[8] == clone_ep3_sand)
 			goto bhm;
 		if (BHM->bonusCharacters[8] == disguisedclone)
 			goto bhm;
 		if (BHM->bonusCharacters[9] == battledroid)
 			goto bhm;
-		if (BHM->bonusCharacters[10] == rebelengineer)
+		if (BHM->bonusCharacters[10] == engineer)
 			goto bhm;
-		if (BHM->bonusCharacters[10] == rebeltrooper)
+		if (BHM->bonusCharacters[10] == rebelscum)
 			goto bhm;
 		if (BHM->bonusCharacters[11] == jawa)
 			goto bhm;
@@ -1234,8 +1213,8 @@ void Randomize() {
 		if (atrb(Ghost, BHM->bonusCharacters)) goto bhm;
 	}
 
-	for (std::shared_ptr<Level> lev : allLevels) {
-		for (std::shared_ptr<Playable> p : lev->party) {
+	for (Level* lev : allLevels) {
+		for (Playable* p : lev->party) {
 			p->storyMode = true;
 		}
 	}
@@ -1295,7 +1274,7 @@ void Randomize() {
 		int x = 1;
 
 		auto collectableWrite
-			= [&x](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
+			= [&x](Level* lev, char scene, std::initializer_list<unsigned int> address) {
 		#ifdef _DEBUG
 			logR((lev->name + " collectables").c_str());
 		#endif
@@ -1327,7 +1306,7 @@ void Randomize() {
 
 		//minikits with multiple spawn points
 		auto specialCollectable
-			= [&x](std::shared_ptr<Level> lev, char scene, std::initializer_list<unsigned int> address) {
+			= [&x](Level* lev, char scene, std::initializer_list<unsigned int> address) {
 		#ifdef _DEBUG
 			logR((lev->name + ' ' + scene + " collectables").c_str());
 		#endif
@@ -1737,7 +1716,7 @@ void Randomize() {
 	#endif
 
 		//auto scpXBatch = []( char scene,  std::string& script,  int characterNum,
-		//	 std::initializer_list<coord>& lncol, std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party) {
+		//	 std::initializer_list<coord>& lncol, std::vector<Playable*> Level::* chType = &Level::party) {
 
 		//	
 
@@ -1760,7 +1739,7 @@ void Randomize() {
 
 
 		//auto fileDeleter = []( char scene,  int characterNum,
-		//	std::vector<std::shared_ptr<Playable>> Level::* chType = &Level::party) {
+		//	std::vector<Playable*> Level::* chType = &Level::party) {
 
 		//	std::remove(getSCP(currentLev, scene, getVanillaAlt(characterNum, chType)).c_str());
 		//};
@@ -2454,7 +2433,7 @@ void Randomize() {
 				{19, {{26, 15}}, bonusCharacter}});
 
 
-			auto missionReplace2 = [](unsigned int c, unsigned int line, std::shared_ptr<Level> lev, char scene, std::string script) {
+			auto missionReplace2 = [](unsigned int c, unsigned int line, Level* lev, char scene, std::string script) {
 				writer(oneWrite, getSCP(lev, scene, script),
 					{BHM->bonusCharacters[c]->name, BHM->vanillaBonusCharacters[c]->name.length(), {line, 49}});
 				//scpIns(scene, script, c, {line, 49}, bonusCharacter);
@@ -2522,8 +2501,8 @@ void Randomize() {
 
 		std::ofstream collect(out + "/CHARS/COLLECTION.TXT");
 
-		auto collectWrite = [&](std::vector<std::shared_ptr<Playable>>& vec) {
-			for (std::shared_ptr<Playable> p : vec) {
+		auto collectWrite = [&](std::vector<Playable*>& vec) {
+			for (Playable* p : vec) {
 				collect << "collect \"" + p->name + "\" ";
 				if (p == allMinikitsCharacter)
 					collect << "all_minikits_complete" << '\n';
@@ -2711,13 +2690,13 @@ void Randomize() {
 		//for (int i = 0; i < 340; i++) {
 		//	rgbFloat(TNG, green, 0x31CC98 + (i * 0x2c4));
 		//}
-}
+	}
 #endif
 
 
 	//free memory
-	//for (std::shared_ptr<Playable> p : pls) delete p;
-//	for (std::shared_ptr<Level> lev : allLevels) delete lev;
+	//for (Playable* p : pls) delete p;
+//	for (Level* lev : allLevels) delete lev;
 	/*pls.clear();
 	chs.clear();
 	vhs.clear();*/

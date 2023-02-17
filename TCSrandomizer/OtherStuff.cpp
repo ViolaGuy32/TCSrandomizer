@@ -5,7 +5,7 @@
 #include "Defines.h"
 #include "Characters.h"
 
-extern std::shared_ptr<Level> currentLev;
+extern Level* currentLev;
 extern std::string out;
 //extern std::unique_ptr<std::ofstream> loggingIt;
 
@@ -199,10 +199,10 @@ std::string cdstr(coord cd) {
 writeSingle::writeSingle(std::string myStr, unsigned int myLen, coord myLnCol)
 	: newStr(myStr), len(myLen), lnCol(myLnCol) {
 }
-writeSingle::writeSingle(unsigned int chNum, coord myLnCol, std::vector<std::shared_ptr<Playable>> Level::* chType)
+writeSingle::writeSingle(unsigned int chNum, coord myLnCol, std::vector<Playable*> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {
 }
-writeSingle::writeSingle(unsigned int chNum, unsigned int line, std::vector<std::shared_ptr<Playable>> Level::* chType)
+writeSingle::writeSingle(unsigned int chNum, unsigned int line, std::vector<Playable*> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol({line, 1}) {
 }
 
@@ -210,7 +210,7 @@ writeSet::writeSet(std::string myStr, unsigned int myLen, std::vector< coord> my
 	: newStr(myStr), len(myLen), lnCol(myLnCol) {
 }
 
-writeSet::writeSet(unsigned int chNum, std::vector< coord> myLnCol, std::vector<std::shared_ptr<Playable>> Level::* chType)
+writeSet::writeSet(unsigned int chNum, std::vector< coord> myLnCol, std::vector<Playable*> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {
 };
 //
@@ -317,7 +317,7 @@ void hexWrite(std::string file, std::string newWrite, int address, int len, bool
 }
 
 //for hex longer than 1 byte
-void binaryWrite(std::string file, std::string bin, int address) {
+void binaryWrite(std::string file, std::string bin, unsigned int address) {
 #ifdef _DEBUG
 	logR(file + " 0x" + bin + " " + std::to_string(address));
 #endif
@@ -356,7 +356,7 @@ void ai2Write(char scene, std::string writ, std::initializer_list<unsigned int> 
 }
 
 void ai2Write(char scene, unsigned int chNum, std::initializer_list<unsigned int> address,
-	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	std::vector<Playable*> Level::* chType) {
 	for (unsigned int a : address)
 		hexWrite(getAI2(currentLev, scene), getName(chNum, chType), a);
 }
@@ -365,15 +365,15 @@ void ai2Write(char scene, unsigned int chNum, std::initializer_list<unsigned int
 int addressPointer = 0x2B0;
 int junkCharacters = 0x3f1b6c;
 
-void characterPointer(std::shared_ptr<Playable> play, int address) {
-	if (play->pointString != 0x0) {
-		numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), address);
+void characterPointer(Playable* play, int address) {
+	if (play->address != 0x0) {
+		numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), address);
 	} else {
 		hexWrite(EXE, play->name, addressPointer);
 		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
-		play->pointString = junkCharacters + 0x400000 - 0x4;
+		play->address = junkCharacters + 0x400000 - 0x4;
 
-		numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), address);
+		numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), address);
 
 		addressPointer += play->name.length() + 1;
 		junkCharacters += 0x8;
@@ -381,17 +381,17 @@ void characterPointer(std::shared_ptr<Playable> play, int address) {
 	}
 }
 
-void multiPointer(std::shared_ptr<Playable> play, std::vector<int> address) {
-	if (play->pointString != 0x0) {
+void multiPointer(Playable* play, std::vector<int> address) {
+	if (play->address != 0x0) {
 		for (int ad : address)
-			numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), ad);
+			numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), ad);
 	} else {
 		hexWrite(EXE, play->name, addressPointer);
 		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
-		play->pointString = junkCharacters + 0x400000 - 0x4;
+		play->address = junkCharacters + 0x400000 - 0x4;
 
 		for (int ad : address)
-			numWrite(EXE, readEXE(play->pointString - 0x400000 + 0x4), ad);
+			numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), ad);
 
 		addressPointer += play->name.length() + 1;
 		junkCharacters += 0x8;
@@ -606,7 +606,7 @@ void lineDel(std::vector< unsigned int>lines, std::vector<std::string>& contents
 	}
 }
 
-void fileDeleter(char scene, int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
+void fileDeleter(char scene, int characterNum, std::vector<Playable*> Level::* chType) {
 	//deletes file
 
 	std::remove(getSCP(currentLev, scene, getVanilla(characterNum, chType)).c_str());
@@ -634,35 +634,35 @@ void fileDeleter(char scene, int characterNum, std::vector<std::shared_ptr<Playa
 
 //gets path for various types of files
 
-std::string getBasePath(std::shared_ptr<Level> lev, char scene, std::string fileType) {
+std::string getBasePath(Level* lev, char scene, std::string fileType) {
 	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + "." + fileType;
 }
 
-std::string getMainTxt(std::shared_ptr<Level> lev) {
+std::string getMainTxt(Level* lev) {
 	return out + lev->path + lev->name + ".TXT";
 }
 
-//std::string getGiz( std::shared_ptr<Level> lev,  char scene) {
+//std::string getGiz( Level* lev,  char scene) {
 //	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIZ";
 //}
 //
-//std::string getGit( std::shared_ptr<Level> lev,   char scene) {
+//std::string getGit( Level* lev,   char scene) {
 //	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIT";
 //}
 //
-//std::string getSceneTxt( std::shared_ptr<Level> lev,   char scene) {
+//std::string getSceneTxt( Level* lev,   char scene) {
 //	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".TXT";
 //}
 
-std::string getSCP(std::shared_ptr<Level> lev, char scene, std::string script) {
+std::string getSCP(Level* lev, char scene, std::string script) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + script + ".SCP";
 }
 
-std::string getAI2(std::shared_ptr<Level> lev, char scene) {
+std::string getAI2(Level* lev, char scene) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + lev->shortName + '_' + scene + ".AI2";
 }
 
-std::string getScriptTxt(std::shared_ptr<Level> lev, char scene) {
+std::string getScriptTxt(Level* lev, char scene) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/SCRIPT.TXT";
 }
 
@@ -675,12 +675,12 @@ void renamer(std::string oldName, std::string newName) {
 	}
 }
 
-std::string getName(unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
+std::string getName(unsigned int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character
 	return (*currentLev.*chType)[characterNum]->name;
 }
 
-std::string getVanilla(unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
+std::string getVanilla(unsigned int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character to be replaced
 	if (chType == &Level::bonusCharacters) {
 		return currentLev->vanillaBonusCharacters[characterNum]->name;
@@ -709,7 +709,7 @@ void mainTxtIns(std::string txt, unsigned int len, coord lnCol) {
 }
 
 void scpIns(char scene, std::string script, unsigned int chNum, coord lnCol,
-	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	std::vector<Playable*> Level::* chType) {
  //replaces string in scp file
 	writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(chNum, lnCol, chType));
 };
@@ -748,7 +748,7 @@ void batchAnywhere(std::string file, std::vector<writeSet> writers) {
 	writer(manyWrite, file, writers);
 };
 
-void scpName(char scene, unsigned int characterNum, std::vector<std::shared_ptr<Playable>> Level::* chType) {
+void scpName(char scene, unsigned int characterNum, std::vector<Playable*> Level::* chType) {
 	//renames scp file
 	renamer(getSCP(currentLev, scene, getVanilla(characterNum, chType)),
 		getSCP(currentLev, scene, getName(characterNum, chType)));
@@ -765,7 +765,7 @@ void scriptTxtAppend(char scene, std::string appendix) {
 }
 
 void scriptTxt(char scene, int characterNum, unsigned int line,
-	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	std::vector<Playable*> Level::* chType) {
 	//updates script.txt
 	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(characterNum, {line, 1}, chType));
 
@@ -811,7 +811,7 @@ void scpDeleter(char scene, std::string script) {
 }
 
 void baseFile(char scene, std::string fileType, unsigned int chNum, coord lnCol,
-	std::vector<std::shared_ptr<Playable>> Level::* chType) {
+	std::vector<Playable*> Level::* chType) {
 	writer(oneWrite, getBasePath(currentLev, scene, fileType), {chNum, lnCol, chType});
 }
 
