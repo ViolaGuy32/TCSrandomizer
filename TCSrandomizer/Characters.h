@@ -5,17 +5,17 @@
 
 struct Level;
 
-void charMaker();
+//void charMaker();
 void levMaker();
 
 struct Playable {
 	std::string name = "";
 	std::string realName = "";
-	int pointString = 0;
+	unsigned int address = 0;
 
 	float speed = 1.2;
 	std::shared_ptr<Level> lev;
-	int price = 0;
+	unsigned int price = 0;
 	bool alwaysTrue = true; //lol
 
 	bool hat = false, lever = false, build = false, box = false, jump = false, doubleJump = false,
@@ -33,13 +33,59 @@ struct Playable {
 		leiaAlt = false, landoAlt = false, lukeAlt = false,
 		defaultCharacter = false, storyMode = false, noLevel = false, allEpisodes = false;
 
+
+	Playable(std::string myName, std::string myRealName, unsigned int myPrice,
+		unsigned int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes);
 };
+
+//
+//struct Spawn {
+//	std::shared_ptr<Playable>character;
+//	std::shared_ptr<Playable> VanillaCharacter;
+//};
+
+
+enum PanelType {
+	AstroPanel, ProtoPanel, BountyPanel, ImperialPanel
+};
+
+enum DispenserType {
+	RandomHat, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat
+};
+
+struct Panel {
+	PanelType type;
+	PanelType vanillaType;
+	char scene;
+	unsigned int address;
+};
+
+struct Dispenser {
+	DispenserType type;
+	DispenserType vanillaType;
+	char scene;
+	unsigned int address;
+};
+
+struct Collectable {
+	char type;
+	char scene;
+	unsigned int address;
+};
+
+//struct SpecialColelctable {
+//	std::vector<Collectable>;
+//};
 
 struct Level {
 	std::vector<std::shared_ptr<Playable>> party;
-	std::vector<std::shared_ptr<Playable>> bonusCharacters; //characters you rescue but do not play as
 	std::vector<std::shared_ptr<Playable>> vanillaParty;
+	std::vector<std::shared_ptr<Playable>> bonusCharacters; //characters you rescue but do not play as
 	std::vector<std::shared_ptr<Playable>> vanillaBonusCharacters;
+
+	std::vector<Panel> panels;
+	std::vector<Dispenser> dispensers;
+
 	std::string name;
 	std::string shortName;
 	std::string path;
@@ -49,8 +95,8 @@ struct Level {
 	std::vector<std::shared_ptr<Playable>> unlocks;
 	unsigned int collectIt = 0;
 	std::array<char, 21> collectables =
-		{'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
-		'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
+	{'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
+	'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
 
 };
 

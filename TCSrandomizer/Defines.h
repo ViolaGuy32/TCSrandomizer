@@ -20,6 +20,76 @@
 #define PTC out + "/STUFF/CHAR.PTL"
 #define PC1 out + "/STUFF/CHAR_LSW1.PTL"
 
+#define Build &Playable::build
+#define Lever &Playable::lever
+#define Box &Playable::box //also for riding stuff
+
+#define Jedi &Playable::jedi
+#define Sith &Playable::sith
+#define Choke &Playable::choke
+#define Saber &Playable::saber //includes magnaguard
+#define Deflect &Playable::deflect
+
+#define Attack &Playable::attack
+#define Grapple &Playable::grapple
+#define Shoot &Playable::shoot
+#define FakeShoot &Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
+
+#define Jump &Playable::jump
+#define DoubleJump &Playable::doubleJump
+#define RealDoubleJump &Playable::realDoubleJump
+#define HighJump &Playable::highJump
+#define ExtraHighJump &Playable::extraHighJump
+#define HighDoubleJump &Playable::highDoubleJump
+#define YodaJump &Playable::yodaJump
+#define GunganJump &Playable::gunganJump
+#define Dive &Playable::dive
+#define Flop &Playable::flop
+#define SlightlyBetterJump &Playable::slightlyBetterJump
+
+#define Fly &Playable::fly
+#define Flutter &Playable::flutter
+#define Hovering &Playable::hovering //trainingremote
+#define Fett &Playable::fett
+#define Zapper &Playable::zapper
+#define AstroZapper &Playable::astrozapper
+
+#define Hat &Playable::hat
+#define Proto &Playable::proto
+#define Astro &Playable::astro
+#define Imperial &Playable::imperial
+#define Bounty &Playable::bounty
+
+#define Passive &Playable::passive
+#define Ghost &Playable::ghost
+#define Hatch &Playable::hatch
+#define Tall &Playable::tall //can walk in swamp
+
+#define Droid &Playable::droid
+#define Gas &Playable::gas
+#define Pushable &Playable::pushable
+#define Zappable &Playable::zappable
+#define Storm &Playable::storm
+#define Chokeable &Playable::chokeable
+#define Trickable &Playable::trickable
+
+#define Hovering &Playable::hovering
+#define FakeShoot &Playable::fakeshoot
+
+#define Tow &Playable::tow
+#define TieDoor &Playable::tiedoor
+
+#define Extratoggle &Playable::extratoggle
+#define Vehicle &Playable::vehicle
+#define Vgreen &Playable::vgreen
+
+#define LeiaAlt &Playable::leiaAlt
+#define LandoAlt &Playable::landoAlt
+#define LukeAlt &Playable::lukeAlt
+
+#define NoLevel &Playable::noLevel
+#define AllEpisodes &Playable::allEpisodes
+
 #define Negotiations allLevels[0]
 #define Invasion allLevels[1]
 #define EscapeNaboo allLevels[2]
@@ -62,38 +132,16 @@
 #define Destiny allLevels[34]
 #define ITDS allLevels[35]
 
-#define Anakinsflight allLevels[36]
-#define ANewHope allLevels[37]
+#define PodraceOriginal allLevels[36]
+#define Anakinsflight allLevels[37]
+#define ANewHope allLevels[38]
 
 enum LogicType { casual, glitched, superGlitched };
 
 
 
 /*
-
-
-bounties
-
-character
-bobafett greedo ig88 4lom bossk dengar
-quigonjinn amidala jarjarbinks macewindu kitfisto luminara kiadimundi rebelscum shaakti clone_ep3_sand r2d2 benkenobi chewbacca princessleia admiralackbar yoda c3po landocalrissian lukeskywalker_tatooine hansolo
-
-
-noLevel
-
-character
-
-
-gonkdroid pkdroid
-
-allLevel
-
-character
-
-
-ig88 dengar 4lom ghostbenkenobi anakin_ghost yoda_ghost r2q5 hansolo_indy slave1
-
-
+ 
 
 
 	TODO
@@ -140,8 +188,7 @@ ig88 dengar 4lom ghostbenkenobi anakin_ghost yoda_ghost r2q5 hansolo_indy slave1
 	6-3:
 	check jump height
 
-	bounty hunter missions:
-	-Kamino with jarjar
+
 
 	flutters can do OOB!
 

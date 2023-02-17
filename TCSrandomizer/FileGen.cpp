@@ -53,24 +53,19 @@ void fileGen() {
 	//	0x653d5,
 	//	0x654c0,
 	//	//0x55f4c,
-
 	//	//status
 	//	0x175d2e,
 	//	0x17a5cf,
-
 	//	//level
 	//	//0x14c85,
 	//	0x15c696, //breaks invasion cs
-
 	//	//loadlevel
 	//	//0xe5636,
-
 	//	//negotiations in-game intro
 	//	0x14c85
-
 	//	//0xe0137
 	//};
-
+	//
 	//for (int i : freePlay)
 	//	binaryWrite(EXE, "0f", i);  
 

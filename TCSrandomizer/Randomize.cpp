@@ -6,6 +6,7 @@
 #include "Defines.h"
 #include "OtherStuff.h"
 #include "Randomize.h"
+#include "CharacterData.h"
 
 extern bool character;
 extern bool extog;
@@ -37,50 +38,7 @@ std::shared_ptr<Level> currentLev;
 std::map<std::string, std::shared_ptr<Playable>> nameList;
 std::shared_ptr<Playable> defaultCharacter;
 std::shared_ptr<Level> BHM;
-//
-//struct currentMem {
-//	uint32_t alloc = 0;
-//	uint32_t freed = 0
-//
-//	uint32_t current() { return alloc - freed; }
-//};
-//
-//currentMem curM;
-//
-//void printMem() {
-//	std::ofstream mem("files/memory.txt", std::ios_base::out | std::ios_base::app);
-//
-//	mem <<"\t\t\t\t\t" << curM.current() << " bytes in use.\n";
-//	mem.close();
-//
-//}
-//
-//void* operator new(size_t size) {
-//
-//	std::ofstream mem("files/memory.txt", std::ios_base::out | std::ios_base::app);
-//
-//	curM.alloc += size;
-//
-//	mem << size << " bytes allocated.\n";
-//
-//	mem.close();
-//
-//
-//	printMem();
-//
-//	return malloc(size);
-//}
-//
-//void operator delete(void* memory, size_t size) {
-//	std::ofstream mem("files/memory.txt", std::ios_base::out | std::ios_base::app);
-//
-//	curM.alloc += size;
-//
-//	mem << size << " bytes freed.\n";
-//	mem.close();
-//
-//	free(memory);
-//}
+
 
 void Randomize() {
 
@@ -97,7 +55,8 @@ void Randomize() {
 	std::mt19937_64 rando(seed);
 	randoPTR = &rando;
 
-	charMaker();
+	//charStuff();
+	//charMaker();
 	levMaker();
 	currentLev = BHM;
 
@@ -178,50 +137,6 @@ void Randomize() {
 	std::shared_ptr<Playable> allMinikitsCharacter = nameList["slave1"];
 
 	if (character) {
-		//makes code easier to read and debug
-	#define Build &Playable::build
-	#define Lever &Playable::lever
-	#define Box &Playable::box //also for riding stuff
-
-	#define Jedi &Playable::jedi
-	#define Sith &Playable::sith
-	#define Saber &Playable::saber //includes magnaguard
-	#define Deflect &Playable::deflect
-
-	#define Attack &Playable::attack
-	#define Grapple &Playable::grapple
-	#define Shoot &Playable::shoot
-	#define FakeShoot &Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
-
-	#define Jump &Playable::jump
-	#define DoubleJump &Playable::doubleJump
-	#define RealDoubleJump &Playable::realDoubleJump
-	#define HighJump &Playable::highJump
-	#define ExtraHighJump &Playable::extraHighJump
-	#define HighDoubleJump &Playable::highDoubleJump
-	#define Dive &Playable::dive
-	#define YodaJump &Playable::yodaJump
-
-	#define Fly &Playable::fly
-	#define Flutter &Playable::flutter
-	#define Hovering &Playable::hovering //trainingremote
-	#define Fett &Playable::fett
-	#define Zapper &Playable::zapper
-	#define AstroZapper &Playable::astrozapper
-
-	#define Hat &Playable::hat
-	#define Proto &Playable::proto
-	#define Astro &Playable::astro
-	#define Imperial &Playable::imperial
-	#define Bounty &Playable::bounty
-
-	#define Passive &Playable::passive
-	#define Ghost &Playable::ghost
-	#define Hatch &Playable::hatch
-	#define Tall &Playable::tall //can walk in swamp
-
-	#define Tow &Playable::tow
-
 
 		negotiations :
 		mix(Negotiations);
@@ -500,9 +415,9 @@ void Randomize() {
 						if (x->pushable && y->jedi) OOB = true;
 						else if (x->chokeable && y->choke) OOB = true;
 						else if (x->trickable && y->jedi) OOB = true;
-						else if (x->zapper && y->zappable) OOB = true;
-						else if (x->astrozapper && y->storm) OOB = true;
-						else if (x->landoAlt && y->leiaAlt) OOB = true;
+						else if (x->zappable && y->zapper) OOB = true;
+						else if (x->storm && y->astrozapper) OOB = true;
+						else if (x->leiaAlt && y->landoAlt) OOB = true;
 						else if (x == nameList["gamorreanguard"] && y->lukeAlt) OOB = true;
 
 						std::shared_ptr<Playable> otherX = defaultCharacter;
@@ -513,9 +428,9 @@ void Randomize() {
 										if (x2->pushable && y2->jedi) OOB2 = true;
 										else if (x2->chokeable && y2->choke) OOB2 = true;
 										else if (x2->trickable && y2->jedi) OOB2 = true;
-										else if (x2->zapper && y2->zappable) OOB2 = true;
-										else if (x2->astrozapper && y2->storm) OOB2 = true;
-										else if (x2->landoAlt && y2->leiaAlt) OOB2 = true;
+										else if (x2->zappable && y2->zapper) OOB2 = true;
+										else if (x2->storm && y2->astrozapper) OOB2 = true;
+										else if (x2->leiaAlt && y2->landoAlt) OOB2 = true;
 										else if (x2 == nameList["gamorreanguard"] && y2->lukeAlt) OOB2 = true;
 
 										if (OOB2) otherX = x2;
@@ -1160,6 +1075,9 @@ void Randomize() {
 		mix(ITDS);
 		if (!atrb(Shoot))
 			goto itds;
+
+	podraceoriginal:
+		mix(PodraceOriginal);
 
 	anakinsflight:
 		mix(Anakinsflight);
@@ -2486,6 +2404,9 @@ void Randomize() {
 		currentLev = ITDS;
 		playerInit({{0, 1}, {1, 2}});
 
+		currentLev = PodraceOriginal;
+		playerInit({{0, 1}, {1, 2}});
+
 		currentLev = Anakinsflight;
 		playerInit({{0, 1}, {1, 2}});
 
@@ -2613,9 +2534,9 @@ void Randomize() {
 						collect << "all_episodes_complete";
 					} else if (!p->noLevel) {
 						collect << "area_complete \"";
-						collect << p->lev->name << "\"";
+						collect << p->lev->name << "\" ";
 					}
-					collect << " buy_in_shop ";
+					collect << "buy_in_shop ";
 					collect << std::to_string(p->price) << '\n';
 				}
 			#ifdef _DEBUG
@@ -2684,9 +2605,9 @@ void Randomize() {
 			0xc50d0, 0xc65b1});
 		numWrite(EXE, indy->price, 0x2e5c7);
 		//txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", indy->realName, {{1627, 7}}, 13);
-
 		//UNCOMMENT THIS
-		//writer(oneWrite, ENGLISH, writeSingle{indy->realName, 13, {1627, 7}});
+		writer(oneWrite, ENGLISH, writeSingle{indy->realName, 13, {1627, 7}});
+
 
 		//fixes ET characters
 		if (extog) {

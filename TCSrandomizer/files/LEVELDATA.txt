@@ -286,6 +286,13 @@ millenniumfalcon xwing
 admiralackbar 
 
 
+PODRACE
+PODRACE
+/LEVELS/EPISODE_I/PODRACE/
+vehicle
+anakinspod anakinspod_green 
+ 
+
 ANAKINSFLIGHT
 ANAKINSFLIGHT
 /LEVELS/ANAKINSFLIGHT/

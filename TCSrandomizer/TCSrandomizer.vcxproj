@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="CharacterData.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="FileGen.h" />
