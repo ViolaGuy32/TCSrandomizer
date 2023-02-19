@@ -65,6 +65,9 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="externData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="CharacterData.h">
       <Filter>Header Files</Filter>
     </ClInclude>

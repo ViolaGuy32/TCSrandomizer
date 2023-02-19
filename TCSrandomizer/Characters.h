@@ -11,11 +11,11 @@ struct Level;
 struct Playable {
 	std::string name = "";
 	std::string realName = "";
-	unsigned int address = 0;
+	 int address = 0;
 
 	float speed = 1.2;
 	Level* lev;
-	unsigned int price = 0;
+	 int price = 0;
 	bool alwaysTrue = true; //lol
 
 	bool hat = false, lever = false, build = false, box = false, jump = false, doubleJump = false,
@@ -35,8 +35,8 @@ struct Playable {
 		fake = false;
 
 
-	Playable(std::string myName, std::string myRealName, unsigned int myPrice,
-		unsigned int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes);
+	Playable(std::string myName, std::string myRealName,  int myPrice,
+		 int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes);
 };
 
 //
@@ -56,28 +56,38 @@ enum DispenserType {
 
 struct Panel {
 	PanelType type;
-	PanelType vanillaType;
-	char scene;
-	unsigned int address;
+	int address;
 };
 
 struct Dispenser {
 	DispenserType type;
-	DispenserType vanillaType;
-	char scene;
-	unsigned int address;
+	int address;
 };
 
+struct PanelSet {
+	char scene;
+	std::vector<Panel> panels;
+};
+
+struct DispenserSet {
+	char scene;
+	std::vector<Dispenser> dispenser;
+};
 
 struct Collectable {
-	char type;
 	char scene;
-	unsigned int address;
+	std::vector<std::pair<char, int>> typeAddress;
+
+	Collectable(char c, std::initializer_list<int> addresses);
 };
 
 struct SpecialCollectable {
 	char type;
 	std::vector<std::pair<char, int>> sceneAddress;
+	SpecialCollectable(char c, std::initializer_list<int> addresses);
+	//SpecialCollectable(std::vector<Collectable> spawnPoints);
+	SpecialCollectable(std::initializer_list<std::pair<char, int>> mySceneAddress);
+
 };
 
 //struct SpecialColelctable {
@@ -90,8 +100,8 @@ struct Level {
 	std::vector<Playable*> bonusCharacters; //characters you rescue but do not play as
 	std::vector<Playable*> vanillaBonusCharacters;
 
-	std::vector<Panel> panels;
-	std::vector<Dispenser> dispensers;
+	std::vector<PanelSet> panels;
+	std::vector<DispenserSet> dispensers;
 
 	std::string name;
 	std::string shortName;
@@ -99,8 +109,8 @@ struct Level {
 	//std::string episode;
 	bool vehicleLevel = false;
 	//int isFake;
-	std::vector<Playable*> unlocks;
-	unsigned int collectIt = 0;
+	//std::vector<Playable*> unlocks;
+	//int collectIt = 0;
 
 	std::vector<Collectable> collectables;
 	std::vector<SpecialCollectable> specialCollectables;
@@ -112,13 +122,15 @@ struct Level {
 	Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
 		std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 		std::vector<Playable*> myUnlocks,
-		std::vector<Collectable> myCollectables, std::vector<SpecialCollectable> mySpecialCollectables);
+		std::vector<Collectable> myCollectables, std::vector<SpecialCollectable> mySpecialCollectables,
+		std::vector<PanelSet> myPanels, std::vector<DispenserSet> myDispensers);
 
 };
 
 extern std::vector<Playable*> testing;
 
 void add(int a);
+void addHat(int set, int hat);
 
 void mix(Level* lev);
 
@@ -126,15 +138,17 @@ bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current = t
 
 bool Multi(const bool Playable::* atr, const  int n, const std::vector<Playable*>& current = testing);
 
-bool Any(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
+bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
 
-bool All(const std::initializer_list<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
+bool All(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
 
-bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current = testing);
+bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current = testing);
 
 bool SuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
 
 bool InstantSuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
+
+
 
 bool LivingJedi(const std::vector<Playable*>& current = testing);
 
@@ -143,3 +157,9 @@ bool DoubleTransitionSkip(const bool Playable::* atr = &Playable::alwaysTrue, co
 float GetFastest(const std::vector<Playable*> current = testing);
 
 float GetSlowest(const std::vector<Playable*> current = testing);
+
+bool Playable::* getPanel(int panSet, int pan);
+
+bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing);
+
+bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current = testing);

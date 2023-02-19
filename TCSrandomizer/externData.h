@@ -1,6 +1,7 @@
 #pragma once
-#include "Defines.h"
+//#include "Defines.h"
 #include "Characters.h"
+
 
 extern Playable* quigonjinn;
 extern Playable* obiwankenobi;
@@ -211,3 +212,4 @@ extern Level* PodraceOriginal;
 extern Level* Anakinsflight;
 extern Level* ANewHope;
 extern Level* BHM;
+extern Level* Cantina;

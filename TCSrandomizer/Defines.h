@@ -73,7 +73,7 @@
 #define Chokeable &Playable::chokeable
 #define Trickable &Playable::trickable
 
-#define Hovering &Playable::hovering
+
 #define FakeShoot &Playable::fakeshoot
 
 #define Tow &Playable::tow
@@ -90,52 +90,6 @@
 #define NoLevel &Playable::noLevel
 #define AllEpisodes &Playable::allEpisodes
 #define Fake &Playable::fake
-//
-//#define Negotiations allLevels[0]
-//#define Invasion allLevels[1]
-//#define EscapeNaboo allLevels[2]
-//#define Podrace allLevels[3]
-//#define Theed allLevels[4]
-//#define Maul allLevels[5]
-//
-//#define BHP allLevels[6]
-//#define Kamino allLevels[7]
-//#define Factory allLevels[8]
-//#define JediBattle allLevels[9]
-//#define Gunship allLevels[10]
-//#define Dooku allLevels[11]
-//
-//#define Coruscant allLevels[12]
-//#define Chancellor allLevels[13]
-//#define Grievous allLevels[14]
-//#define Kashyyyk allLevels[15]
-//#define Ruin allLevels[16]
-//#define Vader allLevels[17]
-//
-//#define SecretPlans allLevels[18]
-//#define Jundland allLevels[19]
-//#define Spaceport allLevels[20]
-//#define Princess allLevels[21]
-//#define DSE allLevels[22]
-//#define RebelAttack allLevels[23]
-//
-//#define Hoth allLevels[24]
-//#define EchoBase allLevels[25]
-//#define FalconFlight allLevels[26]
-//#define Dagobah allLevels[27]
-//#define CCT allLevels[28]
-//#define Bespin allLevels[29]
-//
-//#define Jabbas allLevels[30]
-//#define Carkoon allLevels[31]
-//#define Showdown allLevels[32]
-//#define Endor allLevels[33]
-//#define Destiny allLevels[34]
-//#define ITDS allLevels[35]
-//
-//#define PodraceOriginal allLevels[36]
-//#define Anakinsflight allLevels[37]
-//#define ANewHope allLevels[38]
 
 enum LogicType { casual, glitched, superGlitched };
 
@@ -143,15 +97,14 @@ enum LogicType { casual, glitched, superGlitched };
 
 /*
  
+ CHANGE TXT FOR PANELS
 
 
 	TODO
-	---fix Indiana Jones
 	make code to check stringPointer
-	make special function for TR
 
 	1-1:
-	tc STILL faces panel
+	pk droid
 	AI gets stuck on force ledge
 
 	1-2:
@@ -168,32 +121,41 @@ enum LogicType { casual, glitched, superGlitched };
 	slow 3po
 
 	3-1:
-	have spinners correct mode
+	have spinners only spawn in correct mode
 
 	3-2:
-	?r2 following in tall room
+	r2 not following in tall room
+	jump around gas without DJ
 
 	3-6:
 	room 1 AI
 	room 3 FP ???---
+
+	4-1:
+	skip midtro sheild with force choke
 
 	4-3:
 	more bomb skip stuff
 
 	4-4:
 	Ben AI when not Jedi
+	backtracking to hat room
+
+	5-6:
+	Boba freezes at door
 
 	6-2:
-	shoot boba from other skiff
+	YOU CAN shoot boba from other skiff
 
 	6-3:
 	check jump height
 
 
+	alternate droid color
 
 	flutters can do OOB!
 
-	thread or wxYeild
+	thread or wxYeild?
 	use NOWEAPON for stuff
 	minikit spinner colors
 	fix file rename when enemy is same as player
@@ -203,14 +165,12 @@ enum LogicType { casual, glitched, superGlitched };
 	fix double file rename problem
 	resist_zap
 	match buildable minikits to product
-	fix level streaming for faster loads
-	use line replace function
+	fix level streaming for faster loads?
 	fix special character for padme
 	create error messages for missing files
 	only open bms if not unpacked
 	delete pak files individually
 	fix speed variable ROLLS
-	double check watto
 	test everything with training remote
 	check playable attributes in log
 	fix name length limit for scp

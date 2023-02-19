@@ -21,7 +21,7 @@ struct coord {
 };
 
 struct twoNum {
-	unsigned int chNum;
+	int chNum;
 	unsigned int line;
 };
 
@@ -31,7 +31,7 @@ struct writeSet {
 	std::vector<coord> lnCol;
 
 	writeSet(std::string myStr, unsigned int myLen, std::vector<coord> myLnCol);
-	writeSet(unsigned int chNum, std::vector< coord> myLnCol,
+	writeSet(int chNum, std::vector<coord> myLnCol,
 		std::vector<Playable*> Level::* chType = &Level::party);
 };
 
@@ -41,8 +41,8 @@ struct writeSingle {
 	coord lnCol;
 
 	writeSingle(std::string myStr, unsigned int myLen, coord myLnCol);
-	writeSingle(unsigned int chNum, coord myLnCol, std::vector<Playable*> Level::* chType = &Level::party);
-	writeSingle(unsigned int chNum, unsigned int line, std::vector<Playable*> Level::* chType = &Level::party);
+	writeSingle(int chNum, coord myLnCol, std::vector<Playable*> Level::* chType = &Level::party);
+	writeSingle(int chNum, unsigned int line, std::vector<Playable*> Level::* chType = &Level::party);
 };
 
 //template <typename FUN, typename W>
@@ -73,7 +73,7 @@ void getfile(std::string file, std::vector<std::string>& contents);
 //
 //void rgbWrite( std::string file,  rgb color,  int address);
 //
-void binaryWrite(std::string file, char bin, unsigned int address);
+void binaryWrite(std::string file, char bin, int address);
 //
 //void rgbBatch( std::string file,  rgb color,  std::vector<int>& IDs);
 //
@@ -89,9 +89,9 @@ void binaryWrite(std::string file, std::string bin, int address);
 
 void numWrite(std::string file, int newWrite, int address);
 
-void ai2Write(char scene, std::string writ, std::initializer_list<unsigned int> address);
+void ai2Write(char scene, std::string writ, std::initializer_list<int> address);
 
-void ai2Write(char scene, unsigned int chNum, std::initializer_list<unsigned int> address,
+void ai2Write(char scene, int chNum, std::initializer_list<int> address,
 	std::vector<Playable*> Level::* chType = &Level::party);
 
 void characterPointer(Playable* play, int address);
@@ -99,7 +99,7 @@ void characterPointer(Playable* play, int address);
 void multiPointer(Playable* play, std::vector<int> address);
 
 void txtIns(std::string file, std::string newC, const std::initializer_list<coord>& lnCol, const int len = 0);
-void txtIns(std::string file, std::string newC, const std::initializer_list<unsigned int>& lnCol, const int len = 0);
+void txtIns(std::string file, std::string newC, const std::initializer_list<int>& lnCol, const int len = 0);
 
 //void txtIns(std::string file, std::string newC, coord lnCol, const int len = 0);
 
@@ -125,17 +125,17 @@ std::string getScriptTxt(Level* lev, char scene);
 
 void renamer(std::string oldName, std::string newName);
 
-std::string getName(unsigned int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+std::string getName(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
-std::string getVanilla(unsigned int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
 void playerInit(std::vector<writeSingle> writers);
 
-void mainTxtIns(std::string txt, unsigned int len, coord lnCol);
+void mainTxtIns(std::string txt, int len, coord lnCol);
 
-void scpRep(char scene, std::string script, std::string txt, unsigned int len, coord lnCol);
+void scpRep(char scene, std::string script, std::string txt, int len, coord lnCol);
 
-void scpIns(char scene, std::string script, unsigned int chNum, coord lnCol,
+void scpIns(char scene, std::string script, int chNum, coord lnCol,
 	std::vector<Playable*> Level::* chType = &Level::party);
 
 void scpMulti(char scene, std::string script, writeSet);
@@ -144,7 +144,7 @@ void scpMany(char scene, std::string script, std::vector<writeSet> writers);
 
 void batchAnywhere(std::string file, std::vector<writeSet> writers);
 
-void scpName(char scene, unsigned int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+void scpName(char scene, int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
 void scpAppend(char scene, std::string script, std::string appendix);
 
@@ -154,17 +154,17 @@ void scriptTxt(char scene, int characterNum, unsigned int line,
 	std::vector<Playable*> Level::* chType = &Level::party);
 
 //void multiScriptTxt(char scene, std::vector<writeSingle> write);
-void multiScriptTxt(char scene, std::vector< twoNum> pairs);
+void multiScriptTxt(char scene, std::vector<twoNum> pairs);
 
 void scriptTxtRep(char scene, std::string newStr, std::string oldStr, unsigned int line);
 
 void lineDeleterScp(char scene, std::string script, std::vector<unsigned int> lines);
 
 
-void lineDeleter(std::string file, std::vector< unsigned int> lines);
+void lineDeleter(std::string file, std::vector<unsigned int> lines);
 
 void scpDeleter(char scene, std::string script);
 
-void baseFile(char scene, std::string fileType, unsigned int chNum, coord lnCol,
+void baseFile(char scene, std::string fileType, int chNum, coord lnCol,
 	std::vector<Playable*> Level::* chType = &Level::party);
 

@@ -10,6 +10,9 @@ extern std::string out;
 extern bool extog;
 extern bool greenVeh;
 extern bool character;
+extern bool panelOp;
+extern bool hatOp;
+
 extern  std::mt19937_64* randoPTR;
 
 extern std::vector<Level*> allLevels;
@@ -24,15 +27,16 @@ extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
 
 extern Level* currentLev;
+extern std::vector<DispenserType> availableHats;
 
-Playable::Playable(std::string myName, std::string myRealName, unsigned int myPrice,
-	unsigned int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes)
+Playable::Playable(std::string myName, std::string myRealName, int myPrice,
+	int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes)
 	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed) {
 	for (bool Playable::* atr : Attributes) {
 		*this.*atr = true;
 	}
 	if (fake) return;
-
+	pls.push_back(this);
 	if (vehicle) {
 		if (greenVeh || !vgreen) {
 			vhs.push_back(this);
@@ -46,13 +50,46 @@ Playable::Playable(std::string myName, std::string myRealName, unsigned int myPr
 	}
 }
 
+Collectable::Collectable(char c, std::initializer_list<int> addresses) : scene(c) {
+	for (int i : addresses) {
+		typeAddress.push_back({'\0', i});
+	}
+}
+
+SpecialCollectable::SpecialCollectable(char c, std::initializer_list<int>addresses) : type('\0') {
+	//for minikits with multiple spawn points
+	for (int i : addresses) {
+		sceneAddress.push_back({c, i});
+	}
+}
+
+//SpecialCollectable::SpecialCollectable(std::vector<Collectable> spawnPoints) {
+//	for (Collectable& spawn : spawnPoints) {
+//		for (std::pair<char, int>& p : spawn.typeAddress) {
+//			sceneAddress.push_back({spawn.scene, p.second});
+//		}
+//	}
+//}
+
+
+
+SpecialCollectable::SpecialCollectable(std::initializer_list<std::pair<char, int>> mySceneAddress)
+	: type('\0'), sceneAddress(mySceneAddress) {
+	//BHP and Bespin have minikits that span multiple scenes
+}
+
 Level::Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
 	std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 	std::vector<Playable*> myUnlocks,
-	std::vector<Collectable> myCollectables, std::vector<SpecialCollectable> mySpecialCollectables)
+	std::vector<Collectable> myCollectables, std::vector<SpecialCollectable> mySpecialCollectables,
+	std::vector<PanelSet> myPanels, std::vector<DispenserSet> myDispensers)
 	: name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel), vanillaParty(myVanillaParty),
 	party(myVanillaParty), vanillaBonusCharacters(myVanillaBonusCharacters), bonusCharacters(myVanillaBonusCharacters),
-	unlocks(myUnlocks), collectables(myCollectables), specialCollectables(mySpecialCollectables) {
+	collectables(myCollectables), specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers) {
+	for (Playable* p : myUnlocks) {
+		p->lev = this;
+	}
+
 	allLevels.push_back(this);
 }
 
@@ -67,13 +104,13 @@ void add(int a) {
 	testing.push_back(currentLev->party[a]);
 }
 
+void addHat(int set, int hat) {
+	availableHats.push_back(currentLev->dispensers[set].dispenser[hat].type);
+}
+
 void mix(Level* lev) {
 	//generates random characters for given level
-//
-//#ifdef _DEBUG
-//	if (lev->name != currentLev->name)
-//		logR(lev->name);
-//#endif
+
 
 	testing.clear();
 	lev->party.clear();
@@ -81,11 +118,6 @@ void mix(Level* lev) {
 	currentLev = lev;
 
 	if (character) {
-
-		//std::array<Playable*>* menu;
-		//if (lev->vehicleLevel)
-		//	menu = &vhs;
-		//else menu = &chs;
 
 		if (lev->vehicleLevel) {
 			std::uniform_int_distribution<int> distrib(0, vhs.size() - 1);
@@ -128,17 +160,72 @@ void mix(Level* lev) {
 			}
 		}
 
+		if (panelOp) {
+			std::uniform_int_distribution<int> panDist(AstroPanel, ImperialPanel);
+			for (PanelSet& panSet : lev->panels) {
+				for (Panel& pan : panSet.panels) {
+					pan.type = (PanelType)panDist(*randoPTR);
+				}
+			}
+		}
+
+		if (hatOp) {
+			std::uniform_int_distribution<int> hatDist(0, 2);
+			for (DispenserSet& dispSet : lev->dispensers) {
+				for (Dispenser& disp : dispSet.dispenser) {
+					int temp = hatDist(*randoPTR);
+					if (temp != 0) temp += 4;
+					disp.type = (DispenserType)temp;
+				}
+			}
+		}
+
 		add(0);
 		if (!lev->vehicleLevel || logicType != casual)
 			add(1); //Only checks P1 in casual vehicle levels because casual logic does not have 1p2c
 
-		//prevents duplicates
-		/*for (int i = 0; i < lev->vanillaParty.size() - 1; i++) {
-			for (int j = i + 1; j < lev->vanillaParty.size(); j++) {
-				if (lev->party[i] == lev->party[j]) goto label;
-			}
-		}*/
+
 	}
+}
+
+bool Playable::* getPanel(int panSet, int pan) {
+	PanelType panType = currentLev->panels[panSet].panels[pan].type;
+
+	if (panType == AstroPanel) return Astro;
+	if (panType == ProtoPanel) return Proto;
+	if (panType == BountyPanel) return Bounty;
+	if (panType == ImperialPanel) return Imperial;
+}
+
+bool panel(int panSet, int pan, const std::vector<Playable*>& current) {
+	bool Playable::* panType = getPanel(panSet, pan);
+
+	if (atrb(panType, current)) return true;
+	if (atrb(Hat, current)) {
+		for (DispenserType disp : availableHats) {
+			if (disp == StormtrooperHat && panType == Imperial) return true;
+			if (disp == BountyHat && panType == Bounty) return true;
+		}
+	}
+
+	return false;
+}
+
+bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+	bool Playable::* panType = getPanel(panSet, pan);
+	std::vector<bool Playable::*> atrs2 = atrs;
+	atrs2.push_back(panType);
+	if (All(atrs2, current)) return true;
+
+	std::vector<bool Playable::*> atrs3 = atrs;
+	atrs3.push_back(Hat);
+	if (All(atrs3, current)) {
+		for (DispenserType disp : availableHats) {
+			if (disp == StormtrooperHat && panType == Imperial) return true;
+			if (disp == BountyHat && panType == Bounty) return true;
+		}
+	}
+	return false;
 }
 
 bool atrb(const bool(Playable::* atr), const   std::vector<Playable*>& current) {
@@ -149,7 +236,7 @@ bool atrb(const bool(Playable::* atr), const   std::vector<Playable*>& current) 
 	return false;
 }
 
-bool Any(const std::initializer_list<bool Playable::*>& atrs, const   std::vector<Playable*>& current) {
+bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
 	//needs any of the given attributes
 	for (Playable* p : current) {
 		for (bool Playable::* atr : atrs) {
@@ -159,7 +246,7 @@ bool Any(const std::initializer_list<bool Playable::*>& atrs, const   std::vecto
 	return false;
 }
 
-bool All(const std::initializer_list<bool Playable::*>& atrs, const  std::vector<Playable*>& current) {
+bool All(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
 	//needs all of the given attributes
 
 	int i = 0;
@@ -173,7 +260,7 @@ bool All(const std::initializer_list<bool Playable::*>& atrs, const  std::vector
 	return false;
 }
 
-bool Multi(const bool Playable::* atr, const int n, const   std::vector<Playable*>& current) {
+bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>& current) {
 	//needs multiple with same attribute
 	int x = 0;
 	for (Playable* p : current) {
@@ -187,7 +274,7 @@ bool Multi(const bool Playable::* atr, const int n, const   std::vector<Playable
 	return false;
 }
 
-bool MultiAny(const std::initializer_list<bool Playable::*>& atrs, const int n, const  std::vector<Playable*>& current) {
+bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
 	//needs multiple who have any of given attributes
 	int x = 0;
 	for (Playable* p : current) {

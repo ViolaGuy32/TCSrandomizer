@@ -15,8 +15,9 @@ bool greenVeh = 0;
 bool extra = 0;
 bool collectable = 0;
 bool enemy = 0;
+bool panelOp = 0;
+bool hatOp= 0;
 bool colorOp = 0;
-bool advanceMus = 0;
 std::string out = "out";
 std::string vanillaDirectory = "";
 LogicType logicType = casual;
@@ -30,7 +31,9 @@ wxCheckBox* etType;
 wxCheckBox* greenType;
 wxCheckBox* extraType;
 wxCheckBox* collectableType;
-wxCheckBox* colorType;
+wxCheckBox* panelOpType;
+wxCheckBox* hatOpType;
+//wxCheckBox* colorType;
 
 //std::unique_ptr<std::ofstream> loggingIt;
 
@@ -58,6 +61,8 @@ MainFrame::MainFrame(const wxString& title)
 
 	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 120));
 	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 140));
+	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 160));
+	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 180));
 	//colorType = new wxCheckBox(panel, wxID_ANY, "Randomize Colors", wxPoint(165, 160));
 
 	//loads save data
@@ -74,6 +79,8 @@ MainFrame::MainFrame(const wxString& title)
 		greenType->SetValue(savedat[3] - 48);
 		extraType->SetValue(savedat[4] - 48);
 		collectableType->SetValue(savedat[5] - 48);
+		panelOpType->SetValue(savedat[6] - 48);
+		hatOpType->SetValue(savedat[7] - 48);
 		//colorType->SetValue(savedat[6] - 48);
 
 		saver.close();
@@ -100,6 +107,8 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	greenVeh = greenType->GetValue();
 	extra = extraType->GetValue();
 	collectable = collectableType->GetValue();
+	panelOp = panelOpType->GetValue();
+	hatOp = hatOpType->GetValue();
 	vanillaDirectory = tcsFolder->GetPath();
 	//colorOp = colorType->GetValue();
 
@@ -126,7 +135,9 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 
 	dat << std::to_string(extra);
 	dat << std::to_string(collectable);
-	dat << std::to_string(colorOp);
+	dat << std::to_string(panelOp);
+	dat << std::to_string(hatOp);
+	//dat << std::to_string(colorOp);
 
 	dat.close();
 
