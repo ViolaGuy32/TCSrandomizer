@@ -97,8 +97,8 @@ enum LogicType { casual, glitched, superGlitched };
 
 /*
  
- CHANGE TXT FOR PANELS
-
+	fix droid panel hat 
+	
 
 	TODO
 	make code to check stringPointer
@@ -109,6 +109,9 @@ enum LogicType { casual, glitched, superGlitched };
 
 	1-2:
 	AI won't single jump over bridge
+
+	1-3:
+	scaling BROKE again!!!
 
 	1-5:
 	bad jump 2nd room beginning
@@ -142,7 +145,10 @@ enum LogicType { casual, glitched, superGlitched };
 	backtracking to hat room
 
 	5-6:
+	BTS
 	Boba freezes at door
+	go OOB for 3po
+	outside - use 3po panel with flyer
 
 	6-2:
 	YOU CAN shoot boba from other skiff
@@ -150,6 +156,8 @@ enum LogicType { casual, glitched, superGlitched };
 	6-3:
 	check jump height
 
+	6-4:
+	try skipping bunker elevator with oob
 
 	alternate droid color
 

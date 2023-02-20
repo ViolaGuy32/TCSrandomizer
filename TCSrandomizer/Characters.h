@@ -51,12 +51,17 @@ enum PanelType {
 };
 
 enum DispenserType {
-	RandomHat, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat
+	RandomHat, DroidPanel, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat
 };
 
 struct Panel {
 	PanelType type;
 	int address;
+
+	int altColor = -1;
+	int altBody= -1;
+
+	Panel(PanelType myType, int myAddress);
 };
 
 struct Dispenser {
@@ -127,6 +132,7 @@ struct Level {
 
 };
 
+extern std::vector<DispenserType> availableHats;
 extern std::vector<Playable*> testing;
 
 void add(int a);
@@ -160,6 +166,6 @@ float GetSlowest(const std::vector<Playable*> current = testing);
 
 bool Playable::* getPanel(int panSet, int pan);
 
-bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing);
+bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing, std::vector<DispenserType> theHats = availableHats);
 
 bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current = testing);

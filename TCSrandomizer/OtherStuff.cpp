@@ -367,16 +367,19 @@ void ai2Write(char scene, int chNum, std::initializer_list< int> address,
 //0xca35a
 int addressPointer = 0x2B0;
 int junkCharacters = 0x3f1b6c;
+//int junkCharacters = 0x3f1b74;
 
 void characterPointer(Playable* play, int address) {
 	if (play->address != 0x0) {
 		numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), address);
+		//numWrite(EXE, play->address + 0x4, address);
 	} else {
 		hexWrite(EXE, play->name, addressPointer);
 		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
 		play->address = junkCharacters + 0x400000 - 0x4;
 
 		numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), address);
+		//numWrite(EXE, play->address + 0x4, address);
 
 		addressPointer += play->name.length() + 1;
 		junkCharacters += 0x8;

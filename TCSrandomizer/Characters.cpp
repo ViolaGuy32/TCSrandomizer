@@ -27,7 +27,6 @@ extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
 
 extern Level* currentLev;
-extern std::vector<DispenserType> availableHats;
 
 Playable::Playable(std::string myName, std::string myRealName, int myPrice,
 	int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes)
@@ -49,6 +48,11 @@ Playable::Playable(std::string myName, std::string myRealName, int myPrice,
 		}
 	}
 }
+
+Panel::Panel(PanelType myType, int myAddress)
+	: type(myType), address(myAddress) {
+}
+
 
 Collectable::Collectable(char c, std::initializer_list<int> addresses) : scene(c) {
 	for (int i : addresses) {
@@ -113,6 +117,7 @@ void mix(Level* lev) {
 
 
 	testing.clear();
+	availableHats.clear();
 	lev->party.clear();
 	lev->bonusCharacters.clear();
 	currentLev = lev;
@@ -165,6 +170,12 @@ void mix(Level* lev) {
 			for (PanelSet& panSet : lev->panels) {
 				for (Panel& pan : panSet.panels) {
 					pan.type = (PanelType)panDist(*randoPTR);
+					if (pan.type == AstroPanel || pan.type == ProtoPanel) {
+						std::uniform_int_distribution<int> bin(0, 1);
+						pan.altColor = bin(*randoPTR);
+						pan.altBody = bin(*randoPTR);
+					}
+
 				}
 			}
 		}
@@ -180,10 +191,11 @@ void mix(Level* lev) {
 			}
 		}
 
-		add(0);
-		if (!lev->vehicleLevel || logicType != casual)
-			add(1); //Only checks P1 in casual vehicle levels because casual logic does not have 1p2c
-
+		if (lev->party.size() != 0) {
+			add(0);
+			if (!lev->vehicleLevel || logicType != casual)
+				add(1); //Only checks P1 in casual vehicle levels because casual logic does not have 1p2c
+		}
 
 	}
 }
@@ -197,12 +209,12 @@ bool Playable::* getPanel(int panSet, int pan) {
 	if (panType == ImperialPanel) return Imperial;
 }
 
-bool panel(int panSet, int pan, const std::vector<Playable*>& current) {
+bool panel(int panSet, int pan, const std::vector<Playable*>& current, std::vector<DispenserType> theHats) {
 	bool Playable::* panType = getPanel(panSet, pan);
 
 	if (atrb(panType, current)) return true;
 	if (atrb(Hat, current)) {
-		for (DispenserType disp : availableHats) {
+		for (DispenserType disp : theHats) {
 			if (disp == StormtrooperHat && panType == Imperial) return true;
 			if (disp == BountyHat && panType == Bounty) return true;
 		}
@@ -336,7 +348,9 @@ bool LivingJedi(const std::vector<Playable*>& current) {
 bool DoubleTransitionSkip(const bool Playable::* atr, const std::vector<Playable*>current) {
 	for (Playable* p1 : current) {
 		for (Playable* p2 : current) {
-			if (p1->saber && *p2.*atr && !p2->ghost) return true;
+			if (p1 != p2) {
+				if (p1->saber && *p2.*atr && !p2->ghost) return true;
+			}
 		}
 	}
 	return false;

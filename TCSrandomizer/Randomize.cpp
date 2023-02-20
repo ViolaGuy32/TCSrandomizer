@@ -481,8 +481,8 @@ kamino:
 	if (Multi(Passive, 2) && !(Shoot))
 		goto kamino;
 
+	if (!atrb(Jedi)) goto kamino;
 	if (logicType == casual) {
-		if (!atrb(Jedi)) goto kamino;
 		if (!panel(2, 1)) goto kamino; //clone room
 		if (!panel(3, 2)) goto kamino; //to jango fight
 		if (!panel(4, 0)) goto kamino; //to elevator
@@ -732,7 +732,6 @@ secretplans:
 
 	mix(SecretPlans);
 
-	addHat(0, 0);
 	if (logicType == casual) {
 		if (!All({Grapple, Build}) && !All({YodaJump, Build}) &&
 			!All({ExtraHighJump, Build}))
@@ -743,6 +742,8 @@ secretplans:
 			goto secretplans;
 
 	} else {
+		addHat(0, 0);
+
 		if (!atrb(Attack))
 			goto secretplans;
 		if (!atrb(Build))
@@ -958,9 +959,10 @@ princess:
 	add(0); //midtro
 	add(1);
 	add(2);
+	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
 	addHat(1, 1);
-	if (panel(1, 1) || panel(1, 2)) {
+	if (panel(1, 1) || panel(1, 2) && logicType != casual) {
 		//bonus room with lots of hat machines
 		addHat(3, 0);
 		addHat(3, 1);
@@ -974,6 +976,7 @@ princess:
 		goto princess;
 	if (!panel(1, 3)) goto princess; //try oil glitch
 
+	if (logicType == casual) availableHats.clear();
 	addHat(2, 0);
 	if (!panel(2, 0)) goto princess;
 
@@ -994,9 +997,11 @@ dse:
 	goto dse;
 
 dse3:
+	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
 	if (!panelAnd(1, 0, {Grapple})) goto dse;
 
+	if (logicType == casual) availableHats.clear();
 	addHat(2, 0);
 	if (!panelAnd(2, 0, {Grapple})) goto dse;
 
@@ -1127,64 +1132,224 @@ dagobah2:
 
 cct:
 	mix(CCT);
-	if (!LivingJedi())
-		goto cct;
+	if (!atrb(Jedi)) goto cct;
+	if (Multi(Passive, 2)) goto cct;
+	//first room
+	int bridgeUp = false;
+	if (panelAnd(0, 0, {Fly})) bridgeUp = true;
+
+	std::vector<Playable*> overBridge;
+	for (Playable* p : testing) {
+		//check fluttering
+		if (p->fly) overBridge.push_back(p);
+		if (bridgeUp && p->jump) overBridge.push_back(p);
+	}
+	if (overBridge.size() == 0) goto cct;
+	if (!atrb(Build, overBridge)) goto cct;
+	if (!panel(0, 1, overBridge)) goto cct;
+
 	if (logicType == casual) {
-		if (!atrb(AstroZapper))
-			goto cct;
-		if (!Any({Imperial, Hat}))
-			goto cct;
-	} else {
-		if (!atrb(Fly))
-			goto cct;
-		if (atrb(Astro))
-			goto bespin;
-		if (logicType == superGlitched && Any({Imperial, Hat}))
-			goto bespin; //door clip pixel jump
+		if (!atrb(Bounty) && !panel(0, 2)) goto cct;
+		if (!panel(0, 4)) goto cct;
+		addHat(0, 0);
+		if (!panel(0, 5)) goto cct;
+		if (testing[0]->box) {
+			if (panel(0, 6, {testing[1]})) goto cct10;
+			if (panel(0, 7, {testing[1]}) && panel(0, 6)) goto cct10;
+		}
+		if (testing[1]->box) {
+			if (panel(0, 6, {testing[0]})) goto cct10;
+			if (panel(0, 7, {testing[0]}) && panel(0, 6)) goto cct10;
+		}
+
 		goto cct;
+	cct10:
+		availableHats.clear();
+
+		//dvt
+		if (!panel(2, 0)) goto cct;
+		std::vector<Playable*> overGap;
+
+		for (Playable* p : testing) {
+			if (p->jump || p->fly) overGap.push_back(p);
+		}
+
+		if (!panel(2, 1, overGap)) goto cct;
+
+		//dv2
+		if (!panel(2, 2)) goto cct;
+		if (!panel(2, 3)) goto cct;
+
+		//dv3
+		overGap.clear();
+		for (Playable* p : testing) {
+			if (p->fly) {
+				if (!p->passive) goto cct11;
+				if (panel(1, 1, {p}) && panel(1, 2, {p})) goto cct11;
+			}
+		}
+		goto cct;
+
+	cct11:
+		if (!panel(1, 0)) goto cct;
+	} else {
+
+		if (logicType != superGlitched) {
+			if (!atrb(Build, overBridge)) goto cct;
+			if (!panel(0, 1, overBridge)) goto cct;
+		}
+
+		//second room
+		if (!atrb(Bounty) && !panel(0, 2)) goto cct;
+		//you can skip panel at end of hallway with door clip pixel jump
+		//try hitting room 3 transition from OOB
+
+		//dv1
+		addHat(0, 0);
+		std::vector<Playable*> dv1;
+		for (Playable* p : testing) {
+			if (p->fly || p->realDoubleJump) dv1.push_back(p);
+		}
+
+		//if you actually do the fight
+		if (panel(0, 5)) {
+			//go through door during camera pan
+			if (dv1.size() > 1 || Multi(Attack, 2)) {
+				if (logicType != superGlitched) {
+					availableHats.clear(); //cannot backtrack
+				}
+				goto cct2;
+			}
+
+			dv1 = testing; //use crane
+		}
+		if (panel(0, 6, dv1)) goto cct2;
+		if (panel(0, 7, dv1)) {
+			//raise platform
+			//does not matter - need dj anyway
+			//for (Playable* p : testing) {
+			//	//see if this needs dj
+			//	if (p->jump) dv1.push_back(p);
+			//}
+		}
+
+		goto cct;
+	cct2:
+		//dvt
+		if (panel(2, 1)) goto cct3;
+		if (atrb(Fett)) goto cct3; //can jump to vader to skip panels
+		if (panel(2, 2) && panel(2, 3)) goto cct3;
+		goto cct;
+
+	cct3:
+		//dv3
+		for (Playable* p : testing) {
+			if ((p->realDoubleJump || p->fly) && !p->passive) goto bespin;
+		}
+
+		goto cct;
+
 	}
 
 bespin:
 	mix(Bespin);
 	add(2);
-	if (!atrb(Attack))
-		goto bespin;
+
 	if (!atrb(Lever) && !atrb(DoubleJump) && !atrb(Flutter) && !atrb(Hovering))
 		goto bespin;
-	if (logicType == casual) {
-		if (atrb(Proto) && Any({Imperial, Hat}))
-			goto bespin2;
-		add(3); //r2
-		if (atrb(Proto) && atrb(Astro) && Any({Imperial, Hat}))
-			goto bespin2;
+	{
+		std::vector<Playable*> pastFight;
+		std::vector<Playable*> pastDoor;
+		bool got3po = false;
+		bool gotr2 = false;
+		bool openneddoor = false;
+		bool room2 = false;
+		bool bonusHat = false;
+		//old OOB
+		if (logicType != casual && panel(0, 5)) {
+			for (Playable* p : testing) {
+				if (p->doubleJump || p->dive) pastFight.push_back(p);
+			}
+		}
 
-		//building 3po
-		if (!atrb(Astro))
-			goto bespin;
-		if (!atrb(Build))
-			goto bespin;
-		if (!atrb(Lever))
-			goto bespin;
-		if (!atrb(Box))
-			goto bespin;
-		add(4); //3po
-		if (atrb(Proto) && Any({Imperial, Hat}))
-			goto bespin2;
-		goto bespin;
-	} else {
-		if (Any({Imperial, Hat}))
-			goto bespin2; //all hats and imperials can do door clip
+		while (!room2) {
+			int tempSize = testing.size();
+			int hatSize = availableHats.size();
+			if (!bonusHat) {
+				if (panel(0, 0)) {
+					addHat(0, 0);
+					bonusHat = true;
+				}
+			}
+			if (panel(0, 1)) pastFight = testing;
+			if (panel(0, 1, {bobafett}) && atrb(Attack)) pastFight = testing;
 
-		add(3); //r2
-		if (Any({Imperial, Hat}, {Bespin->party[3]}) && atrb(Astro))
-			goto bespin2;
-		if (Any({Imperial, Hat}, {Bespin->party[4]}) && atrb(Astro) && atrb(Build) &&
-			atrb(Box) && atrb(Lever))
-			goto bespin2;
+			//slave 1
+			if (!gotr2) {
+				std::vector<Playable*> temp = pastFight;
+				temp.push_back(Bespin->party[3]);
+				if (panel(0, 4, temp)) {
+					add(3);
+					pastFight.push_back(Bespin->party[3]);
+					gotr2 = true;
+
+				} else {
+					for (Playable* p : temp) {
+						if (p->gas && panel(0, 5)) {
+							add(3);
+							pastFight.push_back(Bespin->party[3]);
+							gotr2 = true;
+						}
+					}
+				}
+
+			}
+			//built 3po
+			if (!got3po) {
+				if (panel(0, 3, pastFight)) {
+					if (atrb(Build, pastFight) && atrb(Lever, pastFight) && atrb(Box, pastFight)) {
+						add(4);
+						pastFight.push_back(Bespin->party[4]);
+						got3po = true;
+					}
+				}
+			}
+			//door clip
+			if (logicType != casual) {
+				for (Playable* p : pastFight) {
+					if (p->jump) pastDoor.push_back(p);
+				}
+			}
+
+			//open door normally
+			if (!openneddoor) {
+				if (panel(0, 2, pastFight)) {
+					pastDoor = pastFight;
+					addHat(0, 1);
+					openneddoor = true;
+				}
+			}
+			std::vector<DispenserType> tempHats = availableHats;
+			tempHats.push_back(Bespin->dispensers[0].dispenser[1].type);
+			if (panel(0, 6, pastDoor, tempHats)) pastDoor = testing;
+			if (panel(0, 7, pastDoor, tempHats)) room2 = true;
+
+
+
+			//if no advancements are made, seed must be bad
+			if (tempSize == testing.size() && availableHats.size() == hatSize) goto bespin;
+		}
+
 	}
 
 bespin2:
 	testing.clear();
+	availableHats.clear();
+	if (logicType != casual) {
+		addHat(0, 1);
+		if (panel(0, 0)) addHat(0, 0);
+	}
+
 	add(0);
 	add(1);
 	add(2);
@@ -1192,14 +1357,22 @@ bespin2:
 	add(4);
 	if (!All({Lever, Grapple}))
 		goto bespin;
+
 	if (logicType == casual) {
-		if (!atrb(AstroZapper))
+		if (!panelAnd(1, 0, {Fly}))
 			goto bespin;
 		if (!All({Box, DoubleJump}) && !All({Box, Grapple}))
 			goto bespin;
+
+		if (!panel(1, 1)) goto bespin;
+		if (!panel(1, 2)) goto bespin;
+		if (!panel(1, 3)) goto bespin;
+
+
 	} else {
-		if (!atrb(AstroZapper) && !Multi(Fett, 2))
-			goto bespin;
+		if (!panelAnd(1, 0, {Fly}) && !Multi(Fett, 2)) goto bespin;
+
+
 	}
 
 jabbas:
@@ -1209,22 +1382,45 @@ jabbas:
 		goto jabbas;
 	if (!atrb(Build) && !atrb(DoubleJump))
 		goto jabbas;
-	if (atrb(Bounty))
-		goto jabbas2;
-	if (atrb(Hat))
-		goto jabbas2;
-	if (logicType != casual) {
-		if (Any({Bounty, Hat}), Jabbas->party[2]) {
-			if (atrb(YodaJump)) //only Yoda can jump over the gate
-				goto jabbas2;
-			if (SuperJump())
-				goto jabbas2;
+
+	//inside
+	addHat(0, 0);
+	std::vector<Playable*> pastGate;
+
+	if (panel(0, 2)) {
+		pastGate = testing;
+	} else if (logicType != casual) {
+		for (Playable* p : testing) {
+			if (p->yodaJump) pastGate.push_back(p);
+
+			if (logicType == superGlitched) {
+				for (Playable* x : testing) {
+					if (p != x) {
+						if (x->jedi && p->pushable) pastGate.push_back(p);
+						if (x->choke && p->chokeable) pastGate.push_back(p);
+						if (x->zapper && p->zappable) pastGate.push_back(p);
+						if (x->jedi && p->trickable) pastGate.push_back(p);
+						if (x->astrozapper && p->storm) pastGate.push_back(p);
+						if (x->landoAlt && p->leiaAlt) pastGate.push_back(p);
+						if (x->lukeAlt && p == gamorreanguard) pastGate.push_back(p);
+					}
+				}
+			}
 		}
 	}
-	goto jabbas;
 
-jabbas2:  //got luke
+	if (pastGate.size() != 0) pastGate.push_back(Jabbas->party[2]);
+
+	if (!panel(0, 1, pastGate)) goto jabbas;
+	if (!atrb(Build, pastGate)) goto jabbas;
+
+
+
+
+jabbas2:  //scene B
 	add(2);
+	if (logicType == casual) availableHats.clear();
+	addHat(1, 0);
 	if (logicType == casual) {
 		if (!atrb(Jedi))
 			goto jabbas;
@@ -1232,58 +1428,78 @@ jabbas2:  //got luke
 		for (Playable* t : testing)
 			if (Any({Jump, Fly, Flutter}, {t})) //can get into droid room
 				droidRoom.push_back(t);
-		droidRoom.push_back(Jabbas->party[3]);
-		droidRoom.push_back(Jabbas->party[4]);
-		if (atrb(Astro, droidRoom) && atrb(Proto, droidRoom))
+
+		if (panel(1, 1, droidRoom) && panel(1, 2, droidRoom) && panel(1, 3, droidRoom))
 			goto jabbas3;
 
 	} else {
 		if (atrb(Jedi))
 			goto jabbas3;
-		if (All({Box, Astro, Proto}))
-			goto jabbas3;
-		if (All({Box, DoubleJump})) {
-			add(3); //droids
-			add(4);
+
+		std::vector<Playable*> droidRoom;
+		for (Playable* t : testing) {
+			if (t->box) {//can get into droid room
+				droidRoom.push_back(t);
+			}
 		}
-		if (atrb(Jedi))
+
+		if (atrb(DoubleJump, droidRoom)) {
+			droidRoom.push_back(Jabbas->party[3]);
+			droidRoom.push_back(Jabbas->party[4]);
+		}
+		if (atrb(Jedi, droidRoom))
 			goto jabbas3;
-		if (atrb(Astro) && atrb(Proto))
+
+		if (panel(1, 1, droidRoom) && panel(1, 2, droidRoom) && panel(1, 3, droidRoom))
 			goto jabbas3;
 	}
 	goto jabbas;
 
 jabbas3:  //long room
 	testing.clear();
+	if (logicType == casual) availableHats.clear();
 	add(0);
 	add(1);
 	add(2);
 	add(3);
 	add(4);
 	if (logicType == casual) {
-		if (!atrb(Proto))
-			goto jabbas;
-		if (!atrb(AstroZapper))
-			goto jabbas;
+		if (!panel(2, 0)) goto jabbas;
+		if (!panelAnd(2, 1, {Fly}) && !panelAnd(2, 0, {Fly})) goto jabbas;
+		addHat(2, 0);
+		addHat(2, 1);
+		if (!panel(2, 3)) goto jabbas;
+
 	} else {
-		if (atrb(Jedi))
-			goto jabbas4;
-		if (atrb(Proto) && atrb(Zapper))
-			goto jabbas4;
-		if (SuperJump({Jump}))
-			goto jabbas4;
+		if (atrb(Jedi))goto jabbas4;
+
+		if (panelAnd(2, 0, {Fly})) goto jabbas4;
+		if (panelAnd(2, 0, {Box})) goto jabbas4;
+		if (panelAnd(2, 0, {DoubleJump})) goto jabbas4;
+
+		if (SuperJump({Jump})) goto jabbas4;
 		goto jabbas;
 	}
 
 jabbas4:  //rancor
+
+	if (logicType != superGlitched) availableHats.clear();
+	else {
+		addHat(2, 0);
+		addHat(2, 1);
+	}
 	testing.clear();
 	add(1);
 	add(2);
 	add(3);
 	add(4);
-	add(5);
-	if (!atrb(Astro) && !atrb(Proto))
+	if (!panel(3, 0) && !panel(3, 1)
+		&& !panel(3, 0, {Jabbas->party[5]}, {}) && !panel(3, 1, {Jabbas->party[5]}, {})) {
+
 		goto jabbas;
+	}
+
+	add(5);
 	if (!atrb(Attack) && !atrb(FakeShoot))
 		goto jabbas;
 	if (!atrb(Lever))
@@ -1329,12 +1545,14 @@ carkoon2: //second skiff
 			goto carkoon;
 		carkoon4:
 			//boba fight
+			if (atrb(Shoot)) goto carkoon5;
 			if (All({DoubleJump, Attack}))
 				goto carkoon5;
 			if (All({Fly, Attack}))
 				goto carkoon5;
 			if (All({Dive, Attack}))
 				goto carkoon5;
+
 
 			goto carkoon;
 		carkoon5:
@@ -1354,7 +1572,7 @@ carkoon3: //inside
 	add(4);
 	add(5);
 	if (logicType == casual) {
-		if (!atrb(Proto))
+		if (!panel(1, 0))
 			goto carkoon;
 	} else {
 		if (!atrb(Saber)) //double jump slam into room 3
@@ -1362,9 +1580,9 @@ carkoon3: //inside
 	}
 
 	add(6); //leia
-	if (!atrb(Astro) && !atrb(Bounty))
+	if (!panel(2, 1) && !atrb(Bounty))
 		goto carkoon;
-	if (!atrb(Proto))
+	if (!panel(2, 0))
 		goto carkoon;
 
 showdown:
@@ -1389,11 +1607,23 @@ endor:
 	add(3);
 	add(4);
 	add(5);
-	if (!atrb(Proto))
+	if (!atrb(Lever))
+		goto endor;
+	if (!atrb(Box))
+		goto endor;
+	if (!atrb(Build))
 		goto endor;
 	if (logicType == casual) {
-		if (!atrb(AstroZapper))
-			goto endor;
+		if (!panel(0, 0)) goto endor;
+		if (!panel(1, 0)) goto endor;
+		if (!panel(2, 0)) goto endor;
+
+		addHat(0, 0);
+		if (!panel(3, 0)) goto endor;
+		if (!panel(3, 1)) goto endor;
+		if (!panelAnd(3, 2, {Fly})) goto endor;
+		if (!panel(3, 3)) goto endor;
+		
 		if (!atrb(Hatch))
 			goto endor;
 		if (!atrb(Grapple))
@@ -1401,17 +1631,19 @@ endor:
 		if (!MultiAny({Grapple, DoubleJump, Hatch}, 4)) //left side
 			goto endor;
 	} else {
-		if (!atrb(Astro))
-			goto endor;
-		if (!atrb(Lever))
-			goto endor;
-		if (!atrb(Box))
-			goto endor;
-		if (!atrb(Build))
-			goto endor;
+		if (logicType != superGlitched) {
+			if (!panel(2, 0)) goto endor;
+		}
+
+		addHat(0, 0);
+		if (!panel(3, 0)) goto endor;
+		if (!panel(3, 1)) goto endor;
+		if (!panel(3, 3)) goto endor;
+		
+		
 		if (atrb(DoubleJump)) //12 button skip
 			goto destiny;
-		if (atrb(Hatch) && MultiAny({Grapple, Hatch}, 4)) //left side
+		if (panel(1, 0), atrb(Hatch) && MultiAny({Grapple, Hatch}, 4)) //left side
 			goto destiny;
 		goto endor;
 	}
@@ -1447,22 +1679,19 @@ anewhope:
 		if (!atrb(Attack) && !atrb(FakeShoot))
 			goto anewhope;
 		add(2); //3po
-		if (!atrb(Proto))
-			goto anewhope;
+		if (!panel(0, 0)) goto anewhope;
+		if (!panel(0, 1)) goto anewhope;
+		if (!panel(0, 2)) goto anewhope;
 	} else {
 		if (DoubleTransitionSkip())
-			goto bhmPrep;
+			goto bhm;
 		if (atrb(Attack) || atrb(FakeShoot)) {
 			add(2); //3po
-			if (atrb(Proto))
-				goto bhmPrep;
+			if (panel(0, 0) && panel(0, 1) && panel(0, 2))
+				goto bhm;
 		}
 		goto anewhope;
 	}
-
-bhmPrep:
-
-	//breaks if target is not unique
 
 bhm:
 	mix(BHM);
@@ -1618,37 +1847,42 @@ bhm:
 	//FILE GEN IS HERE
 
 
-	//{
-	//	//Diverts references for nonexistent characters to dummy character so I can
-	//	//use override said characters.
-	//	int addresses[] = {
-	//		0x4f13, 0x4f33, 0x4fc6, 0x1a7af, 0x29322, 0x895e9, 0xca382, 0x1de5f,
-	//		0x31774, 0x8727a, 0x317a2, 0x317b2, 0x1f29f, 0x2d314, 0x400a6, 0x400c2,
-	//		0x400c9, 0x400e5, 0x4005c, 0x40078, 0x400ec, 0x40108, 0x4007f, 0x317c2,
-	//		0xb57e5, 0x87288, 0xa91ca, 0x1e3e2, 0x1e3eb, 0xa91d7, 0x40039, 0x40055
-	//	};
+	{
+		//Diverts references for nonexistent characters to dummy character so I can
+		//use override said characters.
+		int addresses[] = {
+			0x4f13, 0x4f33, 0x4fc6, 0x1a7af, 0x29322, 0x895e9, 0xca382, 0x1de5f,
+			0x31774, 0x8727a, 0x317a2, 0x317b2, 0x1f29f, 0x2d314, 0x400a6, 0x400c2,
+			0x400c9, 0x400e5, 0x4005c, 0x40078, 0x400ec, 0x40108, 0x4007f, 0x317c2,
+			0xb57e5, 0x87288, 0xa91ca, 0x1e3e2, 0x1e3eb, 0xa91d7, 0x40039, 0x40055
+		};
 
-	//	for (int address : addresses)
-	//		numWrite(EXE, 0x7f17b8, address);
-	//}
+		for (int address : addresses)
+			binaryWrite(EXE, "b8177f", address);
+	}
 
 	if (panelOp) {
 		for (Level* lev : allLevels) {
 			for (PanelSet& panSet : lev->panels) {
 				for (Panel& pan : panSet.panels) {
-					binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), BountyPanel, pan.address);
-					//binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.type, pan.address);
+					binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.type, pan.address);
+					if (pan.type == AstroPanel || pan.type == ProtoPanel) {
+						binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.altColor, pan.address + 19);
+						//binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.altBody, pan.address + 20);
+
+					}
 				}
 			}
 		}
+		//binaryWrite(getBasePath(Princess, 'A', "GIZ"), "00", 0x3035);
+
 	}
 
 	if (hatOp) {
 		for (Level* lev : allLevels) {
 			for (DispenserSet& dispSet : lev->dispensers) {
 				for (Dispenser& disp : dispSet.dispenser) {
-					binaryWrite(getBasePath(lev, dispSet.scene, "GIZ"), BountyHat, disp.address);
-					//binaryWrite(getBasePath(lev, dispSet.scene, "GIZ"), disp.type, disp.address);
+					binaryWrite(getBasePath(lev, dispSet.scene, "GIZ"), disp.type, disp.address);
 				}
 			}
 		}
@@ -1761,42 +1995,18 @@ bhm:
 
 	#endif
 
-		//auto scpXBatch = []( char scene,  std::string& script,  int characterNum,
-		//	 std::initializer_list<coord>& lncol, std::vector<Playable*> Level::* chType = &Level::party) {
-
-		//	
-
-
-
-		//(getSCP(currentLev, scene, script), getVanilla(characterNum, chType),
-		//		lncol, getVanillaAlt(characterNum, chType).length());
-		//};
-
-		//auto scXpRep = []( char scene,  std::string& script,  std::string& newStr,  int len,  coord lncol) {
-		//	txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
-		//};
-
-
-		//auto scpRepXBatch = []( char scene,  std::string& script,  std::string& newStr,
-		//	 int len,  std::initializer_list<coord>& lncol) {
-
-		//	txtIns(getSCP(currentLev, scene, script), newStr, lncol, len);
-		//};
-
-
-		//auto fileDeleter = []( char scene,  int characterNum,
-		//	std::vector<Playable*> Level::* chType = &Level::party) {
-
-		//	std::remove(getSCP(currentLev, scene, getVanillaAlt(characterNum, chType)).c_str());
-		//};
-		//
-
 		//pointerWrite(EXE, cantina1->name, 0x3f1c30);
 		//pointerWrite(EXE, cantina2->name, 0x3f1c38);
 	#define bonusCharacter &Level::bonusCharacters
 
 		characterPointer(cantina1, 0xca35a);
 		characterPointer(cantina2, 0xca360);
+
+		std::remove("files/cantina.txt");
+		std::ofstream can("files/cantina.txt", std::ios_base::out);
+		can << cantina1->name << std::endl;
+		can << cantina2->name << std::endl;
+		can.close();
 
 		currentLev = Negotiations;
 		playerInit({{0, 1}, {1, 2}, {2, 3}});
@@ -1841,8 +2051,8 @@ bhm:
 		currentLev = Podrace;
 		playerInit({{0, 1}, {1, 2}});
 		//fixes scaling problem
-		binaryWrite(EXE, 0x0f, 0xB5129);
-		binaryWrite(EXE, 0x0f, 0x35946);
+		binaryWrite(EXE, "0f", 0xB5129);
+		binaryWrite(EXE, "0f", 0x35946);
 
 		currentLev = Theed;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5,6}});
@@ -2174,7 +2384,8 @@ bhm:
 			{4, {{25, 26}}},
 			{5, {{26, 26}}}});
 
-		ai2Write('B', 0, {0x6825}, bonusCharacter);
+		ai2Write('B', 5, {0x6825});
+		ai2Write('C', 0, {0x3A9F}, bonusCharacter);
 
 		//TCS stupidly checks weapon instead of character
 		scpRep('B', "LEVEL",
@@ -2739,7 +2950,7 @@ bhm:
 		//for (int i = 0; i < 340; i++) {
 		//	rgbFloat(TNG, green, 0x31CC98 + (i * 0x2c4));
 		//}
-	}
+}
 #endif
 
 

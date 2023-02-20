@@ -600,7 +600,7 @@ void makeCharactersAndLevels() {
 		{'F', {0x2235, 0x221e, 0x2024, 0x200d}}}, {},
 
 		{{'A', {{AstroPanel, 0x206E}}}, //closet
-		{'C', {{AstroPanel, 0x3F4B}, {AstroPanel, 0x3F7C}, {ImperialPanel, 0x3FAB}}}, //bonus
+		{'C', {{AstroPanel, 0x3F4B}, {AstroPanel, 0x3F7C}, {ImperialPanel, 0x3FAD}}}, //bonus
 		{'D', {{BountyPanel, 0x5337}, //bonus room
 		{AstroPanel, 0x5365}}}, //room 3 end hallway
 		{'E', {{AstroPanel, 0x3565}, {AstroPanel, 0x3594}, //stop droids
@@ -620,7 +620,7 @@ void makeCharactersAndLevels() {
 		{'G', {0x1531}}}, {},
 
 		{{'B', {{AstroPanel, 0x311B}, {ImperialPanel, 0x31D7},
-		{AstroPanel, 0x3148}, {AstroPanel, 0x3178}, {AstroPanel, 0x31A7}}}, //color matching
+		{AstroPanel, 0x314A}, {AstroPanel, 0x317A}, {AstroPanel, 0x31A9}}}, //color matching
 		{'D', {{AstroPanel, 0x1A8C},
 		{AstroPanel, 0x1ABB}}}, //story
 		{'E', {{ProtoPanel, 0x1191}}}, //story
@@ -1070,7 +1070,7 @@ void makeCharactersAndLevels() {
 		r2d2, benkenobi, chewbacca, princessleia, admiralackbar, yoda, c3po, landocalrissian, lukeskywalker_tatooine, hansolo},
 		{}, {}, {}, {}, {});
 
-	Cantina = new Level("MAP", "MAP", "/LEVELS/MAP/MAP/", false,
+	Cantina = new Level("MAP", "MAP", "/LEVELS/MAP/", false,
 		{}, {},{},{}, {},
 		{},
 		{{'\0', {{RandomHat, 0x12402}}}});

@@ -9,7 +9,7 @@ extern std::string out;
 extern std::string vanillaDirectory;
 
 void fileGen() {
-	//coppies the game files and removes cutscenes
+	//copies the game files and removes cutscenes
 
 	logR("\n\t\t\t\t\tGenerating files. . .");
 	wxLogStatus("Generating files. . .");
@@ -19,7 +19,11 @@ void fileGen() {
 		std::filesystem::copy_options::recursive
 		| std::filesystem::copy_options::overwrite_existing);
 
-	//delete individually
+	//makes sure it has the GOG exe
+	std::filesystem::copy("files/LEGOStarWarsSaga.exe", out,
+		std::filesystem::copy_options::overwrite_existing);
+
+	//delete these individually
 	std::string cmd = ("files\\quickbms.exe -F \"*.DAT\" -o files\\ttgames.bms " +
 		out + " " + out);
 	system(cmd.c_str());
@@ -39,10 +43,7 @@ void fileGen() {
 	cmd = "del /S " + out + "\\*PAK";
 	system(cmd.c_str());
 
-	//makes sure it has the GOG exe
-	std::filesystem::copy("files/LEGOStarWarsSaga.exe", out,
-		std::filesystem::copy_options::overwrite_existing);
-
+	
 	logR("\n\t\t\t\t\tPatching. . .");
 	wxLogStatus("Patching. . .");
 
@@ -108,19 +109,6 @@ void fileGen() {
 		788, 799, 812, 820, 821, 877, 881, 882
 		});
 
-		//removes FP checks
-	binaryWrite(EXE, "0f", 0xe1ffe);  //kamino
-	binaryWrite(EXE, "0f", 0xdf0f2);  //jedi battle
-	binaryWrite(EXE, "0f", 0xe7c30);  //falconflight
-	binaryWrite(EXE, "0f", 0xe7e9e);  //cct
-	binaryWrite(EXE, "0f", 0xe9ba6);  //hoth
-	binaryWrite(EXE, "0f", 0xe33a1);  //grievous
-	binaryWrite(EXE, "0f", 0xeaf5f);  //destiny
-	binaryWrite(EXE, "0f", 0x39475);  //vader
-
-	//diverts outro pointer to status screen
-	binaryWrite(EXE, "bcb087", 0xdab15);  //podrace original
-	hexWrite(EXE, "jabbaspalace_status", 0x35A450);
 
 	//speeds up cutscenes to 1 frame
 	txtIns(out + "/CUT/EPISODEI/EP1_FAILEDNEG_INTRO1.TXT", "//", {9});
@@ -182,6 +170,20 @@ void fileGen() {
 		{1});
 	txtIns(out + "/CUT/EPISODEVI/EPISODE6ENDING_PART2.TXT", "fpsec 500000\n",
 		{1});
+
+	//removes FP checks
+	binaryWrite(EXE, "0f", 0xe1ffe);  //kamino
+	binaryWrite(EXE, "0f", 0xdf0f2);  //jedi battle
+	binaryWrite(EXE, "0f", 0xe7c30);  //falconflight
+	binaryWrite(EXE, "0f", 0xe7e9e);  //cct
+	binaryWrite(EXE, "0f", 0xe9ba6);  //hoth
+	binaryWrite(EXE, "0f", 0xe33a1);  //grievous
+	binaryWrite(EXE, "0f", 0xeaf5f);  //destiny
+	binaryWrite(EXE, "0f", 0x39475);  //vader
+
+	//diverts outro pointer to status screen
+	binaryWrite(EXE, "bcb087", 0xdab15);  //podrace original
+	hexWrite(EXE, "jabbaspalace_status", 0x35A450);
 
 	/*
 
