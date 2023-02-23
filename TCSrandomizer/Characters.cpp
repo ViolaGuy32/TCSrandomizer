@@ -34,6 +34,9 @@ Playable::Playable(std::string myName, std::string myRealName, int myPrice,
 	for (bool Playable::* atr : Attributes) {
 		*this.*atr = true;
 	}
+
+	if (!this->passive) this->active = true;
+
 	if (fake) return;
 	pls.push_back(this);
 	if (vehicle) {
@@ -50,7 +53,7 @@ Playable::Playable(std::string myName, std::string myRealName, int myPrice,
 }
 
 Panel::Panel(PanelType myType, int myAddress)
-	: type(myType), address(myAddress) {
+	: type(myType), address(myAddress), altBody(-1), altColor(-1) {
 }
 
 
@@ -118,12 +121,12 @@ void mix(Level* lev) {
 
 	testing.clear();
 	availableHats.clear();
-	lev->party.clear();
-	lev->bonusCharacters.clear();
 	currentLev = lev;
 
 	if (character) {
 
+		lev->party.clear();
+		lev->bonusCharacters.clear();
 		if (lev->vehicleLevel) {
 			std::uniform_int_distribution<int> distrib(0, vhs.size() - 1);
 
@@ -165,39 +168,40 @@ void mix(Level* lev) {
 			}
 		}
 
-		if (panelOp) {
-			std::uniform_int_distribution<int> panDist(AstroPanel, ImperialPanel);
-			for (PanelSet& panSet : lev->panels) {
-				for (Panel& pan : panSet.panels) {
-					pan.type = (PanelType)panDist(*randoPTR);
-					if (pan.type == AstroPanel || pan.type == ProtoPanel) {
-						std::uniform_int_distribution<int> bin(0, 1);
-						pan.altColor = bin(*randoPTR);
-						pan.altBody = bin(*randoPTR);
-					}
+	} //character
 
+	if (panelOp) {
+		std::uniform_int_distribution<int> panDist(0, 3);
+		for (PanelSet& panSet : lev->panels) {
+			for (Panel& pan : panSet.panels) {
+				pan.type = (PanelType)panDist(*randoPTR);
+				if (pan.type == AstroPanel || pan.type == ProtoPanel) {
+					std::uniform_int_distribution<int> bin(0, 1);
+					pan.altColor = bin(*randoPTR);
+					pan.altBody = bin(*randoPTR);
 				}
+
 			}
 		}
-
-		if (hatOp) {
-			std::uniform_int_distribution<int> hatDist(0, 2);
-			for (DispenserSet& dispSet : lev->dispensers) {
-				for (Dispenser& disp : dispSet.dispenser) {
-					int temp = hatDist(*randoPTR);
-					if (temp != 0) temp += 4;
-					disp.type = (DispenserType)temp;
-				}
-			}
-		}
-
-		if (lev->party.size() != 0) {
-			add(0);
-			if (!lev->vehicleLevel || logicType != casual)
-				add(1); //Only checks P1 in casual vehicle levels because casual logic does not have 1p2c
-		}
-
 	}
+
+	if (hatOp) {
+		std::uniform_int_distribution<int> hatDist(0, 2);
+		for (DispenserSet& dispSet : lev->dispensers) {
+			for (Dispenser& disp : dispSet.dispenser) {
+				int temp = hatDist(*randoPTR);
+				if (temp != 0) temp += 4;
+				disp.type = (DispenserType)temp;
+			}
+		}
+	}
+
+	if (lev->party.size() != 0) {
+		add(0);
+		if (!lev->vehicleLevel || logicType != casual)
+			add(1); //Only checks P1 in casual vehicle levels because casual logic does not have 1p2c
+	}
+
 }
 
 bool Playable::* getPanel(int panSet, int pan) {
@@ -235,6 +239,36 @@ bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std
 		for (DispenserType disp : availableHats) {
 			if (disp == StormtrooperHat && panType == Imperial) return true;
 			if (disp == BountyHat && panType == Bounty) return true;
+		}
+	}
+	return false;
+}
+
+bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::vector<Playable*>& current) {
+	bool Playable::* panType = getPanel(panSet, pan);
+	for (bool Playable::* at : ats) {
+		if (All({panType, at}, current)) return true;
+
+		for (DispenserType disp : availableHats) {
+			if (disp == StormtrooperHat && panType == Imperial) {
+				if (All({Hat, at})) return true;
+			}
+			
+			if (disp == BountyHat && panType == Bounty) {
+				if (All({Hat, at})) return true;
+			}
+		}
+		
+	}
+	return false;
+}
+
+bool panelSeparate(int panSet, int pan, bool Playable::* atr, const std::vector<Playable*>& current) {
+	for (Playable* p : current) {
+		for (Playable* p2 : current) {
+			if (p != p2) {
+				if (panel(panSet, pan, {p}) && *p2.*atr) return true;
+			}
 		}
 	}
 	return false;
@@ -283,6 +317,18 @@ bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>
 			}
 		}
 	}
+	return false;
+}
+
+bool Separate(const bool Playable::* atr1, const bool Playable::* atr2, const std::vector<Playable*>& current) {
+	for (Playable* p : current) {
+		for (Playable* p2 : current) {
+			if (*p.*atr1 && *p2.*atr2 && p != p2) {
+					return true;
+			}
+		}
+	}
+
 	return false;
 }
 

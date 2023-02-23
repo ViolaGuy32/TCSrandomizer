@@ -73,6 +73,7 @@
 #define Chokeable &Playable::chokeable
 #define Trickable &Playable::trickable
 
+#define Active &Playable::active
 
 #define FakeShoot &Playable::fakeshoot
 
@@ -97,14 +98,15 @@ enum LogicType { casual, glitched, superGlitched };
 
 /*
  
-	fix droid panel hat 
-	
-
 	TODO
-	make code to check stringPointer
+
+	OIL GLITCH	
+	SLAVE 1
+
+	panelAnd() does not work
 
 	1-1:
-	pk droid
+	pk droid freezes
 	AI gets stuck on force ledge
 
 	1-2:
@@ -115,6 +117,7 @@ enum LogicType { casual, glitched, superGlitched };
 
 	1-5:
 	bad jump 2nd room beginning
+	wicket freezes in theed 2
 
 	1-6:
 	investigate double ghost in casual
@@ -136,19 +139,26 @@ enum LogicType { casual, glitched, superGlitched };
 
 	4-1:
 	skip midtro sheild with force choke
+	free rebel friend with bomb
 
 	4-3:
+	casual with no jedi
 	more bomb skip stuff
+	cantina diw
 
 	4-4:
 	Ben AI when not Jedi
-	backtracking to hat room
+	backtracking to hat room with other hat
+	midtro panel
+	turnstile room hat without grapple
+
 
 	5-6:
 	BTS
 	Boba freezes at door
 	go OOB for 3po
 	outside - use 3po panel with flyer
+	puts you by shop?
 
 	6-2:
 	YOU CAN shoot boba from other skiff
@@ -159,30 +169,26 @@ enum LogicType { casual, glitched, superGlitched };
 	6-4:
 	try skipping bunker elevator with oob
 
-	alternate droid color
+	podrace original:
+	does not work
 
-	flutters can do OOB!
+	
 
-	thread or wxYeild?
-	use NOWEAPON for stuff
-	minikit spinner colors
+	flutters can do OOB
+
 	fix file rename when enemy is same as player
-	training remote buttons
-	Slave 1 unlocked?
 
 	fix double file rename problem
 	resist_zap
-	match buildable minikits to product
-	fix level streaming for faster loads?
 	fix special character for padme
 	create error messages for missing files
 	only open bms if not unpacked
 	delete pak files individually
-	fix speed variable ROLLS
 	test everything with training remote
-	check playable attributes in log
 	fix name length limit for scp
+	check playable attributes in log
 
+	fix speed variable for ROLLS
 	bespin guard - slightly faster than 1.2
 
 	*/

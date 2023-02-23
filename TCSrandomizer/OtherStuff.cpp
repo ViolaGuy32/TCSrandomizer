@@ -15,7 +15,7 @@ void logR(std::string lg) {
 	//(*loggingIt) << lg << '\n';
 
 	std::ofstream log2("files/log2.txt", std::ios_base::out | std::ios_base::app);
-	log2 << lg << std::endl;
+	log2 << lg << '\n';
 	//wxLogStatus(lg.c_str());
 #endif 
 }
@@ -365,8 +365,8 @@ void ai2Write(char scene, int chNum, std::initializer_list< int> address,
 }
 
 //0xca35a
-int addressPointer = 0x2B0;
-int junkCharacters = 0x3f1b6c;
+extern int addressPointer;
+extern int junkCharacters;
 //int junkCharacters = 0x3f1b74;
 
 void characterPointer(Playable* play, int address) {

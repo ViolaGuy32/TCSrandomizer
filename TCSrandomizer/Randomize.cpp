@@ -249,20 +249,22 @@ std::vector<Playable*> testing = {}; //Current logic;
 std::vector<DispenserType> availableHats = {}; //Current logic;
 Level* currentLev;
 
+int addressPointer;
+int junkCharacters;
 
 void Randomize() {
-
+	addressPointer = 0x2B0;
+	junkCharacters = 0x3f1b6c;
 
 	//std::random_device rando;
 	//std::seed_seq rando(time(NULL));
 	//srand(time(nullptr));
 
 
-	if (seed == 0) {
-		std::random_device rd;
-		seed = rd();
-	}
-	std::mt19937_64 rando(seed);
+	std::random_device rd;
+	//seed = rd();
+
+	std::mt19937_64 rando(rd());
 	randoPTR = &rando;
 
 	//charStuff();
@@ -431,7 +433,7 @@ theed:
 	add(5); //0 and 1 are in mix function.
 
 	if (logicType == casual) {
-		if (panel(0, 0) && panel(1, 0) && panel(2, 0)
+		if (panel(0, 0) && panelOr(1, 0, {Jedi, Grapple, Hatch, Fly}) && panel(2, 0)
 			&& Multi(Jedi, 2) && atrb(Hatch) &&
 			MultiAny({Jedi, Grapple, Hatch, Fly}, 6))
 			goto maul;
@@ -442,6 +444,13 @@ theed:
 				|| MultiAny({Fly, Grapple, HighJump}, 6)))
 				goto theed;
 		}
+
+		if (panelOr(1, 0, {Fly, Grapple, HighJump})) goto theed2;
+		if (atrb(Jedi) && panelOr(1, 0, {Jump, Fly, Flutter})) goto theed2;
+		goto theed;
+
+	theed2:
+
 		if (!panel(2, 0)) goto theed; //hangar
 
 		if (!panel(0, 0) && !atrb(Jedi)) goto theed; //first room
@@ -505,7 +514,7 @@ factory:
 	if (!atrb(Attack)) goto factory;
 
 	add(2); //r2
-	if (!All({Jump, getPanel(1, 1)}) && !All({Fly, getPanel(1, 1)})) goto factory;
+	if (!panelOr(1, 1, {Fly, Jump})) goto factory;
 
 	if (logicType == casual) {
 		if (!atrb(Jedi) && !atrb(ExtraHighJump))
@@ -514,10 +523,10 @@ factory:
 		if (!atrb(Jedi) && !atrb(HighJump))
 			goto factory;
 
-		if (atrb(Jedi) && All({Fly, getPanel(1, 1)}))
+		if (atrb(Jedi) && panelAnd(1, 1, {Fly}))
 			goto factory2;
 
-		if (All({Jedi, getPanel(1, 1)})) goto factory2;
+		if (panelAnd(1, 1, {Jedi})) goto factory2;
 
 	}
 
@@ -535,19 +544,17 @@ factory2:
 	if (!panel(4, 1)) goto factory; //end room
 
 	if (logicType == casual) {
-		if (All({DoubleJump, getPanel(3, 1)})) goto jedibattle;
-		if (All({Fly, getPanel(3, 1)})) goto jedibattle;
+		if (panelAnd(3, 1, {DoubleJump})) goto jedibattle;
+		if (panelAnd(3, 1, {Fly})) goto jedibattle;
 
-		if (All({DoubleJump, getPanel(3, 0)}) && panel(3, 1)) goto jedibattle;
-		if (All({Fly, getPanel(3, 0)}) && panel(3, 1)) goto jedibattle;
+		if (panelAnd(3, 0, {DoubleJump}) && panel(3, 1)) goto jedibattle;
+		if (panelAnd(3, 0, {Fly}) && panel(3, 1)) goto jedibattle;
 
 		goto factory;
 	} else {
 		//extending bridge
-		if (All({DoubleJump, getPanel(3, 0)})) goto factory3;
-		if (All({Fly, getPanel(3, 0)})) goto factory3;
-		if (All({Pushable, getPanel(3, 0)})) goto factory3;
-		if (All({Chokeable, getPanel(3, 0)}) && atrb(Choke)) goto factory3;
+		if (panelOr(3, 0, {DoubleJump, Pushable, Fly})) goto factory3;
+		if (panelAnd(3, 0, {Chokeable}) && atrb(Choke)) goto factory3;
 
 
 		//if you can't extend the bridge
@@ -561,7 +568,7 @@ factory2:
 
 
 	factory3:
-		if (panel(3, 1) || SuperJump()) goto jedibattle;
+		if (panel(3, 1)) goto jedibattle;
 
 		goto factory;
 	}
@@ -1009,9 +1016,9 @@ dse3:
 	if (logicType == casual) {
 		add(4); //droids
 		add(5);
-		if (!panel(0, 1)) goto dse;
-		if (!panel(0, 3)) goto dse;
-		if (!panel(0, 4)) goto dse;
+		if (!panel(2, 1)) goto dse;
+		if (!panel(2, 3)) goto dse;
+		if (!panel(2, 4)) goto dse;
 	}
 
 rebelattack:
@@ -1131,76 +1138,154 @@ dagobah2:
 	}
 
 cct:
-	mix(CCT);
-	if (!atrb(Jedi)) goto cct;
-	if (Multi(Passive, 2)) goto cct;
-	//first room
-	int bridgeUp = false;
-	if (panelAnd(0, 0, {Fly})) bridgeUp = true;
 
-	std::vector<Playable*> overBridge;
-	for (Playable* p : testing) {
-		//check fluttering
-		if (p->fly) overBridge.push_back(p);
-		if (bridgeUp && p->jump) overBridge.push_back(p);
-	}
-	if (overBridge.size() == 0) goto cct;
-	if (!atrb(Build, overBridge)) goto cct;
-	if (!panel(0, 1, overBridge)) goto cct;
+	currentLev = CCT;
 
 	if (logicType == casual) {
-		if (!atrb(Bounty) && !panel(0, 2)) goto cct;
-		if (!panel(0, 4)) goto cct;
-		addHat(0, 0);
-		if (!panel(0, 5)) goto cct;
-		if (testing[0]->box) {
-			if (panel(0, 6, {testing[1]})) goto cct10;
-			if (panel(0, 7, {testing[1]}) && panel(0, 6)) goto cct10;
-		}
-		if (testing[1]->box) {
-			if (panel(0, 6, {testing[0]})) goto cct10;
-			if (panel(0, 7, {testing[0]}) && panel(0, 6)) goto cct10;
-		}
+		//probability of getting valid seed is so low that using the mix() function takes too long.
+		int ccti = 1;
 
-		goto cct;
-	cct10:
+	cctCasual:
+		wxLogStatus((std::to_string(ccti)).c_str());
+		++ccti;
+
+		testing.clear();
 		availableHats.clear();
 
-		//dvt
-		if (!panel(2, 0)) goto cct;
-		std::vector<Playable*> overGap;
+		if (character) {
+			CCT->party.clear();
 
-		for (Playable* p : testing) {
-			if (p->jump || p->fly) overGap.push_back(p);
+			std::uniform_int_distribution<int> distrib(0, chs.size() - 1);
+			Playable* c1 = (chs)[distrib(*randoPTR)];
+			Playable* c2 = (chs)[distrib(*randoPTR)];
+			if (c1 == c2) goto cctCasual;
+
+			CCT->party.push_back(c1);
+			CCT->party.push_back(c2);
 		}
 
-		if (!panel(2, 1, overGap)) goto cct;
+		add(0);
+		add(1);
+		if (!atrb(Jedi)) goto cctCasual;
+		if (!atrb(Active)) goto cctCasual;
 
-		//dv2
-		if (!panel(2, 2)) goto cct;
-		if (!panel(2, 3)) goto cct;
+		std::uniform_int_distribution<int> panDist(0, 3);
+		auto rPanMake = [&panDist](int panSet, int pan) {
+			if (panelOp) {
+				CCT->panels[panSet].panels[pan].type = (PanelType)panDist(*randoPTR);
+			}
+		};
 
-		//dv3
-		overGap.clear();
+		auto rPan = [&rPanMake](int panSet, int pan) {
+			//Greatly speeds up seed generation; not sure about seed distribution
+			for (int i = 0; i < 25; ++i) {
+				rPanMake(panSet, pan);
+				if (panel(panSet, pan)) break;
+			}
+				return panel(panSet, pan);
+		};
+
+		rPanMake(1, 1);
+		rPanMake(1, 2);
+		if (All({Fly, Active})) goto cct8;
+		if (panelAnd(1, 1, {Fly}) && panelAnd(1, 2, {Fly})) goto cct8;
+		goto cctCasual;
+	cct8:
+
+
+		if (!rPan(0, 2)) goto cctCasual;
+		if (!rPan(0, 4)) goto cctCasual;
+
+		if (!rPan(2, 0)) goto cctCasual;
+		if (!rPan(2, 1)) goto cctCasual;
+		if (!rPan(2, 2)) goto cctCasual;
+		if (!rPan(2, 3)) goto cctCasual;
+
+		if (!rPan(1, 0)) goto cctCasual;
+
+	
+		//first room
+		int bridgeUp = false;
+		rPanMake(0, 0);
+
+		if (panelAnd(0, 0, {Fly})) bridgeUp = true;
+
+		std::vector<Playable*> overBridge;
+
 		for (Playable* p : testing) {
-			if (p->fly) {
-				if (!p->passive) goto cct11;
-				if (panel(1, 1, {p}) && panel(1, 2, {p})) goto cct11;
+			//check fluttering
+			if (p->fly) overBridge.push_back(p);
+			if (bridgeUp && p->jump) overBridge.push_back(p);
+		}
+
+		rPanMake(0, 1);
+		if (!atrb(Build, overBridge)) goto cctCasual;
+		if (!panel(0, 1, overBridge)) goto cctCasual;
+
+		if (hatOp) {
+			std::uniform_int_distribution<int> hatDist(0, 2);
+			int temp = hatDist(*randoPTR);
+			if (temp != 0) temp += 4;
+			CCT->dispensers[0].dispenser[0].type = (DispenserType)temp;
+		}
+
+		addHat(0, 0);
+		if (!rPan(0, 5)) goto cctCasual;
+		if (!rPan(0, 6)) goto cctCasual;
+
+
+		rPanMake(0, 7);
+		if (!panelSeparate(0, 7, Box) && !panelSeparate(0, 6, Box)) goto cctCasual;
+
+		rPanMake(0, 3);
+		rPanMake(1, 3);
+
+
+		if (panelOp) {
+			for (PanelSet& panSet : CCT->panels) {
+				for (Panel& pan : panSet.panels) {
+
+					if (pan.type == AstroPanel || pan.type == ProtoPanel) {
+						std::uniform_int_distribution<int> bin(0, 1);
+						pan.altColor = bin(*randoPTR);
+						pan.altBody = bin(*randoPTR);
+					}
+
+				}
 			}
 		}
-		goto cct;
 
-	cct11:
-		if (!panel(1, 0)) goto cct;
 	} else {
 
+	cctGlitch:
+
+		mix(CCT);
+
+		if (!atrb(Jedi)) goto cctGlitch;
+		if (!atrb(Active)) goto cctGlitch;
+
+		//first room
+		int bridgeUp = false;
+		if (panelAnd(0, 0, {Fly})) bridgeUp = true;
+
+		std::vector<Playable*> overBridge;
+
+		for (Playable* p : testing) {
+			//check fluttering
+			if (p->fly) overBridge.push_back(p);
+			if (bridgeUp && p->jump) overBridge.push_back(p);
+		}
+
+
 		if (logicType != superGlitched) {
-			if (!atrb(Build, overBridge)) goto cct;
-			if (!panel(0, 1, overBridge)) goto cct;
+			if (!atrb(Build, overBridge)) goto cctGlitch;
+			if (!panel(0, 1, overBridge)) goto cctGlitch;
+		} else {
+			if (overBridge.size() == 0) goto cctGlitch;
 		}
 
 		//second room
-		if (!atrb(Bounty) && !panel(0, 2)) goto cct;
+		if (!atrb(Bounty) && !panel(0, 2)) goto cctGlitch;
 		//you can skip panel at end of hallway with door clip pixel jump
 		//try hitting room 3 transition from OOB
 
@@ -1233,13 +1318,13 @@ cct:
 			//}
 		}
 
-		goto cct;
+		goto cctGlitch;
 	cct2:
 		//dvt
 		if (panel(2, 1)) goto cct3;
 		if (atrb(Fett)) goto cct3; //can jump to vader to skip panels
 		if (panel(2, 2) && panel(2, 3)) goto cct3;
-		goto cct;
+		goto cctGlitch;
 
 	cct3:
 		//dv3
@@ -1247,7 +1332,7 @@ cct:
 			if ((p->realDoubleJump || p->fly) && !p->passive) goto bespin;
 		}
 
-		goto cct;
+		goto cctGlitch;
 
 	}
 
@@ -1623,7 +1708,7 @@ endor:
 		if (!panel(3, 1)) goto endor;
 		if (!panelAnd(3, 2, {Fly})) goto endor;
 		if (!panel(3, 3)) goto endor;
-		
+
 		if (!atrb(Hatch))
 			goto endor;
 		if (!atrb(Grapple))
@@ -1639,8 +1724,8 @@ endor:
 		if (!panel(3, 0)) goto endor;
 		if (!panel(3, 1)) goto endor;
 		if (!panel(3, 3)) goto endor;
-		
-		
+
+
 		if (atrb(DoubleJump)) //12 button skip
 			goto destiny;
 		if (panel(1, 0), atrb(Hatch) && MultiAny({Grapple, Hatch}, 4)) //left side
@@ -1777,9 +1862,9 @@ bhm:
 	if (BHM->bonusCharacters[19] == snowtrooper)
 		goto bhm;
 
-
-	if (!atrb(HighDoubleJump))
-		goto bhm;
+	//why was this here?
+	//if (!atrb(HighDoubleJump))
+	//	goto bhm;
 	if (!atrb(Bounty))
 		goto bhm;
 	if (!atrb(Astro))
@@ -2260,7 +2345,7 @@ bhm:
 		playerInit({{0, 1}, {1, 2}});
 		//fixes ditto problem
 		scriptTxtRep('A', "ai_griev", "GRIEVOUS", 3);
-		ai2Write('G', "ai_griev", {0x472d});
+		ai2Write('A', "ai_griev", {0x472d});
 
 		currentLev = Kashyyyk;
 		playerInit({{0, 1}, {1, 2}});
@@ -2836,10 +2921,10 @@ bhm:
 		}
 		collect.close();
 
-		multiPointer(allMinikitsCharacter, {0x2b0ce, 0x84ef2});
+		multiPointer(allMinikitsCharacter, {0x2b0ce, 0x84ef2, 0x5a750, 0x5fd87, 0x5a7db, 0x5fe12});
 
 		//removed 0x86969, 0x86982,
-		multiPointer(indy, {0x2e585, 0xc1053, 0x83b24, 0xc5098, 0x86969, 0x86982,
+		multiPointer(indy, {0x2e585, 0xc1053, 0x83b26, 0xc5098, 0x86969, 0x86982,
 			0xc50d0, 0xc65b1});
 		numWrite(EXE, indy->price, 0x2e5c7);
 		//txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", indy->realName, {{1627, 7}}, 13);
@@ -2973,4 +3058,4 @@ bhm:
 	logR("\n\t\t\t\t\tDone.");
 	//loggingIt->close();
 	wxLogStatus("Done.");
-} //randomize
+	} //randomize

@@ -28,6 +28,8 @@ struct Playable {
 		extratoggle = false, pushable = false, chokeable = false,
 		trickable = false, zappable = false, storm = false, slightlyBetterJump = false,
 
+		active = false,
+
 		vehicle = false, tow = false, tiedoor = false, vgreen = false,
 
 		leiaAlt = false, landoAlt = false, lukeAlt = false,
@@ -51,15 +53,15 @@ enum PanelType {
 };
 
 enum DispenserType {
-	RandomHat, DroidPanel, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat
+	RandomHat, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat, DroidPanel
 };
 
 struct Panel {
 	PanelType type;
 	int address;
 
-	int altColor = -1;
-	int altBody= -1;
+	int altColor;
+	int altBody;
 
 	Panel(PanelType myType, int myAddress);
 };
@@ -148,6 +150,8 @@ bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>
 
 bool All(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
 
+bool Separate(const bool Playable::* atr1, const bool Playable::* atr2, const std::vector<Playable*>& current = testing);
+
 bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current = testing);
 
 bool SuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
@@ -169,3 +173,7 @@ bool Playable::* getPanel(int panSet, int pan);
 bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing, std::vector<DispenserType> theHats = availableHats);
 
 bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current = testing);
+
+bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::vector<Playable*>& current = testing);
+
+bool panelSeparate(int panSet, int pan, bool Playable::* atr, const std::vector<Playable*>& current = testing);

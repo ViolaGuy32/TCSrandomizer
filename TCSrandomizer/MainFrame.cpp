@@ -141,7 +141,25 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 
 	dat.close();
 
+	/*out = "out1";
 	Randomize();
+	
+	out = "out2";
+	Randomize();
+	
+	out = "out3";
+	Randomize();
+	
+	out = "out4";
+	Randomize();
+	
+	out = "out5";
+	Randomize();
+	
+	out = "out6";*/
+	Randomize();
+
+
 	//std::thread randomize{ Randomize };
 	//randomize.detach();
 }
