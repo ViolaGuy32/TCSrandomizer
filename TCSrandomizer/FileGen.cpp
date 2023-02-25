@@ -4,6 +4,7 @@
 #include "FileGen.h"
 #include "OtherStuff.h"
 #include "App.h"
+#include "externData.h"
 
 extern std::string out;
 extern std::string vanillaDirectory;
@@ -413,4 +414,37 @@ void fileGen() {
 		{12, 13});
 	txtIns(JDI + "SPEEDERCHASE/SPEEDERCHASE_A/SPEEDERCHASE_A.GIT", "status",
 		{{4403, 40}}, 5);
+}
+
+void fixNames() {
+	obiwankenobi_jedimaster->name = "obiwan_jedi";
+	lukeskywalker_tatooine->name = "luke_tatooine";
+	hansolo_stormtrooper->name = "han_trooper";
+	lukeskywalker_stormtrooper->name = "luke_trooper";
+	princessleia_hoth->name = "leia_hoth";
+	lukeskywalker_pilot->name = "luke_pilot";
+	lukeskywalker_dagobah->name = "luke_dagobah";
+	lukeskywalker_bespin->name = "luke_bespin";
+	princessleia_bespin->name = "leia_bespin";
+	lukeskywalker_jedi->name = "luke_jedi";
+	princessleia_boushh->name = "leia_boushh";
+	lando_palaceguard->name = "lando_guard";
+	princessleia_slave->name = "leia_slave";
+	princessleia_endor->name = "leia_endor";
+	lukeskywalker_endor->name = "luke_endor";
+	battledroid_security->name = "securitydroid";
+	battledroid_commander->name = "commanderdroid";
+	battledroid_geonosian->name = "geonosiandroid";
+	imperialshuttlepilot->name = "shuttlepilot";
+	lukeskywalker_hoth->name = "luke_hoth";
+	princessleia_prisoner->name = "leia_prisoner";
+	newrepublicgunship->name = "gunship";
+	jedistarfighter_yellow_ep3->name = "star_yellow";
+	jedistarfighter_red_ep3->name = "star_red";
+	newanakinspod_green->name = "pod_green";
+	naboostarfighter_lime->name = "naboo_green";
+	anakinsspeeder_green->name = "speeder_green";
+	newrepublicgunship_green->name = "gunship_green";
+
+
 }

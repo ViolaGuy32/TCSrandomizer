@@ -208,7 +208,7 @@ extern Level* Showdown;
 extern Level* Endor;
 extern Level* Destiny;
 extern Level* ITDS;
-extern Level* PodraceOriginal;
+//extern Level* PodraceOriginal;
 extern Level* Anakinsflight;
 extern Level* ANewHope;
 extern Level* BHM;

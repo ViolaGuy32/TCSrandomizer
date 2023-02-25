@@ -98,70 +98,54 @@ enum LogicType { casual, glitched, superGlitched };
 
 /*
  
-	TODO
-
-	OIL GLITCH	
-	SLAVE 1
-
-	panelAnd() does not work
 
 	1-1:
-	pk droid freezes
 	AI gets stuck on force ledge
 
 	1-2:
 	AI won't single jump over bridge
 
-	1-3:
-	scaling BROKE again!!!
-
 	1-5:
 	bad jump 2nd room beginning
 	wicket freezes in theed 2
 
-	1-6:
-	investigate double ghost in casual
-
 	2-3:
 	3po AI
-	slow 3po
 
 	3-1:
 	have spinners only spawn in correct mode
 
 	3-2:
 	r2 not following in tall room
-	jump around gas without DJ
 
 	3-6:
 	room 1 AI
-	room 3 FP ???---
 
 	4-1:
 	skip midtro sheild with force choke
 	free rebel friend with bomb
 
 	4-3:
-	casual with no jedi
 	more bomb skip stuff
-	cantina diw
 
 	4-4:
+	midtro panel icon
 	Ben AI when not Jedi
 	backtracking to hat room with other hat
-	midtro panel
-	turnstile room hat without grapple
+	turnstile room hat needs grapple
 
+	5-5:
+	dv1 & dvt & dv4 fett casual
+	dvt glitched skip fan
+	dv1, dv3 - fix ai
 
 	5-6:
+	add bool for r2 door
 	BTS
 	Boba freezes at door
 	go OOB for 3po
 	outside - use 3po panel with flyer
 	puts you by shop?
-
-	6-2:
-	YOU CAN shoot boba from other skiff
 
 	6-3:
 	check jump height
@@ -169,24 +153,21 @@ enum LogicType { casual, glitched, superGlitched };
 	6-4:
 	try skipping bunker elevator with oob
 
-	podrace original:
-	does not work
+	BHM panels
 
-	
 
-	flutters can do OOB
-
-	fix file rename when enemy is same as player
-
-	fix double file rename problem
+	OIL GLITCH	
 	resist_zap
-	fix special character for padme
-	create error messages for missing files
-	only open bms if not unpacked
-	delete pak files individually
+	flutters can do OOB
 	test everything with training remote
+
+	fix special character for padme
 	fix name length limit for scp
+	
+	create error messages for missing files
 	check playable attributes in log
+
+	add seed to gui
 
 	fix speed variable for ROLLS
 	bespin guard - slightly faster than 1.2

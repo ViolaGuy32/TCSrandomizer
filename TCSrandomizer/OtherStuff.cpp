@@ -693,9 +693,9 @@ std::string getName(int characterNum, std::vector<Playable*> Level::* chType) {
 std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character to be replaced
 	if (chType == &Level::bonusCharacters) {
-		return currentLev->vanillaBonusCharacters[characterNum]->name;
+		return currentLev->vanillaBonusCharacters[characterNum]->vanillaName;
 	} else {
-		return currentLev->vanillaParty[characterNum]->name;
+		return currentLev->vanillaParty[characterNum]->vanillaName;
 	}
 }
 

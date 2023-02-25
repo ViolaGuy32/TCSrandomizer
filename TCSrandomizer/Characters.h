@@ -11,11 +11,12 @@ struct Level;
 struct Playable {
 	std::string name = "";
 	std::string realName = "";
-	 int address = 0;
+	std::string vanillaName = "";
+	int address = 0;
 
 	float speed = 1.2;
 	Level* lev;
-	 int price = 0;
+	int price = 0;
 	bool alwaysTrue = true; //lol
 
 	bool hat = false, lever = false, build = false, box = false, jump = false, doubleJump = false,
@@ -37,8 +38,8 @@ struct Playable {
 		fake = false;
 
 
-	Playable(std::string myName, std::string myRealName,  int myPrice,
-		 int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes);
+	Playable(std::string myName, std::string myRealName, int myPrice,
+		int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes);
 };
 
 //
@@ -144,6 +145,8 @@ void mix(Level* lev);
 
 bool atrb(const bool(Playable::* atr), const std::vector<Playable*>& current = testing);
 
+bool boom(const std::vector<Playable*>& current = testing, std::vector<DispenserType> theHats = availableHats);
+
 bool Multi(const bool Playable::* atr, const  int n, const std::vector<Playable*>& current = testing);
 
 bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current = testing);
@@ -168,7 +171,7 @@ float GetFastest(const std::vector<Playable*> current = testing);
 
 float GetSlowest(const std::vector<Playable*> current = testing);
 
-bool Playable::* getPanel(int panSet, int pan);
+//bool Playable::*getPanel(int panSet, int pan);
 
 bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing, std::vector<DispenserType> theHats = availableHats);
 

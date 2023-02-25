@@ -30,7 +30,7 @@ extern Level* currentLev;
 
 Playable::Playable(std::string myName, std::string myRealName, int myPrice,
 	int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes)
-	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed) {
+	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed), vanillaName(myName) {
 	for (bool Playable::* atr : Attributes) {
 		*this.*atr = true;
 	}
@@ -116,12 +116,10 @@ void addHat(int set, int hat) {
 }
 
 void mix(Level* lev) {
-	//generates random characters for given level
 
-
+	currentLev = lev;
 	testing.clear();
 	availableHats.clear();
-	currentLev = lev;
 
 	if (character) {
 
@@ -253,12 +251,12 @@ bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::
 			if (disp == StormtrooperHat && panType == Imperial) {
 				if (All({Hat, at})) return true;
 			}
-			
+
 			if (disp == BountyHat && panType == Bounty) {
 				if (All({Hat, at})) return true;
 			}
 		}
-		
+
 	}
 	return false;
 }
@@ -267,17 +265,29 @@ bool panelSeparate(int panSet, int pan, bool Playable::* atr, const std::vector<
 	for (Playable* p : current) {
 		for (Playable* p2 : current) {
 			if (p != p2) {
-				if (panel(panSet, pan, {p}) && *p2.*atr) return true;
+				if (panel(panSet, pan, {p}) && p2->*atr) return true;
 			}
 		}
 	}
 	return false;
 }
 
+bool boom(const std::vector<Playable*>& current, std::vector<DispenserType> theHats) {
+	if (atrb(Bounty, current)) return true;
+
+	if (atrb(Hat, current)) {
+		for (DispenserType disp : theHats) {
+			if (disp == BountyHat) return true;
+		}
+	}
+
+	return false;
+}
+
 bool atrb(const bool(Playable::* atr), const   std::vector<Playable*>& current) {
 	//checks if anyone in party has given attribute
 	for (Playable* p : current) {
-		if (*p.*atr) return true;
+		if (p->*atr) return true;
 	}
 	return false;
 }
@@ -286,7 +296,7 @@ bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>
 	//needs any of the given attributes
 	for (Playable* p : current) {
 		for (bool Playable::* atr : atrs) {
-			if (*p.*atr) return true;
+			if (p->*atr) return true;
 		}
 	}
 	return false;
@@ -295,10 +305,10 @@ bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>
 bool All(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
 	//needs all of the given attributes
 
-	int i = 0;
 	for (Playable* p : current) {
+		int i = 0;
 		for (bool Playable::* at : atrs) {
-			if (!(*p.*at)) break;
+			if (!(p->*at)) break;
 			if (i == atrs.size() - 1) return true;
 			i++;
 		}
@@ -310,7 +320,7 @@ bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>
 	//needs multiple with same attribute
 	int x = 0;
 	for (Playable* p : current) {
-		if (*p.*atr) {
+		if (p->*atr) {
 			x++;
 			if (x == n) {
 				return true;
@@ -323,8 +333,8 @@ bool Multi(const bool Playable::* atr, const int n, const std::vector<Playable*>
 bool Separate(const bool Playable::* atr1, const bool Playable::* atr2, const std::vector<Playable*>& current) {
 	for (Playable* p : current) {
 		for (Playable* p2 : current) {
-			if (*p.*atr1 && *p2.*atr2 && p != p2) {
-					return true;
+			if (p->*atr1 && p2->*atr2 && p != p2) {
+				return true;
 			}
 		}
 	}
@@ -337,7 +347,7 @@ bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std:
 	int x = 0;
 	for (Playable* p : current) {
 		for (bool(Playable::* atr) : atrs) {
-			if (*p.*atr) {
+			if (p->*atr) {
 				x++;
 				if (x == n) {
 					return true;
@@ -395,7 +405,7 @@ bool DoubleTransitionSkip(const bool Playable::* atr, const std::vector<Playable
 	for (Playable* p1 : current) {
 		for (Playable* p2 : current) {
 			if (p1 != p2) {
-				if (p1->saber && *p2.*atr && !p2->ghost) return true;
+				if (p1->saber && p2->*atr && !p2->ghost) return true;
 			}
 		}
 	}

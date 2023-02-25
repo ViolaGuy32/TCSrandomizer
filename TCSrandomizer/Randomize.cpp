@@ -213,7 +213,7 @@ Level* Showdown;
 Level* Endor;
 Level* Destiny;
 Level* ITDS;
-Level* PodraceOriginal;
+//Level* PodraceOriginal;
 Level* Anakinsflight;
 Level* ANewHope;
 Level* BHM;
@@ -271,6 +271,7 @@ void Randomize() {
 	//charMaker();
 	//levMaker();
 	makeCharactersAndLevels();
+
 
 	currentLev = BHM;
 
@@ -366,6 +367,9 @@ void Randomize() {
 
 negotiations:
 	mix(Negotiations);
+
+	//DELETE THIS
+	Negotiations->party[2] = lukeskywalker_dagobah;
 
 	if (!atrb(Jedi)) goto negotiations;
 
@@ -466,6 +470,12 @@ theed:
 
 maul:
 	mix(Maul);
+
+	//DELETE THIS
+	testing.clear();
+	Maul->party[0] = darthmaul;
+	testing = Maul->party;
+
 	if (logicType == casual) {
 		if (Multi(Jedi, 2) && LivingJedi())
 			goto bhp;
@@ -623,12 +633,17 @@ chancellor:
 	add(3); //palpatine
 	if (!Multi(Jedi, 2))
 		goto chancellor;
-	if (logicType == casual) {
-		//can outrun elevator
-		if (GetSlowest() < 1.0) goto chancellor;
-		if (!panel(3, 0)) goto chancellor;
-	}
-	if (!panel(3, 1)) goto chancellor;
+
+	if (logicType == casual && GetSlowest() < 1.0) goto chancellor;
+
+	bool gasOff = false;
+	if (panelOr(3, 0, {Gas,  Fly})) gasOff = true;
+	if (logicType != casual && panelOr(3, 0, {DoubleJump, Dive, Flop})) gasOff = true;
+	if (gasOff && panel(3, 1)) goto grievous;
+	if (panelAnd(3, 1, {Gas, Fly})) goto grievous;
+	if (logicType != casual && panelOr(3, 1, {DoubleJump, Dive, Flop})) goto grievous;
+	goto chancellor;
+
 
 grievous:
 	mix(Grievous);
@@ -725,9 +740,9 @@ secretplans:
 							}
 						}
 						//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
-						if (atrb(getPanel(2, 2), {x, shield})) return true;
-						if (atrb(getPanel(2, 1), {x, otherX}) && atrb(Box, {x, otherX})) return true;
-						if (atrb(getPanel(2, 1), {redGuy}) &&
+						if (panel(2, 2, {x, shield})) return true;
+						if (panel(2, 1, {x, otherX}) && atrb(Box, {x, otherX})) return true;
+						if (panel(2, 1, {redGuy}) &&
 							(Any({DoubleJump, Fly}, {x, otherX}) || (atrb(Box, {x}) && atrb(Lever, {redGuy})))) return true;
 						//								not sure
 					}
@@ -900,7 +915,7 @@ spaceport:
 	add(2);
 	add(3);
 	//cantina buttons
-	if (!atrb(Shoot) && !atrb(FakeShoot)) {
+	if (logicType == casual && !atrb(Shoot) && !atrb(FakeShoot)) {
 		for (Playable* p : testing)
 			if (p->droid && !p->jump)
 				goto spaceport3;
@@ -911,7 +926,8 @@ spaceport:
 spaceport3:
 	if (logicType == casual) {
 		if (!panel(0, 3) && !panel(0, 4)) goto spaceport;
-		if (!atrb(Jedi)) goto spaceport;
+		//jump off speeder to skip forcing ramp
+		if (!atrb(Jedi) && !panelAnd(0, 3, {Jump}) && !panelAnd(0, 4, {Jump})) goto spaceport;
 
 		if (atrb(Bounty))
 			goto spaceport2;
@@ -1018,7 +1034,9 @@ dse3:
 		add(5);
 		if (!panel(2, 1)) goto dse;
 		if (!panel(2, 3)) goto dse;
-		if (!panel(2, 4)) goto dse;
+		//Droideka and mouse droid do not need floor waxer.
+		//Uses slightly lower value to avoid rounding errors.
+		if (!panel(2, 4) && GetFastest() < 1.799) goto dse;
 	}
 
 rebelattack:
@@ -1122,19 +1140,16 @@ dagobah2:
 	add(2);
 	add(3);
 	if (logicType == casual) {
-		if (!Multi(Jedi, 2))
-			goto dagobah;
-		if (!panelAnd(1, 0, {Fly}) && !All({Flutter, Attack}) && !All({Hovering, FakeShoot}))
-			goto dagobah;
+		if (!Multi(Jedi, 2)) goto dagobah;
 
-		if (!panel(2, 0))
-			goto dagobah;
+		//you can easily double jump accross
+		//if (!panelAnd(1, 0, {Fly}) && !All({Flutter, Attack}) && !All({Hovering, FakeShoot})) goto dagobah;
+
+		if (!panel(2, 0)) goto dagobah;
 
 	} else {
-		if (!atrb(Jedi))
-			goto dagobah;
-		if (!panel(2, 0))
-			goto dagobah;
+		if (!atrb(Jedi)) goto dagobah;
+		if (!panel(2, 0)) goto dagobah;
 	}
 
 cct:
@@ -1143,11 +1158,9 @@ cct:
 
 	if (logicType == casual) {
 		//probability of getting valid seed is so low that using the mix() function takes too long.
-		int ccti = 1;
 
 	cctCasual:
-		wxLogStatus((std::to_string(ccti)).c_str());
-		++ccti;
+
 
 		testing.clear();
 		availableHats.clear();
@@ -1353,7 +1366,7 @@ bespin:
 		//old OOB
 		if (logicType != casual && panel(0, 5)) {
 			for (Playable* p : testing) {
-				if (p->doubleJump || p->dive) pastFight.push_back(p);
+				if (p->doubleJump || (p->jump && p->speed >= 1.199)) pastFight.push_back(p);
 			}
 		}
 
@@ -1380,7 +1393,7 @@ bespin:
 
 				} else {
 					for (Playable* p : temp) {
-						if (p->gas && panel(0, 5)) {
+						if (p->gas && panel(0, 5, {p})) {
 							add(3);
 							pastFight.push_back(Bespin->party[3]);
 							gotr2 = true;
@@ -1507,8 +1520,9 @@ jabbas2:  //scene B
 	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
 	if (logicType == casual) {
-		if (!atrb(Jedi))
-			goto jabbas;
+		if (!atrb(Jedi)) goto jabbas;
+		if (!boom()) goto jabbas;
+
 		std::vector<Playable*> droidRoom;
 		for (Playable* t : testing)
 			if (Any({Jump, Fly, Flutter}, {t})) //can get into droid room
@@ -1522,9 +1536,12 @@ jabbas2:  //scene B
 			goto jabbas3;
 
 		std::vector<Playable*> droidRoom;
-		for (Playable* t : testing) {
-			if (t->box) {//can get into droid room
-				droidRoom.push_back(t);
+		if (boom()) droidRoom = testing;
+		else {
+			for (Playable* t : testing) {
+				if (t->box) {//can get into droid room
+					droidRoom.push_back(t);
+				}
 			}
 		}
 
@@ -1672,12 +1689,10 @@ carkoon3: //inside
 
 showdown:
 	mix(Showdown);
-	add(0);
-	add(1);
-	if (Multi(Jedi, 2))
-		goto endor;
-	if (atrb(Jedi) && atrb(Grapple))
-		goto endor;
+
+	if (Multi(Jedi, 2)) goto endor;
+	if (atrb(Jedi) && atrb(Grapple)) goto endor;
+
 	if (logicType != casual) {
 		if (Multi(Box, 2) && atrb(DoubleJump)) { //need both to ride speeders
 			if (atrb(Jedi) || atrb(Fett))
@@ -1749,9 +1764,9 @@ itds:
 	mix(ITDS);
 	if (!atrb(Shoot))
 		goto itds;
-
-podraceoriginal:
-	mix(PodraceOriginal);
+//
+//podraceoriginal:
+//	mix(PodraceOriginal);
 
 anakinsflight:
 	mix(Anakinsflight);
@@ -1931,6 +1946,8 @@ bhm:
 	fileGen();
 	//FILE GEN IS HERE
 
+	//TESTING THIS
+
 
 	{
 		//Diverts references for nonexistent characters to dummy character so I can
@@ -2082,6 +2099,7 @@ bhm:
 
 		//pointerWrite(EXE, cantina1->name, 0x3f1c30);
 		//pointerWrite(EXE, cantina2->name, 0x3f1c38);
+
 	#define bonusCharacter &Level::bonusCharacters
 
 		characterPointer(cantina1, 0xca35a);
@@ -2106,13 +2124,25 @@ bhm:
 		scpRep('A', "TC14", "alwaystrue", 26, {35, 6});
 		lineDeleterScp('A', "TC14", {39});
 
+		
+		scriptTxtRep('A', "ai_pk", "PKDROID", 4);
+		ai2Write('A', "ai_pk", {0x4400, 0x44B5});
+		scriptTxtRep('C', "ai_pk", "PKDROID", 6);
+		ai2Write('C', "ai_pk", {0x3846});
+
 		scriptTxt('A', 2, 5);
 
 		currentLev = Invasion;
 		playerInit({{0, 1}, {1, 2}, {2, 3}});
 
+		scriptTxtRep('A', "ai_bdroid", "BATTLEDROID", 4);
+		ai2Write('A', "ai_bdroid", {});
+		scriptTxtRep('E', "ai_bdroid", "BATTLEDROID", 1);
+		ai2Write('E', "ai_bdroid", {0x854, 0x909, 0x9BE, 0xA73, 0xB28});
+
 		scriptTxt('A', 2, 2);
 		fileDeleter('B', 2);
+
 
 		currentLev = EscapeNaboo;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
@@ -2174,6 +2204,13 @@ bhm:
 			{1, {{48, 28}, {84, 28}}},});
 
 		//ditto
+		scriptTxtRep('A', "ai_taunwe", "TAUNWE", 3);
+		ai2Write('A', "ai_taunwe", {0x1439});
+		scriptTxtRep('C', "ai_taunwe", "TAUNWE", 2);
+		ai2Write('C', "ai_taunwe", {0x1B9F});
+		scriptTxtRep('D', "ai_taunwe", "TAUNWE", 1);
+		ai2Write('D', "ai_taunwe", {0x2BAE});
+
 		scriptTxtRep('C', "ai_jango", "JANGOFETT", 1);
 		ai2Write('C', "ai_jango", {0x1afa});
 
@@ -2200,6 +2237,10 @@ bhm:
 		scpRep('F', "PARTY", "if CategoryIs \"noweapon\" == 1", 18, {13, 3});
 
 		lineDeleterScp('F', "PARTY", {14});
+
+
+		ai2Write('G', 0, {0x972}, bonusCharacter);
+		characterPointer(Factory->party[0], 0xE010F);
 
 		multiScriptTxt('A', {{2, 2}, {3, 3}});
 		multiScriptTxt('B', {{2, 2}, {3, 3}});
@@ -2244,10 +2285,6 @@ bhm:
 
 		//Factory->binWrite(1, { 0x181A }, 'E', "FACTORY_E.AI2");
 		//Factory->binWrite(2, { 0x143D }, 'E', "FACTORY_E.AI2");
-
-		ai2Write('G', 0, {0x972}, bonusCharacter);
-		characterPointer(Factory->party[0], 0xE010F);
-
 		currentLev = JediBattle;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5},
 			{2, 8}, {3, 9}, {4, 10}}); //so they still spawn in FP
@@ -2276,11 +2313,13 @@ bhm:
 		scpIns('C', "PARTY", 2, {6, 11});
 		scpIns('B', "PARTY", 2, {18, 11});
 
+	
 		currentLev = Coruscant;
 		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Chancellor;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
+
 
 		scpMany('C', "DOOKU", {
 			{0, {{29, 28}}},
@@ -2328,6 +2367,12 @@ bhm:
 
 		scpMulti('D', "PARTY", {"if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}}}); //test
 
+		scriptTxtRep('A', "ai_griev", "GRIEVOUS", 3);
+		ai2Write('A', "ai_griev", {0x8F7});
+
+		scriptTxtRep('F', "ai_guard", "BODYGUARD", 1);
+		ai2Write('F', "ai_guard", {0x111E, 0x11D3});
+
 		multiScriptTxt('A', {
 			{2, 1},
 			{3, 4},});
@@ -2352,6 +2397,10 @@ bhm:
 		scpMany('A', "LEVEL", {
 			{0, {{44, 28}}},
 			{1, {{45, 28}}}});
+
+		scriptTxtRep('A', "ai_wookiee", "WOOKIE", 4);
+		ai2Write('A', "ai_wookiee", {});
+
 
 		currentLev = Ruin;
 		playerInit({{0, 1}, {1, 2}});
@@ -2393,6 +2442,10 @@ bhm:
 			{4, {{49, 27}, {50, 27}, {51, 29}}}});
 		scpIns('C', "LIFT_TROOPER", 2, {34, 25});
 
+		scriptTxtRep('D', "ai_beach", "BEACHTROOPER", 7);
+		ai2Write('D', "ai_beach", {0x21FB, 0x22B0});
+
+
 		currentLev = Jundland;
 		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}});
 
@@ -2411,6 +2464,9 @@ bhm:
 		scpMany('D', "PARTY", {
 			{2, {{6, 11}, {9, 11}, {32, 11}}},
 			{3, {{7, 11}, {12, 11}, {35, 11}}}});
+
+		scriptTxtRep('C', "ai_tusken", "TUSKENRAIDER", 3);
+		ai2Write('C', "ai_tusken", {0x6885, 0x69DF, 0x6BEE, 0x6CA3, 0x6D58});
 
 		currentLev = Spaceport;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
@@ -2554,6 +2610,7 @@ bhm:
 		currentLev = RebelAttack;
 		playerInit({{0, 1}, {1, 2}});
 
+		currentLev = Hoth;
 		mainTxtIns("character \"" + Hoth->party[0]->name + "\" player\n"
 			"character \"" + Hoth->party[1]->name + "\" player",
 			32, {1, 1});
@@ -2572,6 +2629,9 @@ bhm:
 			{3, {{5, 11}}}});
 
 		scpIns('C', "Party", 3, {6, 11});
+
+		scriptTxtRep('A', "ai_skeleton", "SKELETON", 5);
+		ai2Write('A', "ai_skeleton", {0x33FB, 0x34B0});
 
 		currentLev = FalconFlight;
 		playerInit({{0, 3}, {1, 4}});
@@ -2725,8 +2785,8 @@ bhm:
 		currentLev = ITDS;
 		playerInit({{0, 1}, {1, 2}});
 
-		currentLev = PodraceOriginal;
-		playerInit({{0, 1}, {1, 2}});
+		//currentLev = PodraceOriginal;
+		//playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Anakinsflight;
 		playerInit({{0, 1}, {1, 2}});
@@ -2778,7 +2838,7 @@ bhm:
 
 			auto missionReplace2 = [](int c, unsigned int line, Level* lev, char scene, std::string script) {
 				writer(oneWrite, getSCP(lev, scene, script),
-					{BHM->bonusCharacters[c]->name, BHM->vanillaBonusCharacters[c]->name.length(), {line, 49}});
+					{BHM->bonusCharacters[c]->name, BHM->vanillaBonusCharacters[c]->vanillaName.length(), {line, 49}});
 				//scpIns(scene, script, c, {line, 49}, bonusCharacter);
 			};
 

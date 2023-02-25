@@ -502,7 +502,7 @@ void makeCharactersAndLevels() {
 
 	defaultCharacter = new Playable("", "", 0, 0, 0.0f, {Fake});
 
-	//podrace original uses a different version of the pods i
+	//podrace original uses a different version of the pods 
 	fakeAnakinsPod = new Playable("anakinspod", "", 0, 0, 0.0f, {Fake, Vehicle});
 
 	fakeAnakinsPodGreen = new Playable("anakinspod_green", "", 0, 0, 0.0f, {Fake, Vehicle});
@@ -533,7 +533,7 @@ void makeCharactersAndLevels() {
 		{'C', {0x214d, 0x2136, 0x211f, 0x1965, 0x194e, 0x1937}},
 		{'E', {0xab7, 0x9e8}}}, {},
 
-		{{'B', {{BountyPanel, 0x1C01}}}}, {});//rb
+		{{'B', {{BountyPanel, 0x1C01}}}}, {}); //rb
 
 	EscapeNaboo = new Level("PALACERESCUE", "RESCUE", "/LEVELS/EPISODE_I/PALACERESCUE/", false,
 		{amidala, captainpanaka, quigonjinn, obiwankenobi}, {},
@@ -1048,10 +1048,10 @@ void makeCharactersAndLevels() {
 		{'F', {0x1f3f, 0x1f28}},
 		{'G', {0x30bc, 0x30a5}}}, {}, {}, {});
 
-	PodraceOriginal = new Level("PODRACE", "PODRACE", "/LEVELS/EPISODE_I/PODRACE/", true,
-		{fakeAnakinsPod, fakeAnakinsPodGreen}, {},
-		{},
-		{}, {}, {}, {});
+	//PodraceOriginal = new Level("PODRACE", "PODRACE", "/LEVELS/EPISODE_I/PODRACE/", true,
+	//	{fakeAnakinsPod, fakeAnakinsPodGreen}, {},
+	//	{},
+	//	{}, {}, {}, {});
 
 	Anakinsflight = new Level("ANAKINSFLIGHT", "ANAKINSFLIGHT", "/LEVELS/ANAKINSFLIGHT/", false,
 		{naboostarfighter, naboostarfighter_lime}, {},
