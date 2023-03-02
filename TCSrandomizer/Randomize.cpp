@@ -256,20 +256,11 @@ void Randomize() {
 	addressPointer = 0x2B0;
 	junkCharacters = 0x3f1b6c;
 
-	//std::random_device rando;
-	//std::seed_seq rando(time(NULL));
-	//srand(time(nullptr));
-
-
 	std::random_device rd;
-	//seed = rd();
 
 	std::mt19937_64 rando(rd());
 	randoPTR = &rando;
 
-	//charStuff();
-	//charMaker();
-	//levMaker();
 	makeCharactersAndLevels();
 
 
@@ -364,12 +355,18 @@ void Randomize() {
 	Playable* indy = hansolo_indy;
 	Playable* allMinikitsCharacter = slave1;
 
+	auto tooLong = [](int ch) {
+		//SCP files do not work if name is too long
+		if (currentLev->party[ch]->name.length() > 16) return true;
+		else return false;
+	};
 
 negotiations:
 	mix(Negotiations);
 
-	//DELETE THIS
 	Negotiations->party[2] = lukeskywalker_dagobah;
+
+	//if (tooLong(2)) goto negotiations;
 
 	if (!atrb(Jedi)) goto negotiations;
 
@@ -380,7 +377,7 @@ negotiations:
 			goto negotiations;
 	} else {
 
-		if (!Multi(Jump, 2))
+		if (!MultiAny({Jump, Flutter}, 2))
 			goto negotiations;
 
 		if (SuperJump()) goto invasion;
@@ -392,6 +389,7 @@ negotiations:
 
 invasion:
 	mix(Invasion);
+	if (tooLong(2)) goto invasion;
 
 	if (logicType == casual) {
 		if (atrb(Jedi))
@@ -421,7 +419,7 @@ escape:
 	if (atrb(Grapple)) goto podrace;
 
 	if (logicType != casual) {
-		if (SuperJump(Jump) && atrb(Shoot))
+		if (SuperJump({Jump, Flutter}) && atrb(Shoot))
 			goto podrace;
 	}
 	goto escape;
@@ -439,14 +437,25 @@ theed:
 	if (logicType == casual) {
 		if (panel(0, 0) && panelOr(1, 0, {Jedi, Grapple, Hatch, Fly}) && panel(2, 0)
 			&& Multi(Jedi, 2) && atrb(Hatch) &&
-			MultiAny({Jedi, Grapple, Hatch, Fly}, 6))
+			MultiAny({DoubleJump, Grapple, Hatch, Fly}, 6))
 			goto maul;
 	} else {
 		if (logicType != superGlitched) {
 			//button room
-			if (!(atrb(Jedi) && MultiAny({Jump, Fly, Flutter}, 6)
-				|| MultiAny({Fly, Grapple, HighJump}, 6)))
-				goto theed;
+			std::vector<Playable*> overGap;
+			for (Playable* p : testing) {
+				if (p->fly) overGap.push_back(p);
+				if (p->grapple) overGap.push_back(p);
+				if (p->highJump) overGap.push_back(p);
+				if (atrb(Jedi)) {
+					if (p->jump && p->speed >= 0.79f) overGap.push_back(p);
+					if (p->flutter) overGap.push_back(p);
+
+				}
+				if (atrb(Choke) && p->chokeable) overGap.push_back(p);
+				if (atrb(Lightning) && p->lightningable) overGap.push_back(p);
+			}
+			if (overGap.size() < 6) goto theed;
 		}
 
 		if (panelOr(1, 0, {Fly, Grapple, HighJump})) goto theed2;
@@ -461,7 +470,7 @@ theed:
 
 		if (!All({DoubleJump, Attack}) && !atrb(Shoot))
 			goto theed;
-		if (!atrb(HighJump) && !atrb(Jedi) && !SuperJump(Jump))
+		if (!atrb(HighJump) && !atrb(Jedi) && !SuperJump({Jump, Flutter}))
 			goto theed;
 		goto maul;
 	}
@@ -470,11 +479,6 @@ theed:
 
 maul:
 	mix(Maul);
-
-	//DELETE THIS
-	testing.clear();
-	Maul->party[0] = darthmaul;
-	testing = Maul->party;
 
 	if (logicType == casual) {
 		if (Multi(Jedi, 2) && LivingJedi())
@@ -506,8 +510,6 @@ kamino:
 		if (!panel(3, 2)) goto kamino; //to jango fight
 		if (!panel(4, 0)) goto kamino; //to elevator
 		if (!atrb(Fly)) goto kamino;
-		//if (atrb(Jedi) && atrb(AstroZapper))
-		//	goto factory;
 
 	} else { //worst superjump ever
 		if (atrb(Jedi) && atrb(Fly) && SuperJump()) goto factory;
@@ -520,6 +522,9 @@ kamino:
 
 factory:
 	mix(Factory);
+	if (tooLong(2)) goto factory;
+	if (tooLong(3)) goto factory;
+
 
 	if (!atrb(Attack)) goto factory;
 
@@ -565,6 +570,7 @@ factory2:
 		//extending bridge
 		if (panelOr(3, 0, {DoubleJump, Pushable, Fly})) goto factory3;
 		if (panelAnd(3, 0, {Chokeable}) && atrb(Choke)) goto factory3;
+		if (panelAnd(3, 0, {Lightningable}) && atrb(Lightning)) goto factory3;
 
 
 		//if you can't extend the bridge
@@ -574,6 +580,7 @@ factory2:
 			if (p->fly) testing.push_back(p);
 			if (p->pushable) testing.push_back(p);
 			if (p->chokeable && atrb(Choke, Factory->party)) testing.push_back(p);
+			if (p->lightningable && atrb(Lightning, Factory->party)) testing.push_back(p);
 		}
 
 
@@ -624,6 +631,9 @@ coruscant:
 
 chancellor:
 	mix(Chancellor);
+	if (tooLong(2)) goto chancellor;
+	if (tooLong(3)) goto chancellor;
+
 	if (!atrb(Jedi)) goto chancellor;
 
 	add(2); //r2
@@ -716,6 +726,7 @@ secretplans:
 				if (x != y) {
 					if (x->pushable && y->jedi) OOB = true;
 					else if (x->chokeable && y->choke) OOB = true;
+					else if (x->lightningable && y->chokeable) OOB = true;
 					else if (x->trickable && y->jedi) OOB = true;
 					else if (x->zappable && y->zapper) OOB = true;
 					else if (x->storm && y->astrozapper) OOB = true;
@@ -729,6 +740,7 @@ secretplans:
 								if (x2 != y2 && x2 != x) {
 									if (x2->pushable && y2->jedi) OOB2 = true;
 									else if (x2->chokeable && y2->choke) OOB2 = true;
+									else if (x2->lightningable && y2->lightning) OOB2 = true;
 									else if (x2->trickable && y2->jedi) OOB2 = true;
 									else if (x2->zappable && y2->zapper) OOB2 = true;
 									else if (x2->storm && y2->astrozapper) OOB2 = true;
@@ -741,9 +753,9 @@ secretplans:
 						}
 						//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
 						if (panel(2, 2, {x, shield})) return true;
-						if (panel(2, 1, {x, otherX}) && atrb(Box, {x, otherX})) return true;
+						if (panel(2, 1, {x, otherX}) && Any({Box, Bounty}, {x, otherX})) return true;
 						if (panel(2, 1, {redGuy}) &&
-							(Any({DoubleJump, Fly}, {x, otherX}) || (atrb(Box, {x}) && atrb(Lever, {redGuy})))) return true;
+							(Any({DoubleJump, Fly}, {x, otherX}) || (Any({Box, Bounty}, {x}) && atrb(Lever, {redGuy})))) return true;
 						//								not sure
 					}
 				}
@@ -775,7 +787,7 @@ secretplans:
 		if (((All({Grapple, Build}) || atrb(YodaJump) || //Both Yodas can build
 			All({ExtraHighJump, Build})) &&
 			(atrb(Shoot) || atrb(FakeShoot))) ||
-			SuperJump(Jump) || DoubleTransitionSkip(Jump))
+			SuperJump({Jump, Flutter}) || DoubleTransitionSkip({Jump, Flutter}))
 			goto secretplans2;
 		goto secretplans;
 	}
@@ -819,7 +831,7 @@ secretplans3:
 	if (logicType == casual) {
 		if (!panel(2, 2))
 			goto secretplans;
-		if (!Any({Jedi, Fett}) && !(SecretPlans->party[2]->lever && atrb(Box)))
+		if (!Any({Jedi, Fett}) && !(SecretPlans->party[2]->lever && Any({Box, Bounty})))
 			goto secretplans;
 	}
 
@@ -965,6 +977,8 @@ spaceport2:
 
 princess:
 	mix(Princess);
+	if (tooLong(5)) goto princess;
+
 	add(2);
 	add(3);
 	add(4);
@@ -985,23 +999,48 @@ princess:
 	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
 	addHat(1, 1);
-	if (panel(1, 1) || panel(1, 2) && logicType != casual) {
-		//bonus room with lots of hat machines
-		addHat(3, 0);
-		addHat(3, 1);
-		addHat(3, 2);
-		addHat(3, 3);
-	}
 
-	if (!Princess->party[5]->jedi && !Any({DoubleJump, Fly}))
-		goto princess;
-	if (!atrb(Grapple))
-		goto princess;
-	if (!panel(1, 3)) goto princess; //try oil glitch
+	{
+		bool gotHats = false;
+		if ((panel(1, 1) || panel(1, 2)) && logicType != casual) {
+			//bonus room with lots of hat machines
+			addHat(3, 0);
+			addHat(3, 1);
+			addHat(3, 2);
+			addHat(3, 3);
+			gotHats = true;
+		}
 
-	if (logicType == casual) availableHats.clear();
-	addHat(2, 0);
-	if (!panel(2, 0)) goto princess;
+		if (!Princess->party[5]->jedi && !Any({DoubleJump, Fly}))
+			goto princess;
+		if (!atrb(Grapple))
+			goto princess;
+		if (!panel(1, 3)) goto princess; //try oil glitch
+
+		if (logicType == casual) availableHats.clear();
+
+		if (panel(2, 0)) goto dse;
+
+		{
+			std::vector<Playable*> hasThisHat;
+			for (Playable* p : testing) if (p->grapple) hasThisHat.push_back(p);
+
+			addHat(2, 0);
+			if (panel(2, 0, hasThisHat)) goto dse;
+
+			if ((panel(1, 1, hasThisHat) || panel(1, 2, hasThisHat)) && !gotHats && logicType != casual) {
+				//bonus room with lots of hat machines
+				availableHats.pop_back();
+				addHat(3, 0);
+				addHat(3, 1);
+				addHat(3, 2);
+				addHat(3, 3);
+				if (panel(2, 0)) goto dse;
+			}
+
+			goto princess;
+		}
+	} //gotHats
 
 dse:
 	mix(DSE);
@@ -1195,7 +1234,7 @@ cct:
 				rPanMake(panSet, pan);
 				if (panel(panSet, pan)) break;
 			}
-				return panel(panSet, pan);
+			return panel(panSet, pan);
 		};
 
 		rPanMake(1, 1);
@@ -1210,13 +1249,13 @@ cct:
 		if (!rPan(0, 4)) goto cctCasual;
 
 		if (!rPan(2, 0)) goto cctCasual;
-		if (!rPan(2, 1)) goto cctCasual;
-		if (!rPan(2, 2)) goto cctCasual;
-		if (!rPan(2, 3)) goto cctCasual;
+		if (!rPan(2, 1) && !atrb(Fett)) goto cctCasual;
+		if (!rPan(2, 2) && !atrb(Fett)) goto cctCasual;
+		if (!rPan(2, 3) && !atrb(Fett)) goto cctCasual;
 
 		if (!rPan(1, 0)) goto cctCasual;
 
-	
+
 		//first room
 		int bridgeUp = false;
 		rPanMake(0, 0);
@@ -1226,7 +1265,6 @@ cct:
 		std::vector<Playable*> overBridge;
 
 		for (Playable* p : testing) {
-			//check fluttering
 			if (p->fly) overBridge.push_back(p);
 			if (bridgeUp && p->jump) overBridge.push_back(p);
 		}
@@ -1242,13 +1280,22 @@ cct:
 			CCT->dispensers[0].dispenser[0].type = (DispenserType)temp;
 		}
 
+		std::vector<Playable*> balcony;
 		addHat(0, 0);
-		if (!rPan(0, 5)) goto cctCasual;
-		if (!rPan(0, 6)) goto cctCasual;
-
-
 		rPanMake(0, 7);
-		if (!panelSeparate(0, 7, Box) && !panelSeparate(0, 6, Box)) goto cctCasual;
+		for (Playable* p : testing) {
+			if (p->fett) balcony.push_back(p);
+		}
+
+		if (rPan(0, 5)) {
+			for (Playable* p : testing) {
+				if (panel(0, 7, {p})) balcony.push_back(p);
+			}
+
+		}
+
+		rPanMake(0, 6);
+		if (!panel(0, 6, balcony)) goto cctCasual;
 
 		rPanMake(0, 3);
 		rPanMake(1, 3);
@@ -1334,7 +1381,8 @@ cct:
 		goto cctGlitch;
 	cct2:
 		//dvt
-		if (panel(2, 1)) goto cct3;
+		//bounty and imperial panels have different hitbox, so you probably cannot do DV2 skip
+		if (CCT->panels[2].panels[1].type == AstroPanel && panel(2, 1) && logicType == superGlitched) goto cct3;
 		if (atrb(Fett)) goto cct3; //can jump to vader to skip panels
 		if (panel(2, 2) && panel(2, 3)) goto cct3;
 		goto cctGlitch;
@@ -1362,9 +1410,12 @@ bespin:
 		bool gotr2 = false;
 		bool openneddoor = false;
 		bool room2 = false;
+		bool r2Door = false;
 		bool bonusHat = false;
+
+		if (panel(0, 5)) r2Door = true;
 		//old OOB
-		if (logicType != casual && panel(0, 5)) {
+		if (logicType != casual && r2Door) {
 			for (Playable* p : testing) {
 				if (p->doubleJump || (p->jump && p->speed >= 1.199)) pastFight.push_back(p);
 			}
@@ -1393,10 +1444,12 @@ bespin:
 
 				} else {
 					for (Playable* p : temp) {
-						if (p->gas && panel(0, 5, {p})) {
+						if ((p->gas || (logicType != casual && p->jump)) //BTS
+							&& (panel(0, 5, {p}) || (r2Door && logicType != casual))) {
 							add(3);
 							pastFight.push_back(Bespin->party[3]);
 							gotr2 = true;
+							r2Door = true;
 						}
 					}
 				}
@@ -1406,6 +1459,15 @@ bespin:
 			if (!got3po) {
 				if (panel(0, 3, pastFight)) {
 					if (atrb(Build, pastFight) && atrb(Lever, pastFight) && atrb(Box, pastFight)) {
+						add(4);
+						pastFight.push_back(Bespin->party[4]);
+						got3po = true;
+					}
+				}
+				//door clip to get 3po
+				if (logicType != casual
+					&& All({Build, Jump}, pastFight) && All({Lever, Jump}, pastFight) && All({Box, Jump}, pastFight)) {
+					if (r2Door || gotr2 || panel(0, 6, pastDoor)) {
 						add(4);
 						pastFight.push_back(Bespin->party[4]);
 						got3po = true;
@@ -1468,7 +1530,17 @@ bespin2:
 
 
 	} else {
-		if (!panelAnd(1, 0, {Fly}) && !Multi(Fett, 2)) goto bespin;
+		std::vector<Playable*> overGap;
+		if (panelAnd(1, 0, {Fly})) overGap = testing;
+		else for (Playable* p : testing) {
+			if (p->fly) overGap.push_back(p);
+		}
+
+		//box clip
+		if (Multi(Fett, 2, overGap)) goto jabbas;
+		if (panel(1, 1, overGap) && (atrb(Gas, overGap) || panel(1, 2, overGap))) goto jabbas;
+		goto bespin;
+
 
 
 	}
@@ -1496,6 +1568,7 @@ jabbas:
 					if (p != x) {
 						if (x->jedi && p->pushable) pastGate.push_back(p);
 						if (x->choke && p->chokeable) pastGate.push_back(p);
+						if (x->lightning && p->lightningable) pastGate.push_back(p);
 						if (x->zapper && p->zappable) pastGate.push_back(p);
 						if (x->jedi && p->trickable) pastGate.push_back(p);
 						if (x->astrozapper && p->storm) pastGate.push_back(p);
@@ -1579,7 +1652,7 @@ jabbas3:  //long room
 		if (panelAnd(2, 0, {Box})) goto jabbas4;
 		if (panelAnd(2, 0, {DoubleJump})) goto jabbas4;
 
-		if (SuperJump({Jump})) goto jabbas4;
+		if (SuperJump({Jump, Flutter})) goto jabbas4;
 		goto jabbas;
 	}
 
@@ -1691,7 +1764,7 @@ showdown:
 	mix(Showdown);
 
 	if (Multi(Jedi, 2)) goto endor;
-	if (atrb(Jedi) && atrb(Grapple)) goto endor;
+	if (atrb(Jedi) && All({Grapple, SlightlyHigherJump})) goto endor;
 
 	if (logicType != casual) {
 		if (Multi(Box, 2) && atrb(DoubleJump)) { //need both to ride speeders
@@ -1880,32 +1953,65 @@ bhm:
 	//why was this here?
 	//if (!atrb(HighDoubleJump))
 	//	goto bhm;
-	if (!atrb(Bounty))
+	if (!bhPanel(Negotiations, 0, 1)) goto bhm;
+	if (!bhPanel(Factory, 3, 2)) goto bhm;
+	if (!bhPanel(JediBattle, 0, 1)) goto bhm;
+	if (!bhPanel(SecretPlans, 1, 1) && !bhPanel(SecretPlans, 1, 2)) goto bhm;
+	if (!bhPanel(Jundland, 0, 2)) goto bhm;
+	if (!bhPanel(Jundland, 0, 4)) goto bhm;
+	if (!bhPanel(EchoBase, 2, 0)) goto bhm;
+
+	//bounty or yodajump
+
+	if (logicType == casual) {
+		if (!atrb(Gas)) goto bhm;
+		if (!atrb(Fly)) goto bhm;
+		if (!bhPanel(Bespin, 1, 1)) goto bhm;
+
+		if (bhPanel(Bespin, 0, 0)) addHat(0, 0, Bespin);
+		if (!bhPanel(Bespin, 0, 1)) goto bhm;
+		if (!bhPanel(Bespin, 0, 2)) goto bhm;
+		addHat(0, 1, Bespin);
+		if (!bhPanel(Bespin, 0, 6)) goto bhm;
+
+		availableHats.clear();
+
+	} else {
+
+		if (bhPanel(Bespin, 0, 0)) addHat(0, 0, Bespin);
+		if (bhPanel(Bespin, 0, 1)) goto bhm7;
+		if (bhPanel(Bespin, 0, 5)) {
+			if (atrb(DoubleJump)) goto bhm7;
+			for (Playable* p : testing) {
+				if (p->jump && p->speed >= 1.199) goto bhm7;
+			}
+		}
+		addHat(0, 1, Bespin);
+		if (bhPanel(Bespin, 0, 6)) goto bhm7;
+
 		goto bhm;
-	if (!atrb(Astro))
-		goto bhm;
-	if (!atrb(Proto))
-		goto bhm;
+
+	bhm7:
+		availableHats.clear();
+
+		if (!Any({Gas, Fly})) goto bhm;
+		if (!atrb(Fly) && !All({HighJump, RealDoubleJump})) goto bhm;
+
+
+	}
+	if (!atrb(Bounty)) goto bhm;
+
 	if (!atrb(Build))
 		goto bhm;
 	if (!atrb(Lever))
 		goto bhm;
 	if (!atrb(Fett) && !All({Grapple, DoubleJump}))
 		goto bhm;
-	if (logicType == casual) {
-		if (!atrb(Fly))
-			goto bhm;
-	} else {
-		if (!atrb(Fly) && !All({HighJump, RealDoubleJump}))
-			goto bhm;
-	}
 
 	//ghost cannot be captured
 	if (atrb(Ghost, BHM->bonusCharacters)) goto bhm;
 
 	mix(Cantina);
-
-
 
 
 	if (character) {
@@ -1976,7 +2082,11 @@ bhm:
 				}
 			}
 		}
-		//binaryWrite(getBasePath(Princess, 'A', "GIZ"), "00", 0x3035);
+
+		//Makes the actual panel visible once you build it since I could not figure
+		//out how to replace the icon on the fake one.
+		txtIns(getBasePath(Princess, 'A', "GIT"), "\t\tStartInvisible\n", {195});
+		binaryWrite(getBasePath(Princess, 'A', "GIZ"), "00", 0x3035);
 
 	}
 
@@ -2124,7 +2234,7 @@ bhm:
 		scpRep('A', "TC14", "alwaystrue", 26, {35, 6});
 		lineDeleterScp('A', "TC14", {39});
 
-		
+
 		scriptTxtRep('A', "ai_pk", "PKDROID", 4);
 		ai2Write('A', "ai_pk", {0x4400, 0x44B5});
 		scriptTxtRep('C', "ai_pk", "PKDROID", 6);
@@ -2313,7 +2423,7 @@ bhm:
 		scpIns('C', "PARTY", 2, {6, 11});
 		scpIns('B', "PARTY", 2, {18, 11});
 
-	
+
 		currentLev = Coruscant;
 		playerInit({{0, 1}, {1, 2}});
 
@@ -2699,6 +2809,11 @@ bhm:
 		baseFile('A', "TXT", 4, {494, 13});
 		baseFile('A', "GIT", 4, {1598, 22});
 
+		if (Bespin->panels[0].panels[1].type != BountyPanel) {
+			//Prevents camera pan if Boba can't open door
+			lineDeleterScp('A', "AI_BOBAFETT", {345, 348});
+		}
+
 		currentLev = Jabbas;
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
@@ -2838,7 +2953,7 @@ bhm:
 
 			auto missionReplace2 = [](int c, unsigned int line, Level* lev, char scene, std::string script) {
 				writer(oneWrite, getSCP(lev, scene, script),
-					{BHM->bonusCharacters[c]->name, BHM->vanillaBonusCharacters[c]->vanillaName.length(), {line, 49}});
+					{BHM->bonusCharacters[c]->name, BHM->vanillaBonusCharacters[c]->name.length(), {line, 49}});
 				//scpIns(scene, script, c, {line, 49}, bonusCharacter);
 			};
 
@@ -2896,91 +3011,6 @@ bhm:
 			batchAnywhere(ENGLISH, bounties);
 
 		}
-
-		//Character unlocks
-	#ifdef _DEBUG
-		logR("starting collection");
-	#endif
-
-		std::ofstream collect(out + "/CHARS/COLLECTION.TXT");
-
-		auto collectWrite = [&](std::vector<Playable*>& vec) {
-			for (Playable* p : vec) {
-				collect << "collect \"" + p->name + "\" ";
-				if (p == allMinikitsCharacter)
-					collect << "all_minikits_complete" << '\n';
-				else if (p->storyMode)
-					collect << "story" << '\n';
-				else {
-					if (p->allEpisodes) {
-						collect << "all_episodes_complete ";
-					} else if (!p->noLevel) {
-						collect << "area_complete \"";
-						collect << p->lev->name << "\" ";
-					}
-					collect << "buy_in_shop ";
-					collect << std::to_string(p->price) << '\n';
-				}
-			#ifdef _DEBUG
-				logR(p->realName + " collected.");
-			#endif
-			}
-		};
-
-		collectWrite(chs);
-
-		collect << "collect \"weirdo1\"" << '\n';
-		collect << "collect \"weirdo2\"" << '\n';
-
-		collectWrite(vhs);
-
-		std::string minis[] = {"mini_republic_cruiser",
-			"mini_gungan_bongo",
-			"mini_royal_starship",
-			"mini_sebulba_pod",
-			"mini_naboo_starfighter",
-			"mini_sith_infiltrator",
-
-			"mini_zam_speeder",
-			"mini_jedi_starfighter",
-			"mini_droideka",
-			"mini_gunship",
-			"mini_atte",
-			"mini_solar_sailor",
-
-			"mini_dropship",
-			"mini_emergency_ship",
-			"mini_e3_jedi_starfighter",
-			"mini_wookie_cat",
-			"mini_e3_x_wing",
-			"mini_v_wing",
-
-			"mini_star_destroyer",
-			"mini_sand_crawler",
-			"mini_land_speeder",
-			"mini_millennium_falcon",
-			"mini_y_wing",
-			"mini_tie_advanced",
-
-			"mini_atat",
-			"mini_snow_speeder",
-			"mini_tie_fighter",
-			"mini_x_wing",
-			"mini_slave1",
-			"mini_cloud_car",
-
-			"mini_desert_skiff",
-			"mini_sail_barge",
-			"mini_tie_bomber",
-			"mini_atst",
-			"mini_tie_interceptor",
-			"mini_imperial_shuttle"};
-
-		for (std::string mini : minis) {
-			collect << "collect \"" << mini << "\" minikit" << '\n';
-		}
-		collect.close();
-
 		multiPointer(allMinikitsCharacter, {0x2b0ce, 0x84ef2, 0x5a750, 0x5fd87, 0x5a7db, 0x5fe12});
 
 		//removed 0x86969, 0x86982,
@@ -2988,53 +3018,138 @@ bhm:
 			0xc50d0, 0xc65b1});
 		numWrite(EXE, indy->price, 0x2e5c7);
 		//txtIns(out + "/STUFF/TEXT/ENGLISH.TXT", indy->realName, {{1627, 7}}, 13);
-		//UNCOMMENT THIS
 		writer(oneWrite, ENGLISH, writeSingle{indy->realName, 13, {1627, 7}});
 
-
-		//fixes ET characters
-		if (extog) {
-			//UNCOMMENT THIS
-			writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
-
-			lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
-			lineDeleter(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
-			lineDeleter(CHR + "MOUSEDROID/MOUSEDROID.TXT", {17});
-			lineDeleter(CHR + "NAFFDROID1/NAFFDROID1.TXT", {19});
-			lineDeleter(CHR + "NAFFDROID2/NAFFDROID2.TXT", {19});
-			lineDeleter(CHR + "NAFFDROID3/NAFFDROID3.TXT", {13});
-			lineDeleter(CHR + "NAFFDROID4/NAFFDROID4.TXT", {19});
-			lineDeleter(CHR + "REBELSCUM/ENGINEER.TXT", {5});
-			lineDeleter(CHR + "SKELETON/SKELETON.TXT", {6});
-			lineDeleter(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", {4});
-			lineDeleter(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", {7});
-			lineDeleter(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", {6});
-			lineDeleter(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", {4});
-			lineDeleter(CHR + "WOMPRAT/WOMPRAT.TXT", {18});
-		}
 	} //character
 
-	/*
-	blue	3fb112
-	green	3fb102
-	red		3fb0f2
-	purple	3fb122
-	*/
+		//Character unlocks
+#ifdef _DEBUG
+	logR("starting collection");
+#endif
 
-	/*
-	green:
-	model		205
-	material	316
-	mesh		389ac
+	std::ofstream collect(out + "/CHARS/COLLECTION.TXT");
 
-	float		3419AC
-	modelptr	36361c
-	grnglwptr	363B50
-	specialptr	35C4F4
-	grnmd		36ADFC
+	auto collectWrite = [&](std::vector<Playable*>& vec) {
+		for (Playable* p : vec) {
+			collect << "collect \"" + p->name + "\" ";
+			if (p == allMinikitsCharacter)
+				collect << "all_minikits_complete" << '\n';
+			else if (p->storyMode)
+				collect << "story" << '\n';
+			else {
+				if (p->allEpisodes) {
+					collect << "all_episodes_complete ";
+				} else if (!p->noLevel) {
+					collect << "area_complete \"";
+					collect << p->lev->name << "\" ";
+				}
+				collect << "buy_in_shop ";
+				collect << std::to_string(p->price) << '\n';
+			}
+		#ifdef _DEBUG
+			logR(p->realName + " collected.");
+		#endif
+		}
+	};
 
-	3F483C
-	*/
+	collectWrite(chs);
+
+	collect << "collect \"weirdo1\"" << '\n';
+	collect << "collect \"weirdo2\"" << '\n';
+
+	collectWrite(vhs);
+
+	std::string minis[] = {"mini_republic_cruiser",
+		"mini_gungan_bongo",
+		"mini_royal_starship",
+		"mini_sebulba_pod",
+		"mini_naboo_starfighter",
+		"mini_sith_infiltrator",
+
+		"mini_zam_speeder",
+		"mini_jedi_starfighter",
+		"mini_droideka",
+		"mini_gunship",
+		"mini_atte",
+		"mini_solar_sailor",
+
+		"mini_dropship",
+		"mini_emergency_ship",
+		"mini_e3_jedi_starfighter",
+		"mini_wookie_cat",
+		"mini_e3_x_wing",
+		"mini_v_wing",
+
+		"mini_star_destroyer",
+		"mini_sand_crawler",
+		"mini_land_speeder",
+		"mini_millennium_falcon",
+		"mini_y_wing",
+		"mini_tie_advanced",
+
+		"mini_atat",
+		"mini_snow_speeder",
+		"mini_tie_fighter",
+		"mini_x_wing",
+		"mini_slave1",
+		"mini_cloud_car",
+
+		"mini_desert_skiff",
+		"mini_sail_barge",
+		"mini_tie_bomber",
+		"mini_atst",
+		"mini_tie_interceptor",
+		"mini_imperial_shuttle"};
+
+	for (std::string mini : minis) {
+		collect << "collect \"" << mini << "\" minikit" << '\n';
+	}
+	collect.close();
+
+
+
+	//fixes ET characters
+	if (extog) {
+		//UNCOMMENT THIS
+		writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
+
+		lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
+		lineDeleter(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
+		lineDeleter(CHR + "MOUSEDROID/MOUSEDROID.TXT", {17});
+		lineDeleter(CHR + "NAFFDROID1/NAFFDROID1.TXT", {19});
+		lineDeleter(CHR + "NAFFDROID2/NAFFDROID2.TXT", {19});
+		lineDeleter(CHR + "NAFFDROID3/NAFFDROID3.TXT", {13});
+		lineDeleter(CHR + "NAFFDROID4/NAFFDROID4.TXT", {19});
+		lineDeleter(CHR + "REBELSCUM/ENGINEER.TXT", {5});
+		lineDeleter(CHR + "SKELETON/SKELETON.TXT", {6});
+		lineDeleter(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", {4});
+		lineDeleter(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", {7});
+		lineDeleter(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", {6});
+		lineDeleter(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", {4});
+		lineDeleter(CHR + "WOMPRAT/WOMPRAT.TXT", {18});
+	}
+
+/*
+blue	3fb112
+green	3fb102
+red		3fb0f2
+purple	3fb122
+*/
+
+/*
+green:
+model		205
+material	316
+mesh		389ac
+
+float		3419AC
+modelptr	36361c
+grnglwptr	363B50
+specialptr	35C4F4
+grnmd		36ADFC
+
+3F483C
+*/
 
 
 #if (0)

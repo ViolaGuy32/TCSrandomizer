@@ -1,4 +1,4 @@
 #pragma once
 void fileGen();
 
-void fixNames();
+//void fixNames();

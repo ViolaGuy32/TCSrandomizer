@@ -48,7 +48,7 @@ MainFrame::MainFrame(const wxString& title)
 	logOpt.Add("Glitched");
 	logOpt.Add("Super Glitched");
 
-	directoryLabel = new wxStaticText(panel, wxID_ANY, "Unmoddified TCS Directory:", wxPoint(45, 10));
+	directoryLabel = new wxStaticText(panel, wxID_ANY, "Unmoddified TCS Directory with GOG exe:", wxPoint(45, 10));
 	tcsFolder = new wxDirPickerCtrl(panel, wxID_ANY, wxEmptyString, "Game Files", wxPoint(40, 25), wxSize(300, 25));
 
 	start = new wxButton(panel, wxID_ANY, "Randomize", wxPoint(100, 225), wxSize(200, 50));

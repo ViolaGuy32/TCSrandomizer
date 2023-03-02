@@ -473,80 +473,6 @@ void txtIns(std::string file, std::string newC, const std::initializer_list<int>
 
 }
 
-/*
-void txtIns( std::string file,  std::string newC, coord lnCol, const int len) {
-	txtIns(file, newC, {lnCol}, len);
-}*/
-
-//void batchTxt( std::string file,  std::initializer_list<writeSet> stuff) {
-//	//this one is faster
-//	std::vector<std::string> contents;
-//	getfile(file, contents);
-//
-//	for (writeSet thing : stuff)
-//		for (coord x : thing.lnCol)
-//			contents[x.ln - 1].replace(x.col - 1, thing.len, thing.newStr);
-//
-//
-//	std::ofstream fileout(file);
-//	for ( std::string y : contents)
-//		fileout << y + "\n";
-//
-//	fileout.close();
-//}
-//
-//void batchPlayerTxt( std::string file,  std::initializer_list<writePlayerSet> stuff) {
-//
-//	std::vector<std::string> contents;
-//	getfile(file, contents);
-//
-//	for (writePlayerSet thing : stuff) {
-//		for (coord x : thing.lnCol) {
-//			contents[x.ln - 1].replace(x.col - 1, currentLev->vanillaMap[currentLev->*thing.chType][thing.characterNum]->name.length(),
-//				(currentLev->*thing.chType)[thing.characterNum]->name);
-//		}
-//	}
-//
-//	std::ofstream fileout(file);
-//	for ( std::string y : contents)
-//		fileout << y + "\n";
-//
-//	fileout.close();
-//}
-//
-//void batchSinglePlayerTxt( std::string file,  std::initializer_list<writePlayerSingle> stuff) {
-//	//this one is faster
-//	std::vector<std::string> contents;
-//	getfile(file, contents);
-//
-//	for (writePlayerSingle thing : stuff) {
-//		contents[thing.lnCol.ln - 1].replace(thing.lnCol.col - 1, currentLev->vanillaMap[currentLev->*thing.chType][thing.characterNum]->name.length(),
-//			(currentLev->*thing.chType)[thing.characterNum]->name);
-//	}
-//
-//	std::ofstream fileout(file);
-//	for ( std::string y : contents)
-//		fileout << y + "\n";
-//
-//	fileout.close();
-//}
-
-//template <typename C, typename W>
-//void writer(void(*fun)(std::initializer_list<C>&, std::vector<std::string>&),
-//	 std::string file,  std::initializer_list<W> stuff) {
-//
-//	std::vector<std::string> contents;
-//	getfile(file, contents);
-//
-//	fun(stuff, contents);
-//
-//	std::ofstream fileout(file);
-//	for ( std::string y : contents)
-//		fileout << y + "\n";
-//
-//	fileout.close();
-//}
-
 
 void oneWrite(writeSingle wrt, std::vector<std::string>& contents) {
 	//alters one line in file
@@ -652,17 +578,6 @@ std::string getMainTxt(Level* lev) {
 	return out + lev->path + lev->name + ".TXT";
 }
 
-//std::string getGiz( Level* lev,  char scene) {
-//	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIZ";
-//}
-//
-//std::string getGit( Level* lev,   char scene) {
-//	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".GIT";
-//}
-//
-//std::string getSceneTxt( Level* lev,   char scene) {
-//	return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + ".TXT";
-//}
 
 std::string getSCP(Level* lev, char scene, std::string script) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + script + ".SCP";
@@ -693,9 +608,9 @@ std::string getName(int characterNum, std::vector<Playable*> Level::* chType) {
 std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character to be replaced
 	if (chType == &Level::bonusCharacters) {
-		return currentLev->vanillaBonusCharacters[characterNum]->vanillaName;
+		return currentLev->vanillaBonusCharacters[characterNum]->name;
 	} else {
-		return currentLev->vanillaParty[characterNum]->vanillaName;
+		return currentLev->vanillaParty[characterNum]->name;
 	}
 }
 
@@ -825,88 +740,6 @@ void baseFile(char scene, std::string fileType, int chNum, coord lnCol,
 	writer(oneWrite, getBasePath(currentLev, scene, fileType), {chNum, lnCol, chType});
 }
 
-/*
-
-void Level::rename(std::string newText, std::string oldText, char scene) {
-	std::string file = episode + firstName + '/' + name + '_' + scene + "/AI/";
-	renamer(file + oldText, file + newText);
-
-}
-
-void Level::rename(int characterNumber, char scene) {
-	rename(party[characterNumber]->name + ".SCP", vanillaParty[characterNumber]->name + ".SCP", scene); //FIX
-}
-*/
-
-//void OLDtxtIns( std::string file, std::string newC, std::vector<coord> lnCol, int len = 0) {
-//	//lnCol must be in order
-//
-//	std::ifstream filein(file);
-//
-//	//switch to arrays
-//	std::vector<std::string> contents = getfile(file);
-//	std::vector<std::string> output;
-//	 int i = 1;
-//	 int j = 0;
-//	for (std::string x : contents) {
-//
-//
-//		if (i < contents.size()) {
-//			//wxstd::string temp = (wxstd::string) file + " " + to_std::string(i) + ", " + to_std::string(j) + " " + newC;
-//			//logR(temp);
-//			while (j < lnCol.size() && i == lnCol[j].ln) {
-//				x.replace(lnCol[j].col - 1, len, newC);
-//
-//				j++;
-//			}
-//		}
-//		output.push_back(x + "\n");
-//		i++;
-//	}
-//	filein.close();
-//
-//	ofstream fileout(file);
-//	for (std::string y : output) {
-//		fileout << y;
-//	}
-//	fileout.close();
-//
-//}
-//void txtIns(std::string file, std::string newC, int* coord, int len = 0) {
-//	//coord must be in order
-//	logR("txtIns");
-//
-//	std::ifstream filein(file);
-//
-//	//switch to arrays
-//	std::vector<std::string> contents = getfile(file);
-//	std::vector<std::string> output;
-//	 int i = 1;
-//	 int j = 0;
-//	for (std::string x : contents) {
-//		wxstd::string temp = to_std::string(i);
-//		logR(temp);
-//
-//		if (i < contents.size()) {
-//			if (i == coord[j]) {
-//				x.replace(0, len, newC);
-//				j++;
-//
-//			}
-//		}
-//		output.push_back(x + "\n");
-//		i++;
-//	}
-//	filein.close();
-//
-//	ofstream fileout(file);
-//	for (std::string y : output) {
-//		fileout << y;
-//	}
-//	fileout.close();
-//
-//}
-
 rgb::rgb() {
 	r = rand() % 0xFF;
 	g = rand() % 0xFF;
@@ -916,9 +749,3 @@ rgb::rgb() {
 	gF = (float)g / 255.0f;
 	bF = (float)b / 255.0f;
 }
-
-//coord::coord() {}
-//
-//coord::coord(  int myLn) : ln(myLn) {}
-//
-//coord::coord(  int myLn,   int myCol) : ln(myLn), col(myCol) {}

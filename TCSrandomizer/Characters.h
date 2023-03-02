@@ -11,7 +11,7 @@ struct Level;
 struct Playable {
 	std::string name = "";
 	std::string realName = "";
-	std::string vanillaName = "";
+	//std::string vanillaName = "";
 	int address = 0;
 
 	float speed = 1.2;
@@ -27,7 +27,10 @@ struct Playable {
 		saber = false, deflect = false, imperial = false, astro = false, proto = false, droid = false,
 		passive = false, gas = false, bounty = false, hatch = false, tall = false,
 		extratoggle = false, pushable = false, chokeable = false,
-		trickable = false, zappable = false, storm = false, slightlyBetterJump = false,
+		trickable = false, zappable = false, storm = false,
+		slightlyBetterJump = false, slightlyHigherJump = false,
+
+		lightning = false, lightningable = false, resistZap = false,
 
 		active = false,
 
@@ -98,9 +101,6 @@ struct SpecialCollectable {
 
 };
 
-//struct SpecialColelctable {
-//	std::vector<Collectable>;
-//};
 
 struct Level {
 	std::vector<Playable*> party;
@@ -114,18 +114,10 @@ struct Level {
 	std::string name;
 	std::string shortName;
 	std::string path;
-	//std::string episode;
 	bool vehicleLevel = false;
-	//int isFake;
-	//std::vector<Playable*> unlocks;
-	//int collectIt = 0;
 
 	std::vector<Collectable> collectables;
 	std::vector<SpecialCollectable> specialCollectables;
-
-	//std::array<char, 21> collectables =
-	//{'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm',
-	//'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
 
 	Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
 		std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
@@ -137,9 +129,10 @@ struct Level {
 
 extern std::vector<DispenserType> availableHats;
 extern std::vector<Playable*> testing;
+extern Level* currentLev;
 
 void add(int a);
-void addHat(int set, int hat);
+void addHat(int set, int hat, Level* lev = currentLev);
 
 void mix(Level* lev);
 
@@ -159,13 +152,18 @@ bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std:
 
 bool SuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
 
+bool SuperJump(std::initializer_list<bool Playable::*> atrs, const  std::vector<Playable*>& current = testing);
+
 bool InstantSuperJump(const bool Playable::* atr = &Playable::alwaysTrue, const std::vector<Playable*>& current = testing);
 
+bool Instant(std::initializer_list<bool Playable::*> atrs, const  std::vector<Playable*>& current = testing);
 
 
 bool LivingJedi(const std::vector<Playable*>& current = testing);
 
 bool DoubleTransitionSkip(const bool Playable::* atr = &Playable::alwaysTrue, const  std::vector<Playable*> current = testing);
+
+bool DoubleTransitionSkip(std::initializer_list<bool Playable::*> atrs, const  std::vector<Playable*>& current = testing);
 
 float GetFastest(const std::vector<Playable*> current = testing);
 
@@ -175,8 +173,12 @@ float GetSlowest(const std::vector<Playable*> current = testing);
 
 bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing, std::vector<DispenserType> theHats = availableHats);
 
+bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats = availableHats);
+
 bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current = testing);
 
 bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::vector<Playable*>& current = testing);
 
 bool panelSeparate(int panSet, int pan, bool Playable::* atr, const std::vector<Playable*>& current = testing);
+
+std::string panelString(int panSet, int pan);

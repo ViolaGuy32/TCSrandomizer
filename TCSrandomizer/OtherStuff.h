@@ -107,6 +107,8 @@ void oneWrite(writeSingle wrt, std::vector<std::string>& contents);
 
 void multiWrite(std::vector<writeSingle> stuff, std::vector<std::string>& contents);
 
+void weirdWrite(writeSet stuff, std::vector<std::string>& contents);
+
 void manyWrite(std::vector<writeSet> stuff, std::vector<std::string>& contents);
 
 void appender(std::string appendix, std::vector<std::string>& contents);
@@ -114,6 +116,8 @@ void appender(std::string appendix, std::vector<std::string>& contents);
 void lineDel(std::vector<unsigned int> lines, std::vector<std::string>& contents);
 
 std::string getBasePath(Level* lev, char scene, std::string fileType);
+
+std::string getMainTxt(Level* lev);
 
 std::string getSCP(Level* lev, char scene, std::string script);
 

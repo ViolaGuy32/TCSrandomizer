@@ -26,11 +26,10 @@ extern std::vector<Playable*> pls; //Characters and Vehicles
 extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
 
-extern Level* currentLev;
 
 Playable::Playable(std::string myName, std::string myRealName, int myPrice,
 	int myAddress, float mySpeed, std::vector<bool Playable::*> Attributes)
-	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed), vanillaName(myName) {
+	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed) {
 	for (bool Playable::* atr : Attributes) {
 		*this.*atr = true;
 	}
@@ -111,8 +110,8 @@ void add(int a) {
 	testing.push_back(currentLev->party[a]);
 }
 
-void addHat(int set, int hat) {
-	availableHats.push_back(currentLev->dispensers[set].dispenser[hat].type);
+void addHat(int set, int hat, Level* lev) {
+	availableHats.push_back(lev->dispensers[set].dispenser[hat].type);
 }
 
 void mix(Level* lev) {
@@ -202,8 +201,17 @@ void mix(Level* lev) {
 
 }
 
-bool Playable::* getPanel(int panSet, int pan) {
+std::string panelString(int panSet, int pan) {
 	PanelType panType = currentLev->panels[panSet].panels[pan].type;
+
+	if (panType == AstroPanel) return "astromech";
+	if (panType == ProtoPanel) return "protocol";
+	if (panType == BountyPanel) return "bounty_hunter";
+	if (panType == ImperialPanel) return "stormtrooper"; //might not work
+}
+
+bool Playable::* getPanel(int panSet, int pan, Level* lev = currentLev) {
+	PanelType panType = lev->panels[panSet].panels[pan].type;
 
 	if (panType == AstroPanel) return Astro;
 	if (panType == ProtoPanel) return Proto;
@@ -216,6 +224,20 @@ bool panel(int panSet, int pan, const std::vector<Playable*>& current, std::vect
 
 	if (atrb(panType, current)) return true;
 	if (atrb(Hat, current)) {
+		for (DispenserType disp : theHats) {
+			if (disp == StormtrooperHat && panType == Imperial) return true;
+			if (disp == BountyHat && panType == Bounty) return true;
+		}
+	}
+
+	return false;
+}
+
+bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats) {
+	bool Playable::* panType = getPanel(panSet, pan, lev);
+
+	if (atrb(panType, BHM->party)) return true;
+	if (atrb(Hat, BHM->party)) {
 		for (DispenserType disp : theHats) {
 			if (disp == StormtrooperHat && panType == Imperial) return true;
 			if (disp == BountyHat && panType == Bounty) return true;
@@ -367,6 +389,8 @@ bool SuperJump(const bool Playable::* atr, const  std::vector<Playable*>& curren
 			if (x != y) {
 				if (x->jedi && y->pushable && *y.*atr) return true;
 				if (x->choke && y->chokeable && *y.*atr) return true;
+				if (x->lightning && y->lightningable && *y.*atr) return true;
+				if (x->lightning && y->resistZap && *y.*atr) return true;
 				if (x->zapper && y->zappable && *y.*atr) return true;
 				if (x->jedi && y->trickable && *y.*atr) return true;
 				if (x->astrozapper && y->storm && *y.*atr) return true;
@@ -378,6 +402,14 @@ bool SuperJump(const bool Playable::* atr, const  std::vector<Playable*>& curren
 	return false;
 }
 
+bool SuperJump(std::initializer_list<bool Playable::*> atrs, const  std::vector<Playable*>& current) {
+	for (bool Playable::* atr : atrs) {
+		if (SuperJump(atr, current)) return true;
+	}
+	return false;
+}
+
+
 bool InstantSuperJump(const bool Playable::* atr, const  std::vector<Playable*>& current) {
 	//can act immediatly after SJC
 	if (logicType != superGlitched) return false;
@@ -386,9 +418,18 @@ bool InstantSuperJump(const bool Playable::* atr, const  std::vector<Playable*>&
 			if (x != y) {
 				if (x->jedi && y->jedi && *y.*atr) return true;
 				if (x->chokeable && y->choke && *y.*atr) return true;
+				if (x->lightning && y->lightningable && *y.*atr) return true;
+				if (x->lightning && y->resistZap && *y.*atr) return true;
 				if (x->lukeAlt && y == gamorreanguard && *y.*atr) return true;
 			}
 		}
+	}
+	return false;
+}
+
+bool InstantSuperJump(std::initializer_list<bool Playable::*> atrs, const  std::vector<Playable*>& current) {
+	for (bool Playable::* atr : atrs) {
+		if (InstantSuperJump(atr, current)) return true;
 	}
 	return false;
 }
@@ -408,6 +449,14 @@ bool DoubleTransitionSkip(const bool Playable::* atr, const std::vector<Playable
 				if (p1->saber && p2->*atr && !p2->ghost) return true;
 			}
 		}
+	}
+	return false;
+}
+
+
+bool DoubleTransitionSkip(std::initializer_list<bool Playable::*> atrs, const  std::vector<Playable*>& current) {
+	for (bool Playable::* atr : atrs) {
+		if (DoubleTransitionSkip(atr, current)) return true;
 	}
 	return false;
 }

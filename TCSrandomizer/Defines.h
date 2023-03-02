@@ -13,12 +13,12 @@
 #define ENGLISH out + "/STUFF/TEXT/ENGLISH.TXT"
 #define CHR out + "/CHARS/"
 
-
-#define TNG out + "/STUFF/THINGS_PC.GSC"
-#define PTL out + "/STUFF/GENERAL.PTL"
-#define PT1 out + "/STUFF/GENERAL_LSW1.PTL"
-#define PTC out + "/STUFF/CHAR.PTL"
-#define PC1 out + "/STUFF/CHAR_LSW1.PTL"
+//
+//#define TNG out + "/STUFF/THINGS_PC.GSC"
+//#define PTL out + "/STUFF/GENERAL.PTL"
+//#define PT1 out + "/STUFF/GENERAL_LSW1.PTL"
+//#define PTC out + "/STUFF/CHAR.PTL"
+//#define PC1 out + "/STUFF/CHAR_LSW1.PTL"
 
 #define Build &Playable::build
 #define Lever &Playable::lever
@@ -27,6 +27,7 @@
 #define Jedi &Playable::jedi
 #define Sith &Playable::sith
 #define Choke &Playable::choke
+#define Lightning &Playable::lightning
 #define Saber &Playable::saber //includes magnaguard
 #define Deflect &Playable::deflect
 
@@ -46,6 +47,7 @@
 #define Dive &Playable::dive
 #define Flop &Playable::flop
 #define SlightlyBetterJump &Playable::slightlyBetterJump
+#define SlightlyHigherJump &Playable::slightlyHigherJump
 
 #define Fly &Playable::fly
 #define Flutter &Playable::flutter
@@ -71,6 +73,8 @@
 #define Zappable &Playable::zappable
 #define Storm &Playable::storm
 #define Chokeable &Playable::chokeable
+#define Lightningable &Playable::lightningable
+#define ResistZap &Playable::resistZap
 #define Trickable &Playable::trickable
 
 #define Active &Playable::active
@@ -105,12 +109,8 @@ enum LogicType { casual, glitched, superGlitched };
 	1-2:
 	AI won't single jump over bridge
 
-	1-5:
-	bad jump 2nd room beginning
-	wicket freezes in theed 2
-
 	2-3:
-	3po AI
+	3po won't always follow onto turn things
 
 	3-1:
 	have spinners only spawn in correct mode
@@ -121,55 +121,24 @@ enum LogicType { casual, glitched, superGlitched };
 	3-6:
 	room 1 AI
 
-	4-1:
-	skip midtro sheild with force choke
-	free rebel friend with bomb
-
-	4-3:
-	more bomb skip stuff
-
 	4-4:
-	midtro panel icon
 	Ben AI when not Jedi
-	backtracking to hat room with other hat
-	turnstile room hat needs grapple
 
 	5-5:
-	dv1 & dvt & dv4 fett casual
-	dvt glitched skip fan
-	dv1, dv3 - fix ai
+	dv1 and dv3 ai
 
 	5-6:
-	add bool for r2 door
-	BTS
-	Boba freezes at door
-	go OOB for 3po
-	outside - use 3po panel with flyer
-	puts you by shop?
-
-	6-3:
-	check jump height
-
-	6-4:
-	try skipping bunker elevator with oob
-
-	BHM panels
+	sometimes puts you by shop?
 
 
-	OIL GLITCH	
-	resist_zap
-	flutters can do OOB
+	oil glitch
 	test everything with training remote
 
 	fix special character for padme
 	fix name length limit for scp
 	
-	create error messages for missing files
 	check playable attributes in log
 
-	add seed to gui
-
-	fix speed variable for ROLLS
-	bespin guard - slightly faster than 1.2
+	allow custom seeds
 
 	*/

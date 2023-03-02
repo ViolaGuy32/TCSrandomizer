@@ -8,6 +8,7 @@
 
 extern std::string out;
 extern std::string vanillaDirectory;
+extern Level* currentLev;
 
 void fileGen() {
 	//copies the game files and removes cutscenes
@@ -20,11 +21,7 @@ void fileGen() {
 		std::filesystem::copy_options::recursive
 		| std::filesystem::copy_options::overwrite_existing);
 
-	//makes sure it has the GOG exe
-	std::filesystem::copy("files/LEGOStarWarsSaga.exe", out,
-		std::filesystem::copy_options::overwrite_existing);
 
-	//delete these individually
 	std::string cmd = ("files\\quickbms.exe -F \"*.DAT\" -o files\\ttgames.bms " +
 		out + " " + out);
 	system(cmd.c_str());
@@ -415,36 +412,178 @@ void fileGen() {
 	txtIns(JDI + "SPEEDERCHASE/SPEEDERCHASE_A/SPEEDERCHASE_A.GIT", "status",
 		{{4403, 40}}, 5);
 }
-
-void fixNames() {
-	obiwankenobi_jedimaster->name = "obiwan_jedi";
-	lukeskywalker_tatooine->name = "luke_tatooine";
-	hansolo_stormtrooper->name = "han_trooper";
-	lukeskywalker_stormtrooper->name = "luke_trooper";
-	princessleia_hoth->name = "leia_hoth";
-	lukeskywalker_pilot->name = "luke_pilot";
-	lukeskywalker_dagobah->name = "luke_dagobah";
-	lukeskywalker_bespin->name = "luke_bespin";
-	princessleia_bespin->name = "leia_bespin";
-	lukeskywalker_jedi->name = "luke_jedi";
-	princessleia_boushh->name = "leia_boushh";
-	lando_palaceguard->name = "lando_guard";
-	princessleia_slave->name = "leia_slave";
-	princessleia_endor->name = "leia_endor";
-	lukeskywalker_endor->name = "luke_endor";
-	battledroid_security->name = "securitydroid";
-	battledroid_commander->name = "commanderdroid";
-	battledroid_geonosian->name = "geonosiandroid";
-	imperialshuttlepilot->name = "shuttlepilot";
-	lukeskywalker_hoth->name = "luke_hoth";
-	princessleia_prisoner->name = "leia_prisoner";
-	newrepublicgunship->name = "gunship";
-	jedistarfighter_yellow_ep3->name = "star_yellow";
-	jedistarfighter_red_ep3->name = "star_red";
-	newanakinspod_green->name = "pod_green";
-	naboostarfighter_lime->name = "naboo_green";
-	anakinsspeeder_green->name = "speeder_green";
-	newrepublicgunship_green->name = "gunship_green";
-
-
-}
+//
+//void quickName(std::string oldstr, std::string newstr) {
+//	int test = rename(oldstr.c_str(), newstr.c_str());
+//	if (test == -1) {
+//		wxString err = "File name override failed: " + oldstr + " -> " + newstr;
+//		wxLogError(err);
+//	}
+//}
+//Playable* currentChar = defaultCharacter;
+//
+//void renameChar(std::string folder) {
+//	quickName(CHR + folder + '/' + currentChar->vanillaName + ".TXT", CHR + folder + '/' + currentChar->name + ".TXT");
+//	quickName(CHR + folder + '/' + currentChar->vanillaName + "_PC.GHG", CHR + folder + '/' + currentChar->name + "_PC.GHG");
+//	quickName(CHR + folder + '/' + currentChar->vanillaName + "_LR_PC.GHG", CHR + folder + '/' + currentChar->name + "_LR_PC.GHG");
+//
+//}
+//
+//void chartxt(unsigned int ln) {
+//	writer(oneWrite, CHR + "CHARS.TXT", {currentChar->name, currentChar->vanillaName.length(), {ln, 8}});
+//}
+//
+//void hgo(coord lncol) {
+//	writer(oneWrite, CHR + "HGO.TXT", {currentChar->name, currentChar->vanillaName.length(), lncol});
+//}
+//
+//void lrghg(coord lncol) {
+//	writer(oneWrite, CHR + "LRGHG.TXT", {currentChar->name, currentChar->vanillaName.length(), lncol});
+//}
+//
+//void stranger(std::vector<coord> lncol) {
+//	writer(weirdWrite, CHR + "CUSTOMIZER.TXT", {currentChar->name, currentChar->vanillaName.length(), lncol});
+//}
+//
+//void ghg(std::vector<coord> lncol) {
+//	writer(weirdWrite, CHR + "GHG.TXT", {currentChar->name, currentChar->vanillaName.length(), lncol});
+//}
+//
+//void repMain(Level* lev, unsigned int ln) {
+//	writer(oneWrite, getMainTxt(currentLev), {currentChar->name, currentChar->vanillaName.length(), {ln, 12}});
+//}
+//
+//void scpNamer(Level* lev, char scene, std::string script, coord lncol) {
+//	writer(oneWrite, getSCP(lev, scene, script), {currentChar->name, currentChar->vanillaName.length(), lncol});
+//}
+//
+//void fixNames() {
+//	obiwankenobi_jedimaster->name = "obiwan_jedi";
+//	lukeskywalker_tatooine->name = "luke_tatooine";
+//	hansolo_stormtrooper->name = "han_trooper";
+//	lukeskywalker_stormtrooper->name = "luke_trooper";
+//	princessleia_hoth->name = "leia_hoth";
+//	lukeskywalker_pilot->name = "luke_pilot";
+//	lukeskywalker_dagobah->name = "luke_dagobah";
+//	lukeskywalker_bespin->name = "luke_bespin";
+//	princessleia_bespin->name = "leia_bespin";
+//	lukeskywalker_jedi->name = "luke_jedi";
+//	princessleia_boushh->name = "leia_boushh";
+//	lando_palaceguard->name = "lando_guard";
+//	princessleia_slave->name = "leia_slave";
+//	princessleia_endor->name = "leia_endor";
+//	lukeskywalker_endor->name = "luke_endor";
+//	battledroid_security->name = "securitydroid";
+//	battledroid_commander->name = "commanderdroid";
+//	battledroid_geonosian->name = "geonosiandroid";
+//	imperialshuttlepilot->name = "shuttlepilot";
+//	lukeskywalker_hoth->name = "luke_hoth";
+//	princessleia_prisoner->name = "leia_prisoner";
+//	newrepublicgunship->name = "gunship";
+//	jedistarfighter_yellow_ep3->name = "star_yellow";
+//	jedistarfighter_red_ep3->name = "star_red";
+//	newanakinspod_green->name = "pod_green";
+//	naboostarfighter_lime->name = "naboo_green";
+//	anakinsspeeder_green->name = "speeder_green";
+//	newrepublicgunship_green->name = "gunship_green";
+//
+//	currentChar = obiwankenobi_jedimaster;
+//	renameChar("OBIWANKENOBI");
+//	chartxt(303);
+//	ghg({{451, 38}, {452, 38}});
+//	hgo({229, 38});
+//	lrghg({226, 38});
+//	stranger({{148, 47}, {23, 29}});
+//	
+//	repMain(Dooku, 1);
+//	scpNamer(Dooku, 'C', "DOOKU", {209, 45});
+//
+//	repMain(Factory, 10);
+//	repMain(JediBattle, 3);
+//	repMain(JediBattle, 8);
+//
+//	currentChar = lukeskywalker_tatooine;
+//	renameChar("LUKESKYWALKER");
+//
+//	currentChar = hansolo_stormtrooper;
+//	renameChar("HANSOLO");
+//
+//	currentChar = lukeskywalker_stormtrooper;
+//	renameChar("LUKESKYWALKER");
+//
+//	currentChar = princessleia_hoth;
+//	renameChar("PRINCESSLEIA");
+//
+//	currentChar = lukeskywalker_pilot;
+//	renameChar("LUKESKYWALKER");
+//
+//	currentChar = lukeskywalker_dagobah;
+//	renameChar("LUKESKYWALKER_JEDI");
+//
+//	currentChar = lukeskywalker_bespin;
+//	renameChar("LUKESKYWALKER_JEDI");
+//
+//	currentChar = princessleia_bespin;
+//	renameChar("PRINCESSLEIA");
+//
+//	currentChar = lukeskywalker_jedi;
+//	renameChar("LUKESKYWALKER_JEDI");
+//
+//	currentChar = princessleia_boushh;
+//	renameChar("PRINCESSLEIA");
+//
+//	currentChar = lando_palaceguard;
+//	renameChar("LANDOCALRISSIAN");
+//
+//	currentChar = princessleia_slave;
+//	renameChar("PRINCESSLEIA");
+//
+//	currentChar = princessleia_endor;
+//	renameChar("PRINCESSLEIA");
+//
+//	currentChar = lukeskywalker_endor;
+//	renameChar("LUKESKYWALKER_JEDI");
+//
+//	currentChar = battledroid_security;
+//	renameChar("BATTLEDROID");
+//
+//	currentChar = battledroid_commander;
+//	renameChar("BATTLEDROID");
+//
+//	currentChar = battledroid_geonosian;
+//	renameChar("BATTLEDROID");
+//
+//	currentChar = imperialshuttlepilot;
+//	renameChar("IMPERIALOFFICER");
+//
+//	currentChar = lukeskywalker_hoth;
+//	renameChar("LUKESKYWALKER");
+//
+//	currentChar = princessleia_prisoner;
+//	renameChar("PRINCESSLEIA");
+//
+//	currentChar = newrepublicgunship;
+//	renameChar("REPUBLICGUNSHIP");
+//
+//	currentChar = jedistarfighter_yellow_ep3;
+//	renameChar("JEDISTARFIGHTER_EP3");
+//
+//	currentChar = jedistarfighter_red_ep3;
+//	renameChar("JEDISTARFIGHTER_EP3");
+//
+//	currentChar = newanakinspod_green;
+//	renameChar("ANAKINSPOD");
+//
+//	currentChar = naboostarfighter_lime;
+//	renameChar("NABOOSTARFIGHTER");
+//
+//	currentChar = anakinsspeeder_green;
+//	renameChar("ANAKINSSPEEDER");
+//
+//	currentChar = newrepublicgunship_green;
+//	renameChar("REPUBLICGUNSHIP");
+//
+//
+//	
+//
+//}
