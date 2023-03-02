@@ -1,7 +1,7 @@
 # TCSrandomizer  
 
-Casual logic does not include any glitches or advanced techniques.
-Glitched logic does not include Super Jumps, DV3 Skip, or manipulating enemies onto buttons.
+Casual logic does not include any glitches or advanced techniques. 
+Glitched logic does not include Super Jumps, DV3 Skip, or manipulating enemies onto buttons. 
 Demonstrations of all advanced techniques included in logic can be found here:
 
 If you clone from source:  
