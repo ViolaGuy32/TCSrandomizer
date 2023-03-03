@@ -364,9 +364,8 @@ void Randomize() {
 negotiations:
 	mix(Negotiations);
 
-	Negotiations->party[2] = lukeskywalker_dagobah;
 
-	//if (tooLong(2)) goto negotiations;
+	if (tooLong(2)) goto negotiations;
 
 	if (!atrb(Jedi)) goto negotiations;
 
