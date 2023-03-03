@@ -511,7 +511,7 @@ kamino:
 		if (!atrb(Fly)) goto kamino;
 
 	} else { //worst superjump ever
-		if (atrb(Jedi) && atrb(Fly) && SuperJump()) goto factory;
+		if (atrb(Jedi) && atrb(Fly) && SuperJump(Jump)) goto factory;
 
 		if (!panel(2, 1)) goto kamino; //clone room
 		if (!panel(3, 2) && !atrb(Jedi)) goto kamino; //to jango fight
