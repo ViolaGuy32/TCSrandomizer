@@ -1194,10 +1194,18 @@ cct:
 	currentLev = CCT;
 
 	if (logicType == casual) {
+		int ff = 0;
+		auto furthest = [&ff](int i) {
+			if (i > ff) {
+				ff = i;
+				wxLogStatus(std::to_string(i).c_str());
+			}
+		};
+
 		//probability of getting valid seed is so low that using the mix() function takes too long.
 
 	cctCasual:
-
+		furthest(1);
 
 		testing.clear();
 		availableHats.clear();
@@ -1213,11 +1221,14 @@ cct:
 			CCT->party.push_back(c1);
 			CCT->party.push_back(c2);
 		}
+		furthest(2);
 
 		add(0);
 		add(1);
 		if (!atrb(Jedi)) goto cctCasual;
 		if (!atrb(Active)) goto cctCasual;
+
+		furthest(3);
 
 		std::uniform_int_distribution<int> panDist(0, 3);
 		auto rPanMake = [&panDist](int panSet, int pan) {
@@ -1236,27 +1247,38 @@ cct:
 		};
 
 		rPanMake(1, 1);
+		furthest(4);
+
 		rPanMake(1, 2);
+		furthest(5);
+
 		if (All({Fly, Active})) goto cct8;
 		if (panelAnd(1, 1, {Fly}) && panelAnd(1, 2, {Fly})) goto cct8;
 		goto cctCasual;
 	cct8:
+		furthest(6);
 
 
 		if (!rPan(0, 2)) goto cctCasual;
+		furthest(7);
+
 		if (!rPan(0, 4)) goto cctCasual;
+		furthest(8);
+
 
 		if (!rPan(2, 0)) goto cctCasual;
-		if (!rPan(2, 1) && !atrb(Fett)) goto cctCasual;
-		if (!rPan(2, 2) && !atrb(Fett)) goto cctCasual;
-		if (!rPan(2, 3) && !atrb(Fett)) goto cctCasual;
+		furthest(9);
 
-		if (!rPan(1, 0)) goto cctCasual;
+		if (!rPan(2, 1) && !atrb(Fett)) goto cctCasual; furthest(10);
+		if (!rPan(2, 2) && !atrb(Fett)) goto cctCasual; furthest(11);
+		if (!rPan(2, 3) && !atrb(Fett)) goto cctCasual; furthest(12);
+
+		if (!rPan(1, 0)) goto cctCasual; furthest(13);
 
 
 		//first room
 		int bridgeUp = false;
-		rPanMake(0, 0);
+		rPanMake(0, 0); furthest(14);
 
 		if (panelAnd(0, 0, {Fly})) bridgeUp = true;
 
@@ -1266,10 +1288,10 @@ cct:
 			if (p->fly) overBridge.push_back(p);
 			if (bridgeUp && p->jump) overBridge.push_back(p);
 		}
-
-		rPanMake(0, 1);
-		if (!atrb(Build, overBridge)) goto cctCasual;
-		if (!panel(0, 1, overBridge)) goto cctCasual;
+		furthest(15);
+		rPanMake(0, 1); furthest(16);
+		if (!atrb(Build, overBridge)) goto cctCasual; furthest(17);
+		if (!panel(0, 1, overBridge)) goto cctCasual; furthest(18);
 
 		if (hatOp) {
 			std::uniform_int_distribution<int> hatDist(0, 2);
@@ -1280,7 +1302,7 @@ cct:
 
 		std::vector<Playable*> balcony;
 		addHat(0, 0);
-		rPanMake(0, 7);
+		rPanMake(0, 7); furthest(19);
 		for (Playable* p : testing) {
 			if (p->fett) balcony.push_back(p);
 		}
@@ -1291,12 +1313,12 @@ cct:
 			}
 
 		}
-
-		rPanMake(0, 6);
+		furthest(20);
+		rPanMake(0, 6); furthest(21);
 		if (!panel(0, 6, balcony)) goto cctCasual;
 
-		rPanMake(0, 3);
-		rPanMake(1, 3);
+		rPanMake(0, 3); furthest(22);
+		rPanMake(1, 3); furthest(23);
 
 
 		if (panelOp) {
@@ -1396,6 +1418,7 @@ cct:
 	}
 
 bespin:
+wxLogStatus("Bespin");
 	mix(Bespin);
 	add(2);
 

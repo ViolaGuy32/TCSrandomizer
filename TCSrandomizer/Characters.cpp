@@ -120,6 +120,7 @@ void mix(Level* lev) {
 	testing.clear();
 	availableHats.clear();
 
+
 	if (character) {
 
 		lev->party.clear();
