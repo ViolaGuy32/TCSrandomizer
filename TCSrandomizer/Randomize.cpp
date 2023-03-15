@@ -725,7 +725,7 @@ secretplans:
 				if (x != y) {
 					if (x->pushable && y->jedi) OOB = true;
 					else if (x->chokeable && y->choke) OOB = true;
-					else if (x->lightningable && y->chokeable) OOB = true;
+					else if (x->lightningable && y->lightning) OOB = true;
 					else if (x->trickable && y->jedi) OOB = true;
 					else if (x->zappable && y->zapper) OOB = true;
 					else if (x->storm && y->astrozapper) OOB = true;
@@ -798,14 +798,13 @@ secretplans2:
 			goto secretplans;
 	} else {
 		//Bounties can get the car
-		if (Any({Jedi, Bounty}) && SecretPlans->party[4]->astro)
+		if (Any({Jedi, Bounty}) && panel(2, 2, {SecretPlans->party[4]})); 
 			goto secretplans3;
 
-		if (atrb(Hat) && availableHats[0] == BountyHat && SecretPlans->party[4]->astro)
+		if (atrb(Hat) && availableHats[0] == BountyHat && panel(2, 2, {SecretPlans->party[4]}))
 			goto secretplans3;
 
-		if (panel(2, 2) && panel(2, 2, {SecretPlans->party[1], SecretPlans->party[3],
-			SecretPlans->party[4]}))
+		if (panel(2, 0) && panel(2, 2, {SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4]}))
 			goto secretplans3;
 
 		//droids and rebel friend area with super jumps
@@ -1433,7 +1432,7 @@ bespin:
 			if (panel(0, 1, {bobafett}) && atrb(Attack)) pastFight = testing;
 
 			//slave 1
-			if (!gotr2) {
+			if (!gotr2 && pastFight.size() != 0) {
 				std::vector<Playable*> temp = pastFight;
 				temp.push_back(Bespin->party[3]);
 				if (panel(0, 4, temp)) {
@@ -2981,7 +2980,7 @@ bhm:
 			std::vector<writeSet> bounties;
 
 			auto missionNames = [&bounties](int c, coord lc, unsigned int len) {
-				bounties.push_back({BHM->bonusCharacters[c]->name, len, {lc}});
+				bounties.push_back({BHM->bonusCharacters[c]->realName, len, {lc}});
 
 			};
 
