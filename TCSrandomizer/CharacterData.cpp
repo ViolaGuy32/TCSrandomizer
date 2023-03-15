@@ -89,10 +89,10 @@ void makeCharactersAndLevels() {
 	hansolo = new Playable("hansolo", "Han Solo", 18000, 0x0, 1.44f,
 		{Hat, Lever, Build, Box, Jump, Dive, Attack, Shoot, Grapple, Chokeable, Lightningable});
 
-	hansolo_stormtrooper = new Playable("hansolo_stormtrooper", "Han Solo (SlightlyHigherJump, Stormtrooper)", 20000, 0x0, 1.44f,
+	hansolo_stormtrooper = new Playable("hansolo_stormtrooper", "Han Solo (Stormtrooper)", 20000, 0x0, 1.44f,
 		{Hat, Lever, Build, Box, Jump, Dive, Attack, Shoot, Grapple, Chokeable, Lightningable});
 
-	lukeskywalker_stormtrooper = new Playable("lukeskywalker_stormtrooper", "Luke Skywalker (SlightlyHigherJump, Stormtrooper)", 14000, 0x0, 1.2f,
+	lukeskywalker_stormtrooper = new Playable("lukeskywalker_stormtrooper", "Luke Skywalker (Stormtrooper)", 14000, 0x0, 1.2f,
 		{Hat, Lever, Build, Box, Jump, Dive, Attack, Shoot, Grapple, Chokeable, Lightningable, SlightlyHigherJump});
 
 	hansolo_hoth = new Playable("hansolo_hoth", "Han Solo (Hoth)", 20000, 0x0, 1.44f,
@@ -266,7 +266,7 @@ void makeCharactersAndLevels() {
 	rebelscum = new Playable("rebelscum", "Rebel Trooper", 10000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Chokeable, Lightningable, Trickable, SlightlyHigherJump});
 
-	stormtrooper = new Playable("SlightlyHigherJump, Stormtrooper", "SlightlyHigherJump, Stormtrooper", 10000, 0x7f1ff0, 1.2f,
+	stormtrooper = new Playable("stormtrooper", "Stormtrooper", 10000, 0x7f1ff0, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable, Trickable, SlightlyHigherJump, Storm});
 
 	imperialshuttlepilot = new Playable("imperialshuttlepilot", "imperial Shuttle Pilot", 25000, 0x7f2000, 1.2f,
@@ -933,7 +933,7 @@ void makeCharactersAndLevels() {
 		{'B', {0x14f, 0xdc}},
 		{'C', {0x434c, 0x4335, 0x431e, 0x4307, 0x42f0, 0x424f, 0x4238, 0x4221, 0x420a}}},
 
-		{{{'A', 0x4d37}, {'A', 0x4d93}, {'B', 0x41f3}}}, //towers
+		{{{'A', 0x4d37}, {'A', 0x4d93}, {'C', 0x41f3}}}, //towers
 
 		{{'A', {{ProtoPanel, 0x4FD4}, //first minikit
 		{BountyPanel, 0x5003}, //boba opens this
@@ -1074,5 +1074,7 @@ void makeCharactersAndLevels() {
 		{}, {},{},{}, {},
 		{},
 		{{'\0', {{RandomHat, 0x12402}}}});
+	BHM->fakeLevel = true;
+	Cantina->fakeLevel = true;
 
 }

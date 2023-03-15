@@ -115,7 +115,7 @@ void addHat(int set, int hat, Level* lev) {
 }
 
 void mix(Level* lev) {
-
+	//wxLogStatus(lev->name.c_str());
 	currentLev = lev;
 	testing.clear();
 	availableHats.clear();

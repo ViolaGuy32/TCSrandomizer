@@ -115,6 +115,7 @@ struct Level {
 	std::string shortName;
 	std::string path;
 	bool vehicleLevel = false;
+	bool fakeLevel = false;
 
 	std::vector<Collectable> collectables;
 	std::vector<SpecialCollectable> specialCollectables;

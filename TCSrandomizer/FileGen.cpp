@@ -77,7 +77,7 @@ void fileGen() {
 	//---ep5 finish story
 	//test princess midtro
 	txtIns(LEV + "AREAS.TXT", "//", {
-		29, 30, //negotiations
+		//29, 30, //negotiations
 		34, 45, 46, 52, 63, 64, 65, 70, 94, 95, 96, 97, 98, 102, 103, 114,
 		115, 116, 123, 134, 182, 188, 201, 202, 208, 209, 220, 221,
 		222,  //factory
@@ -109,10 +109,10 @@ void fileGen() {
 
 
 	//speeds up cutscenes to 1 frame
-	/*txtIns(out + "/CUT/EPISODEI/EP1_FAILEDNEG_INTRO1.TXT", "//", {9});
+	txtIns(out + "/CUT/EPISODEI/EP1_FAILEDNEG_INTRO1.TXT", "//", {9});
 	txtIns(out + "/CUT/EPISODEI/EP1_FAILEDNEG_INTRO1.TXT", "500000", {{1, 7}}, 2);
 	txtIns(out + "/CUT/EPISODEI/EP1_FAILEDNEG_INTRO1.TXT", "negotiations_a",
-		{{10, 13}}, 20);*/
+		{{10, 13}}, 20);
 
 	txtIns(out + "/CUT/EPISODEII/EP2_KAMINO_DISCOVERJANGO.TXT", "//", {8});
 	txtIns(out + "/CUT/EPISODEII/EP2_KAMINO_DISCOVERJANGO.TXT", "500000",

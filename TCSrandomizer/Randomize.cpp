@@ -1193,19 +1193,13 @@ cct:
 
 	currentLev = CCT;
 
-	if (logicType == casual) {
-		int ff = 0;
-		auto furthest = [&ff](int i) {
-			if (i > ff) {
-				ff = i;
-				wxLogStatus(std::to_string(i).c_str());
-			}
-		};
 
+	if (logicType == casual) {
+		
 		//probability of getting valid seed is so low that using the mix() function takes too long.
 
 	cctCasual:
-		furthest(1);
+		
 
 		testing.clear();
 		availableHats.clear();
@@ -1221,14 +1215,14 @@ cct:
 			CCT->party.push_back(c1);
 			CCT->party.push_back(c2);
 		}
-		furthest(2);
+		
 
 		add(0);
 		add(1);
 		if (!atrb(Jedi)) goto cctCasual;
 		if (!atrb(Active)) goto cctCasual;
 
-		furthest(3);
+		
 
 		std::uniform_int_distribution<int> panDist(0, 3);
 		auto rPanMake = [&panDist](int panSet, int pan) {
@@ -1247,38 +1241,38 @@ cct:
 		};
 
 		rPanMake(1, 1);
-		furthest(4);
+		
 
 		rPanMake(1, 2);
-		furthest(5);
+		
 
 		if (All({Fly, Active})) goto cct8;
 		if (panelAnd(1, 1, {Fly}) && panelAnd(1, 2, {Fly})) goto cct8;
 		goto cctCasual;
 	cct8:
-		furthest(6);
+		
 
 
 		if (!rPan(0, 2)) goto cctCasual;
-		furthest(7);
+		
 
 		if (!rPan(0, 4)) goto cctCasual;
-		furthest(8);
+		
 
 
 		if (!rPan(2, 0)) goto cctCasual;
-		furthest(9);
+		
 
-		if (!rPan(2, 1) && !atrb(Fett)) goto cctCasual; furthest(10);
-		if (!rPan(2, 2) && !atrb(Fett)) goto cctCasual; furthest(11);
-		if (!rPan(2, 3) && !atrb(Fett)) goto cctCasual; furthest(12);
+		if (!rPan(2, 1) && !atrb(Fett)) goto cctCasual;
+		if (!rPan(2, 2) && !atrb(Fett)) goto cctCasual;
+		if (!rPan(2, 3) && !atrb(Fett)) goto cctCasual;
 
-		if (!rPan(1, 0)) goto cctCasual; furthest(13);
+		if (!rPan(1, 0)) goto cctCasual; 
 
 
 		//first room
 		int bridgeUp = false;
-		rPanMake(0, 0); furthest(14);
+		rPanMake(0, 0); 
 
 		if (panelAnd(0, 0, {Fly})) bridgeUp = true;
 
@@ -1288,10 +1282,10 @@ cct:
 			if (p->fly) overBridge.push_back(p);
 			if (bridgeUp && p->jump) overBridge.push_back(p);
 		}
-		furthest(15);
-		rPanMake(0, 1); furthest(16);
-		if (!atrb(Build, overBridge)) goto cctCasual; furthest(17);
-		if (!panel(0, 1, overBridge)) goto cctCasual; furthest(18);
+		
+		rPanMake(0, 1); 
+		if (!atrb(Build, overBridge)) goto cctCasual; 
+		if (!panel(0, 1, overBridge)) goto cctCasual; 
 
 		if (hatOp) {
 			std::uniform_int_distribution<int> hatDist(0, 2);
@@ -1302,23 +1296,23 @@ cct:
 
 		std::vector<Playable*> balcony;
 		addHat(0, 0);
-		rPanMake(0, 7); furthest(19);
+		rPanMake(0, 7); 
 		for (Playable* p : testing) {
 			if (p->fett) balcony.push_back(p);
 		}
 
 		if (rPan(0, 5)) {
 			for (Playable* p : testing) {
-				if (panel(0, 7, {p})) balcony.push_back(p);
+				if (panel(0, 7, {p})) balcony = testing;
 			}
 
 		}
-		furthest(20);
-		rPanMake(0, 6); furthest(21);
-		if (!panel(0, 6, balcony)) goto cctCasual;
+		
+		rPanMake(0, 6); 
+		if (!panel(0, 6, balcony)) goto cctCasual; 
 
-		rPanMake(0, 3); furthest(22);
-		rPanMake(1, 3); furthest(23);
+		rPanMake(0, 3); 
+		rPanMake(1, 3); 
 
 
 		if (panelOp) {
@@ -1418,12 +1412,12 @@ cct:
 	}
 
 bespin:
-wxLogStatus("Bespin");
 	mix(Bespin);
 	add(2);
-
-	if (!atrb(Lever) && !atrb(DoubleJump) && !atrb(Flutter) && !atrb(Hovering))
+	
+	if (!(atrb(Lever) && Any({Attack, FakeShoot})) && !atrb(DoubleJump) && !atrb(Flutter) && !atrb(Hovering))
 		goto bespin;
+	
 	{
 		std::vector<Playable*> pastFight;
 		std::vector<Playable*> pastDoor;
@@ -1435,13 +1429,14 @@ wxLogStatus("Bespin");
 		bool bonusHat = false;
 
 		if (panel(0, 5)) r2Door = true;
+		
 		//old OOB
 		if (logicType != casual && r2Door) {
 			for (Playable* p : testing) {
 				if (p->doubleJump || (p->jump && p->speed >= 1.199)) pastFight.push_back(p);
 			}
 		}
-
+		
 		while (!room2) {
 			int tempSize = testing.size();
 			int hatSize = availableHats.size();
@@ -1453,7 +1448,7 @@ wxLogStatus("Bespin");
 			}
 			if (panel(0, 1)) pastFight = testing;
 			if (panel(0, 1, {bobafett}) && atrb(Attack)) pastFight = testing;
-
+			
 			//slave 1
 			if (!gotr2 && pastFight.size() != 0) {
 				std::vector<Playable*> temp = pastFight;
@@ -1476,6 +1471,7 @@ wxLogStatus("Bespin");
 				}
 
 			}
+			
 			//built 3po
 			if (!got3po) {
 				if (panel(0, 3, pastFight)) {
@@ -1495,13 +1491,14 @@ wxLogStatus("Bespin");
 					}
 				}
 			}
+			
 			//door clip
 			if (logicType != casual) {
 				for (Playable* p : pastFight) {
 					if (p->jump) pastDoor.push_back(p);
 				}
 			}
-
+			
 			//open door normally
 			if (!openneddoor) {
 				if (panel(0, 2, pastFight)) {
@@ -1510,15 +1507,17 @@ wxLogStatus("Bespin");
 					openneddoor = true;
 				}
 			}
+			
 			std::vector<DispenserType> tempHats = availableHats;
 			tempHats.push_back(Bespin->dispensers[0].dispenser[1].type);
 			if (panel(0, 6, pastDoor, tempHats)) pastDoor = testing;
 			if (panel(0, 7, pastDoor, tempHats)) room2 = true;
 
-
+			
 
 			//if no advancements are made, seed must be bad
 			if (tempSize == testing.size() && availableHats.size() == hatSize) goto bespin;
+			
 		}
 
 	}
@@ -1526,11 +1525,12 @@ wxLogStatus("Bespin");
 bespin2:
 	testing.clear();
 	availableHats.clear();
+	
 	if (logicType != casual) {
 		addHat(0, 1);
 		if (panel(0, 0)) addHat(0, 0);
 	}
-
+	
 	add(0);
 	add(1);
 	add(2);
@@ -1538,17 +1538,17 @@ bespin2:
 	add(4);
 	if (!All({Lever, Grapple}))
 		goto bespin;
-
+	
 	if (logicType == casual) {
 		if (!panelAnd(1, 0, {Fly}))
 			goto bespin;
+		
 		if (!All({Box, DoubleJump}) && !All({Box, Grapple}))
 			goto bespin;
-
+		
 		if (!panel(1, 1)) goto bespin;
 		if (!panel(1, 2)) goto bespin;
 		if (!panel(1, 3)) goto bespin;
-
 
 	} else {
 		std::vector<Playable*> overGap;
@@ -1559,7 +1559,24 @@ bespin2:
 
 		//box clip
 		if (Multi(Fett, 2, overGap)) goto jabbas;
-		if (panel(1, 1, overGap) && (atrb(Gas, overGap) || panel(1, 2, overGap))) goto jabbas;
+		//if (panel(1, 1, overGap) && (atrb(Gas, overGap) || panel(1, 2, overGap))) goto jabbas; //fix this
+		if (panel(1, 1, overGap)) {
+			if (atrb(Gas, overGap)) {
+				if (panelAnd(1, 2, {Gas})) goto jabbas;
+				if (panelAnd(1, 3, {Gas})) {
+					if (panel(1, 2)) goto jabbas;
+				}
+			}
+		}
+
+		if (Separate(Box, Fly, overGap)) goto jabbas;
+		if (Separate(Box, Gas, overGap)) { 
+			if (panelAnd(1, 2, {Gas})) goto jabbas;
+			if (panelAnd(1, 3, {Gas})) {
+				if (panel(1, 2)) goto jabbas;
+			}
+
+		}
 		goto bespin;
 
 
@@ -1570,9 +1587,9 @@ jabbas:
 	mix(Jabbas);
 	//door
 	if (!atrb(Shoot) && !atrb(FakeShoot) && !atrb(Deflect))
-		goto jabbas;
+		goto jabbas; 
 	if (!atrb(Build) && !atrb(DoubleJump))
-		goto jabbas;
+		goto jabbas; 
 
 	//inside
 	addHat(0, 0);
@@ -1600,11 +1617,11 @@ jabbas:
 			}
 		}
 	}
-
+	
 	if (pastGate.size() != 0) pastGate.push_back(Jabbas->party[2]);
 
-	if (!panel(0, 1, pastGate)) goto jabbas;
-	if (!atrb(Build, pastGate)) goto jabbas;
+	if (!panel(0, 1, pastGate)) goto jabbas; 
+	if (!atrb(Build, pastGate)) goto jabbas; 
 
 
 
@@ -1612,18 +1629,23 @@ jabbas:
 jabbas2:  //scene B
 	add(2);
 	if (logicType == casual) availableHats.clear();
-	addHat(1, 0);
+	addHat(1, 0); 
 	if (logicType == casual) {
-		if (!atrb(Jedi)) goto jabbas;
-		if (!boom()) goto jabbas;
+		if (!atrb(Jedi)) goto jabbas; 
+		if (!boom()) goto jabbas; 
 
 		std::vector<Playable*> droidRoom;
 		for (Playable* t : testing)
 			if (Any({Jump, Fly, Flutter}, {t})) //can get into droid room
 				droidRoom.push_back(t);
+		
 
+		if (atrb(Jedi, droidRoom)) {
+			droidRoom.push_back(Jabbas->party[3]);
+			droidRoom.push_back(Jabbas->party[4]);
+		}
 		if (panel(1, 1, droidRoom) && panel(1, 2, droidRoom) && panel(1, 3, droidRoom))
-			goto jabbas3;
+			goto jabbas3; 
 
 	} else {
 		if (atrb(Jedi))
@@ -1652,6 +1674,7 @@ jabbas2:  //scene B
 	goto jabbas;
 
 jabbas3:  //long room
+	
 	testing.clear();
 	if (logicType == casual) availableHats.clear();
 	add(0);
@@ -1660,11 +1683,11 @@ jabbas3:  //long room
 	add(3);
 	add(4);
 	if (logicType == casual) {
-		if (!panel(2, 0)) goto jabbas;
-		if (!panelAnd(2, 1, {Fly}) && !panelAnd(2, 0, {Fly})) goto jabbas;
+		if (!panel(2, 0)) goto jabbas; 
+		if (!panelAnd(2, 1, {Fly}) && !panelAnd(2, 0, {Fly})) goto jabbas; 
 		addHat(2, 0);
 		addHat(2, 1);
-		if (!panel(2, 3)) goto jabbas;
+		if (!panel(2, 3)) goto jabbas; 
 
 	} else {
 		if (atrb(Jedi))goto jabbas4;
@@ -1694,14 +1717,15 @@ jabbas4:  //rancor
 
 		goto jabbas;
 	}
-
+	
 	add(5);
 	if (!atrb(Attack) && !atrb(FakeShoot))
-		goto jabbas;
+		goto jabbas; 
 	if (!atrb(Lever))
-		goto jabbas;
+		goto jabbas; 
 
 carkoon:
+	
 	mix(Carkoon);
 	add(0);
 	add(1);
@@ -2037,7 +2061,7 @@ bhm:
 
 	if (character) {
 		for (Level* lev : allLevels) {
-			for (Playable* p : lev->party) {
+			if (!lev->fakeLevel) for (Playable* p : lev->party) {
 				p->storyMode = true;
 			}
 		}
