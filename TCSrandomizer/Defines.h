@@ -121,6 +121,9 @@ enum LogicType { casual, glitched, superGlitched };
 	3-6:
 	room 1 AI
 
+	4-1:
+	last room - super jump
+
 	4-4:
 	Ben AI when not Jedi
 
