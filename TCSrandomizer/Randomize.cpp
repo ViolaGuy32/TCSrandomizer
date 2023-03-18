@@ -2825,8 +2825,8 @@ bhm:
 		hexWrite(EXE, "\0", 0x35E3A0);  //unrestricts xwing force
 
 		//training
-		if (Dagobah->party[0]->jedi)
-			multiPointer(Dagobah->party[0], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
+		if (Dagobah->party[2]->jedi)
+			multiPointer(Dagobah->party[2], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
 		else if (Dagobah->party[1]->jedi)
 			multiPointer(Dagobah->party[1], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
 
