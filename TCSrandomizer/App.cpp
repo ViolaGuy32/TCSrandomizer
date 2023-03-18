@@ -5,7 +5,7 @@
 wxIMPLEMENT_APP(App);
 
 bool App::OnInit() {
-	MainFrame* frame = new MainFrame("TCS Randomizer 1.4");
+	MainFrame* frame = new MainFrame("TCS Randomizer 1.4.4");
 	frame->SetClientSize(400, 300);
 	frame->Center();
 	frame->Show();
