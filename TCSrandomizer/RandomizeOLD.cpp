@@ -2099,6 +2099,7 @@ bhm:
 
 	//TESTING THIS
 
+
 	{
 		//Diverts references for nonexistent characters to dummy character so I can
 		//use override said characters.
@@ -2259,20 +2260,11 @@ bhm:
 		characterPointer(cantina1, 0xca35a);
 		characterPointer(cantina2, 0xca360);
 
-		//std::remove("files/cantina.txt");
-		//std::ofstream can("files/cantina.txt", std::ios_base::out);
-		//can << cantina1->name << std::endl;
-		//can << cantina2->name << std::endl;
-		//can.close();
-
-		//Removes name length limit for creature spawns (this took forever to fix)
-		//binaryWrite(EXE, "dc", 0x113402);
-		//binaryWrite(EXE, "d8", 0x113410);
-		//binaryWrite(EXE, "e4", 0x113418);
-		//binaryWrite(EXE, "20", 0x113420);
-		//binaryWrite(EXE, "28", 0x11342d);
-		//binaryWrite(EXE, "20", 0x11345a);
-		//binaryWrite(EXE, "e0", 0x113510);
+		std::remove("files/cantina.txt");
+		std::ofstream can("files/cantina.txt", std::ios_base::out);
+		can << cantina1->name << std::endl;
+		can << cantina2->name << std::endl;
+		can.close();
 
 		currentLev = Negotiations;
 		playerInit({{0, 1}, {1, 2}, {2, 3}});
@@ -2383,19 +2375,19 @@ bhm:
 		scpRep('D', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
 		scpRep('E', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
 
-		 //Do not delete this yet.
-		//if (!Proto({ Factory->party[3] })) Factory->replace("1", 3, { {34, 17} },
-		//'E', "C3PO.SCP"); Factory->replace("\t\tif CategoryIs \"Protocol\" == 1 goto
-		//ProtoUpdate\n", 0, { {12, 1} }, 'E', "PARTY.SCP"); Factory->append( "state
-		//ProtoUpdate <openbrace>\n"
-		//				"\tConditions {\n"
-		//				"\t}\n"
-		//				"\tActions {\n"
-		//				"\t\tFollowPlayer \"0.5\"\n"
-		//				"\t}\n"
-		//				"}",
+		/* Do not delete this yet.
+		if (!Proto({ Factory->party[3] })) Factory->replace("1", 3, { {34, 17} },
+		'E', "C3PO.SCP"); Factory->replace("\t\tif CategoryIs \"Protocol\" == 1 goto
+		ProtoUpdate\n", 0, { {12, 1} }, 'E', "PARTY.SCP"); Factory->append( "state
+		ProtoUpdate {\n"
+						"\tConditions {\n"
+						"\t}\n"
+						"\tActions {\n"
+						"\t\tFollowPlayer \"0.5\"\n"
+						"\t}\n"
+						"}",
 
-		//				'E', "PARTY.SCP");
+						'E', "PARTY.SCP");*/
 
 		scpRep('F', "PARTY", "if CategoryIs \"noweapon\" == 1", 18, {13, 3});
 
@@ -3075,7 +3067,6 @@ bhm:
 
 	} //character
 
-	outro:
 		//Character unlocks
 #ifdef _DEBUG
 	logR("starting collection");

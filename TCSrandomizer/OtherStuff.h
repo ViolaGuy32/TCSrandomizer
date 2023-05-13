@@ -172,3 +172,4 @@ void scpDeleter(char scene, std::string script);
 void baseFile(char scene, std::string fileType, int chNum, coord lnCol,
 	std::vector<Playable*> Level::* chType = &Level::party);
 
+void appendFile( std::string file,  std::string appendix);

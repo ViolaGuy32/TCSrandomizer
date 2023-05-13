@@ -544,26 +544,26 @@ void fileDeleter(char scene, int characterNum, std::vector<Playable*> Level::* c
 
 	std::remove(getSCP(currentLev, scene, getVanilla(characterNum, chType)).c_str());
 };
-//
-//void appendFile( std::string file,  std::string appendix) {
+
+void appendFile( std::string file,  std::string appendix) {
 //#ifdef _DEBUG
 //	wxGetApp().CallAfter([file]() {
 //		wxString log = "appending" + file;
 //	logR(log);
 //	});
 //#endif
-//
-//	std::vector<std::string> contents;
-//	getfile(file, contents);
-//	contents.push_back(appendix);
-//
-//	std::ofstream fileout(file);
-//	for (std::string y : contents) {
-//		fileout << y + "\n";
-//	}
-//	fileout.close();
-//
-//}
+
+	std::vector<std::string> contents;
+	getfile(file, contents);
+	contents.push_back(appendix);
+
+	std::ofstream fileout(file);
+	for (std::string y : contents) {
+		fileout << y + "\n";
+	}
+	fileout.close();
+
+}
 
 //gets path for various types of files
 
@@ -672,6 +672,7 @@ void batchAnywhere(std::string file, std::vector<writeSet> writers) {
 
 	writer(manyWrite, file, writers);
 };
+
 
 void scpName(char scene, int characterNum, std::vector<Playable*> Level::* chType) {
 	//renames scp file
