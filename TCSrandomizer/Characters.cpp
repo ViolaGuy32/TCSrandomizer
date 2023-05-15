@@ -29,14 +29,17 @@ extern std::vector<Playable*> vhs; //Vehicles
 
 extern std::vector<Playable*> enemies;
 
-Enemy::Enemy(enemyScp myScp, coord myType, coord myScript) : enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
+Enemy::Enemy(enemyScp myScp, coord myType, coord myScript)
+	: enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
 
 Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
 	: enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
 
-SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses,
-	const char* myFun, unsigned int start, unsigned int end)
-	: scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), redirect(false) {
+SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName,
+	const char* myOldFunName, std::vector<int> myAddresses, const char* myFun, unsigned int start,
+	unsigned int end)
+	: scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun),
+	  oldFunName(myOldFunName), redirect(false) {
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, both});
 	}
@@ -45,20 +48,21 @@ SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName,
 	}
 }
 
-SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myScpName, const char* myFileName, const char* myOldFunName,
-	std::vector<int> myAddresses, coord myLncol, const char* myCondition, const char* myAction)
+SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myScpName,
+	const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses, unsigned int myLn)
 	: scene(myScene), scpFile(myScpFile), scpName(myScpName), fileName(myFileName),
-	  oldFunName(myOldFunName), lnCol(myLncol), condition(myCondition), action(myAction),
-	  redirect(true) {
+	  oldFunName(myOldFunName), lnCol({myLn, 1}), redirect(true) {
 
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, both});
 	}
 }
 
-Playable::Playable(std::string myName, std::string myRealName, int myPrice, int myAddress, float mySpeed,
-	std::vector<bool Playable::*> Attributes, std::unordered_map<enemyScp, std::string> myChart, const char* myAttackPattern)
-	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed), enemyChart(myChart), attackPattern(myAttackPattern) {
+Playable::Playable(std::string myName, std::string myRealName, int myPrice, int myAddress,
+	float mySpeed, std::vector<bool Playable::*> Attributes,
+	std::unordered_map<enemyScp, std::string> myChart, const char* myAttackPattern)
+	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed),
+	  enemyChart(myChart), attackPattern(myAttackPattern) {
 	for (bool Playable::*atr : Attributes) {
 		*this.*atr = true;
 	}
@@ -79,7 +83,8 @@ Playable::Playable(std::string myName, std::string myRealName, int myPrice, int 
 	}
 }
 
-Panel::Panel(PanelType myType, int myAddress) : type(myType), address(myAddress), altBody(-1), altColor(-1) {}
+Panel::Panel(PanelType myType, int myAddress)
+	: type(myType), address(myAddress), altBody(-1), altColor(-1) {}
 
 Collectable::Collectable(char c, std::initializer_list<int> addresses) : scene(c) {
 	for (int i : addresses) {
@@ -107,14 +112,17 @@ SpecialCollectable::SpecialCollectable(std::initializer_list<std::pair<char, int
 	//BHP and Bespin have minikits that span multiple scenes
 }
 
-Level::Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel, std::vector<Playable*> myVanillaParty,
-	std::vector<Playable*> myVanillaBonusCharacters, std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
-	std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels, std::vector<DispenserSet> myDispensers,
-	std::vector<SpecialScp> mySpecialScp, std::vector<EnemySet> myEnemies, std::vector<unsigned int> myEnemyRes)
-	: name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel), vanillaParty(myVanillaParty), party(myVanillaParty),
-	  vanillaBonusCharacters(myVanillaBonusCharacters), bonusCharacters(myVanillaBonusCharacters), collectables(myCollectables),
-	  specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers), enemies(myEnemies), enemyRes(myEnemyRes),
-	  specialscp(mySpecialScp) {
+Level::Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
+	std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
+	std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
+	std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
+	std::vector<DispenserSet> myDispensers, std::vector<SpecialScp> mySpecialScp,
+	std::vector<EnemySet> myEnemies, std::vector<unsigned int> myEnemyRes)
+	: name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel),
+	  vanillaParty(myVanillaParty), party(myVanillaParty),
+	  vanillaBonusCharacters(myVanillaBonusCharacters), bonusCharacters(myVanillaBonusCharacters),
+	  collectables(myCollectables), specialCollectables(mySpecialCollectables), panels(myPanels),
+	  dispensers(myDispensers), enemies(myEnemies), enemyRes(myEnemyRes), specialscp(mySpecialScp) {
 
 	for (Playable* p : myUnlocks) {
 		p->lev = this;
@@ -270,7 +278,8 @@ bool Playable::*getPanel(int panSet, int pan, Level* lev = currentLev) {
 	return Astro;
 }
 
-bool panel(int panSet, int pan, const std::vector<Playable*>& current, std::vector<DispenserType> theHats) {
+bool panel(int panSet, int pan, const std::vector<Playable*>& current,
+	std::vector<DispenserType> theHats) {
 	bool Playable::*panType = getPanel(panSet, pan);
 
 	if (atrb(panType, current)) return true;
@@ -298,7 +307,8 @@ bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats
 	return false;
 }
 
-bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs,
+	const std::vector<Playable*>& current) {
 	bool Playable::*panType = getPanel(panSet, pan);
 	std::vector<bool Playable::*> atrs2 = atrs;
 	atrs2.push_back(panType);
@@ -315,7 +325,8 @@ bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std
 	return false;
 }
 
-bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::vector<Playable*>& current) {
+bool panelOr(
+	int panSet, int pan, std::vector<bool Playable::*> ats, const std::vector<Playable*>& current) {
 	bool Playable::*panType = getPanel(panSet, pan);
 	for (bool Playable::*at : ats) {
 		if (All({panType, at}, current)) return true;
@@ -333,7 +344,8 @@ bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::
 	return false;
 }
 
-bool panelSeparate(int panSet, int pan, bool Playable::*atr, const std::vector<Playable*>& current) {
+bool panelSeparate(
+	int panSet, int pan, bool Playable::*atr, const std::vector<Playable*>& current) {
 	for (Playable* p : current) {
 		for (Playable* p2 : current) {
 			if (p != p2) {
@@ -402,7 +414,8 @@ bool Multi(const bool Playable::*atr, const int n, const std::vector<Playable*>&
 	return false;
 }
 
-bool Separate(const bool Playable::*atr1, const bool Playable::*atr2, const std::vector<Playable*>& current) {
+bool Separate(
+	const bool Playable::*atr1, const bool Playable::*atr2, const std::vector<Playable*>& current) {
 	for (Playable* p : current) {
 		for (Playable* p2 : current) {
 			if (p->*atr1 && p2->*atr2 && p != p2) {
@@ -414,7 +427,8 @@ bool Separate(const bool Playable::*atr1, const bool Playable::*atr2, const std:
 	return false;
 }
 
-bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
+bool MultiAny(
+	const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
 	//needs multiple who have any of given attributes
 	int x = 0;
 	for (Playable* p : current) {
@@ -451,7 +465,8 @@ bool SuperJump(const bool Playable::*atr, const std::vector<Playable*>& current)
 	return false;
 }
 
-bool SuperJump(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+bool SuperJump(
+	std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
 	for (bool Playable::*atr : atrs) {
 		if (SuperJump(atr, current)) return true;
 	}
@@ -475,7 +490,8 @@ bool InstantSuperJump(const bool Playable::*atr, const std::vector<Playable*>& c
 	return false;
 }
 
-bool InstantSuperJump(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+bool InstantSuperJump(
+	std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
 	for (bool Playable::*atr : atrs) {
 		if (InstantSuperJump(atr, current)) return true;
 	}
@@ -501,7 +517,8 @@ bool DoubleTransitionSkip(const bool Playable::*atr, const std::vector<Playable*
 	return false;
 }
 
-bool DoubleTransitionSkip(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+bool DoubleTransitionSkip(
+	std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
 	for (bool Playable::*atr : atrs) {
 		if (DoubleTransitionSkip(atr, current)) return true;
 	}

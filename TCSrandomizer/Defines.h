@@ -124,19 +124,44 @@
 	"\t}}\n"                                                                                       \
 	"}}\n"
 
+//locator might need to be origin
 #define standardAttack                                                                             \
 	funcNoRef("battledroid", "if GotOpponent == 1 goto battledroidfight", "FollowPlayer")          \
 		funcNoRef("battledroidfight", "if GotOpponent == 0 goto battledroid",                      \
 			"EngageOpponent \"goalrange 1.5\" \"firerange 3\"")
 
+//{0} number
+//{1} entry point
+//{2} exit point
+//{3} extra condition
+//{4} extra action
 #define normalStorm                                                                                \
-	funcNoRef("Enter",                                                                             \
-		"if GotLocator == 0 goto Approach\n\t\tif LocatorRangeXZ < 0.5 goto Approach",             \
-		"GoToLocator") funcNoRef("Fight",                                                          \
-		"if GotOpponent == 0 goto Approach\n\t\t if IAmA \"BattleDroid_Commander\" == 1 goto "     \
-		"CommanderFight",                                                                          \
-		"EngageOpponent \"goalrange 1.5\" \"firerange 3 \"") funcNoRef("CommanderFight",           \
-		"if GotOpponent == 0 goto Approach", "EngageOpponent \"goalrange 2\" \"firerange 3\"")
+	funcNoRef("{1}",                                                                               \
+		"if GotLocator == 0 goto Approach\n\t\tif LocatorRangeXZ < 0.5 goto Approach{0}\n\t\t{3}", \
+		"GoToLocator\n\t\t") funcNoRef("Approach",                                                 \
+		"if PartyUnderCover ==1 goto {2}\n\t\tif GotOpponent == 1 goto Fight{0}",                 \
+		"CannotBeSeen \"FALSE\"\n\t\tFollowPlayer") funcNoRef("Fight",                             \
+		"if GotOpponent == 0 goto Approach{0}\n\t\t if IAmA \"BattleDroid_Commander\" == 1 goto "  \
+		"CommanderFight{0}",                                                                       \
+		"EngageOpponent \"goalrange 1.5\" \"firerange 3\"") funcNoRef("CommanderFight",            \
+		"if GotOpponent == 0 goto Approach{0}", "EngageOpponent \"goalrange 2\" \"firerange 3\"")
+
+//#define stormNoEnter                                                                               \
+//	funcNoRef("{1}", "if PartyUnderCover ==1 goto Base\n\t\tif GotOpponent == 1 goto Fight{0}",    \
+//		"CannotBeSeen \"FALSE\"\n\t\tFollowPlayer") funcNoRef("Fight",                             \
+//		"if GotOpponent == 0 goto {1}{0}\n\t\t if IAmA \"BattleDroid_Commander\" == 1 goto "       \
+//		"CommanderFight{0}",                                                                       \
+//		"EngageOpponent \"goalrange 1.5\" \"firerange 3\"") funcNoRef("CommanderFight",            \
+//		"if GotOpponent == 0 goto {1}{0}", "EngageOpponent \"goalrange 2\" \"firerange 3\"")
+
+//gotolocator????
+#define normalBlock                                                                                \
+	funcNoRef("{1}", "if GotOpponent == 1 and\n\t\tif OpponentRange < 3 goto Engage{0}",           \
+		"DontPush\n\t\tGoToOrigin")                                                                \
+		funcNoRef("Engage", "if GotOpponent == 0 goto {1}\n\t\tifOpponentRange > 3 goto {1}",      \
+			"EngageOpponent \"static\" \"firerange 3\"")
+
+#define bodyGuardCombat funcNoRef("{1}", "if GotOpponent ")
 
 enum LogicType { casual, glitched, superGlitched };
 

@@ -295,12 +295,12 @@ void makeCharactersAndLevels() {
 	geonosian = new Playable("geonosian", "Geonosian", 20000, 0x7f1d30, 1.5f,
 		{Lever, Flutter, Attack, Shoot, Pushable, Chokeable, Lightningable},
 		{
-			{chatting, "geonosiana"},
+			{chatting, "storm"}, //maybe chatting?
 			{sniper, "sniper"},
 			{storm, "storm"},
-			{attack, "geonosianf"},
-			{block, "geonosianf"},
-			{patrol, "geonosianf"},
+			{attack, "storm"}, //storm
+			{block, "storm"},
+			{patrol, "storm"},
 		});
 
 	battledroid_geonosian = new Playable("battledroid_geonosian", "Battle droid (Geonosis)", 8500,
@@ -913,7 +913,7 @@ void makeCharactersAndLevels() {
 				{0x39A0, 0x3A45, 0x3AEA, 0x3B8F, 0x3C34, 0x3CD9, 0x3D7E, 0x3E23, 0x3EC8},
 				func("Update", "", "GoToOrigin \"waittime=10\""), 31, 44},
 
-			{'C', block, "block", "DROIDEKA", "Guard", {0x3647, 0x36FC}, {78, 12}},
+			{'C', block, "block", "DROIDEKA", "Guard", {0x3647, 0x36FC}, 82},
 		},
 
 		{
@@ -958,12 +958,9 @@ void makeCharactersAndLevels() {
 		},
 		{},
 		{
-			{'A', storm, "storm", "STORM", "Approach", {0x1722, 0x17F7}, {25, 15}},
-			//{'A', attack, "attack", "BATTLEDROID", "Attack", {}, {23, 13},
-			//	"if GotOpponent == 0 goto Update\n\t\tif OpponentRange > 2 goto Update"},
-			{'E', attack, "attack", "BATTLEDROID", "Attack", {0x864, 0x919, 0x9CE, 0xA83}, {86, 13},
-				"if GotOpponent == 0 goto Update\n\t\tif OpponentRange > 2 goto Update"},
-			{'E', storm, "storm", "STORM", "Approach", {0xBED}, {26, 15}},
+			{'A', storm, "storm", "STORM", "Approach", {0x1722, 0x17F7}, 19},
+			{'E', attack, "attack", "BATTLEDROID", "Attack", {0x864, 0x919, 0x9CE, 0xA83}, 90},
+			{'E', storm, "storm", "STORM", "Approach", {0xBED}, 19}, //make this no enter
 		},
 		{{'B',
 			 {

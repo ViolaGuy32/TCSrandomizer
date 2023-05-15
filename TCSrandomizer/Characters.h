@@ -35,9 +35,7 @@ struct Playable {
 
 		 lightning = false, lightningable = false, resistZap = false,
 
-		 active = false,
-
-		 vehicle = false, tow = false, tiedoor = false, vgreen = false,
+		 active = false, vehicle = false, tow = false, tiedoor = false, vgreen = false,
 
 		 leiaAlt = false, landoAlt = false, lukeAlt = false, defaultCharacter = false,
 		 storyMode = false, noLevel = false, allEpisodes = false, fake = false;
@@ -148,14 +146,11 @@ struct SpecialScp {
 	coord lnCol;
 	std::vector<unsigned int> linesToDelete;
 
-	std::string condition;
-	std::string action;
 	SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
 		std::vector<int> myAddresses, const char* myFun, unsigned int start, unsigned int end);
 
 	SpecialScp(char myScene, enemyScp myScpFile, const char* myScpName, const char* myFileName,
-		const char* myOldFunFame, std::vector<int> myAddresses, coord myLncol,
-		const char* myCondition = "", const char* myAction = "");
+		const char* myOldFunFame, std::vector<int> myAddresses, unsigned int myLn);
 };
 
 struct Level {
