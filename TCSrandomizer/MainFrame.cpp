@@ -3,9 +3,9 @@
 #include "pch.h"
 
 #include "Characters.h"
+#include "Defines.h"
 #include "MainFrame.h"
 #include "OtherStuff.h"
-#include "Defines.h"
 #include "Randomize.h"
 
 bool character = 0;
@@ -16,8 +16,9 @@ bool extra = 0;
 bool collectable = 0;
 bool enemy = 0;
 bool panelOp = 0;
-bool hatOp= 0;
+bool hatOp = 0;
 bool colorOp = 0;
+bool enemyOp = 0;
 std::string out = "out";
 std::string vanillaDirectory = "";
 LogicType logicType = casual;
@@ -33,13 +34,13 @@ wxCheckBox* extraType;
 wxCheckBox* collectableType;
 wxCheckBox* panelOpType;
 wxCheckBox* hatOpType;
+wxCheckBox* enemyOpType;
+
 //wxCheckBox* colorType;
 
 //std::unique_ptr<std::ofstream> loggingIt;
 
-
-MainFrame::MainFrame(const wxString& title)
-	: wxFrame(nullptr, wxID_ANY, title) {
+MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
 	wxPanel* panel = new wxPanel(this);
 
@@ -59,10 +60,11 @@ MainFrame::MainFrame(const wxString& title)
 	etType = new wxCheckBox(panel, wxID_ANY, "Include Extra Toggle Characters", wxPoint(185, 80));
 	greenType = new wxCheckBox(panel, wxID_ANY, "Include Green Vehicles", wxPoint(185, 100));
 
-	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 120));
-	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 140));
-	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 160));
-	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 180));
+	enemyOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Enemies", wxPoint(165, 120));
+	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 140));
+	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 160));
+	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 180));
+	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 200));
 	//colorType = new wxCheckBox(panel, wxID_ANY, "Randomize Colors", wxPoint(165, 160));
 
 	//loads save data
@@ -81,6 +83,7 @@ MainFrame::MainFrame(const wxString& title)
 		collectableType->SetValue(savedat[5] - 48);
 		panelOpType->SetValue(savedat[6] - 48);
 		hatOpType->SetValue(savedat[7] - 48);
+		enemyOpType->SetValue(savedat[8] - 48);
 		//colorType->SetValue(savedat[6] - 48);
 
 		saver.close();
@@ -90,8 +93,6 @@ MainFrame::MainFrame(const wxString& title)
 
 	CreateStatusBar();
 }
-
-
 
 void MainFrame::StartRando(wxCommandEvent& evt) {
 
@@ -105,6 +106,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	character = characterType->GetValue();
 	extog = etType->GetValue();
 	greenVeh = greenType->GetValue();
+	enemyOp = enemyOpType->GetValue();
 	extra = extraType->GetValue();
 	collectable = collectableType->GetValue();
 	panelOp = panelOpType->GetValue();
@@ -137,31 +139,29 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	dat << std::to_string(collectable);
 	dat << std::to_string(panelOp);
 	dat << std::to_string(hatOp);
+	dat << std::to_string(enemyOp);
 	//dat << std::to_string(colorOp);
 
 	dat.close();
 
 	/*out = "out1";
 	Randomize();
-	
+
 	out = "out2";
 	Randomize();
-	
+
 	out = "out3";
 	Randomize();
-	
+
 	out = "out4";
 	Randomize();
-	
+
 	out = "out5";
 	Randomize();
-	
+
 	out = "out6";*/
 	Randomize();
-
 
 	//std::thread randomize{ Randomize };
 	//randomize.detach();
 }
-
-

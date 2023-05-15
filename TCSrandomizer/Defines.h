@@ -12,6 +12,7 @@
 #define EXE out + "/LEGOStarWarsSaga.exe"
 #define ENGLISH out + "/STUFF/TEXT/ENGLISH.TXT"
 #define CHR out + "/CHARS/"
+#define SCR out + "/SCRIPTS/"
 
 //
 //#define TNG out + "/STUFF/THINGS_PC.GSC"
@@ -34,7 +35,8 @@
 #define Attack &Playable::attack
 #define Grapple &Playable::grapple
 #define Shoot &Playable::shoot
-#define FakeShoot &Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
+#define FakeShoot                                                                                  \
+	&Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
 
 #define Jump &Playable::jump
 #define DoubleJump &Playable::doubleJump
@@ -96,14 +98,58 @@
 #define AllEpisodes &Playable::allEpisodes
 #define Fake &Playable::fake
 
+#define funcNoRef(name, condition, action)                                                         \
+	"state " name "{0} {{\n"                                                                       \
+	"\tConditions {{\n"                                                                            \
+	"\t\t" condition "\n"                                                                          \
+	"\t}}\n"                                                                                       \
+	"\tActions {{\n"                                                                               \
+	"\t\t" action "\n"                                                                             \
+	"\t}}\n"                                                                                       \
+	"}}\n"
+#define func(name, condition, action)                                                              \
+	"state " name "{0} {{\n"                                                                       \
+	"\tReferenceScript {{\n"                                                                       \
+	"\t\tScript={1}\n"                                                                             \
+	"\t\tSource=Global\n"                                                                          \
+	"\t\tReturnState=" name "{0}\n"                                                                \
+	"\t\tConditions {{\n"                                                                          \
+	"\t\t}}\n"                                                                                     \
+	"\t}}\n"                                                                                       \
+	"\tConditions {{\n"                                                                            \
+	"\t\t" condition "\n"                                                                          \
+	"\t}}\n"                                                                                       \
+	"\tActions {{\n"                                                                               \
+	"\t\t" action "\n"                                                                             \
+	"\t}}\n"                                                                                       \
+	"}}\n"
+
+#define standardAttack                                                                             \
+	funcNoRef("battledroid", "if GotOpponent == 1 goto battledroidfight", "FollowPlayer")          \
+		funcNoRef("battledroidfight", "if GotOpponent == 0 goto battledroid",                      \
+			"EngageOpponent \"goalrange 1.5\" \"firerange 3\"")
+
+#define normalStorm                                                                                \
+	funcNoRef("Enter",                                                                             \
+		"if GotLocator == 0 goto Approach\n\t\tif LocatorRangeXZ < 0.5 goto Approach",             \
+		"GoToLocator") funcNoRef("Fight",                                                          \
+		"if GotOpponent == 0 goto Approach\n\t\t if IAmA \"BattleDroid_Commander\" == 1 goto "     \
+		"CommanderFight",                                                                          \
+		"EngageOpponent \"goalrange 1.5\" \"firerange 3 \"") funcNoRef("CommanderFight",           \
+		"if GotOpponent == 0 goto Approach", "EngageOpponent \"goalrange 2\" \"firerange 3\"")
+
 enum LogicType { casual, glitched, superGlitched };
 
-
-
 /*
- 
 
+defend and block are DIFFERENT
+
+ sarlacc_a/galley ?????
+check geonosians in Jedi Battle
+ snipers not working.
 	1-1:
+	LAZYDROID not working
+
 	AI gets stuck on force ledge
 
 	1-2:
@@ -134,14 +180,18 @@ enum LogicType { casual, glitched, superGlitched };
 	sometimes puts you by shop?
 
 
+	bhm enemies
+
+
 	oil glitch
 	test everything with training remote
 
 	fix special character for padme
 	fix name length limit for scp
-	
+
 	check playable attributes in log
 
 	allow custom seeds
 
+	make unlocks dependent on residents
 	*/

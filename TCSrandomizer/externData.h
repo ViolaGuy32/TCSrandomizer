@@ -171,6 +171,9 @@ extern Playable* newrepublicgunship_green;
 extern Playable* defaultCharacter;
 extern Playable* fakeAnakinsPod;
 extern Playable* fakeAnakinsPodGreen;
+extern Playable* kaminodroid;
+extern Playable* sentrydroid;
+extern Playable* bat;
 
 extern Level* Negotiations;
 extern Level* Invasion;

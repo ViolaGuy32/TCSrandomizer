@@ -567,27 +567,27 @@ void appendFile( std::string file,  std::string appendix) {
 
 //gets path for various types of files
 
-std::string getBasePath(Level* lev, char scene, std::string fileType) {
+ std::string getBasePath(Level* lev, char scene, std::string fileType) {
 	if (scene != '\0')
 		return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + "." + fileType;
 		
 	return out + lev->path + lev->shortName + '/' + lev->shortName + "." + fileType;
 }
 
-std::string getMainTxt(Level* lev) {
+ std::string getMainTxt(Level* lev) {
 	return out + lev->path + lev->name + ".TXT";
 }
 
 
-std::string getSCP(Level* lev, char scene, std::string script) {
+ std::string getSCP(Level* lev, char scene, std::string script) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + script + ".SCP";
 }
 
-std::string getAI2(Level* lev, char scene) {
+ std::string getAI2(Level* lev, char scene) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/" + lev->shortName + '_' + scene + ".AI2";
 }
 
-std::string getScriptTxt(Level* lev, char scene) {
+ std::string getScriptTxt(Level* lev, char scene) {
 	return out + lev->path + lev->shortName + '_' + scene + "/AI/SCRIPT.TXT";
 }
 
@@ -600,12 +600,12 @@ void renamer(std::string oldName, std::string newName) {
 	}
 }
 
-std::string getName(int characterNum, std::vector<Playable*> Level::* chType) {
+ std::string getName(int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character
 	return (*currentLev.*chType)[characterNum]->name;
 }
 
-std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType) {
+ std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character to be replaced
 	if (chType == &Level::bonusCharacters) {
 		return currentLev->vanillaBonusCharacters[characterNum]->name;
@@ -750,3 +750,4 @@ rgb::rgb() {
 	gF = (float)g / 255.0f;
 	bF = (float)b / 255.0f;
 }
+

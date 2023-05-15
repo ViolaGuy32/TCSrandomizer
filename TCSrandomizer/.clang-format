@@ -1,6 +1,7 @@
 ---
 PointerAlignment: Left
 UseTab: ForContinuationAndIndentation
+TabWidth: 4
 IndentWidth: 4
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
@@ -15,5 +16,5 @@ NamespaceIndentation: All
 AllowShortBlocksOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortFunctionsOnASingleLine: Inline
-ColumnLimit: 120
-#AlignAfterOpenBracket: DontAlign
+ColumnLimit: 100
+AlignAfterOpenBracket: DontAlign

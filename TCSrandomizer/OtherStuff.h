@@ -15,10 +15,6 @@ struct rgb {
 	rgb();
 };
 
-struct coord {
-	unsigned int ln = 1;
-	unsigned int col = 1;
-};
 
 struct twoNum {
 	int chNum;
@@ -115,23 +111,23 @@ void appender(std::string appendix, std::vector<std::string>& contents);
 
 void lineDel(std::vector<unsigned int> lines, std::vector<std::string>& contents);
 
-std::string getBasePath(Level* lev, char scene, std::string fileType);
+ std::string getBasePath(Level* lev, char scene, std::string fileType);
 
-std::string getMainTxt(Level* lev);
+ std::string getMainTxt(Level* lev);
 
-std::string getSCP(Level* lev, char scene, std::string script);
+ std::string getSCP(Level* lev, char scene, std::string script);
 
-std::string getAI2(Level* lev, char scene);
+ std::string getAI2(Level* lev, char scene);
 
 void fileDeleter(char scene, int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
-std::string getScriptTxt(Level* lev, char scene);
+ std::string getScriptTxt(Level* lev, char scene);
 
 void renamer(std::string oldName, std::string newName);
 
-std::string getName(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+ std::string getName(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
-std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+ std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
 void playerInit(std::vector<writeSingle> writers);
 
