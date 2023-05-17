@@ -216,3 +216,5 @@ extern Level* Anakinsflight;
 extern Level* ANewHope;
 extern Level* BHM;
 extern Level* Cantina;
+
+extern std::unordered_map<Playable*, const char*> SpecialScripts;

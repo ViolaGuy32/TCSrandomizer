@@ -80,15 +80,8 @@ void makeCharactersAndLevels() {
 
 	clone_ep3_sand = new Playable("clone_ep3_sand", "Commander Cody", 12000, 0x7f1cb0, 1.0f,
 		{Lever, Build, Box, Jump, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable},
-		{
-			{chatting, "disguisedclone"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "patrol"},
-		});
+			Trickable, Baddy},
+		"", normalAttack);
 
 	chewbacca = new Playable("chewbacca", "Chewbacca", 18000, 0x7f1d50, 1.2f,
 		{Hat, Lever, Build, Box, Jump, Attack, Shoot, Grapple, Chokeable, Lightningable});
@@ -206,51 +199,16 @@ void makeCharactersAndLevels() {
 		{Droid, Passive, Gas, Pushable, Zappable, NoLevel});
 
 	battledroid = new Playable("battledroid", "Battle droid", 6500, 0x7f1c88, 1.2f,
-		{Attack, Shoot, Droid, Gas, Pushable, Zappable},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "commanderpatrol"},
-		});
+		{Attack, Shoot, Droid, Gas, Pushable, Zappable, Baddy}, "", normalAttack);
 	battledroid_security = new Playable("battledroid_security", "Battle droid (Security)", 8500,
-		0x7f1ca0, 1.2f, {Attack, Shoot, Droid, Gas, Pushable, Zappable},
-		{
+		0x7f1ca0, 1.2f, {Attack, Shoot, Droid, Gas, Pushable, Zappable}, "", normalAttack);
 
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "commanderpatrol"},
-		});
-
+	//maybe use goalrange 2
 	battledroid_commander = new Playable("battledroid_commander", "Battle droid (Commander)", 10000,
-		0x7f1c90, 1.2f, {Attack, Shoot, Droid, Gas, Pushable, Zappable},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "commanderpatrol"},
-
-		}
-
-	);
+		0x7f1c90, 1.2f, {Attack, Shoot, Droid, Gas, Pushable, Zappable, Baddy}, "", normalAttack);
 
 	destroyer = new Playable("destroyer", "droideka", 40000, 0x7f1d78, 1.8f,
-		{Attack, Shoot, Droid, Gas, Zappable},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "storm"},
-		});
+		{Attack, Shoot, Droid, Gas, Zappable, Baddy}, "", normalAttack);
 
 	captaintarpals = new Playable("captaintarpals", "Captain Tarpals", 17500, 0x7f1c60, 1.32f,
 		{Build, Box, Jump, DoubleJump, HighJump, RealDoubleJump, HighDoubleJump, GunganJump, Attack,
@@ -293,38 +251,14 @@ void makeCharactersAndLevels() {
 		{Lever, Build, Box, Jump, Chokeable, Lightningable});
 
 	geonosian = new Playable("geonosian", "Geonosian", 20000, 0x7f1d30, 1.5f,
-		{Lever, Flutter, Attack, Shoot, Pushable, Chokeable, Lightningable},
-		{
-			{chatting, "storm"}, //maybe chatting?
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "storm"}, //storm
-			{block, "storm"},
-			{patrol, "storm"},
-		});
+		{Lever, Flutter, Attack, Shoot, Pushable, Chokeable, Lightningable, Baddy}, "",
+		normalAttack);
 
 	battledroid_geonosian = new Playable("battledroid_geonosian", "Battle droid (Geonosis)", 8500,
-		0x7f1c98, 1.2f, {Attack, Shoot, Droid, Gas, Pushable, Zappable},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "commanderpatrol"},
-		});
+		0x7f1c98, 1.2f, {Attack, Shoot, Droid, Gas, Pushable, Zappable, Baddy}, "", normalAttack);
 
 	superbattledroid = new Playable("superbattledroid", "Super Battle droid", 25000, 0x7f1d80,
-		1.07f, {Attack, Shoot, Droid, Gas, Pushable, Zappable},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "commanderpatrol"},
-
-		});
+		1.07f, {Attack, Shoot, Droid, Gas, Pushable, Zappable, Baddy}, "", normalAttack);
 
 	jangofett = new Playable("jangofett", "Jango Fett", 70000, 0x7f1f38, 1.2f,
 		{Lever, Build, Box, Jump, Fly, Fett, Attack, Shoot, Grapple, Bounty, Chokeable,
@@ -362,15 +296,7 @@ void makeCharactersAndLevels() {
 			Sith, Lightning, Chokeable, Lightningable});
 
 	bodyguard = new Playable("bodyguard", "Grievous' Bodyguard", 24000, 0x7f1c70, 1.4f,
-		{Jump, DoubleJump, HighJump, ExtraHighJump, Saber, Gas, Tall},
-		{
-			{chatting, "bodyguard"},
-			{sniper, "bodyguard"},
-			{storm, "bodyguard"},
-			{attack, "bodyguard"},
-			{block, "bodyguard"},
-			{patrol, "bodyguard"},
-		});
+		{Jump, DoubleJump, HighJump, ExtraHighJump, Saber, Gas, Tall, Baddy}, "", magnaAttack);
 
 	grievous = new Playable("grievous", "General Grievous", 70000, 0x7f1e48, 1.2f,
 		{Build, Jump, DoubleJump, HighJump, ExtraHighJump, RealDoubleJump, HighDoubleJump, Saber,
@@ -381,15 +307,8 @@ void makeCharactersAndLevels() {
 
 	clone_ep3 = new Playable("clone_ep3", "Clone (Episode III)", 10000, 0x7f1ca8, 1.0f,
 		{Lever, Build, Box, Jump, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable},
-		{
-			{chatting, "disguisedclone"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "patrol"},
-		});
+			Trickable, Baddy},
+		"", normalAttack);
 
 	clone_ep3_pilot =
 		new Playable("clone_ep3_pilot", "Clone (Episode III, Pilot)", 11000, 0x0, 1.0f,
@@ -399,15 +318,8 @@ void makeCharactersAndLevels() {
 	clone_ep3_swamp =
 		new Playable("clone_ep3_swamp", "Clone (Episode III, Swamp)", 12000, 0x0, 1.0f,
 			{Lever, Build, Box, Jump, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-				Trickable},
-			{
-				{chatting, "disguisedclone"},
-				{sniper, "sniper"},
-				{storm, "storm"},
-				{attack, "attack"},
-				{block, "block"},
-				{patrol, "patrol"},
-			});
+				Trickable, Baddy},
+			"", normalAttack);
 
 	clone_ep3_walker =
 		new Playable("clone_ep3_walker", "Clone (Episode III, Walker)", 12000, 0x0, 1.0f,
@@ -420,15 +332,8 @@ void makeCharactersAndLevels() {
 
 	disguisedclone = new Playable("disguisedclone", "Disguised Clone", 12000, 0x0, 1.0f,
 		{Lever, Build, Box, Jump, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable},
-		{
-			{chatting, "disguisedclone"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "patrol"},
-		});
+			Trickable, Baddy},
+		"", normalAttack);
 
 	rebelscum = new Playable("rebelscum", "Rebel Trooper", 10000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Chokeable,
@@ -436,64 +341,29 @@ void makeCharactersAndLevels() {
 
 	stormtrooper = new Playable("stormtrooper", "Stormtrooper", 10000, 0x7f1ff0, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	imperialshuttlepilot =
 		new Playable("imperialshuttlepilot", "imperial Shuttle Pilot", 25000, 0x7f2000, 1.2f,
 			{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Imperial,
-				Chokeable, Lightningable, Trickable, SlightlyHigherJump},
-			{
-				{chatting, "chatting"},
-				{sniper, "sniper"},
-				{storm, "chatting"},
-				{attack, "attack"},
-				{block, "chatting"},
-				{patrol, "chatting"},
-			});
+				Chokeable, Lightningable, Trickable, SlightlyHigherJump, Baddy},
+			"", normalAttack);
 
 	tuskenraider = new Playable("tuskenraider", "Tusken Raider", 23000, 0x0, 1.2f,
 		{Hat, Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Chokeable,
-			Lightningable, Trickable, SlightlyHigherJump},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "chatting"},
-			{block, "chatting"},
-			{patrol, "chatting"},
-		});
+			Lightningable, Trickable, SlightlyHigherJump, Baddy},
+		"", normalAttack);
 
 	jawa = new Playable("jawa", "Jawa", 24000, 0x7f1e88, 0.9f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Zapper, Hatch, Chokeable, Lightningable,
-			Trickable},
-		{
-			{chatting, "jawa"},
-			{sniper, "jawa"},
-			{storm, "jawa"},
-			{attack, "jawa"},
-			{block, "jawa"},
-			{patrol, "jawa"},
-		});
+			Trickable, Baddy},
+		"", "");
 
 	sandtrooper = new Playable("sandtrooper", "Sandtrooper", 14000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	greedo = new Playable("greedo", "Greedo", 60000, 0x7f2050, 1.3f,
 		{Lever, Build, Box, Jump, Dive, Attack, Shoot, Grapple, Bounty, Chokeable, Lightningable,
@@ -505,51 +375,23 @@ void makeCharactersAndLevels() {
 
 	beachtrooper = new Playable("beachtrooper", "Beach Trooper", 20000, 0x7f1ff8, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	deathstartrooper = new Playable("deathstartrooper", "Death Star Trooper", 19000, 0x7f1ea8, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	tiefighterpilot = new Playable("tiefighterpilot", "TIE Fighter Pilot", 21000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	imperialofficer = new Playable("imperialofficer", "imperial Officer", 28000, 0x7f2008, 1.2f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Imperial, Chokeable,
-			Lightningable, Trickable, SlightlyHigherJump},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "chatting"},
-			{patrol, "chatting"},
-		});
+			Lightningable, Trickable, SlightlyHigherJump, Baddy},
+		"", normalAttack);
 
 	grandmofftarkin = new Playable("grandmofftarkin", "Grand Moff Tarkin", 38000, 0x7f2010, 1.2f,
 		{Hat, Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Imperial,
@@ -568,15 +410,8 @@ void makeCharactersAndLevels() {
 
 	snowtrooper = new Playable("snowtrooper", "Snowtrooper", 16000, 0x7f1ea0, 1.2f,
 		{Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	lukeskywalker_hoth =
 		new Playable("lukeskywalker_hoth", "Luke Skywalker (Hoth)", 14000, 0x0, 1.2f,
@@ -588,15 +423,8 @@ void makeCharactersAndLevels() {
 			Trickable, SlightlyHigherJump});
 
 	ugnaught = new Playable("ugnaught", "Ugnaught", 36000, 0x7f1fd8, 0.9f,
-		{Lever, Build, Box, Jump, Zapper, Hatch, Chokeable, Lightningable, Trickable},
-		{
-			{chatting, "jawa"},
-			{sniper, "jawa"},
-			{storm, "jawa"},
-			{attack, "jawa"},
-			{block, "jawa"},
-			{patrol, "jawa"},
-		});
+		{Lever, Build, Box, Jump, Zapper, Hatch, Chokeable, Lightningable, Trickable, Baddy}, "",
+		"");
 
 	bespinguard = new Playable("bespinguard", "Bespin Guard", 15000, 0x0, 1.3f,
 		{Lever, Build, Box, Jump, Dive, Attack, Shoot, Grapple, Chokeable, Lightningable, Trickable,
@@ -608,15 +436,7 @@ void makeCharactersAndLevels() {
 				Lightningable, SlightlyHigherJump, LeiaAlt});
 
 	gamorreanguard = new Playable("gamorreanguard", "Gamorrean Guard", 40000, 0x7f1c80, 0.75f,
-		{Lever, Build, Box, Jump, Attack, Chokeable, Lightningable, Trickable},
-		{
-			{chatting, "gamorreanguard"},
-			{sniper, "gamorreanguard"},
-			{storm, "gamorreanguard"},
-			{attack, "gamorreanguard"},
-			{block, "gamorreanguard"},
-			{patrol, "gamorreanguard"},
-		});
+		{Lever, Build, Box, Jump, Attack, Chokeable, Lightningable, Trickable, Baddy}, "", "");
 
 	bibfortuna = new Playable("bibfortuna", "Bib Fortuna", 16000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Chokeable, Lightningable, Trickable,
@@ -632,15 +452,8 @@ void makeCharactersAndLevels() {
 
 	skiffguard = new Playable("skiffguard", "Skiff Guard", 12000, 0x0, 1.2f,
 		{Hat, Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple, Chokeable,
-			Lightningable, Trickable, SlightlyHigherJump},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Lightningable, Trickable, SlightlyHigherJump, Baddy},
+		"", normalAttack);
 
 	bobafett = new Playable("bobafett", "Boba Fett", 100000, 0x7f1d88, 1.2f,
 		{Lever, Build, Box, Jump, Fly, Fett, Attack, Shoot, Grapple, Bounty, Chokeable,
@@ -651,15 +464,8 @@ void makeCharactersAndLevels() {
 
 	imperialguard = new Playable("imperialguard", "imperial Guard", 45000, 0x7f1c68, 1.2f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Imperial, Chokeable, Lightningable,
-			Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "impguard"},
-			{sniper, "impguard"},
-			{storm, " impguard"},
-			{attack, "impguard"},
-			{block, "impguard"},
-			{patrol, "impguard"},
-		});
+			Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", "");
 
 	theemperor = new Playable("theemperor", "The Emperor", 275000, 0x7f1eb8, 1.2f,
 		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi, Sith,
@@ -706,15 +512,12 @@ void makeCharactersAndLevels() {
 		{Extratoggle, Attack, Droid, Gas, Pushable, Zappable});
 
 	trainingremote = new Playable("trainingremote", "Training Remote", 2000, 0x7f1d98, 1.05f,
-		{Extratoggle, Hovering, FakeShoot, Droid, Gas},
-		{
-			{chatting, "trainingremote"},
-			{sniper, "trainingremote"},
-			{storm, "trainingremote"},
-			{attack, "trainingremote"},
-			{block, "trainingremote"},
-			{patrol, "trainingremote"},
-		});
+		{Extratoggle, Hovering, FakeShoot, Droid, Gas, Baddy}, "",
+		"SetSide \"Baddy\"\n\t\tSetCircleDirection \"Random\"\nSetState \"NotCircle\"",
+		funcNoRef("NotCircle", "if Timer > 1 goto CircleAttack",
+			"ResetTimer\n\t\tEngageOpponent \"goalrange 0.5\" \"firerange 1\"")
+			funcNoRef("CircleAttack", "if Timer > 1 goto NotCircle",
+				"ResetTimer\n\t\tEngageOpponent \"goalrange 0.5\" \"firerange 1\" \"circle\""));
 
 	engineer = new Playable("engineer", "Rebel Engineer", 8000, 0x0, 1.2f,
 		{Extratoggle, Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Shoot, Grapple,
@@ -750,15 +553,8 @@ void makeCharactersAndLevels() {
 
 	scouttrooper = new Playable("scouttrooper", "Scout Trooper", 16000, 0x0, 1.2f,
 		{Extratoggle, Lever, Build, Box, Jump, Flop, Attack, Shoot, Grapple, Imperial, Chokeable,
-			Lightningable, Trickable, SlightlyHigherJump, Storm},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "attack"},
-			{block, "block"},
-			{patrol, "strolling"},
-		});
+			Lightningable, Trickable, SlightlyHigherJump, Storm, Baddy},
+		"", normalAttack);
 
 	newanakinspod = new Playable("newanakinspod", "Anakin's Pod", 20000, 0x7f21e0, 1.2f, {Vehicle});
 
@@ -838,35 +634,13 @@ void makeCharactersAndLevels() {
 
 	fakeAnakinsPodGreen = new Playable("anakinspod_green", "", 0, 0, 0.0f, {Fake, Vehicle});
 
-	kaminodroid = new Playable("kaminoandroid", "", 0, 0x7f1fe8, 1.05f, {Fake, Shoot, Hovering},
-		{
-			{chatting, "kaminodroid"},
-			{sniper, "sniper"},
-			{storm, "kaminodroid"},
-			{attack, "kaminodroid"},
-			{block, "kaminodroid"},
-			{patrol, "kaminodroid"},
-		});
+	kaminodroid = new Playable(
+		"kaminoandroid", "", 0, 0x7f1fe8, 1.05f, {Fake, Shoot, Hovering, Baddy}, "", normalAttack);
 
-	sentrydroid = new Playable("sentrydroid", "", 0, 0x7f1fe0, 1.2f, {Fake, Shoot, Hovering},
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "chatting"},
-			{attack, "chatting"},
-			{block, "chatting"},
-			{patrol, "chatting"},
-		});
+	sentrydroid = new Playable(
+		"sentrydroid", "", 0, 0x7f1fe0, 1.2f, {Fake, Shoot, Hovering, Baddy}, "", normalAttack);
 
-	bat = new Playable("bat", "", 0, 0x7f1cf8, 0.75f, {Fake, Hovering},
-		{
-			{chatting, "bat"},
-			{sniper, "bat"},
-			{storm, "bat"},
-			{attack, "bat"},
-			{block, "bat"},
-			{patrol, "bat"},
-		});
+	bat = new Playable("bat", "", 0, 0x7f1cf8, 0.75f, {Fake, Hovering, Baddy}, "", "");
 
 	//LEVELS
 	Negotiations = new Level("NEGOTIATIONS", "NEGOTIATIONS", "/LEVELS/EPISODE_I/NEGOTIATIONS/",
@@ -898,22 +672,23 @@ void makeCharactersAndLevels() {
 		{
 			{'A', chatting, "DOORATTACK", "NormalUpdate", {0x456a, 0x460f, 0x46b4, 0x4759},
 
-				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), 30, 43},
+				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), {30, 19}},
 
 			{'A', chatting, "DEACTIVATED", "NormalUpdate", {0x4c3c, 0x4ce1, 0x4d86, 0x4e2b},
 
-				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), 38, 51},
+				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), {38, 19}},
 
 			{'A', chatting, "VENTDROID", "NormalUpdate", {0x4ed0},
-				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), 30, 34},
+				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), {30, 19}},
 
 			{'B', attack, "LAZYDROID", "Attack", {0xBA8, 0xC48, 0xCE8, 0xD88},
-				func("Attack", "", ""), 31, 43},
+				func("Attack", "", ""), {31, 13}},
 			{'C', chatting, "MTT_DROID", "Update",
 				{0x39A0, 0x3A45, 0x3AEA, 0x3B8F, 0x3C34, 0x3CD9, 0x3D7E, 0x3E23, 0x3EC8},
-				func("Update", "", "GoToOrigin \"waittime=10\""), 31, 44},
+				func("Update", "", "GoToOrigin \"waittime=10\""), {31, 13}},
 
-			{'C', block, "block", "DROIDEKA", "Guard", {0x3647, 0x36FC}, 82},
+			{'C', block, "block", "DROIDEKA", "Guard", {0x3647, 0x36FC}, 80, retreat("Guard"),
+				normalAttack},
 		},
 
 		{
@@ -958,9 +733,12 @@ void makeCharactersAndLevels() {
 		},
 		{},
 		{
-			{'A', storm, "storm", "STORM", "Approach", {0x1722, 0x17F7}, 19},
-			{'E', attack, "attack", "BATTLEDROID", "Attack", {0x864, 0x919, 0x9CE, 0xA83}, 90},
-			{'E', storm, "storm", "STORM", "Approach", {0xBED}, 19}, //make this no enter
+			{'A', storm, "storm", "STORM", "Approach", {0x1722, 0x17F7}, 37, retreat("Approach"),
+				normalAttack},
+			{'E', attack, "attack", "BATTLEDROID", "Attack", {0x864, 0x919, 0x9CE, 0xA83}, 90,
+				retreat("Update") "\n\t\tif OpponentRange > 2 goto Update", normalAttack},
+			{'E', storm, "storm", "STORM", "Approach", {0xBED}, 19, retreat("Approach"),
+				normalAttack}, //make this no enter
 		},
 		{{'B',
 			 {
@@ -1528,6 +1306,10 @@ void makeCharactersAndLevels() {
 
 	Cantina = new Level("MAP", "MAP", "/LEVELS/MAP/", false, {}, {}, {}, {}, {}, {},
 		{{'\0', {{RandomHat, 0x12402}}}});
+
 	BHM->fakeLevel = true;
 	Cantina->fakeLevel = true;
+
+	SpecialScripts = {{bat, "bat"}, {jawa, "jawa"}, {ugnaught, "jawa"},
+		{gamorreanguard, "gamorreanguard"}, {imperialguard, "impguard"}};
 }

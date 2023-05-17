@@ -38,12 +38,17 @@ struct Playable {
 		 active = false, vehicle = false, tow = false, tiedoor = false, vgreen = false,
 
 		 leiaAlt = false, landoAlt = false, lukeAlt = false, defaultCharacter = false,
-		 storyMode = false, noLevel = false, allEpisodes = false, fake = false;
+		 storyMode = false, noLevel = false, allEpisodes = false, fake = false,
+		
+		baddy = false;
 
-	std::unordered_map<enemyScp, std::string> enemyChart;
+
+	std::string conditions;
+	std::string actions;
+	std::string appendix;
 	Playable(std::string myName, std::string myRealName, int myPrice, int myAddress, float mySpeed,
-		std::vector<bool Playable::*> Attributes,
-		std::unordered_map<enemyScp, std::string> myChart = {}, const char* myAttackPattern = "");
+		std::vector<bool Playable::*> Attributes, const char* myConditions = "",
+		const char* myActions = "", const char* myAppendix = "");
 };
 
 //
@@ -143,14 +148,16 @@ struct SpecialScp {
 
 	std::string scpName;
 
+	std::string attackPattern;
+	std::string extraConditions;
 	coord lnCol;
-	std::vector<unsigned int> linesToDelete;
+	//std::vector<unsigned int> linesToDelete;
 
 	SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
-		std::vector<int> myAddresses, const char* myFun, unsigned int start, unsigned int end);
+		std::vector<int> myAddresses, const char* myFun, coord myLnCol);
 
 	SpecialScp(char myScene, enemyScp myScpFile, const char* myScpName, const char* myFileName,
-		const char* myOldFunFame, std::vector<int> myAddresses, unsigned int myLn);
+		const char* myOldFunFame, std::vector<int> myAddresses, unsigned int myLn, const char* myExtraConditions, const char* myAttackPattern);
 };
 
 struct Level {

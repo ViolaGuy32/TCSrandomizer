@@ -1,13 +1,15 @@
 #include "pch.h"
 
-#include "App.h"
+//#ifdef WXWIN
+//#include "App.h"
+//#endif
+
 #include "CharacterData.h"
 #include "Characters.h"
 #include "Defines.h"
 #include "FileGen.h"
 #include "OtherStuff.h"
 #include "Randomize.h"
-
 Playable* quigonjinn;
 Playable* obiwankenobi;
 Playable* tc14;
@@ -222,6 +224,8 @@ Level* ANewHope;
 Level* BHM;
 Level* Cantina;
 
+std::unordered_map<Playable*, const char*> SpecialScripts;
+
 extern bool character;
 extern bool extog;
 extern bool greenVeh;
@@ -342,7 +346,7 @@ negotiations:
 
 	add(2);
 	if (logicType == casual) {
-		if (!panel(2, 1) || !panel(0, 2) || !panel(0, 3) || !Multi({DoubleJump}, 2))
+		if (!panel(2, 1) || !panel(0, 2) || !panel(0, 3) || !Multi((DoubleJump), 2))
 			goto negotiations;
 	} else {
 
@@ -1913,41 +1917,45 @@ bhm:
 	}
 
 	if (enemyOp) {
-		//I want these scripts accessable from the entire game.
-		std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
-		std::filesystem::rename(getSCP(Factory, 'A', "GEONOSIAN"), SCR + "GEONOSIANA.SCP");
-		std::filesystem::rename(getSCP(Factory, 'F', "GEONOSIAN"), SCR + "GEONOSIANF.SCP");
+
+		////I want these scripts accessable from the entire game.
+		//std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
+		//std::filesystem::rename(getSCP(Factory, 'A', "GEONOSIAN"), SCR + "GEONOSIANA.SCP");
+		//std::filesystem::rename(getSCP(Factory, 'F', "GEONOSIAN"), SCR + "GEONOSIANF.SCP");
 		std::filesystem::rename(getSCP(Destiny, 'A', "IMPGUARD"), SCR + "IMPGUARD.SCP");
-		std::filesystem::rename(getSCP(Kamino, 'E', "ATTACK"), SCR + "KAMINODROID.SCP");
-		std::filesystem::copy("files/trainingremote.scp", SCR + "trainingremote.SCP");
-		appendFile(SCR + "SCRIPT.TXT",
-			"bodyguard\ngeonosiana\ngeonosianf\nimpguard\ntrainingremote\nkaminodroid");
+		//std::filesystem::rename(getSCP(Kamino, 'E', "ATTACK"), SCR + "KAMINODROID.SCP");
+		//std::filesystem::copy("files/trainingremote.scp", SCR + "trainingremote.SCP");
+		appendFile(SCR + "SCRIPT.TXT", "\nimpguard");
+		//	"bodyguard\ngeonosiana\ngeonosianf\nimpguard\ntrainingremote\nkaminodroid");
 
 		//Fixes some level-specific things.
-		currentLev = Invasion;
-		scpRep('A', "STORM", "if IAmA \"BattleDroid_Commander\" == 1 goto CommanderFight\n", 0,
-			{38, 1});
-		scpAppend('A', "STORM",
-			"state CommanderFight {\n"
-			"\tConditions {\n"
-			"\t\tif GotOpponent == 0 goto Approach0\n"
-			"\t}\n"
-			"\tActions {\n"
-			"\t\tEngageOpponent \"goalrange 2\" \"firerange 3\"\n"
-			"\t}\n"
-			"}\n");
+		//currentLev = Invasion;
+		//scpRep('A', "STORM", "if IAmA \"BattleDroid_Commander\" == 1 goto CommanderFight\n", 0,
+		//	{38, 1});
+		//scpAppend('A', "STORM",
+		//	"state CommanderFight {\n"
+		//	"\tConditions {\n"
+		//	"\t\tif GotOpponent == 0 goto Approach0\n"
+		//	"\t}\n"
+		//	"\tActions {\n"
+		//	"\t\tEngageOpponent \"goalrange 2\" \"firerange 3\"\n"
+		//	"\t}\n"
+		//	"}\n");
 
-		scpRep('E', "STORM", "if IAmA \"BattleDroid_Commander\" == 1 goto CommanderFight\n", 0,
-			{40, 1});
-		scpAppend('E', "STORM",
-			"state CommanderFight {\n"
-			"\tConditions {\n"
-			"\t\tif GotOpponent == 0 goto Approach0\n"
-			"\t}\n"
-			"\tActions {\n"
-			"\t\tEngageOpponent \"goalrange 2\" \"firerange 3\"\n"
-			"\t}\n"
-			"}\n");
+		//scpRep('E', "STORM", "if IAmA \"BattleDroid_Commander\" == 1 goto CommanderFight\n", 0,
+		//	{40, 1});
+		//scpAppend('E', "STORM",
+		//	"state CommanderFight {\n"
+		//	"\tConditions {\n"
+		//	"\t\tif GotOpponent == 0 goto Approach0\n"
+		//	"\t}\n"
+		//	"\tActions {\n"
+		//	"\t\tEngageOpponent \"goalrange 2\" \"firerange 3\"\n"
+		//	"\t}\n"
+		//	"}\n");
+
+		fixScript("Fight", enemies, normalAttack, "if GotOpponent == 0 goto Approach", {45, 0},
+			SCR + "STORM.SCP");
 
 		for (Level* lev : allLevels) {
 			std::string tf = getMainTxt(lev);
@@ -1961,8 +1969,10 @@ bhm:
 
 					if (en.enemywhere == ai2) {
 						hexWrite(getAI2(lev, enSet.scene), en.newEn->name, en.address);
-						hexWrite(getAI2(lev, enSet.scene), en.newEn->enemyChart[en.scpFile],
-							en.address - 0x10);
+						if (SpecialScripts.contains(en.newEn)) {
+							hexWrite(getAI2(lev, enSet.scene), SpecialScripts[en.newEn],
+								en.address - 0x10);
+						}
 					}
 				}
 			}
@@ -1972,37 +1982,24 @@ bhm:
 					hexWrite(getAI2(lev, sp.scene), spEn.newEn->name, spEn.address);
 				}
 				if (sp.redirect) {
-					currentLev = lev;
-					std::string redirect;
-					int i = 1;
-					std::unordered_map<enemyScp, std::string> scpFunc = {
-						{storm, normalStorm},
-					};
-					for (Enemy& spEn : sp.specialEnemies) {
-						if (spEn.newEn->enemyChart[sp.scpFile] != sp.scpName) {
-							redirect += "\t\tif iAm \"" + spEn.newEn->name + "\" == 1 goto " +
-										sp.oldFunName + std::to_string(i) + "\n";
 
-							scpAppend(sp.scene, sp.fileName,
-								std::vformat(normalStorm, std::make_format_args(i, sp.oldFunName)));
-							//scpAppend(sp.scene, sp.fileName,
-							//	std::vformat(scpFunc[sp.scpFile], std::make_format_args(i,
-							//sp.oldFunName)));
-						}
-						i++;
-					}
-					scpRep(sp.scene, sp.fileName, redirect, 0, sp.lnCol);
+					fixScript(sp.oldFunName, sp.spEnemyTypes, sp.attackPattern, sp.extraConditions, sp.lnCol,
+						getSCP(lev, sp.scene, sp.fileName));
 				} else {
-					const std::string tf = getSCP(lev, sp.scene, sp.fileName);
-					lineDeleter(tf, sp.linesToDelete);
+					std::string tf = getSCP(lev, sp.scene, sp.fileName);
+					//lineDeleter(tf, sp.linesToDelete);
 					std::string redirect;
 					std::string ending;
 					for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-						redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " +
-									sp.oldFunName + std::to_string(i) + "\n";
-						ending += std::vformat(sp.fun,
-							std::make_format_args(i, sp.spEnemyTypes[i]->enemyChart[sp.scpFile]));
+						if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+							redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name +
+										"\" == 1 goto " + sp.oldFunName + std::to_string(i) + "\n";
+							std::string temp;
+							ending += std::vformat(sp.fun,
+								std::make_format_args(i, SpecialScripts[sp.spEnemyTypes[i]]));
+						}
 					}
+					redirect += "\t\tif AlwaysTrue == 1 goto " + sp.oldFunName + "vanilla" + "\n";
 					appendFile(tf, "state " + sp.oldFunName +
 									   " {\n"
 									   "\tConditions {\n" +
@@ -2011,6 +2008,7 @@ bhm:
 									   "\tActions {\n"
 									   "\t}\n"
 									   "}\n");
+					txtIns(tf, "vanilla", {sp.lnCol}, 0);
 					appendFile(tf, ending);
 				}
 			}
@@ -3054,5 +3052,5 @@ outro:
 
 	logR("\n\t\t\t\t\tDone.");
 	//loggingIt->close();
-	wxLogStatus("Done.");
+	//wxLogStatus("Done.");
 } //randomize

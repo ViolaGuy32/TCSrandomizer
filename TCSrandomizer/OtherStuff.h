@@ -169,3 +169,6 @@ void baseFile(char scene, std::string fileType, int chNum, coord lnCol,
 	std::vector<Playable*> Level::* chType = &Level::party);
 
 void appendFile( std::string file,  std::string appendix);
+
+void fixScript(std::string oldFunName,std::vector<Playable*>spEnemyTypes, std::string attackPattern, std::string extraConditions, coord lnCol, std::string tf);
+

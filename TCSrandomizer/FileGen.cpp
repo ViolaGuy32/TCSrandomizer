@@ -1,6 +1,9 @@
 #include "pch.h"
 
-#include "App.h"
+//#ifdef WXWIN
+//#include "App.h"
+//#endif
+
 #include "Defines.h"
 #include "FileGen.h"
 #include "OtherStuff.h"
@@ -24,7 +27,7 @@ void fileGen() {
     //copies the game files and removes cutscenes
 
     logR("\n\t\t\t\t\tGenerating files. . .");
-    wxLogStatus("Generating files. . .");
+//    wxLogStatus("Generating files. . .");
 
     std::filesystem::remove_all(out);
     std::filesystem::copy(vanillaDirectory, out,

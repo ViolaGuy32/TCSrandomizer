@@ -1,6 +1,9 @@
 #include "pch.h"
 
-#include "App.h"
+//#ifdef WXWIN
+//#include "App.h"
+//#endif
+
 #include "Characters.h"
 #include "Defines.h"
 #include "OtherStuff.h"
@@ -36,22 +39,20 @@ Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
 	: enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
 
 SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName,
-	const char* myOldFunName, std::vector<int> myAddresses, const char* myFun, unsigned int start,
-	unsigned int end)
+	const char* myOldFunName, std::vector<int> myAddresses, const char* myFun, coord myLnCol)
 	: scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun),
-	  oldFunName(myOldFunName), redirect(false) {
+	  oldFunName(myOldFunName), lnCol(myLnCol), redirect(false) {
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, both});
-	}
-	for (unsigned int i = start; i <= end; i++) {
-		linesToDelete.push_back(i);
 	}
 }
 
 SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myScpName,
-	const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses, unsigned int myLn)
+	const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses,
+	unsigned int myLn, const char* myExtraConditions, const char* myAttackPattern)
 	: scene(myScene), scpFile(myScpFile), scpName(myScpName), fileName(myFileName),
-	  oldFunName(myOldFunName), lnCol({myLn, 1}), redirect(true) {
+	  oldFunName(myOldFunName), lnCol({myLn, 1}), redirect(true),
+	  extraConditions(myExtraConditions), attackPattern(myAttackPattern) {
 
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, both});
@@ -59,17 +60,17 @@ SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myScpName,
 }
 
 Playable::Playable(std::string myName, std::string myRealName, int myPrice, int myAddress,
-	float mySpeed, std::vector<bool Playable::*> Attributes,
-	std::unordered_map<enemyScp, std::string> myChart, const char* myAttackPattern)
+	float mySpeed, std::vector<bool Playable::*> Attributes, const char* myConditions,
+	const char* myActions, const char* myAppendix)
 	: name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed),
-	  enemyChart(myChart), attackPattern(myAttackPattern) {
+	  conditions(myConditions), actions(myActions), appendix(myAppendix) {
 	for (bool Playable::*atr : Attributes) {
 		*this.*atr = true;
 	}
 
 	if (!this->passive) this->active = true;
 
-	if (enemyChart.size() > 0) enemies.push_back(this);
+	if (baddy) enemies.push_back(this);
 	if (fake) return;
 	pls.push_back(this);
 	if (vehicle) {
