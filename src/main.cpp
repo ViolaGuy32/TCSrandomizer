@@ -11,7 +11,7 @@ bool greenVeh = true;
 
 bool extra = true;
 bool collectable = true;
-bool enemy = true;
+bool enemy = false;//change this
 bool panelOp = true;
 bool hatOp = true;
 bool colorOp = true;

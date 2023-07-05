@@ -5,11 +5,14 @@
 //#endif
 
 #include "CharacterData.h"
+#include "LevelData.h"
 #include "Characters.h"
+#include "Levels.h"
 #include "Defines.h"
 #include "FileGen.h"
 #include "OtherStuff.h"
 #include "Randomize.h"
+
 Playable* quigonjinn;
 Playable* obiwankenobi;
 Playable* tc14;
@@ -270,7 +273,8 @@ void Randomize() {
 	std::mt19937_64 rando(rd());
 	randoPTR = &rando;
 
-	makeCharactersAndLevels();
+	makeCharacters();
+	makeLevels();
 
 	currentLev = BHM;
 
@@ -1928,7 +1932,7 @@ bhm:
 		////I want these scripts accessable from the entire game.
 		std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
 		std::filesystem::rename(getSCP(Destiny, 'A', "IMPGUARD"), SCR + "IMPGUARD.SCP");
-		std::filesystem::copy("files/trainingremote.scp", SCR + "trainingremote.scp");
+		//std::filesystem::copy("files/trainingremote.scp", SCR + "trainingremote.scp");
 		appendFile(SCR + "SCRIPT.TXT", "\nimpguard\nbodyguard\ntrainingremote");
 
 		//fixScript(

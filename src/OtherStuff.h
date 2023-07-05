@@ -2,6 +2,7 @@
 #include "pch.h"
 
 #include "Characters.h"
+#include "Levels.h"
 
 struct rgb {
 	char r;
