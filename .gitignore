@@ -1,9 +1,14 @@
 CMakeFiles
 out
+out*
+TCS
 *.cmake
 CMakeCache.txt
 *.json
 Makefile
 outTEST.TXT
+files/*
 rand
 .*
+*.exe
+*.bms
