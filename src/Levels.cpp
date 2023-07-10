@@ -25,7 +25,8 @@ Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
 
 SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
 	std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn)
-    : scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol), dNestEn(myDNestEn) {
+    : scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol),
+      dNestEn(myDNestEn) {
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, ai2});
 	}
@@ -50,7 +51,6 @@ SpecialScp::SpecialScp(char myScene, const char* myFileName, const char* myOldFu
 //		specialEnemies.push_back({scpFile, address, ai2});
 //	}
 //}
-
 
 Panel::Panel(PanelType myType, int myAddress) : type(myType), address(myAddress), altBody(-1), altColor(-1) {}
 
@@ -114,6 +114,7 @@ void addHat(int set, int hat, Level* lev) {
 
 void mix(Level* lev) {
 	//wxLogStatus(lev->name.c_str());
+	if (lev != currentLev) std::cout << lev->name.c_str() << " Done." << std::endl;
 	currentLev = lev;
 	testing.clear();
 	availableHats.clear();
@@ -184,7 +185,7 @@ void mix(Level* lev) {
 				if (pan.type == AstroPanel || pan.type == ProtoPanel) {
 					std::uniform_int_distribution<int> bin(0, 1);
 					pan.altColor = bin(*randoPTR);
-					pan.altBody = bin(*randoPTR);
+					pan.altBody  = bin(*randoPTR);
 				}
 			}
 		}
@@ -243,7 +244,7 @@ std::string panelString(int panSet, int pan) {
 	return "";
 }
 
-bool Playable::*getPanel(int panSet, int pan, Level* lev = currentLev) {
+uint64_t getPanel(int panSet, int pan, Level* lev = currentLev) {
 	PanelType panType = lev->panels[panSet].panels[pan].type;
 
 	if (panType == AstroPanel) return Astro;
@@ -254,7 +255,7 @@ bool Playable::*getPanel(int panSet, int pan, Level* lev = currentLev) {
 }
 
 bool panel(int panSet, int pan, const std::vector<Playable*>& current, std::vector<DispenserType> theHats) {
-	bool Playable::*panType = getPanel(panSet, pan);
+	uint64_t panType = getPanel(panSet, pan);
 
 	if (atrb(panType, current)) return true;
 	if (atrb(Hat, current)) {
@@ -268,7 +269,7 @@ bool panel(int panSet, int pan, const std::vector<Playable*>& current, std::vect
 }
 
 bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats) {
-	bool Playable::*panType = getPanel(panSet, pan, lev);
+	uint64_t panType = getPanel(panSet, pan, lev);
 
 	if (atrb(panType, BHM->party)) return true;
 	if (atrb(Hat, BHM->party)) {
@@ -281,15 +282,13 @@ bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats
 	return false;
 }
 
-bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std::vector<Playable*>& current) {
-	bool Playable::*panType = getPanel(panSet, pan);
-	std::vector<bool Playable::*> atrs2 = atrs;
-	atrs2.push_back(panType);
-	if (All(atrs2, current)) return true;
+bool panelAnd(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current) {
+	uint64_t panType = getPanel(panSet, pan);
+	uint64_t req2    = req | panType;
+	if (All(req2, current)) return true;
 
-	std::vector<bool Playable::*> atrs3 = atrs;
-	atrs3.push_back(Hat);
-	if (All(atrs3, current)) {
+	uint64_t req3 = req | Hat;
+	if (All(req3, current)) {
 		for (DispenserType disp : availableHats) {
 			if (disp == StormtrooperHat && panType == Imperial) return true;
 			if (disp == BountyHat && panType == Bounty) return true;
@@ -298,34 +297,34 @@ bool panelAnd(int panSet, int pan, std::vector<bool Playable::*> atrs, const std
 	return false;
 }
 
-bool panelOr(int panSet, int pan, std::vector<bool Playable::*> ats, const std::vector<Playable*>& current) {
-	bool Playable::*panType = getPanel(panSet, pan);
-	for (bool Playable::*at : ats) {
-		if (All({panType, at}, current)) return true;
+bool panelOr(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current) {
+	//Need either panel or any in req
+	uint64_t panType = getPanel(panSet, pan);
+	if (atrb(panType | req, current)) return true;
 
-		for (DispenserType disp : availableHats) {
-			if (disp == StormtrooperHat && panType == Imperial) {
-				if (All({Hat, at})) return true;
-			}
+	for (DispenserType disp : availableHats) {
+		if (disp == StormtrooperHat && panType == Imperial) {
+			if (atrb(Hat, current)) return true;
+		}
 
-			if (disp == BountyHat && panType == Bounty) {
-				if (All({Hat, at})) return true;
-			}
+		if (disp == BountyHat && panType == Bounty) {
+			if (atrb(Hat, current)) return true;
 		}
 	}
 	return false;
 }
 
-bool panelSeparate(int panSet, int pan, bool Playable::*atr, const std::vector<Playable*>& current) {
-	for (Playable* p : current) {
-		for (Playable* p2 : current) {
-			if (p != p2) {
-				if (panel(panSet, pan, {p}) && p2->*atr) return true;
-			}
-		}
-	}
-	return false;
-}
+//
+//bool panelSeparate(int panSet, int pan, bool Playable::*atr, const std::vector<Playable*>& current) {
+//	for (Playable* p : current) {
+//		for (Playable* p2 : current) {
+//			if (p != p2) {
+//				if (panel(panSet, pan, {p}) && p2->*atr) return true;
+//			}
+//		}
+//	}
+//	return false;
+//}
 
 bool boom(const std::vector<Playable*>& current, std::vector<DispenserType> theHats) {
 	if (atrb(Bounty, current)) return true;
@@ -339,43 +338,44 @@ bool boom(const std::vector<Playable*>& current, std::vector<DispenserType> theH
 	return false;
 }
 
-bool atrb(const bool(Playable::*atr), const std::vector<Playable*>& current) {
-	//checks if anyone in party has given attribute
+bool atrb(uint64_t req, const std::vector<Playable*>& current) {
+	//checks if anyone in party has any given attribute
 	for (Playable* p : current) {
-		if (p->*atr) return true;
+		if (p->check(req)) return true;
 	}
 	return false;
 }
 
-bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
-	//needs any of the given attributes
-	for (Playable* p : current) {
-		for (bool Playable::*atr : atrs) {
-			if (p->*atr) return true;
-		}
-	}
-	return false;
-}
+//bool Any(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
+//	//needs any of the given attributes
+//	for (Playable* p : current) {
+//		for (bool Playable::*atr : atrs) {
+//			if (p->*atr) return true;
+//		}
+//	}
+//	return false;
+//}
 
-bool All(const std::vector<bool Playable::*>& atrs, const std::vector<Playable*>& current) {
+bool All(uint64_t req, const std::vector<Playable*>& current) {
 	//needs all of the given attributes
 
 	for (Playable* p : current) {
-		int i = 0;
-		for (bool Playable::*at : atrs) {
-			if (!(p->*at)) break;
-			if (i == atrs.size() - 1) return true;
-			i++;
-		}
+		if (!(req & ~p->att)) return true;
+		//int i = 0;
+		//for (bool Playable::*at : atrs) {
+		//	if (!(p->*at)) break;
+		//	if (i == atrs.size() - 1) return true;
+		//	i++;
+		//}
 	}
 	return false;
 }
 
-bool Multi(const bool Playable::*atr, const int n, const std::vector<Playable*>& current) {
-	//needs multiple with same attribute
+bool Multi(uint64_t req, const int n, const std::vector<Playable*>& current) {
+	//needs multiple with any of given attributes
 	int x = 0;
 	for (Playable* p : current) {
-		if (p->*atr) {
+		if (p->check(req)) {
 			x++;
 			if (x == n) {
 				return true;
@@ -385,10 +385,10 @@ bool Multi(const bool Playable::*atr, const int n, const std::vector<Playable*>&
 	return false;
 }
 
-bool Separate(const bool Playable::*atr1, const bool Playable::*atr2, const std::vector<Playable*>& current) {
+bool Separate(uint64_t req1, uint64_t req2, const std::vector<Playable*>& current) {
 	for (Playable* p : current) {
 		for (Playable* p2 : current) {
-			if (p->*atr1 && p2->*atr2 && p != p2) {
+			if (p->check(req1) && p2->check(req2) && p != p2) {
 				return true;
 			}
 		}
@@ -397,99 +397,100 @@ bool Separate(const bool Playable::*atr1, const bool Playable::*atr2, const std:
 	return false;
 }
 
-bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
-	//needs multiple who have any of given attributes
-	int x = 0;
-	for (Playable* p : current) {
-		for (bool(Playable::*atr) : atrs) {
-			if (p->*atr) {
-				x++;
-				if (x == n) {
-					return true;
-				}
-				break;
-			}
-		}
-	}
-	return false;
-}
+//bool MultiAny(const std::vector<bool Playable::*>& atrs, const int n, const std::vector<Playable*>& current) {
+//	//needs multiple who have any of given attributes
+//	int x = 0;
+//	for (Playable* p : current) {
+//		for (bool(Playable::*atr) : atrs) {
+//			if (p->*atr) {
+//				x++;
+//				if (x == n) {
+//					return true;
+//				}
+//				break;
+//			}
+//		}
+//	}
+//	return false;
+//}
 
-bool SuperJump(const bool Playable::*atr, const std::vector<Playable*>& current) {
+bool SuperJump(uint64_t oobReq, const std::vector<Playable*>& current) {
+	//only needs one from oobReq
 	if (logicType != superGlitched) return false;
 	for (Playable* x : current) {
 		for (Playable* y : current) {
 			if (x != y) {
-				if (x->jedi && y->pushable && *y.*atr) return true;
-				if (x->choke && y->chokeable && *y.*atr) return true;
-				if (x->lightning && y->lightningable && *y.*atr) return true;
-				if (x->lightning && y->resistZap && *y.*atr) return true;
-				if (x->zapper && y->zappable && *y.*atr) return true;
-				if (x->jedi && y->trickable && *y.*atr) return true;
-				if (x->astrozapper && y->storm && *y.*atr) return true;
-				if (x->landoAlt && y->leiaAlt && *y.*atr) return true;
-				if (x->lukeAlt && y == gamorreanguard && *y.*atr) return true;
+				if (x->check(Jedi) && y->check(Pushable) && y->check(oobReq)) return true;
+				if (x->check(Choke) && y->check(Chokeable) && y->check(oobReq)) return true;
+				if (x->check(Lightning) && y->check(Lightningable) && y->check(oobReq)) return true;
+				if (x->check(Lightning) && y->check(ResistZap) && y->check(oobReq)) return true;
+				if (x->check(Zapper) && y->check(Zappable) && y->check(oobReq)) return true;
+				if (x->check(Jedi) && y->check(Trickable) && y->check(oobReq)) return true;
+				if (x->check(AstroZapper) && y->check(Storm) && y->check(oobReq)) return true;
+				if (x->check(LandoAlt) && y->check(LeiaAlt) && y->check(oobReq)) return true;
+				if (x->check(LukeAlt) && y == gamorreanguard && y->check(oobReq)) return true;
 			}
 		}
 	}
 	return false;
 }
 
-bool SuperJump(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
-	for (bool Playable::*atr : atrs) {
-		if (SuperJump(atr, current)) return true;
-	}
-	return false;
-}
+//bool SuperJump(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+//	for (bool Playable::*atr : atrs) {
+//		if (SuperJump(atr, current)) return true;
+//	}
+//	return false;
+//}
 
-bool InstantSuperJump(const bool Playable::*atr, const std::vector<Playable*>& current) {
+bool InstantSuperJump(uint64_t oobReq, const std::vector<Playable*>& current) {
 	//can act immediatly after SJC
 	if (logicType != superGlitched) return false;
 	for (Playable* x : current) {
 		for (Playable* y : current) {
 			if (x != y) {
-				if (x->jedi && y->jedi && *y.*atr) return true;
-				if (x->chokeable && y->choke && *y.*atr) return true;
-				if (x->lightning && y->lightningable && *y.*atr) return true;
-				if (x->lightning && y->resistZap && *y.*atr) return true;
-				if (x->lukeAlt && y == gamorreanguard && *y.*atr) return true;
+				if (x->check(Jedi) && y->check(Jedi) && y->check(oobReq)) return true;
+				if (x->check(Chokeable) && y->check(Choke) && y->check(oobReq)) return true;
+				if (x->check(Lightning) && y->check(Lightningable) && y->check(oobReq)) return true;
+				if (x->check(Lightning) && y->check(ResistZap) && y->check(oobReq)) return true;
+				if (x->check(LukeAlt) && y == gamorreanguard && y->check(oobReq)) return true;
 			}
 		}
 	}
 	return false;
 }
 
-bool InstantSuperJump(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
-	for (bool Playable::*atr : atrs) {
-		if (InstantSuperJump(atr, current)) return true;
-	}
-	return false;
-}
+//bool InstantSuperJump(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+//	for (bool Playable::*atr : atrs) {
+//		if (InstantSuperJump(atr, current)) return true;
+//	}
+//	return false;
+//}
 
 bool LivingJedi(const std::vector<Playable*>& current) {
 	//ghosts break some bosses
 	for (Playable* p : current) {
-		if (p->jedi && !p->ghost) return true;
+		if (p->check(Jedi) && !p->check(Ghost)) return true;
 	}
 	return false;
 }
 
-bool DoubleTransitionSkip(const bool Playable::*atr, const std::vector<Playable*> current) {
+bool DoubleTransitionSkip(uint64_t oobReq, const std::vector<Playable*> current) {
 	for (Playable* p1 : current) {
 		for (Playable* p2 : current) {
 			if (p1 != p2) {
-				if (p1->saber && p2->*atr && !p2->ghost) return true;
+				if (p1->check(Saber) && p2->check(oobReq) && !p2->check(Ghost)) return true;
 			}
 		}
 	}
 	return false;
 }
 
-bool DoubleTransitionSkip(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
-	for (bool Playable::*atr : atrs) {
-		if (DoubleTransitionSkip(atr, current)) return true;
-	}
-	return false;
-}
+//bool DoubleTransitionSkip(std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
+//	for (bool Playable::*atr : atrs) {
+//		if (DoubleTransitionSkip(atr, current)) return true;
+//	}
+//	return false;
+//}
 
 float GetFastest(const std::vector<Playable*> current) {
 	float fastest = 0.0f;

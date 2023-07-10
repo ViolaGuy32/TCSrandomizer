@@ -1,18 +1,18 @@
 #pragma once
 
-#define LEV out + "/LEVELS/"
+#define LEV out + "\\LEVELS\\"
 
-#define TPM LEV + "EPISODE_I/"
-#define CLN LEV + "EPISODE_II/"
-#define STH LEV + "EPISODE_III/"
-#define ANH LEV + "EPISODE_IV/"
-#define EMP LEV + "EPISODE_V/"
-#define JDI LEV + "EPISODE_VI/"
+#define TPM LEV + "EPISODE_I\\"
+#define CLN LEV + "EPISODE_II\\"
+#define STH LEV + "EPISODE_III\\"
+#define ANH LEV + "EPISODE_IV\\"
+#define EMP LEV + "EPISODE_V\\"
+#define JDI LEV + "EPISODE_VI\\"
 
-#define EXE out + "/LEGOStarWarsSaga.exe"
-#define ENGLISH out + "/STUFF/TEXT/ENGLISH.TXT"
-#define CHR out + "/CHARS/"
-#define SCR out + "/SCRIPTS/"
+#define EXE out + "\\LEGOStarWarsSaga.exe"
+#define ENGLISH out + "\\STUFF\\TEXT\\ENGLISH.TXT"
+#define CHR out + "\\CHARS\\"
+#define SCR out + "\\SCRIPTS\\"
 
 //
 //#define TNG out + "/STUFF/THINGS_PC.GSC"

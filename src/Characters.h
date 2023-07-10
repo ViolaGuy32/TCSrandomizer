@@ -56,34 +56,35 @@ const uint64_t Deflect            = 0x100000000;
 const uint64_t Imperial           = 0x200000000;
 const uint64_t Astro              = 0x400000000;
 const uint64_t Proto              = 0x800000000;
-const uint64_t Droid              = 0x100000000;
-const uint64_t Passive            = 0x200000000;
-const uint64_t Gas                = 0x400000000;
-const uint64_t Bounty             = 0x800000000;
-const uint64_t Hatch              = 0x100000000;
-const uint64_t Tall               = 0x200000000;
-const uint64_t Pushable           = 0x400000000;
-const uint64_t Chokeable          = 0x800000000;
-const uint64_t Lightningable      = 0x100000000;
-const uint64_t Trickable          = 0x200000000;
-const uint64_t Zappable           = 0x400000000;
-const uint64_t ResistZap          = 0x800000000;
-const uint64_t Storm              = 0x1000000000;
-const uint64_t Active             = 0x2000000000;
-const uint64_t Vehicle            = 0x4000000000;
-const uint64_t Tow                = 0x8000000000;
-const uint64_t TieDoor            = 0x10000000000;
-const uint64_t Vgreen             = 0x20000000000;
-const uint64_t LeiaAlt            = 0x40000000000;
-const uint64_t LandoAlt           = 0x80000000000;
-const uint64_t LukeAlt            = 0x10000000000;
-const uint64_t Extratoggle        = 0x20000000000;
-const uint64_t Baddy              = 0x40000000000;
-const uint64_t DefaultCharacter   = 0x100000000000;
-const uint64_t Fake               = 0x200000000000;
-const uint64_t StoryMode          = 0x400000000000;
-const uint64_t NoLevel            = 0x800000000000;
-const uint64_t AllEpisodes        = 0x1000000000000;
+const uint64_t Droid              = 0x1000000000;
+const uint64_t Passive            = 0x2000000000;
+const uint64_t Gas                = 0x4000000000;
+const uint64_t Bounty             = 0x8000000000;
+const uint64_t Hatch              = 0x10000000000;
+const uint64_t Tall               = 0x20000000000;
+const uint64_t Pushable           = 0x40000000000;
+const uint64_t Chokeable          = 0x80000000000;
+const uint64_t Lightningable      = 0x100000000000;
+const uint64_t Trickable          = 0x200000000000;
+const uint64_t Zappable           = 0x400000000000;
+const uint64_t ResistZap          = 0x800000000000;
+const uint64_t Storm              = 0x10000000000000;
+const uint64_t Active             = 0x20000000000000;
+const uint64_t LeiaAlt            = 0x40000000000000;
+const uint64_t LandoAlt           = 0x80000000000000;
+const uint64_t LukeAlt            = 0x100000000000000;
+const uint64_t Extratoggle        = 0x200000000000000;
+const uint64_t Baddy              = 0x400000000000000;
+const uint64_t DefaultCharacter   = 0x800000000000000;
+const uint64_t Fake               = 0x1000000000000000;
+const uint64_t NoLevel            = 0x2000000000000000;
+const uint64_t AllEpisodes        = 0x4000000000000000;
+
+const uint64_t Vehicle = 0x8000000000000000;
+//These are exclusive to ships so they can reuse flags.
+const uint64_t Tow     = 0x2;
+const uint64_t TieDoor = 0x4;
+const uint64_t Vgreen  = 0x8;
 
 struct Playable {
 	std::string name     = "";
@@ -94,35 +95,11 @@ struct Playable {
 	int address     = 0;
 	int price       = 0;
 	bool alwaysTrue = true; //lol
+	bool StoryMode = false;
 
 	//std::string attackPattern;
 
-	uint64_t attributes = 0x0;
-
-	//bool hat = false, lever = false, build = false, box = false, jump = false,
-	//doubleJump = false, highJump = false,
-	//     yodaJump = false, extraHighJump = false, realDoubleJump = false,
-	//     highDoubleJump = false, gunganJump = false, dive = false, flop =
-	//     false, hovering = false, fly = false, flutter = false, fett = false,
-	//     attack = false, shoot = false, grapple = false, fakeshoot = false,
-	//     zapper = false, astrozapper = false, jedi = false, sith = false, choke
-	//     = false, ghost = false, saber = false, deflect = false, imperial =
-	//     false, astro = false, proto = false, droid = false, passive = false,
-	//     gas = false, bounty = false, hatch = false, tall = false, extratoggle
-	//     = false, pushable = false, chokeable = false, trickable = false,
-	//     zappable = false, storm = false, slightlyBetterJump = false,
-	//     slightlyHigherJump = false,
-	//
-	//     lightning = false, lightningable = false, resistZap = false,
-	//
-	//     active = false, vehicle = false, tow = false, tiedoor = false, vgreen
-	//     = false,
-	//
-	//     leiaAlt = false, landoAlt = false, lukeAlt = false, defaultCharacter =
-	//     false, storyMode = false, noLevel = false, allEpisodes = false, fake =
-	//     false,
-	//
-	//     baddy = false;
+	uint64_t att = 0x0; //Individual bits are flags for different attributes.
 
 	std::unordered_map<enemyScp, std::string> enemyChart;
 	scpInfo nAttackInfo;
@@ -132,4 +109,7 @@ struct Playable {
 	Playable(std::string myName, std::string myRealName, int myPrice, int myAddress, float mySpeed,
 		uint64_t myAttributes, std::unordered_map<enemyScp, std::string> myChart = {}, scpInfoArr myAtInfo = {},
 		scpInfoArr myBlockInfo = {}, scpInfoArr mySnipeInfo = {});
+
+	bool check(uint64_t a);
+
 };

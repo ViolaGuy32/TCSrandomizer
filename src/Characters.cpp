@@ -28,20 +28,24 @@ Playable::Playable(std::string myName, std::string myRealName, int myPrice, int 
     : name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed), enemyChart(myChart),
       nAttackInfo(myAtInfo.conditions, myAtInfo.actions, myAtInfo.appendix),
       nBlockInfo(myBlockInfo.conditions, myBlockInfo.actions, myBlockInfo.appendix),
-      nSnipeInfo(mySnipeInfo.conditions, mySnipeInfo.actions, mySnipeInfo.appendix), attributes(myAttributes) {
+      nSnipeInfo(mySnipeInfo.conditions, mySnipeInfo.actions, mySnipeInfo.appendix), att(myAttributes) {
 
-	//if (!this->passive) this->active = true;
+	if (!check(Passive)) att |= Active;
 
-	if (baddy) enemies.push_back(this);
-	if (fake) return;
+	if (att & Baddy) enemies.push_back(this);
+	if (att & Fake) return;
 	pls.push_back(this);
-	if (vehicle) {
-		if (greenVeh || !vgreen) {
+	if (att & Vehicle) {
+		if (greenVeh || !(att & Vgreen)) {
 			vhs.push_back(this);
 		}
 	} else {
-		if (extog || !extratoggle) {
+		if (extog || !(att & Extratoggle)) {
 			chs.push_back(this);
 		}
 	}
+}
+
+bool Playable::check(uint64_t a) {
+	return att & a;
 }

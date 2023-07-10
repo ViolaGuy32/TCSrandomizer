@@ -44,8 +44,9 @@ void fileGen() {
 	std::remove("EPISODE_VI.DAT");
 	std::remove("GAME.DAT");
 	system(("del /S " + LEV +  "\\*.PAK").c_str());
-	system(("del " + out +  "/SCRIPTS/AI.PAK").c_str());
-	system(("del " + out +  "/ALLTXT.PAK").c_str());
+	//system(("del /S " + LEV +  "\\*.PAK").c_str());
+	//system(("del " + out +  "\\SCRIPTS\\AI.PAK").c_str());
+	//system(("del " + out +  "\\ALLTXT.PAK").c_str());
 	//system(("rm " + out + "/*.PAK").c_str());
 	//system(("find " + out + " -type f -name '*.PAK' -delete").c_str());
 
