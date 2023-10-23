@@ -24,18 +24,19 @@ Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
     : enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
 
 SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
-	std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn)
+	std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn,
+	bool myUseAltScript)
     : scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol),
-      dNestEn(myDNestEn) {
+      dNestEn(myDNestEn), useAltScript(myUseAltScript) {
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, ai2});
 	}
 }
 
 SpecialScp::SpecialScp(char myScene, const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses,
-	unsigned int myLn, const char* myExtraConditions, std::vector<DoubleNestedEnemy> myDNestEn)
+	unsigned int myLn, const char* myExtraConditions, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
     : scene(myScene), fileName(myFileName), oldFunName(myOldFunName), lnCol({myLn, 1}),
-      extraConditions(myExtraConditions), newWay(true), dNestEn(myDNestEn) {
+      extraConditions(myExtraConditions), newWay(true), dNestEn(myDNestEn), useAltScript(myUseAltScript) {
 
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, ai2});
@@ -185,7 +186,7 @@ void mix(Level* lev) {
 				if (pan.type == AstroPanel || pan.type == ProtoPanel) {
 					std::uniform_int_distribution<int> bin(0, 1);
 					pan.altColor = bin(*randoPTR);
-					pan.altBody  = bin(*randoPTR);
+					pan.altBody = bin(*randoPTR);
 				}
 			}
 		}
@@ -284,7 +285,7 @@ bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats
 
 bool panelAnd(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current) {
 	uint64_t panType = getPanel(panSet, pan);
-	uint64_t req2    = req | panType;
+	uint64_t req2 = req | panType;
 	if (All(req2, current)) return true;
 
 	uint64_t req3 = req | Hat;

@@ -72,7 +72,8 @@ struct DoubleNestedEnemy {
 	std::string fileName;
 	coord type;
 	Playable* oldEn;
-	Playable* newEn;
+	coord script = {0, 0};
+	Playable* newEn = nullptr;
 };
 
 struct NestedEnemy {
@@ -104,11 +105,11 @@ struct SpecialScp {
 	std::vector<DoubleNestedEnemy> dNestEn;
 	//bool redirect = false;
 	bool inliner = false;
-	bool newWay  = false;
+	bool newWay = false;
 
 	std::string scpName;
 
-	std::string attackPattern   = "";
+	std::string attackPattern = "";
 	std::string extraConditions = "";
 	coord lnCol;
 	//std::vector<unsigned int> linesToDelete;
@@ -116,15 +117,18 @@ struct SpecialScp {
 	unsigned int start;
 	unsigned int end;
 
+	bool useAltScript;
+
 	SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
 		std::vector<int> myAddresses, const char* myFun, coord myLnCol,
-		std::vector<DoubleNestedEnemy> myDNestEn = {});
+		std::vector<DoubleNestedEnemy> myDNestEn = {}, bool myUseAltScript = false);
 
 	//SpecialScp(char myScene, attackType myAtType, const char* myFileName, const char* myOldFunName,
 	//    std::vector<int> myAddresses, const char* myFun, unsigned int myStart, unsigned int myEnd);
 
 	SpecialScp(char myScene, const char* myFileName, const char* myOldFunFame, std::vector<int> myAddresses,
-		unsigned int myLn, const char* myExtraConditions, std::vector<DoubleNestedEnemy> myDNestEn = {});
+		unsigned int myLn, const char* myExtraConditions, std::vector<DoubleNestedEnemy> myDNestEn = {},
+		bool myUseAltScript = false);
 };
 
 struct Level {
@@ -142,7 +146,7 @@ struct Level {
 	std::string shortName;
 	std::string path;
 	bool vehicleLevel = false;
-	bool fakeLevel    = false;
+	bool fakeLevel = false;
 
 	std::vector<Collectable> collectables;
 	std::vector<SpecialCollectable> specialCollectables;

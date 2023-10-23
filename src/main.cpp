@@ -11,7 +11,6 @@ bool greenVeh = true;
 
 bool extra = true;
 bool collectable = true;
-bool enemy = false;//change this
 bool panelOp = true;
 bool hatOp = true;
 bool colorOp = true;
@@ -22,6 +21,8 @@ LogicType logicType = glitched;
 
 std::string out = "out";
 std::string vanillaDirectory = "C:/TCS";
+
+bool enemy = true;//change this
 
 int main() {
 #ifdef _DEBUG

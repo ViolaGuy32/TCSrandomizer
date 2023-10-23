@@ -1,7 +1,7 @@
 CMakeFiles
 out
 out*
-TCS
+TCS*
 *.cmake
 CMakeCache.txt
 *.json

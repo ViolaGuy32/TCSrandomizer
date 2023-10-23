@@ -31,7 +31,8 @@ void fileGen() {
 	std::cout << "Generating files. . ." << std::endl;
 
 	//std::filesystem::remove_all(out);
-	//std::filesystem::copy(vanillaDirectory, out, std::filesystem::copy_options::recursive /*| std::filesystem::copy_options::overwrite_existing*/);
+	//std::filesystem::copy(vanillaDirectory, out, std::filesystem::copy_options::recursive /*|
+	//std::filesystem::copy_options::overwrite_existing*/);
 
 	//std::string cmd = ("files\\quickbms.exe -F \"*.DAT\" -o files\\ttgames.bms " + out + " " + out);
 	//system(cmd.c_str());
@@ -44,11 +45,11 @@ void fileGen() {
 	std::remove("EPISODE_VI.DAT");
 	std::remove("GAME.DAT");
 	system(("del /S " + LEV +  "\\*.PAK").c_str());
-	//system(("del /S " + LEV +  "\\*.PAK").c_str());
-	//system(("del " + out +  "\\SCRIPTS\\AI.PAK").c_str());
-	//system(("del " + out +  "\\ALLTXT.PAK").c_str());
-	//system(("rm " + out + "/*.PAK").c_str());
-	//system(("find " + out + " -type f -name '*.PAK' -delete").c_str());
+	system(("del " + out +  "\\SCRIPTS\\AI.PAK").c_str());
+	system(("del " + out +  "\\ALLTXT.PAK").c_str());
+	system(("rm " + out + "/*.PAK").c_str());
+	system(("find " + out + " -type f -name '*.PAK' -delete").c_str());
+  system("cls");
 
 	//std::filesystem::remove(LEV + "ANAKINSFLIGHT/ANAKINSFLIGHT_A/AI/AI.PAK");
 	//std::filesystem::remove(LEV + "ANAKINSFLIGHT/ANAKINSFLIGHT_B/AI/AI.PAK");
@@ -100,8 +101,6 @@ void fileGen() {
 	//std::filesystem::remove(CLN + "FACTORY/FACTORY_G/AI/AI.PAK");
 	//std::filesystem::remove(CLN + "GUNSHIP/GUNSHIP_A/AI/AI.PAK");
 	//std::filesystem::remove(CLN + "GUNSHIP/GUNSHIP_B/AI/AI.PAK");
-
-
 
 	//cmd = "del /S " + out + "\\*PAK";
 	//system(cmd.c_str());
@@ -181,8 +180,8 @@ void fileGen() {
 	//	783, //endor
 	//	788, 799, 812, 820, 821, 877, 881, 882});
 
-	lineDeleter(
-	    LEV + "AREAS.TXT", {29, 45, 63, 65, 94, 95, 96, 97, 114, 115, 201, 220, 221, 383, 456, 512, 546, 547, 548, 600, 601, 602, 690, 737});
+	lineDeleter(LEV + "AREAS.TXT", {29, 45, 63, 65, 94, 95, 96, 97, 114, 115, 201, 220, 221, 383, 456, 512, 546,
+					       547, 548, 600, 601, 602, 690, 737});
 
 	//lineDeleter(out + Negotiations->path + "NEGOTIATIONS_INTRO/EP1_FAILEDNEG_INTRO2.TXT", {1,
 	//2, 3}); lineDeleter(out + BHP->path + "PURSUIT_INTRO/PURSUIT_INTRO.TXT", {1});
@@ -237,7 +236,8 @@ void fileGen() {
 
 	speedUp(1, "GUNGANCITY_INTRO2", {1});
 	txtIns(TPM + "GUNGAN/GUNGAN_A/GUNGAN_A.TXT", "//", {42, 43, 503});
-	txtIns(TPM + "GUNGAN/GUNGAN_A/AI/JARJARBINKS.SCP", "EitherPlayerInTriggerArea \"PlayCutScene\" == 1", {{5, 6}}, 58);
+	txtIns(TPM + "GUNGAN/GUNGAN_A/AI/JARJARBINKS.SCP", "EitherPlayerInTriggerArea \"PlayCutScene\" == 1", {{5, 6}},
+		58);
 	lineDeleter(TPM + "GUNGAN/GUNGAN_A/AI/LEVEL.SCP", {23});
 	lineDeleter(TPM + "GUNGAN/GUNGAN_E/GUNGAN_E.TXT", {34, 58});
 
@@ -249,7 +249,7 @@ void fileGen() {
 	lineDeleter(TPM + "PODRACE/PODRACE_B/PODRACE_B.TXT", {11, 12, 13});
 	lineDeleter(TPM + "PODRACE/PODRACE_C/PODRACE_C.TXT", {11, 12, 13});
 	binaryWrite(EXE, "DEAE4D",
-	    0xDB074); //allows mushroom to collapse without cutscene
+		0xDB074); //allows mushroom to collapse without cutscene
 
 	speedUp(1, "PODSPRINT", {1});
 	txtIns(TPM + "PODSPRINT/PODSPRINT_A/PODSPRINT_A.TXT", "//", {20, 21, 22, 23, 26, 27, 28, 30, 31, 34, 35});
@@ -307,7 +307,8 @@ void fileGen() {
 	txtIns(CLN + "GUNSHIP/GUNSHIP_B/GUNSHIP_B.GIT", "newlevel=gunship_status", {{882, 18}}, 33);
 	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_A/BONUS_GUNSHIP_A.TXT", "//", {6});
 	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_B/BONUS_GUNSHIP_B.TXT", "//", {7, 8, 9});
-	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_B/BONUS_GUNSHIP_B.GIT", "newlevel=bonus_gunship_status", {{743, 18}}, 34);
+	txtIns(LEV + "BONUS_GUNSHIP/BONUS_GUNSHIP_B/BONUS_GUNSHIP_B.GIT", "newlevel=bonus_gunship_status", {{743, 18}},
+		34);
 
 	speedUp(2, "JEDIBATTLE_INTRO", {1});
 	txtIns(CLN + "JEDI/JEDI_B/JEDI_B.TXT", "//", {1});
@@ -385,7 +386,8 @@ void fileGen() {
 	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_A/AI/LEVEL.SCP", "//", {28});
 	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_C/DEATHSTARRESCUE_C.TXT", "//", {2, 3, 4});
 	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_C/DEATHSTARRESCUE_C.TXT", "status", {{316, 25}}, 5);
-	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_C/DEATHSTARRESCUE_C.GIT", "newlevel=deathstarrescue_status", {{2525, 18}}, 30);
+	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_C/DEATHSTARRESCUE_C.GIT", "newlevel=deathstarrescue_status",
+		{{2525, 18}}, 30);
 
 	speedUp(4, "DEATHSTARESCAPE_INTRO", {1, 8});
 	txtIns(ANH + "DEATHSTARESCAPE/DEATHSTARESCAPE_C/DEATHSTARESCAPE_C.TXT", "status", {{154, 25}}, 5);
@@ -440,16 +442,20 @@ void fileGen() {
 
 	speedUp(2, "KAMINO_INTRO1", {1, 8, 12}, "endorbattle_a");
 	lineDeleter(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", {2});
-	appendFile(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", "cutscene \"episodeii\\kamino_intro1\"");
+	appendFile(
+		JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", "cutscene \"episodeii\\kamino_intro1\"");
 	txtIns(JDI + "ENDORBATTLE/ENDORBATTLE_D/ENDORBATTLE_D.GIT", "status", {{3218, 35}}, 5);
 
 	speedUp(2, "FACTORY_INTRO2", {1, 8}, "emperorfight_a");
 	lineDeleter(JDI + "EMPERORFIGHT/EMPERORFIGHT_INTRO/EMPERORFIGHT_INTRO.TXT", {2});
-	appendFile(JDI + "EMPERORFIGHT/EMPERORFIGHT_INTRO/EMPERORFIGHT_INTRO.TXT", "cutscene \"episodeii\\factory_intro2\"");
+	appendFile(JDI + "EMPERORFIGHT/EMPERORFIGHT_INTRO/EMPERORFIGHT_INTRO.TXT",
+		"cutscene \"episodeii\\factory_intro2\"");
 	//txtIns(JDI + "EMPERORFIGHT/EMPERORFIGHT_A/EMPERORFIGHT_A.TXT", { 28,
 	//29, 30 });
 
 	speedUp(6, "DEATHSTAR2BATTLE_INTRO2");
 	txtIns(JDI + "DEATHSTAR2BATTLE/DEATHSTAR2BATTLE_A/DEATHSTAR2BATTLE_A.GIT", "b", {{426, 40}}, 6);
 	txtIns(JDI + "DEATHSTAR2BATTLE/DEATHSTAR2BATTLE_G/DEATHSTAR2BATTLE_G.TXT", "status", {{72, 26}}, 5);
+
+  system("cls");
 }

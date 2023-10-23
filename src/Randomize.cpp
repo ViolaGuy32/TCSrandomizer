@@ -256,7 +256,7 @@ std::vector<Level*> allLevels;
 std::vector<Playable*> pls;                    //Characters and Vehicles
 std::vector<Playable*> chs;                    //Characters
 std::vector<Playable*> vhs;                    //Vehicles
-std::vector<Playable*> testing           = {}; //Current logic;
+std::vector<Playable*> testing = {};           //Current logic;
 std::vector<DispenserType> availableHats = {}; //Current logic;
 std::vector<Playable*> enemies;                //AvailableEnemies
 Level* currentLev;
@@ -280,15 +280,15 @@ void Randomize() {
 	currentLev = BHM;
 
 #if (0)
-	int blueColor   = 0x00bfff;
-	int greenColor  = 0x1ebf0f;
-	int redColor    = 0xff1f00;
+	int blueColor = 0x00bfff;
+	int greenColor = 0x1ebf0f;
+	int redColor = 0xff1f00;
 	int purpleColor = 0xc800ff;
 
 	if (colorOp) {
-		blueColor   = rand() % 0xFFFFFF;
-		greenColor  = rand() % 0xFFFFFF;
-		redColor    = rand() % 0xFFFFFF;
+		blueColor = rand() % 0xFFFFFF;
+		greenColor = rand() % 0xFFFFFF;
+		redColor = rand() % 0xFFFFFF;
 		purpleColor = rand() % 0xFFFFFF;
 	}
 	rgb red;
@@ -314,7 +314,7 @@ void Randomize() {
 
 	if (collectable) {
 		for (int i = 0; i < 36; i++) {
-			int q                        = 0;
+			int q = 0;
 			std::array<char, 21> collect = {'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'c', 'c', 'c',
 				'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
 			std::shuffle(collect.begin(), collect.end(), rando);
@@ -331,9 +331,9 @@ void Randomize() {
 			}
 		}
 	}
-	Playable* cantina1             = quigonjinn;
-	Playable* cantina2             = obiwankenobi;
-	Playable* indy                 = hansolo_indy;
+	Playable* cantina1 = quigonjinn;
+	Playable* cantina2 = obiwankenobi;
+	Playable* indy = hansolo_indy;
 	Playable* allMinikitsCharacter = slave1;
 
 	auto tooLong = [](int ch) {
@@ -649,7 +649,7 @@ secretplans:
 
 		for (Playable* x : current) {
 			for (Playable* y : current) {
-				bool OOB  = false;
+				bool OOB = false;
 				bool OOB2 = false;
 
 				if (x != y) {
@@ -693,7 +693,8 @@ secretplans:
 							}
 						}
 						//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
-						if (panel(2, 2, {x, shield})) return true;
+                        #define plnp SecretPlans->party
+						if (panel(2, 2, {x, shield}) && panel(2,1, {plnp[1], plnp[2], plnp[3], plnp[4]})) return true;
 						if (panel(2, 1, {x, otherX}) && atrb(Box | Bounty, {x, otherX}))
 							return true;
 						if (panel(2, 1, {redGuy}) &&
@@ -1202,7 +1203,7 @@ cct:
 					if (pan.type == AstroPanel || pan.type == ProtoPanel) {
 						std::uniform_int_distribution<int> bin(0, 1);
 						pan.altColor = bin(*randoPTR);
-						pan.altBody  = bin(*randoPTR);
+						pan.altBody = bin(*randoPTR);
 					}
 				}
 			}
@@ -1298,12 +1299,12 @@ bespin:
 	{
 		std::vector<Playable*> pastFight;
 		std::vector<Playable*> pastDoor;
-		bool got3po      = false;
-		bool gotr2       = false;
+		bool got3po = false;
+		bool gotr2 = false;
 		bool openneddoor = false;
-		bool room2       = false;
-		bool r2Door      = false;
-		bool bonusHat    = false;
+		bool room2 = false;
+		bool r2Door = false;
+		bool bonusHat = false;
 
 		if (panel(0, 5)) r2Door = true;
 
@@ -1317,7 +1318,7 @@ bespin:
 
 		while (!room2) {
 			int tempSize = testing.size();
-			int hatSize  = availableHats.size();
+			int hatSize = availableHats.size();
 			if (!bonusHat) {
 				if (panel(0, 0)) {
 					addHat(0, 0);
@@ -1342,7 +1343,7 @@ bespin:
 							&& (panel(0, 5, {p}) || (r2Door && logicType != casual))) {
 							add(3);
 							pastFight.push_back(Bespin->party[3]);
-							gotr2  = true;
+							gotr2 = true;
 							r2Door = true;
 						}
 					}
@@ -1872,7 +1873,7 @@ bhm:
 		if (allMinikitsCharacter->StoryMode) goto allMinikits;
 	}
 
-	if (enemyOp && 0) {
+	if (enemyOp && 1) {
 		for (Level* lev : allLevels) {
 			for (NestedEnemySet& nestSet : lev->nestedEns) {
 				for (NestedEnemy& nest : nestSet.nEns) {
@@ -1916,11 +1917,12 @@ bhm:
 	}
 	cantina1->StoryMode = true;
 	cantina2->StoryMode = true;
-	indy->StoryMode     = true;
+	indy->StoryMode = true;
 
 	//FILE GEN IS HERE
 	fileGen();
 	//FILE GEN IS HERE
+    system("cls");
 
 	//TESTING THIS
 
@@ -1936,7 +1938,7 @@ bhm:
 			binaryWrite(EXE, "b8177f", address);
 	}
 
-	if (enemyOp && 0) {
+	if (enemyOp && 1) {
 
 		////I want these scripts accessable from the entire game.
 		std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
@@ -1959,9 +1961,11 @@ bhm:
 
 					if (en.enemywhere == ai2) {
 						hexWrite(getAI2(lev, enSet.scene), en.newEn->name, en.address);
-						hexWrite(getAI2(lev, enSet.scene), en.newEn->enemyChart[en.scpFile],
-							en.address - 0x10, 0x10);
-
+						if (en.scpFile != NONE) {
+							hexWrite(getAI2(lev, enSet.scene),
+								en.newEn->enemyChart[en.scpFile], en.address - 0x10,
+								0x10);
+						}
 						//if (SpecialScripts.contains(en.newEn)) {
 						//	hexWrite(getAI2(lev, enSet.scene), SpecialScripts[en.newEn],
 						//	    en.address - 0x10);
@@ -1998,6 +2002,11 @@ bhm:
 				//sp.lnCol, getSCP(lev, sp.scene, sp.fileName));
 				/*} else */
 				for (DoubleNestedEnemy& dne : sp.dNestEn) {
+					if (sp.useAltScript && SpecialScripts.contains(dne.newEn)) {
+            std::cout << dne.type.ln << ',' << dne.type.col << ' ' << dne.newEn->name << ' ' << dne.fileName << ' ' << dne.script.ln << ',' << dne.script.col << ' ' << dne.oldEn << std::endl;
+						txtIns(getSCP(lev, sp.scene, dne.fileName), SpecialScripts[dne.newEn],
+							{dne.script}, dne.fileName.length());
+					}
 					txtIns(getSCP(lev, sp.scene, dne.fileName), dne.newEn->name, {dne.type},
 						dne.oldEn->name.length());
 					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), dne.newEn) ==
@@ -2033,34 +2042,38 @@ bhm:
 					std::string redirect;
 					std::string ending;
 					for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-						if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
-							redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name +
-								    "\" == 1 goto " + sp.oldFunName +
-								    std::to_string(i) + "\n";
+						if (!(sp.useAltScript &&
+							    !SpecialScripts.contains(sp.spEnemyTypes[i]))) {
+							if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+								redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name +
+									    "\" == 1 goto " + sp.oldFunName +
+									    std::to_string(i) + "\n";
 
-							ending += "state " + sp.oldFunName + std::to_string(i) + " {\n";
-							ending += "\tReferenceScript {\n"
-								  "\t\tScript=";
+								ending += "state " + sp.oldFunName + std::to_string(i) +
+									  " {\n";
+								ending += "\tReferenceScript {\n"
+									  "\t\tScript=";
 
-							ending += SpecialScripts[sp.spEnemyTypes[i]];
+								ending += SpecialScripts[sp.spEnemyTypes[i]];
 
-							ending += "\n\t\tSource=Global\n"
-								  "\t\tReturnState=" +
-								  sp.oldFunName + std::to_string(i) +
-								  "\n"
-								  "\t\tConditions {\n"
-								  "\t\t}\n"
-								  "\t}\n";
-							ending += "\tConditions {\n"
-								  "\t\t" +
-								  //spEnemyTypes[i]->conditions + "\n\t\t" +
-								  sp.extraConditions +
-								  "\n\t}\n"
-								  "\tActions {\n"
-								  "\t\t" +
-								  //sp.spEnemyTypes[i]->nAttackInfo.actions +
-								  "\n\t}\n"
-								  "}\n";
+								ending += "\n\t\tSource=Global\n"
+									  "\t\tReturnState=" +
+									  sp.oldFunName + std::to_string(i) +
+									  "\n"
+									  "\t\tConditions {\n"
+									  "\t\t}\n"
+									  "\t}\n";
+								ending += "\tConditions {\n"
+									  "\t\t" +
+									  //spEnemyTypes[i]->conditions + "\n\t\t" +
+									  sp.extraConditions +
+									  "\n\t}\n"
+									  "\tActions {\n"
+									  "\t\t" +
+									  //sp.spEnemyTypes[i]->nAttackInfo.actions +
+									  "\n\t}\n"
+									  "}\n";
+							}
 						}
 					}
 					txtIns(tf, redirect, {sp.lnCol}, 0);
@@ -2231,11 +2244,11 @@ bhm:
 		characterPointer(cantina1, 0xca35a);
 		characterPointer(cantina2, 0xca360);
 
-		//std::remove("files/cantina.txt");
-		//std::ofstream can("files/cantina.txt",
-		//std::ios_base::out); can << cantina1->name <<
-		//std::endl; can << cantina2->name << std::endl;
-		//can.close();
+		std::remove("files/cantina.txt");
+		std::ofstream can("files/cantina.txt", std::ios_base::out);
+		can << cantina1->name << std::endl;
+		can << cantina2->name << std::endl;
+		can.close();
 
 		//Removes name length limit for creature spawns
 		//(this took forever to fix) binaryWrite(EXE,
