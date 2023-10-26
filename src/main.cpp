@@ -16,13 +16,13 @@ bool hatOp = true;
 bool colorOp = true;
 bool enemyOp = true;
 //bool advanceMus;
-LogicType logicType = glitched;
+LogicType logicType = casual;
 //std::unique_ptr<std::ofstream> loggingIt;
 
 std::string out = "out";
 std::string vanillaDirectory = "C:/TCS";
 
-bool enemy = true;//change this
+bool enemy = true;
 
 int main() {
 #ifdef _DEBUG

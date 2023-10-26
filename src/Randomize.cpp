@@ -301,10 +301,9 @@ void Randomize() {
 	std::array<std::string, 36> extras = {"supergonk", "poomoney", "walkietalkiedisable", "powerbrickdetector",
 		"superslap", "forcezipup", "coinmagnet", "disarmtroopers", "characterstuds", "perfectdeflect",
 		"explodingblasterbolts", "forcepull", "vehiclesmartbomb", "superastromech", "superjedislam",
-		"superthermaldetonator", "deflectbolts", "darkside", "superblasters", "fastforce", "supersabres",
-		"tractorbeam", "invincibility", "scorex2", "selfdestruct", "fastbuild", "scorex4", "regenerate",
-		"scorex6", "minikitdetector", "superzapper", "rockets", "scorex8", "superewokcatapult", "scorex10",
-		"infinitetorpedos"};
+		"superthermaldetonator", "deflectbolts", "darkside", "superblasters", "fastforce", "supersabres", "tractorbeam",
+		"invincibility", "scorex2", "selfdestruct", "fastbuild", "scorex4", "regenerate", "scorex6", "minikitdetector",
+		"superzapper", "rockets", "scorex8", "superewokcatapult", "scorex10", "infinitetorpedos"};
 
 	std::array<std::string, 36> vanillaExtras = extras;
 
@@ -315,8 +314,8 @@ void Randomize() {
 	if (collectable) {
 		for (int i = 0; i < 36; i++) {
 			int q = 0;
-			std::array<char, 21> collect = {'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'c', 'c', 'c',
-				'c', 'c', 'c', 'c', 'c', 'c', 'c', 'r'};
+			std::array<char, 21> collect = {'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'c', 'c', 'c', 'c', 'c',
+				'c', 'c', 'c', 'c', 'c', 'r'};
 			std::shuffle(collect.begin(), collect.end(), rando);
 			for (Collectable& col : allLevels[i]->collectables) {
 				for (std::pair<char, int>& pairr : col.typeAddress) {
@@ -642,8 +641,8 @@ vader:
 	goto vader;
 
 secretplans:
-
-	auto plansthing = [](std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
+	bool supercraneDoor = false;
+	auto plansthing = [&supercraneDoor](std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
 		//This is for scene 3 super jump
 		if (logicType != superGlitched) return false;
 
@@ -667,40 +666,34 @@ secretplans:
 						for (Playable* x2 : current) {
 							for (Playable* y2 : current) {
 								if (x2 != y2 && x2 != x) {
-									if (x2->att & Pushable && y2->att & Jedi)
-										OOB2 = true;
-									else if (x2->att & Chokeable && y2->att & Choke)
-										OOB2 = true;
-									else if (x2->att & Lightningable &&
-										 y2->att & Lightning)
-										OOB2 = true;
-									else if (x2->att & Trickable && y2->att & Jedi)
-										OOB2 = true;
-									else if (x2->att & Zappable && y2->att & Zapper)
-										OOB2 = true;
-									else if (x2->att & Storm &&
-										 y2->att & AstroZapper)
-										OOB2 = true;
-									else if (x2->att & LeiaAlt &&
-										 y2->att & LandoAlt)
-										OOB2 = true;
-									else if (x2 == gamorreanguard &&
-										 y2->att & LukeAlt)
-										OOB2 = true;
+									if (x2->att & Pushable && y2->att & Jedi) OOB2 = true;
+									else if (x2->att & Chokeable && y2->att & Choke) OOB2 = true;
+									else if (x2->att & Lightningable && y2->att & Lightning) OOB2 = true;
+									else if (x2->att & Trickable && y2->att & Jedi) OOB2 = true;
+									else if (x2->att & Zappable && y2->att & Zapper) OOB2 = true;
+									else if (x2->att & Storm && y2->att & AstroZapper) OOB2 = true;
+									else if (x2->att & LeiaAlt && y2->att & LandoAlt) OOB2 = true;
+									else if (x2 == gamorreanguard && y2->att & LukeAlt) OOB2 = true;
 
 									if (OOB2) otherX = x2;
 								}
 							}
 						}
-						//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
-                        #define plnp SecretPlans->party
-						if (panel(2, 2, {x, shield}) && panel(2,1, {plnp[1], plnp[2], plnp[3], plnp[4]})) return true;
-						if (panel(2, 1, {x, otherX}) && atrb(Box | Bounty, {x, otherX}))
+//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
+#define plnp SecretPlans->party
+						if (panel(2, 2, {x, shield}) && panel(2, 1, {plnp[1], plnp[2], plnp[3], plnp[4]})) {
+							supercraneDoor = true;
 							return true;
-						if (panel(2, 1, {redGuy}) &&
-							(atrb(DoubleJump | Fly, {x, otherX}) ||
-								(atrb(Box | Bounty, {x}) && atrb(Lever, {redGuy}))))
+						}
+						if (panel(2, 1, {x, otherX}) && atrb(Box | Bounty, {x, otherX})) {
+							supercraneDoor = true;
 							return true;
+						}
+						if (panel(2, 1, {redGuy}) && (atrb(DoubleJump | Fly, {x, otherX}) ||
+														 (atrb(Box | Bounty, {x}) && atrb(Lever, {redGuy})))) {
+							supercraneDoor = true;
+							return true;
+						}
 						//not sure
 					}
 				}
@@ -723,8 +716,8 @@ secretplans:
 		if (!atrb(Build)) goto secretplans;
 		if (!atrb(Lever)) goto secretplans;
 		if (((All(Grapple | Build) || atrb(YodaJump) || //Both Yodas can build
-			     All(ExtraHighJump | Build)) &&
-			    (atrb(Shoot) || atrb(FakeShoot))) ||
+				 All(ExtraHighJump | Build)) &&
+				(atrb(Shoot) || atrb(FakeShoot))) ||
 			SuperJump(Jump | Flutter) || DoubleTransitionSkip(Jump | Flutter))
 			goto secretplans2;
 		goto secretplans;
@@ -739,19 +732,18 @@ secretplans2:
 		//Bounties can get the car
 		if (atrb(Jedi | Bounty) && panel(2, 2, {SecretPlans->party[4]})) goto secretplans3;
 
-		if (atrb(Hat) && availableHats[0] == BountyHat && panel(2, 2, {SecretPlans->party[4]}))
-			goto secretplans3;
+		if (atrb(Hat) && availableHats[0] == BountyHat && panel(2, 2, {SecretPlans->party[4]})) goto secretplans3;
 
 		if (panel(2, 0) && panel(2, 2, {SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4]}))
 			goto secretplans3;
 
 		//droids and rebel friend area with super jumps
-		if (plansthing({SecretPlans->party[0], SecretPlans->party[1], SecretPlans->party[3]},
-			    SecretPlans->party[4], SecretPlans->party[2]))
+		if (plansthing({SecretPlans->party[0], SecretPlans->party[1], SecretPlans->party[3]}, SecretPlans->party[4],
+				SecretPlans->party[2]))
 			goto secretplans3;
 
 		if (panel(2, 0) && plansthing({SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4]},
-					   defaultCharacter, SecretPlans->party[2]))
+							   defaultCharacter, SecretPlans->party[2]))
 			goto secretplans3;
 
 		goto secretplans;
@@ -765,13 +757,14 @@ secretplans3:
 	add(4);
 	if (logicType == casual) {
 		if (!panel(2, 2)) goto secretplans;
-		if (!atrb(Jedi | Fett) && !(SecretPlans->party[2]->check(Lever) && atrb(Box | Bounty)))
-			goto secretplans;
+		if (!atrb(Jedi | Fett) && !(SecretPlans->party[2]->check(Lever) && atrb(Box | Bounty))) goto secretplans;
 	}
 
 	add(2); //rebel friend
-	if (!atrb(Lever)) goto secretplans;
+	if (panel(2, 1)) supercraneDoor = true;
+	if (!supercraneDoor) goto secretplans;
 
+	if (!atrb(Lever)) goto secretplans;
 	if (atrb(Build)) goto secretplans4;
 
 	{
@@ -1311,8 +1304,7 @@ bespin:
 		//old OOB
 		if (logicType != casual && r2Door) {
 			for (Playable* p : testing) {
-				if (p->check(DoubleJump) || (p->check(Jump) && p->speed >= 1.199))
-					pastFight.push_back(p);
+				if (p->check(DoubleJump) || (p->check(Jump) && p->speed >= 1.199)) pastFight.push_back(p);
 			}
 		}
 
@@ -1360,8 +1352,8 @@ bespin:
 					}
 				}
 				//door clip to get 3po
-				if (logicType != casual && All(Build | Jump, pastFight) &&
-					All(Lever | Jump, pastFight) && All(Box | Jump, pastFight)) {
+				if (logicType != casual && All(Build | Jump, pastFight) && All(Lever | Jump, pastFight) &&
+					All(Box | Jump, pastFight)) {
 					if (r2Door || gotr2 || panel(0, 6, pastDoor)) {
 						add(4);
 						pastFight.push_back(Bespin->party[4]);
@@ -1473,8 +1465,7 @@ jabbas:
 					if (p != x) {
 						if (x->check(Jedi) && p->check(Pushable)) pastGate.push_back(p);
 						if (x->check(Choke) && p->check(Chokeable)) pastGate.push_back(p);
-						if (x->check(Lightning) && p->check(Lightningable))
-							pastGate.push_back(p);
+						if (x->check(Lightning) && p->check(Lightningable)) pastGate.push_back(p);
 						if (x->check(Zapper) && p->check(Zappable)) pastGate.push_back(p);
 						if (x->check(Jedi) && p->check(Trickable)) pastGate.push_back(p);
 						if (x->check(AstroZapper) && p->check(Storm)) pastGate.push_back(p);
@@ -1570,8 +1561,7 @@ jabbas4: //rancor
 	add(2);
 	add(3);
 	add(4);
-	if (!panel(3, 0) && !panel(3, 1) && !panel(3, 0, {Jabbas->party[5]}, {}) &&
-		!panel(3, 1, {Jabbas->party[5]}, {})) {
+	if (!panel(3, 0) && !panel(3, 1) && !panel(3, 0, {Jabbas->party[5]}, {}) && !panel(3, 1, {Jabbas->party[5]}, {})) {
 
 		goto jabbas;
 	}
@@ -1875,27 +1865,27 @@ bhm:
 
 	if (enemyOp && 1) {
 		for (Level* lev : allLevels) {
-			for (NestedEnemySet& nestSet : lev->nestedEns) {
+			for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
 				for (NestedEnemy& nest : nestSet.nEns) {
-					if (std::find(lev->enemyTypes.begin(), lev->enemyTypes.end(), nest.newEn) ==
-						lev->enemyTypes.end()) {
-						lev->enemyTypes.push_back(nest.newEn);
+					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), nest.newEn) ==
+						lev->enemies.enemyTypes.end()) {
+						lev->enemies.enemyTypes.push_back(nest.newEn);
 					}
 				}
 			}
-			for (EnemySet& enSet : lev->enemies) {
+			for (EnemySet& enSet : lev->enemies.enemies) {
 				for (Enemy& en : enSet.enemy) {
-					if (std::find(lev->enemyTypes.begin(), lev->enemyTypes.end(), en.newEn) ==
-						lev->enemyTypes.end()) {
-						lev->enemyTypes.push_back(en.newEn);
+					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), en.newEn) ==
+						lev->enemies.enemyTypes.end()) {
+						lev->enemies.enemyTypes.push_back(en.newEn);
 					}
 				}
 			}
-			for (SpecialScp& sp : lev->specialscp) {
+			for (SpecialScp& sp : lev->enemies.specialscp) {
 				for (Enemy& spEn : sp.specialEnemies) {
-					if (std::find(lev->enemyTypes.begin(), lev->enemyTypes.end(), spEn.newEn) ==
-						lev->enemyTypes.end()) {
-						lev->enemyTypes.push_back(spEn.newEn);
+					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), spEn.newEn) ==
+						lev->enemies.enemyTypes.end()) {
+						lev->enemies.enemyTypes.push_back(spEn.newEn);
 					}
 					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), spEn.newEn) ==
 						sp.spEnemyTypes.end()) {
@@ -1907,9 +1897,9 @@ bhm:
 					}
 				}
 				for (DoubleNestedEnemy& dne : sp.dNestEn) {
-					if (std::find(lev->enemyTypes.begin(), lev->enemyTypes.end(), dne.newEn) ==
-						lev->enemyTypes.end()) {
-						lev->enemyTypes.push_back(dne.newEn);
+					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), dne.newEn) ==
+						lev->enemies.enemyTypes.end()) {
+						lev->enemies.enemyTypes.push_back(dne.newEn);
 					}
 				}
 			}
@@ -1922,22 +1912,23 @@ bhm:
 	//FILE GEN IS HERE
 	fileGen();
 	//FILE GEN IS HERE
-    system("cls");
+	//system("cls");
 
+    std::cout << "Cutscenes removed\n";
 	//TESTING THIS
 
 	{
 		//Diverts references for nonexistent characters to dummy character so I can
 		//use override said characters.
-		int addresses[] = {0x4f13, 0x4f33, 0x4fc6, 0x1a7af, 0x29322, 0x895e9, 0xca382, 0x1de5f, 0x31774,
-			0x8727a, 0x317a2, 0x317b2, 0x1f29f, 0x2d314, 0x400a6, 0x400c2, 0x400c9, 0x400e5, 0x4005c,
-			0x40078, 0x400ec, 0x40108, 0x4007f, 0x317c2, 0xb57e5, 0x87288, 0xa91ca, 0x1e3e2, 0x1e3eb,
-			0xa91d7, 0x40039, 0x40055};
+		int addresses[] = {0x4f13, 0x4f33, 0x4fc6, 0x1a7af, 0x29322, 0x895e9, 0xca382, 0x1de5f, 0x31774, 0x8727a,
+			0x317a2, 0x317b2, 0x1f29f, 0x2d314, 0x400a6, 0x400c2, 0x400c9, 0x400e5, 0x4005c, 0x40078, 0x400ec, 0x40108,
+			0x4007f, 0x317c2, 0xb57e5, 0x87288, 0xa91ca, 0x1e3e2, 0x1e3eb, 0xa91d7, 0x40039, 0x40055};
 
 		for (int address : addresses)
 			binaryWrite(EXE, "b8177f", address);
 	}
 
+    std::cout << "Dummy characters done\n";
 	if (enemyOp && 1) {
 
 		////I want these scripts accessable from the entire game.
@@ -1950,21 +1941,21 @@ bhm:
 		//    "Fight", enemies, normalAttack, "if GotOpponent == 0 goto Approach", {45, 1}, SCR + "STORM.SCP");
 
 		for (Level* lev : allLevels) {
+            std::cout << lev->name << std::endl;
 			std::string tf = getMainTxt(lev);
-			lineDeleter(tf, lev->enemyRes);
+			lineDeleter(tf, lev->enemies.enemyRes);
 
-			for (Playable* p : lev->enemyTypes) {
+			for (Playable* p : lev->enemies.enemyTypes) {
 				appendFile(tf, "character \"" + p->name + "\" resident");
 			}
-			for (EnemySet& enSet : lev->enemies) {
+			for (EnemySet& enSet : lev->enemies.enemies) {
 				for (Enemy& en : enSet.enemy) {
 
 					if (en.enemywhere == ai2) {
 						hexWrite(getAI2(lev, enSet.scene), en.newEn->name, en.address);
 						if (en.scpFile != NONE) {
-							hexWrite(getAI2(lev, enSet.scene),
-								en.newEn->enemyChart[en.scpFile], en.address - 0x10,
-								0x10);
+							hexWrite(
+								getAI2(lev, enSet.scene), en.newEn->enemyChart[en.scpFile], en.address - 0x10, 0x10);
 						}
 						//if (SpecialScripts.contains(en.newEn)) {
 						//	hexWrite(getAI2(lev, enSet.scene), SpecialScripts[en.newEn],
@@ -1973,26 +1964,26 @@ bhm:
 					}
 				}
 			}
-			for (NestedEnemySet nestSet : lev->nestedEns) {
+			for (NestedEnemySet nestSet : lev->enemies.nestedEns) {
 				for (NestedEnemy nest : nestSet.nEns) {
+					std::cout << lev->name.c_str() << ' ' << nestSet.scene << ' ' << nestSet.fileName << ' '
+							  << nest.type << std::endl;
 					if (nest.scpType != NONE) {
-						txtIns(getSCP(lev, nestSet.scene, nestSet.fileName),
-							nest.newEn->enemyChart[nest.scpType], {nest.script},
-							nest.scpLen);
+						txtIns(getSCP(lev, nestSet.scene, nestSet.fileName), nest.newEn->enemyChart[nest.scpType],
+							{nest.script}, nest.scpLen);
 					}
-					txtIns(getSCP(lev, nestSet.scene, nestSet.fileName), nest.newEn->name,
-						{nest.type}, nest.oldEn->name.length());
+					txtIns(getSCP(lev, nestSet.scene, nestSet.fileName), nest.newEn->name, {nest.type},
+						nest.oldEn->name.length());
 					if (nest.chainAdd > -1) {
-						std::vector<Playable*>& spTemp =
-							lev->specialscp[nest.chainAdd].spEnemyTypes;
-						if (std::find(spTemp.begin(), spTemp.end(), nest.newEn) ==
-							spTemp.end()) {
+						std::vector<Playable*>& spTemp = lev->enemies.specialscp[nest.chainAdd].spEnemyTypes;
+						if (std::find(spTemp.begin(), spTemp.end(), nest.newEn) == spTemp.end()) {
 							spTemp.push_back(nest.newEn);
 						}
 					}
 				}
 			}
-			for (SpecialScp& sp : lev->specialscp) {
+			for (SpecialScp& sp : lev->enemies.specialscp) {
+                std::cout << '\t' << sp.fileName << std::endl;
 				for (Enemy& spEn : sp.specialEnemies) {
 
 					hexWrite(getAI2(lev, sp.scene), spEn.newEn->name, spEn.address);
@@ -2003,14 +1994,14 @@ bhm:
 				/*} else */
 				for (DoubleNestedEnemy& dne : sp.dNestEn) {
 					if (sp.useAltScript && SpecialScripts.contains(dne.newEn)) {
-            std::cout << dne.type.ln << ',' << dne.type.col << ' ' << dne.newEn->name << ' ' << dne.fileName << ' ' << dne.script.ln << ',' << dne.script.col << ' ' << dne.oldEn << std::endl;
-						txtIns(getSCP(lev, sp.scene, dne.fileName), SpecialScripts[dne.newEn],
-							{dne.script}, dne.fileName.length());
+						//std::cout << dne.type.ln << ',' << dne.type.col << ' ' << dne.newEn->name << ' ' <<
+						//dne.fileName
+						//		  << ' ' << dne.script.ln << ',' << dne.script.col << ' ' << dne.oldEn << std::endl;
+						txtIns(getSCP(lev, sp.scene, dne.fileName), SpecialScripts[dne.newEn], {dne.script},
+							dne.fileName.length());
 					}
-					txtIns(getSCP(lev, sp.scene, dne.fileName), dne.newEn->name, {dne.type},
-						dne.oldEn->name.length());
-					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), dne.newEn) ==
-						sp.spEnemyTypes.end()) {
+					txtIns(getSCP(lev, sp.scene, dne.fileName), dne.newEn->name, {dne.type}, dne.oldEn->name.length());
+					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), dne.newEn) == sp.spEnemyTypes.end()) {
 						sp.spEnemyTypes.push_back(dne.newEn);
 					}
 				}
@@ -2039,45 +2030,46 @@ bhm:
 
 					std::string tf = getSCP(lev, sp.scene, sp.fileName);
 
-					std::string redirect;
-					std::string ending;
-					for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-						if (!(sp.useAltScript &&
-							    !SpecialScripts.contains(sp.spEnemyTypes[i]))) {
-							if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
-								redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name +
-									    "\" == 1 goto " + sp.oldFunName +
-									    std::to_string(i) + "\n";
+					for (int j = sp.overwriters.size() - 1; j >= 0; j--) {
+#define overwrite sp.overwriters[j]
+						std::string redirect;
+						std::string ending;
+						for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
+							if (!(sp.useAltScript && !SpecialScripts.contains(sp.spEnemyTypes[i]))) {
+								if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+									redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " +
+												overwrite.oldFunName + std::to_string(i) + "\n";
 
-								ending += "state " + sp.oldFunName + std::to_string(i) +
-									  " {\n";
-								ending += "\tReferenceScript {\n"
-									  "\t\tScript=";
+									ending += "state " + overwrite.oldFunName + std::to_string(i) + " {\n";
+									ending += "\tReferenceScript {\n"
+											  "\t\tScript=";
 
-								ending += SpecialScripts[sp.spEnemyTypes[i]];
+									ending += SpecialScripts[sp.spEnemyTypes[i]];
 
-								ending += "\n\t\tSource=Global\n"
-									  "\t\tReturnState=" +
-									  sp.oldFunName + std::to_string(i) +
-									  "\n"
-									  "\t\tConditions {\n"
-									  "\t\t}\n"
-									  "\t}\n";
-								ending += "\tConditions {\n"
-									  "\t\t" +
-									  //spEnemyTypes[i]->conditions + "\n\t\t" +
-									  sp.extraConditions +
-									  "\n\t}\n"
-									  "\tActions {\n"
-									  "\t\t" +
-									  //sp.spEnemyTypes[i]->nAttackInfo.actions +
-									  "\n\t}\n"
-									  "}\n";
+									ending += "\n\t\tSource=Global\n"
+											  "\t\tReturnState=" +
+											  overwrite.oldFunName + std::to_string(i) +
+											  "\n"
+											  "\t\tConditions {\n"
+											  "\t\t}\n"
+											  "\t}\n";
+									ending += "\tConditions {\n"
+											  "\t\t" +
+											  //spEnemyTypes[i]->conditions + "\n\t\t" +
+											  overwrite.extraConditions +
+											  "\n\t}\n"
+											  "\tActions {\n"
+											  "\t\t" +
+											  overwrite.extraActions +
+											  //sp.spEnemyTypes[i]->nAttackInfo.actions +
+											  "\n\t}\n"
+											  "}\n";
+								}
 							}
 						}
+						txtIns(tf, redirect, {{overwrite.ln, 1}}, 0);
+						appendFile(tf, ending);
 					}
-					txtIns(tf, redirect, {sp.lnCol}, 0);
-					appendFile(tf, ending);
 
 				} else {
 					redirrector(lev, sp);
@@ -2086,16 +2078,15 @@ bhm:
 		}
 	}
 
+    std::cout << "Enemies patched";
 	if (panelOp) {
 		for (Level* lev : allLevels) {
 			for (PanelSet& panSet : lev->panels) {
 				for (Panel& pan : panSet.panels) {
 					binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.type, pan.address);
 					if (pan.type == AstroPanel || pan.type == ProtoPanel) {
-						binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.altColor,
-							pan.address + 19);
-						binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.altBody,
-							pan.address + 20);
+						binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.altColor, pan.address + 19);
+						binaryWrite(getBasePath(lev, panSet.scene, "GIZ"), pan.altBody, pan.address + 20);
 					}
 				}
 			}
@@ -2143,9 +2134,9 @@ bhm:
 						std::stringstream st;
 						st << std::hex << mk.first;
 						logR(st.str() + " " + file +
-							" is not a "
-							"collectabl"
-							"e.\n");
+							 " is not a "
+							 "collectabl"
+							 "e.\n");
 					}
 #endif
 					if (type == 'c') {
@@ -2155,8 +2146,7 @@ bhm:
 						//which breaks
 						//when changed
 						//to minikits
-						hexWrite(
-							file, "c_pup" + std::to_string(challengeNum), mk.second - 0x14);
+						hexWrite(file, "c_pup" + std::to_string(challengeNum), mk.second - 0x14);
 						++challengeNum;
 					}
 
@@ -2181,9 +2171,9 @@ bhm:
 						std::stringstream st;
 						st << std::hex << collect.type;
 						logR(st.str() + " " + file +
-							" is not a "
-							"collectabl"
-							"e.\n");
+							 " is not a "
+							 "collectabl"
+							 "e.\n");
 					}
 #endif
 					if (type == 'c') {
@@ -2193,8 +2183,7 @@ bhm:
 						//which breaks
 						//when changed
 						//to minikits
-						hexWrite(file, "c_pup" + std::to_string(challengeNum),
-							special.second - 0x14);
+						hexWrite(file, "c_pup" + std::to_string(challengeNum), special.second - 0x14);
 						++challengeNum;
 					}
 
@@ -2212,18 +2201,18 @@ bhm:
 		lineDeleter(getBasePath(Kashyyyk, 'B', "GIT"), {170});
 	}
 
+    std::cout << "Collectables patched\n";
 	if (extra) {
 #ifdef _DEBUG
 		logR("Starting extras");
 
 #endif
-		unsigned int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286, 332, 351, 363, 377, 392,
-			406, 468, 485, 505, 523, 540, 562, 615, 632, 652, 669, 684, 700, 749, 764, 777, 793, 806, 829};
+		unsigned int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286, 332, 351, 363, 377, 392, 406,
+			468, 485, 505, 523, 540, 562, 615, 632, 652, 669, 684, 700, 749, 764, 777, 793, 806, 829};
 
 		std::vector<writeSet> ex;
 		for (unsigned int i = 0; i < extras.size(); i++) {
-			ex.push_back(
-				{extras[i], static_cast<unsigned int>(vanillaExtras[i].length()), {{lines[i], 18}}});
+			ex.push_back({extras[i], static_cast<unsigned int>(vanillaExtras[i].length()), {{lines[i], 18}}});
 		}
 
 		batchAnywhere(LEV + "AREAS.TXT", ex);
@@ -2449,8 +2438,7 @@ bhm:
 		//"FACTORY_E.AI2"); Factory->binWrite(2, {
 		//0x143D }, 'E', "FACTORY_E.AI2");
 		currentLev = JediBattle;
-		playerInit(
-			{{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 8}, {3, 9}, {4, 10}}); //so they still spawn in FP
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 8}, {3, 9}, {4, 10}}); //so they still spawn in FP
 
 		scpMany('B', "PARTY", {{2, {{15, 11}, {31, 11}}}, {3, {{11, 11}, {26, 11}}}, {4, {{7, 11}, {21, 11}}}});
 		scpIns('B', "LEVEL", 4, {7, 45});
@@ -2488,37 +2476,37 @@ bhm:
 		//"PARTY.SCP"));
 		std::ofstream party(getSCP(Chancellor, 'B', "PARTY"));
 		party << "state Base {\n"
-		      << "\tConditions {\n"
-		      << "\t\tif FreePlay == 1 goto "
-			 "NormalUpdate\n"
-		      << "\t\tif CategoryIs \"Astromech\" == 1 "
-			 "goto PanelUpdate\n"
-		      << "\t\tif AlwaysTrue == 1 goto "
-			 "NormalUpdate\n"
-		      << "\t}\n"
-		      << "\tActions {\n"
-		      << "\t}\n"
-		      << "}\n"
-		      << "state NormalUpdate {\n"
-		      << "\tReferenceScript {\n"
-		      << "\t\tScript=GeneralParty\n"
-		      << "\t\tSource=Global\n"
-		      << "\t\tReturnState=NormalUpdate\n"
-		      << "\t\tConditions {\n"
-		      << "\t\t}\n"
-		      << "\t}\n"
-		      << "\tConditions{\n"
-		      << "\t}\n"
-		      << "\tActions {\n"
-		      << "\t}\n"
-		      << "}\n"
-		      << "state PanelUpdate {\n"
-		      << "\tConditions{\n"
-		      << "\t}\n"
-		      << "\tActions {\n"
-		      << "\t\tFollowPlayer \"1\"\n"
-		      << "\t}\n"
-		      << "}\n";
+			  << "\tConditions {\n"
+			  << "\t\tif FreePlay == 1 goto "
+				 "NormalUpdate\n"
+			  << "\t\tif CategoryIs \"Astromech\" == 1 "
+				 "goto PanelUpdate\n"
+			  << "\t\tif AlwaysTrue == 1 goto "
+				 "NormalUpdate\n"
+			  << "\t}\n"
+			  << "\tActions {\n"
+			  << "\t}\n"
+			  << "}\n"
+			  << "state NormalUpdate {\n"
+			  << "\tReferenceScript {\n"
+			  << "\t\tScript=GeneralParty\n"
+			  << "\t\tSource=Global\n"
+			  << "\t\tReturnState=NormalUpdate\n"
+			  << "\t\tConditions {\n"
+			  << "\t\t}\n"
+			  << "\t}\n"
+			  << "\tConditions{\n"
+			  << "\t}\n"
+			  << "\tActions {\n"
+			  << "\t}\n"
+			  << "}\n"
+			  << "state PanelUpdate {\n"
+			  << "\tConditions{\n"
+			  << "\t}\n"
+			  << "\tActions {\n"
+			  << "\t\tFollowPlayer \"1\"\n"
+			  << "\t}\n"
+			  << "}\n";
 
 		scriptTxtAppend('B', "party");
 
@@ -2533,21 +2521,21 @@ bhm:
 		}
 
 		multiScriptTxt('A', {
-					    {2, 1},
-					    {3, 4},
-				    });
+								{2, 1},
+								{3, 4},
+							});
 		multiScriptTxt('B', {
-					    {2, 1},
-					    {3, 4},
-				    });
+								{2, 1},
+								{3, 4},
+							});
 		multiScriptTxt('C', {
-					    {2, 2},
-					    {3, 4},
-				    });
+								{2, 2},
+								{3, 4},
+							});
 		multiScriptTxt('G', {
-					    {2, 2},
-					    {3, 3},
-				    });
+								{2, 2},
+								{3, 3},
+							});
 
 		currentLev = Grievous;
 		playerInit({{0, 1}, {1, 2}});
@@ -2573,15 +2561,11 @@ bhm:
 		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}});
 
 		scpMany('A', "PARTY",
-			{{0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}},
-				{4, {{20, 11}}}});
+			{{0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}}, {4, {{20, 11}}}});
 		scpMany('B', "PARTY",
-			{{0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}},
-				{4, {{20, 11}}}});
-		scpMany('C', "PARTY",
-			{{0, {{7, 11}, {10, 11}}}, {2, {{34, 11}}}, {3, {{28, 11}, {53, 11}}}, {4, {{31, 11}}}});
-		scpMany('D', "PARTY",
-			{{0, {{38, 26}}}, {1, {{8, 11}}}, {2, {{9, 11}}}, {3, {{6, 11}}}, {4, {{7, 11}}}});
+			{{0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}}, {4, {{20, 11}}}});
+		scpMany('C', "PARTY", {{0, {{7, 11}, {10, 11}}}, {2, {{34, 11}}}, {3, {{28, 11}, {53, 11}}}, {4, {{31, 11}}}});
+		scpMany('D', "PARTY", {{0, {{38, 26}}}, {1, {{8, 11}}}, {2, {{9, 11}}}, {3, {{6, 11}}}, {4, {{7, 11}}}});
 
 		scpMany('C', "LEVEL",
 			{{0, {{53, 26}, {54, 25}}}, {3, {{21, 22}, {36, 27}, {37, 27}, {38, 29}}},
@@ -2607,39 +2591,30 @@ bhm:
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
 		scpMany('A', "PARTY",
-			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}},
-				{5, {{21, 11}}}});
+			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}}});
 		scpMany('B', "PARTY",
-			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}},
-				{5, {{21, 11}}}});
+			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}}});
 		scpMany('C', "PARTY",
-			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}},
-				{5, {{21, 11}}}});
+			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}}});
 
 		scpMany('C', "LEVEL",
 			{{0, {{100, 26}, {101, 25}}}, {1, {{103, 26}, {104, 25}}}, {2, {{106, 26}, {107, 25}}},
 				{3, {{109, 26}, {110, 25}}}, {4, {{97, 23}, {98, 28}}}, {5, {{94, 23}, {95, 28}}}});
 
 		scpMany('D', "LEVEL",
-			{{0, {{26, 26}, {27, 27}, {28, 27}, {29, 28}, {30, 29}, {108, 26}, {109, 27}, {110, 27},
-				     {111, 29}}},
-				{1, {{32, 26}, {33, 27}, {34, 27}, {35, 28}, {36, 29}, {113, 26}, {114, 27}, {115, 27},
-					    {116, 29}}},
-				{2, {{38, 26}, {39, 27}, {40, 27}, {41, 28}, {42, 29}, {118, 26}, {119, 27}, {120, 27},
-					    {121, 29}}},
-				{3, {{44, 26}, {45, 27}, {46, 27}, {47, 28}, {48, 29}, {123, 26}, {124, 27}, {125, 27},
-					    {126, 29}}}});
+			{{0, {{26, 26}, {27, 27}, {28, 27}, {29, 28}, {30, 29}, {108, 26}, {109, 27}, {110, 27}, {111, 29}}},
+				{1, {{32, 26}, {33, 27}, {34, 27}, {35, 28}, {36, 29}, {113, 26}, {114, 27}, {115, 27}, {116, 29}}},
+				{2, {{38, 26}, {39, 27}, {40, 27}, {41, 28}, {42, 29}, {118, 26}, {119, 27}, {120, 27}, {121, 29}}},
+				{3, {{44, 26}, {45, 27}, {46, 27}, {47, 28}, {48, 29}, {123, 26}, {124, 27}, {125, 27}, {126, 29}}}});
 
 		scpMany('E', "LEVEL",
 			{{0, {{16, 26}, {17, 27}, {18, 27}, {19, 26}}}, {1, {{21, 26}, {22, 27}, {23, 27}, {24, 26}}},
-				{2, {{26, 26}, {27, 27}, {28, 27}, {29, 26}}},
-				{3, {{31, 26}, {32, 27}, {33, 27}, {34, 26}}}});
+				{2, {{26, 26}, {27, 27}, {28, 27}, {29, 26}}}, {3, {{31, 26}, {32, 27}, {33, 27}, {34, 26}}}});
 
 		currentLev = Princess;
 		playerInit({{0, 17}, {1, 18}, {2, 19}, {3, 20}, {4, 21}, {5, 22}, {0, 25, bonusCharacter}});
 
-		scpMany('A', "LEVEL",
-			{{3, {{35, 26}, {36, 25}}}, {4, {{33, 26}, {34, 25}}}, {5, {{37, 26}, {38, 25}}}});
+		scpMany('A', "LEVEL", {{3, {{35, 26}, {36, 25}}}, {4, {{33, 26}, {34, 25}}}, {5, {{37, 26}, {38, 25}}}});
 		scpMany('B', "LEVEL", {{3, {{24, 26}}}, {4, {{25, 26}}}, {5, {{26, 26}}}});
 
 		ai2Write('B', 5, {0x6825});
@@ -2665,8 +2640,7 @@ bhm:
 			"\t}\n"
 			"\tActions {\n"
 			"\t\tdeactivate \"character=" +
-				Princess->party[3]->name + "\"\n" +
-				"\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
+				Princess->party[3]->name + "\"\n" + "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
 				//"\t\tdeactivate \"character=" +
 				//Princess->party[5]->name + "\"\n" +
 				"\t}\n" + "}");
@@ -2675,7 +2649,7 @@ bhm:
 		os << "state Base {\n"
 		   << "\tConditions {\n"
 		   << "\t\tif FreePlay == 0 goto "
-		      "MakeSurePlayersNotDroids\n"
+			  "MakeSurePlayersNotDroids\n"
 		   << "\t}\n"
 		   << "\tActions {\n"
 		   << "\t}\n"
@@ -2701,8 +2675,8 @@ bhm:
 			"\t}\n"
 			"\tActions {\n"
 			"\t\tdeactivate \"character=" +
-				Princess->party[3]->name + "\"\n" +
-				"\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" + "\t}\n" + "}");
+				Princess->party[3]->name + "\"\n" + "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
+				"\t}\n" + "}");
 
 		scpDeleter('A', "NOWEAPON");
 		scpDeleter('B', "NOWEAPON");
@@ -2728,9 +2702,9 @@ bhm:
 
 		currentLev = Hoth;
 		mainTxtIns("character \"" + Hoth->party[0]->name +
-				   "\" player\n"
-				   "character \"" +
-				   Hoth->party[1]->name + "\" player",
+					   "\" player\n"
+					   "character \"" +
+					   Hoth->party[1]->name + "\" player",
 			32, {1, 1});
 
 		currentLev = EchoBase;
@@ -2767,8 +2741,7 @@ bhm:
 			{{0, {{35, 26}, {36, 27}, {37, 27}, {38, 25}}}, {2, {{48, 26}, {49, 27}, {50, 27}, {51, 25}}},
 				{3, {{53, 26}, {54, 27}, {55, 27}, {56, 25}}}});
 		scpMany('E', "LEVEL",
-			{{0, {{33, 26}, {34, 27}, {35, 27}, {36, 25}, {54, 26}, {55, 27}, {56, 27}, {57, 25}}},
-				{3, {{38, 27}}}});
+			{{0, {{33, 26}, {34, 27}, {35, 27}, {36, 25}, {54, 26}, {55, 27}, {56, 27}, {57, 25}}}, {3, {{38, 27}}}});
 
 		//fixes AI
 		scpRep('C', "PARTY", "if CategoryIs \"Jedi\" == 0", 18, {5, 3});
@@ -2892,16 +2865,15 @@ bhm:
 			currentLev = BHM;
 
 			batchAnywhere(LEV + "MISSIONS.TXT",
-				{{"party \"" + BHM->party[0]->name + "\" \"" + BHM->party[1]->name + "\" \"" +
-						 BHM->party[2]->name + "\" \"" + BHM->party[3]->name + "\" \"" +
-						 BHM->party[4]->name + "\" \"" + BHM->party[5]->name + "\" ",
+				{{"party \"" + BHM->party[0]->name + "\" \"" + BHM->party[1]->name + "\" \"" + BHM->party[2]->name +
+						 "\" \"" + BHM->party[3]->name + "\" \"" + BHM->party[4]->name + "\" \"" + BHM->party[5]->name +
+						 "\" ",
 					 56, {{1, 1}}},
 
-					{0, {{5, 15}}, bonusCharacter}, {1, {{6, 15}}, bonusCharacter},
-					{2, {{7, 15}}, bonusCharacter}, {3, {{8, 15}}, bonusCharacter},
-					{4, {{9, 15}}, bonusCharacter}, {5, {{10, 15}}, bonusCharacter},
-					{6, {{11, 15}}, bonusCharacter}, {7, {{12, 15}}, bonusCharacter},
-					{8, {{13, 15}}, bonusCharacter}, {9, {{14, 15}}, bonusCharacter},
+					{0, {{5, 15}}, bonusCharacter}, {1, {{6, 15}}, bonusCharacter}, {2, {{7, 15}}, bonusCharacter},
+					{3, {{8, 15}}, bonusCharacter}, {4, {{9, 15}}, bonusCharacter}, {5, {{10, 15}}, bonusCharacter},
+					{6, {{11, 15}}, bonusCharacter}, {7, {{12, 15}}, bonusCharacter}, {8, {{13, 15}}, bonusCharacter},
+					{9, {{14, 15}}, bonusCharacter},
 
 					{10, {{17, 15}}, bonusCharacter}, {11, {{18, 15}}, bonusCharacter},
 					{12, {{19, 15}}, bonusCharacter}, {13, {{20, 15}}, bonusCharacter},
@@ -2909,13 +2881,10 @@ bhm:
 					{16, {{23, 15}}, bonusCharacter}, {17, {{24, 15}}, bonusCharacter},
 					{18, {{25, 15}}, bonusCharacter}, {19, {{26, 15}}, bonusCharacter}});
 
-			auto missionReplace2 = [](int c, unsigned int line, Level* lev, char scene,
-						       std::string script) {
+			auto missionReplace2 = [](int c, unsigned int line, Level* lev, char scene, std::string script) {
 				writer(oneWrite, getSCP(lev, scene, script),
 					{BHM->bonusCharacters[c]->name,
-						static_cast<unsigned int>(
-							BHM->vanillaBonusCharacters[c]->name.length()),
-						{line, 49}});
+						static_cast<unsigned int>(BHM->vanillaBonusCharacters[c]->name.length()), {line, 49}});
 				//scpIns(scene, script, c,
 				//{line, 49}, bonusCharacter);
 			};
@@ -2999,10 +2968,10 @@ outro:
 			else {
 				if (p->check(AllEpisodes)) {
 					collect << "all_episodes_"
-						   "complete ";
+							   "complete ";
 				} else if (!(p->check(NoLevel))) {
 					collect << "area_complete "
-						   "\"";
+							   "\"";
 					collect << p->lev->name << "\" ";
 				}
 				collect << "buy_in_shop ";
@@ -3024,14 +2993,13 @@ outro:
 	std::string minis[] = {"mini_republic_cruiser", "mini_gungan_bongo", "mini_royal_starship", "mini_sebulba_pod",
 		"mini_naboo_starfighter", "mini_sith_infiltrator",
 
-		"mini_zam_speeder", "mini_jedi_starfighter", "mini_droideka", "mini_gunship", "mini_atte",
-		"mini_solar_sailor",
+		"mini_zam_speeder", "mini_jedi_starfighter", "mini_droideka", "mini_gunship", "mini_atte", "mini_solar_sailor",
 
 		"mini_dropship", "mini_emergency_ship", "mini_e3_jedi_starfighter", "mini_wookie_cat", "mini_e3_x_wing",
 		"mini_v_wing",
 
-		"mini_star_destroyer", "mini_sand_crawler", "mini_land_speeder", "mini_millennium_falcon",
-		"mini_y_wing", "mini_tie_advanced",
+		"mini_star_destroyer", "mini_sand_crawler", "mini_land_speeder", "mini_millennium_falcon", "mini_y_wing",
+		"mini_tie_advanced",
 
 		"mini_atat", "mini_snow_speeder", "mini_tie_fighter", "mini_x_wing", "mini_slave1", "mini_cloud_car",
 

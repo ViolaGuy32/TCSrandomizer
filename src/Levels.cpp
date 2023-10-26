@@ -18,26 +18,34 @@ extern LogicType logicType;
 extern Level* BHM;
 
 Enemy::Enemy(enemyScp myScp, coord myType, coord myScript)
-    : enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
+	: enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
 
 Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
-    : enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
+	: enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
 
 SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
 	std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn,
 	bool myUseAltScript)
-    : scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol),
-      dNestEn(myDNestEn), useAltScript(myUseAltScript) {
+	: scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol),
+	  dNestEn(myDNestEn), useAltScript(myUseAltScript) {
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, ai2});
 	}
 }
 
 SpecialScp::SpecialScp(char myScene, const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses,
-	unsigned int myLn, const char* myExtraConditions, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
-    : scene(myScene), fileName(myFileName), oldFunName(myOldFunName), lnCol({myLn, 1}),
-      extraConditions(myExtraConditions), newWay(true), dNestEn(myDNestEn), useAltScript(myUseAltScript) {
+	unsigned int myLn, const char* myExtraConditions, const char* myExtraActions, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
+	: scene(myScene), fileName(myFileName), newWay(true), dNestEn(myDNestEn), useAltScript(myUseAltScript) {
+	overwriters.push_back({myOldFunName, myLn, myExtraConditions, myExtraActions});
+	for (int address : myAddresses) {
+		specialEnemies.push_back({scpFile, address, ai2});
+	}
+}
 
+SpecialScp::SpecialScp(char myScene, const char* myFileName, std::vector<int> myAddresses,
+	std::vector<SpecialScpOverwrite> myOverwriters, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
+	: scene(myScene), fileName(myFileName), overwriters(myOverwriters), newWay(true), dNestEn(myDNestEn),
+	  useAltScript(myUseAltScript) {
 	for (int address : myAddresses) {
 		specialEnemies.push_back({scpFile, address, ai2});
 	}
@@ -77,7 +85,7 @@ SpecialCollectable::SpecialCollectable(char c, std::initializer_list<int> addres
 //}
 
 SpecialCollectable::SpecialCollectable(std::initializer_list<std::pair<char, int>> mySceneAddress)
-    : type('\0'), sceneAddress(mySceneAddress) {
+	: type('\0'), sceneAddress(mySceneAddress) {
 	//BHP and Bespin have minikits that span multiple scenes
 }
 
@@ -85,14 +93,11 @@ Level::Level(std::string myName, std::string myShortName, std::string myPath, bo
 	std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 	std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
 	std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
-	std::vector<DispenserSet> myDispensers, std::vector<SpecialScp> mySpecialScp, std::vector<EnemySet> myEnemies,
-	std::vector<NestedEnemySet> myNestedEns, std::vector<unsigned int> myEnemyRes)
-    : name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel), vanillaParty(myVanillaParty),
-      party(myVanillaParty), vanillaBonusCharacters(myVanillaBonusCharacters),
-      bonusCharacters(myVanillaBonusCharacters), collectables(myCollectables),
-      specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers), enemies(myEnemies),
-      enemyRes(myEnemyRes), specialscp(mySpecialScp), nestedEns(myNestedEns) {
-
+	std::vector<DispenserSet> myDispensers)
+	: name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel), vanillaParty(myVanillaParty),
+	  party(myVanillaParty), vanillaBonusCharacters(myVanillaBonusCharacters),
+	  bonusCharacters(myVanillaBonusCharacters), collectables(myCollectables),
+	  specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers) {
 	for (Playable* p : myUnlocks) {
 		p->lev = this;
 	}
@@ -103,9 +108,8 @@ Level::Level(std::string myName, std::string myShortName, std::string myPath, bo
 void add(int a) {
 
 #ifdef _DEBUG
-	//logR(currentLev->name + ' ' + currentLev->party[a]->name);
+//logR(currentLev->name + ' ' + currentLev->party[a]->name);
 #endif
-
 	testing.push_back(currentLev->party[a]);
 }
 
@@ -207,22 +211,23 @@ void mix(Level* lev) {
 		add(0);
 		if (!lev->vehicleLevel || logicType != casual)
 			add(1); //Only checks P1 in casual vehicle levels
-				//because casual logic does not have 1p2c
+					//because casual logic does not have 1p2c
 	}
+
 	if (enemyOp) {
 		std::uniform_int_distribution<int> distrib(0, enemies.size() - 1);
-		for (NestedEnemySet& nestSet : lev->nestedEns) {
+		for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
 			for (NestedEnemy& nest : nestSet.nEns) {
 				nest.newEn = enemies[distrib(*randoPTR)];
 			}
 		}
-		for (EnemySet& enSet : lev->enemies) {
+		for (EnemySet& enSet : lev->enemies.enemies) {
 			for (Enemy& en : enSet.enemy) {
 
 				en.newEn = enemies[distrib(*randoPTR)];
 			}
 		}
-		for (SpecialScp& sp : lev->specialscp) {
+		for (SpecialScp& sp : lev->enemies.specialscp) {
 			for (Enemy& spEn : sp.specialEnemies) {
 
 				spEn.newEn = enemies[distrib(*randoPTR)];

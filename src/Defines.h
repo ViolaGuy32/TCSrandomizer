@@ -24,69 +24,69 @@
 #define target(att) "if GotOpponent == 1 goto " exit
 #define outOfRange(exit, range) "if OpponentRange > " range " goto " exit
 #define underCover(exit) "if PartyUnderCover == 1 goto " exit
-
+#define trigger(area, exit) "if EitherPlayerInTriggerArea " area "goto" exit
 //{0} number
 //{1} attackpattern
 //[2] extraCondition
 //{3} appendix
 #define scpFun(name, condition, action)                                                                                \
-	"state " name "{0} {{\n"                                                                                       \
-	"\tConditions {{\n"                                                                                            \
-	"\t\t" condition "\n"                                                                                          \
-	"\t\t{1}\n"                                                                                                    \
-	"\t}}\n"                                                                                                       \
-	"\tActions {{\n"                                                                                               \
-	"\t\t" action "\n"                                                                                             \
-	"\t\t{2}\n"                                                                                                    \
-	"\t}}\n"                                                                                                       \
-	"}}\n"                                                                                                         \
+	"state " name "{0} {{\n"                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t\t{1}\n"                                                                                                        \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t\t{2}\n"                                                                                                        \
+	"\t}}\n"                                                                                                           \
+	"}}\n"                                                                                                             \
 	"{3}\n"
 
 #define funcNoRef(name, condition, action)                                                                             \
-	"state " name "{0} {{\n"                                                                                       \
-	"\tConditions {{\n"                                                                                            \
-	"\t\t" condition "\n"                                                                                          \
-	"\t}}\n"                                                                                                       \
-	"\tActions {{\n"                                                                                               \
-	"\t\t" action "\n"                                                                                             \
-	"\t}}\n"                                                                                                       \
+	"state " name "{0} {{\n"                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t}}\n"                                                                                                           \
 	"}}\n"
 
 //{0} number
 //{1} condition
 //{2} action
 #define func(name, condition, action)                                                                                  \
-	"state " name "{0} {{\n"                                                                                       \
-	"\tReferenceScript {{\n"                                                                                       \
-	"\t\tScript={1}\n"                                                                                             \
-	"\t\tSource=Global\n"                                                                                          \
-	"\t\tReturnState=" name "{0}\n"                                                                                \
-	"\t\tConditions {{\n"                                                                                          \
-	"\t\t}}\n"                                                                                                     \
-	"\t}}\n"                                                                                                       \
-	"\tConditions {{\n"                                                                                            \
-	"\t\t" condition "\n"                                                                                          \
-	"\t}}\n"                                                                                                       \
-	"\tActions {{\n"                                                                                               \
-	"\t\t" action "\n"                                                                                             \
-	"\t}}\n"                                                                                                       \
+	"state " name "{0} {{\n"                                                                                           \
+	"\tReferenceScript {{\n"                                                                                           \
+	"\t\tScript={1}\n"                                                                                                 \
+	"\t\tSource=Global\n"                                                                                              \
+	"\t\tReturnState=" name "{0}\n"                                                                                    \
+	"\t\tConditions {{\n"                                                                                              \
+	"\t\t}}\n"                                                                                                         \
+	"\t}}\n"                                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t}}\n"                                                                                                           \
 	"}}\n"
 
 #define funcCustom(name, referenceScript, condition, action)                                                           \
-	"state " name " {{\n"                                                                                          \
-	"\tReferenceScript {{\n"                                                                                       \
-	"\t\tScript=" referenceScript "\n"                                                                             \
-	"\t\tSource=Global\n"                                                                                          \
-	"\t\tReturnState=" name "\n"                                                                                   \
-	"\t\tConditions {{\n"                                                                                          \
-	"\t\t}}\n"                                                                                                     \
-	"\t}}\n"                                                                                                       \
-	"\tConditions {{\n"                                                                                            \
-	"\t\t" condition "\n"                                                                                          \
-	"\t}}\n"                                                                                                       \
-	"\tActions {{\n"                                                                                               \
-	"\t\t" action "\n"                                                                                             \
-	"\t}}\n"                                                                                                       \
+	"state " name " {{\n"                                                                                              \
+	"\tReferenceScript {{\n"                                                                                           \
+	"\t\tScript=" referenceScript "\n"                                                                                 \
+	"\t\tSource=Global\n"                                                                                              \
+	"\t\tReturnState=" name "\n"                                                                                       \
+	"\t\tConditions {{\n"                                                                                              \
+	"\t\t}}\n"                                                                                                         \
+	"\t}}\n"                                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t}}\n"                                                                                                           \
 	"}}\n"
 
 //candefend????
@@ -96,17 +96,22 @@ enum PanelType { AstroPanel, ProtoPanel, BountyPanel, ImperialPanel };
 
 enum DispenserType { RandomHat, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat, DroidPanel };
 
-enum enemyScp { chatting, sniper, storm, attack, block, spawnattack, patrol, NONE };
+enum enemyScp { chatting, sniper, storm, attack, block, spawnattack, patrol, NONE, special };
 
 enum attackType { nAttack, nBlock, nSnipe };
 
 struct coord {
 	unsigned int ln = 1;
 	unsigned int col = 1;
+
+	friend std::ostream& operator<<(std::ostream& out, const coord& lncol) {
+		return out << '(' << lncol.ln << ", " << lncol.col << ')';
+	}
 };
 
 /*
 
+specialscp additional actions
 
 fix geonosian rename
 
@@ -122,7 +127,7 @@ gamorreanguard
 impguard
 bat
 
-
+floating characters don't finish spawning from grapple
 
 defend and block are DIFFERENT
 
@@ -150,16 +155,32 @@ check geonosians in Jedi Battle
 	room 1 AI
 
 	4-1:
-    jawa escort t-poses
-    remove KeepWeaponOut
+    rebel friend enemies keep falling off.
+    CHECK GIT TO REVERT PLANSTHING!!!!!
+	jawa escort t-poses
+	remove KeepWeaponOut
 	last room - super jump
-    backflip 50hz for no grapple
+	backflip 50hz for no grapple
 
 4-2:
+dropout intro
+hill guys don't infinitely spawn
 disguised clone doesn't work on ledges
 nonjumpers get stuck on top of hill in A
 sj directly into elevator
-
+second to last room ledge trooper won't attack
+
+
+	4-3:
+    intro not skipped
+    A ledge fails spawns (super battle droid blocks it?)
+	cleaClearTakeOverTarget?
+    B deathstartrooper spawnattack t-poses
+    B takeover kaminodroid is stuck
+    spy spawns don't always work 
+hangerattack is broken
+    bodyguards follow me into block pushing room
+
 	4-4:
 	Ben AI when not Jedi
 

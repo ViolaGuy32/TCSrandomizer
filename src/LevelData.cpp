@@ -30,7 +30,9 @@ void makeLevels() {
 					{ProtoPanel, 0x38F8}, //end
 				},
 			}},
-		{},
+		{});
+
+	Negotiations->enemies = Enemies(
 		{
 			{'A', chatting, "DOORATTACK", "NormalUpdate", {0x456a, 0x460f, 0x46b4, 0x4759},
 				func("NormalUpdate", "", "GoToOrigin \"waittime=10\""), {30, 19}},
@@ -45,7 +47,7 @@ void makeLevels() {
 			{'C', chatting, "MTT_DROID", "Update",
 				{0x39A0, 0x3A45, 0x3AEA, 0x3B8F, 0x3C34, 0x3CD9, 0x3D7E, 0x3E23, 0x3EC8},
 				func("Update", "", "GoToOrigin \"waittime=10\""), {31, 13}},
-			{'C', "DROIDEKA", "Engage", {0x3647, 0x37fc}, 90, retreat("Guard") "\n\t\t" outOfRange("3", "Guard")},
+			{'C', "DROIDEKA", "Engage", {0x3647, 0x37fc}, 90, retreat("Guard") "\n\t\t" outOfRange("3", "Guard"), ""},
 		},
 
 		{
@@ -88,14 +90,19 @@ void makeLevels() {
 		{
 			{'B', {{BountyPanel, 0x1C01}}}, //rb
 		},
-		{},
-		{//{'A', storm, "storm", "STORM", "Approach", {0x1722, 0x17F7}, 37, retreat("Approach"),
-		 //normalAttack},
-			{'A', "STORM", "Approach", {0x1722, 0x17F7}, 27, ""},
+		{});
 
-			{'E', "BATTLEDROID", "Attack", {0x864, 0x1919, 0x9CE, 0xA83}, 88,
-				scpFun("Attack", retreat("update") "\n\t\t" outOfRange("Update", "2"), "")},
-			{'E', "STORM", "Approach", {0xBED}, 28, underCover("Base")}},
+	Invasion->enemies = Enemies(
+		{
+			//{'A', storm, "storm", "STORM", "Approach", {0x1722, 0x17F7}, 37, retreat("Approach"),
+			//normalAttack},
+			{'A', "STORM", "Approach", {0x1722, 0x17F7}, 27, "", ""},
+
+            //PUT THIS BACK IN
+			//{'E', "BATTLEDROID", "Attack", {0x864, 0x1919, 0x9CE, 0xA83}, 88,
+			//	scpFun("Attack", retreat("update") "\n\t\t" outOfRange("Update", "2"), ""), ""}, //??????
+			{'E', "STORM", "Approach", {0xBED}, 28, underCover("Base"), ""},
+		},
 		{{'B',
 			 {
 				 {sniper, 0x2303},
@@ -124,7 +131,8 @@ void makeLevels() {
 		{amidala, captainpanaka, quigonjinn, obiwankenobi}, {}, {amidala, captainpanaka, royalguard, padme},
 		{{'A', {0x8153, 0x813c, 0x8125, 0x810e, 0x7cd5, 0x7cbe}}, {'B', {0x559c, 0x5585, 0x5232, 0x521b, 0x5204}},
 			{'C', {0x681d, 0x6806, 0x67ef, 0x67d8, 0x67c1, 0x67aa}}, {'E', {0x343b, 0x3424, 0x33f6, 0x33df}}},
-		{}, {}, {}, {},
+		{}, {}, {});
+	EscapeNaboo->enemies = Enemies({},
 		{
 			{'A',
 				{
@@ -212,14 +220,16 @@ void makeLevels() {
 			{'G', {0x3473, 0x345c, 0x2938}}},
 		{},
 
-		{{'A', {{AstroPanel, 0x38BC}}}, {'B', {{AstroPanel, 0x62FE}}}, {'G', {{AstroPanel, 0x35F6}}}}, {},
+		{{'A', {{AstroPanel, 0x38BC}}}, {'B', {{AstroPanel, 0x62FE}}}, {'G', {{AstroPanel, 0x35F6}}}}, {});
+
+	Theed->enemies = Enemies(
 		{
-			SpecialScp{'F', "HIDDENDROIDS", "Fight", {0x177B, 0x1820}, 20, ""},
-			SpecialScp{'F', "HIDDENDECKA", "Approach", {0x16C6, 0x1C1E}, 33, ""},
-			SpecialScp{'G', "DROIDS1", "Approach", {0x8E36, 0x8EEB, 0x8FA0, 0x9055, 0x910A}, 31, ""},
-			SpecialScp{'G', "DROIDS2", "Approach", {0x91BF, 0x9274, 0x9329, 0x93DE}, 30, ""},
+			SpecialScp{'F', "HIDDENDROIDS", "Fight", {0x177B, 0x1820}, 20, "", ""},
+			SpecialScp{'F', "HIDDENDECKA", "Approach", {0x16C6, 0x1C1E}, 33, "", ""},
+			SpecialScp{'G', "DROIDS1", "Approach", {0x8E36, 0x8EEB, 0x8FA0, 0x9055, 0x910A}, 31, "", ""},
+			SpecialScp{'G', "DROIDS2", "Approach", {0x91BF, 0x9274, 0x9329, 0x93DE}, 30, "", ""},
 			SpecialScp{'G', "BLOCK", "Engage", {0x95DD, 0x9682, 0x9727, 0x97CC, 0x9871}, 17,
-				"if GotOpponent == 0 goto Base\n\t\tif OpponentRange > shootrange goto Base"},
+				"if GotOpponent == 0 goto Base\n\t\tif OpponentRange > shootrange goto Base", ""},
 		},
 		{
 			{'A',
@@ -306,40 +316,42 @@ void makeLevels() {
 	Maul = new Level("MAUL", "MAUL", "/LEVELS/EPISODE_I/MAUL/", false, {obiwankenobi, quigonjinn}, {}, {darthmaul},
 		{{'A', {0x2e7c, 0x2e65, 0x2be1, 0x2bca}}, {'B', {0x2a4e, 0x2a37, 0x2a20, 0x2757, 0x2740, 0x2449, 0x1531}},
 			{'D', {0x1a95, 0x1a67, 0x1a50, 0x1a39, 0x193c}}, {'E', {0x18bc}}, {'F', {0xe76, 0xe1a, 0xe03, 0xdec}}},
-		{}, {{'A', {{ImperialPanel, 0x2F44}}}, {'D', {{ProtoPanel, 0x1C1F}, {ImperialPanel, 0x1C4E}}}}, {},
-		{{'A', "LEFTDRAWER", "Attack", {0x2763, 0x2808}, 17, ""},
-			{'A', "RIGHTDRAWER", "Attack", {0x28AD, 0x2952}, 17, ""},
-			{'B', "BONUSLEFT", "Chase", {0x653D, 0x65F2, 0x66A7}, 30, ""},
-			{'B', "BONUSRIGHT", "Chase", {0x675C, 0x6811, 0x68C6}, 30, ""}, {'D', "ATTACK", "Approach", {}, 18, ""},
+		{}, {{'A', {{ImperialPanel, 0x2F44}}}, {'D', {{ProtoPanel, 0x1C1F}, {ImperialPanel, 0x1C4E}}}}, {});
+	Maul->enemies = Enemies({{'A', "LEFTDRAWER", "Attack", {0x2763, 0x2808}, 17, "", ""},
+								{'A', "RIGHTDRAWER", "Attack", {0x28AD, 0x2952}, 17, "", ""},
+								{'B', "BONUSLEFT", "Chase", {0x653D, 0x65F2, 0x66A7}, 30, "", ""},
+								{'B', "BONUSRIGHT", "Chase", {0x675C, 0x6811, 0x68C6}, 30, "", ""},
+								{'D', "ATTACK", "Approach", {}, 18, "", ""},
 
-			SpecialScp{'D', "COMMANDER_LEFT", "Defend", {}, 41,
-				retreat("Update") "\n\t\t" outOfRange(
-					"Update", "3") "\n\t\t"
-								   "if EtherPlayaerInTriggerArea \"Left\" == 1 and\n\t\tif "
-								   "NumBaddies < 11 goto CallTroops"
-								   "\n\t\t"
-								   "if EtherPlayaerInTriggerArea \"Right\" == 0 and\n\t\tif "
-								   "NumBaddies < 11 goto CallTroops",
-				{DoubleNestedEnemy{"LEVEL", {52, 50}, battledroid_commander}}},
+								SpecialScp{'D', "COMMANDER_LEFT", "Defend", {}, 41,
+									retreat("Update") "\n\t\t" outOfRange(
+										"Update", "3") "\n\t\t"
+													   "if EtherPlayaerInTriggerArea \"Left\" == 1 and\n\t\tif "
+													   "NumBaddies < 11 goto CallTroops"
+													   "\n\t\t"
+													   "if EtherPlayaerInTriggerArea \"Right\" == 0 and\n\t\tif "
+													   "NumBaddies < 11 goto CallTroops",
+									"", {DoubleNestedEnemy{"LEVEL", {52, 50}, battledroid_commander}}},
 
-			SpecialScp{'D', "COMMANDER_RIGHT", "Defend", {}, 40,
-				retreat("Update") "\n\t\t" outOfRange(
-					"Update", "3") "\n\t\t"
-								   "if EtherPlayaerInTriggerArea \"Right\" == 1 and\n\t\tif "
-								   "NumBaddies < 11 goto CallTroops"
-								   "\n\t\t"
-								   "if EtherPlayaerInTriggerArea \"Left\" == 0 and\n\t\tif "
-								   "NumBaddies < 11 goto CallTroops",
-				{DoubleNestedEnemy{"COMMANDER_LEFT", {18, 51}, battledroid_commander}}},
+								SpecialScp{'D', "COMMANDER_RIGHT", "Defend", {}, 40,
+									retreat("Update") "\n\t\t" outOfRange(
+										"Update", "3") "\n\t\t"
+													   "if EtherPlayaerInTriggerArea \"Right\" == 1 and\n\t\tif "
+													   "NumBaddies < 11 goto CallTroops"
+													   "\n\t\t"
+													   "if EtherPlayaerInTriggerArea \"Left\" == 0 and\n\t\tif "
+													   "NumBaddies < 11 goto CallTroops",
+									"", {DoubleNestedEnemy{"COMMANDER_LEFT", {18, 51}, battledroid_commander}}},
 
-			{'D', "DROIDEKA", "Guard", {}, 14, "", {{"LEVEL", {83, 49}, destroyer}, {"LEVEL", {84, 50}, destroyer}}},
-			{'A', "MAULDROID", "Approach", {}, 65, "",
-				{
-					{"DARTHMAUL", {63, 42}, battledroid},
-					{"DARTHMAUL", {64, 42}, battledroid},
-					{"DARTHMAUL", {65, 42}, battledroid},
-					{"DARTHMAUL", {66, 42}, battledroid},
-				}}},
+								{'D', "DROIDEKA", "Guard", {}, 14, "", "",
+									{{"LEVEL", {83, 49}, destroyer}, {"LEVEL", {84, 50}, destroyer}}},
+								{'A', "MAULDROID", "Approach", {}, 65, "", "",
+									{
+										{"DARTHMAUL", {63, 42}, battledroid},
+										{"DARTHMAUL", {64, 42}, battledroid},
+										{"DARTHMAUL", {65, 42}, battledroid},
+										{"DARTHMAUL", {66, 42}, battledroid},
+									}}},
 		{
 			{'B',
 				{
@@ -403,16 +415,17 @@ void makeLevels() {
 					{AstroPanel, 0x35F2}, {AstroPanel, 0x3621}, {AstroPanel, 0x3650}, {AstroPanel, 0x367F}}}, //turrets
 			{'F', {{AstroPanel, 0x233A}, //outside to elevator
 					  {ProtoPanel, 0x2368}}}},
-		{},
+		{});
+	Kamino->enemies = Enemies(
 		{
-			{'C', "KAMINODROID", "Approach", {0x1C54, 0x1CF9, 0x1D9E, 0x1F8D, 0x2032}, 32, ""},
-			{'C', "KAMINODROID_FP", "Approach", {0x20D7, 0x217C, 0x2221, 0x22C6}, 35, ""},
-			{'E', "ATTACK", "Wander", {}, 19, "if Message \"JangoFight\" > 0 goto Kill",
+			{'C', "KAMINODROID", "Approach", {0x1C54, 0x1CF9, 0x1D9E, 0x1F8D, 0x2032}, 32, "", ""},
+			{'C', "KAMINODROID_FP", "Approach", {0x20D7, 0x217C, 0x2221, 0x22C6}, 35, "", ""},
+			{'E', "ATTACK", "Wander", {}, 19, "if Message \"JangoFight\" > 0 goto Kill", "",
 				{
 					DoubleNestedEnemy{"LEVEL", {71, 59}, kaminodroid},
 					DoubleNestedEnemy{"LEVEL", {81, 60}, kaminodroid},
 				}},
-			{'E', "BONUSDROID", "Approach", {0x170B, 0x17B0, 0x1855, 0x18FA, 0x199F, 0x1A44}, 30, ""},
+			{'E', "BONUSDROID", "Approach", {0x170B, 0x17B0, 0x1855, 0x18FA, 0x199F, 0x1A44}, 30, "", ""},
 		},
 		{}, {}, {9});
 
@@ -435,45 +448,46 @@ void makeLevels() {
 				{'G', {{AstroPanel, 0x1B18},       //left, bonus
 						  {AstroPanel, 0x1B47}}}}, //right, story
 
-			{},
-			{
-				{'A', "GEONOSIAN", "Approach", {0x1248, 0x12F8, 0x13A8, 0x1458, 0x1508, 0x15B8, 0x1668, 0x1718, 0x17C8},
-					26, ""},
-				{'F', "GEONOSIAN", "Approach",
-					{0x4D58, 0x4E0D, 0x4ED2, 0x4F97, 0x505C, 0x5121, 0x51E6, 0x52AB, 0x5360, 0x5425, 0x54EA, 0x55AF,
-						0x5674, 0x5739, 0x57EE},
-					24, ""},
-			},
-			{{'B',
-				 {
-					 {block, 0x3033},
-					 {block, 0x30D8},
-					 {storm, 0x317D},
-				 }},
-				{'D',
-					{
-						{sniper, 0x5781},
-						{sniper, 0x5821},
-						{sniper, 0x58C1},
-						{sniper, 0x5961},
-						{block, 0x5A01},
+			{});
+	Factory->enemies = Enemies(
+		{
+			{'A', "GEONOSIAN", "Approach", {0x1248, 0x12F8, 0x13A8, 0x1458, 0x1508, 0x15B8, 0x1668, 0x1718, 0x17C8}, 26,
+				"", ""},
+			{'F', "GEONOSIAN", "Approach",
+				{0x4D58, 0x4E0D, 0x4ED2, 0x4F97, 0x505C, 0x5121, 0x51E6, 0x52AB, 0x5360, 0x5425, 0x54EA, 0x55AF, 0x5674,
+					0x5739, 0x57EE},
+				24, "", ""},
+		},
+		{{'B',
+			 {
+				 {block, 0x3033},
+				 {block, 0x30D8},
+				 {storm, 0x317D},
+			 }},
+			{'D',
+				{
+					{sniper, 0x5781},
+					{sniper, 0x5821},
+					{sniper, 0x58C1},
+					{sniper, 0x5961},
+					{block, 0x5A01},
 
-					}},
-				{'F',
-					{
-						{block, 0x58B3},
-						{block, 0x5958},
-					}},
-				{'G',
-					{
-						{block, 0xA12},
-						{block, 0xAB2},
-						{storm, 0xB52},
-						{storm, 0xC02},
-						{storm, 0xCC2},
-						{storm, 0xD82},
-					}}},
-			{}, {6, 7, 8, 9});
+				}},
+			{'F',
+				{
+					{block, 0x58B3},
+					{block, 0x5958},
+				}},
+			{'G',
+				{
+					{block, 0xA12},
+					{block, 0xAB2},
+					{storm, 0xB52},
+					{storm, 0xC02},
+					{storm, 0xCC2},
+					{storm, 0xD82},
+				}}},
+		{}, {6, 7, 8, 9});
 
 	//Do this later
 	JediBattle = new Level("JEDI", "JEDI", "/LEVELS/EPISODE_II/JEDI/", false,
@@ -482,10 +496,21 @@ void makeLevels() {
 			aylasecura, plokoon},
 		{{'B', {0x5099, 0x5082, 0x506b, 0x5054, 0x503d, 0x5026, 0x500f, 0x4ff8, 0x4fe1, 0x4fca, 0x4fb3, 0x4de7, 0x4c8e,
 				   0x4c60, 0x4c04, 0x4bed, 0x4bd6, 0x4bbf, 0x4ba8, 0x4b91, 0x4b7a}}},
-		{}, {{'B', {{ImperialPanel, 0x5305}, {BountyPanel, 0x5334}}}}, {}, //Bounty Hunter Mission
+		{},
 		{
-			{'B', "GEN_BDROIDS", "Update", {}, 16, ""},
-			{'B', "PHASE_DROIDS", "Base", {}, 3, ""},
+			{
+				'B',
+				{
+					{ImperialPanel, 0x5305},
+					{BountyPanel, 0x5334},
+				},
+			},
+		},
+		{});
+	JediBattle->enemies = Enemies(
+		{
+			{'B', "GEN_BDROIDS", "Update", {}, 16, "", ""},
+			{'B', "PHASE_DROIDS", "Base", {}, 3, "", ""},
 		},
 		{}, {}, {12, 13, 14, 15, 17});
 
@@ -500,17 +525,17 @@ void makeLevels() {
 		{obiwankenobi_jedimaster, anakin_padawan, yoda}, {}, {yoda},
 		{{'B', {0x2245, 0x222e, 0x2217, 0x2200, 0x21e9, 0x1f20, 0x1f09, 0x1ef2, 0x1edb, 0x1ec4, 0x1ead}},
 			{'C', {0x2063, 0x204c, 0x2035, 0x201e, 0x2007, 0x1ff0, 0x1d27, 0x1d10, 0x1cf9, 0x1ce2}}},
-		{}, {}, {},
-		{{'B', "STORM", "Approach", {}, 28, "",
-			{
+		{}, {}, {});
+	Dooku->enemies = Enemies({{'B', "STORM", "Approach", {}, 28, "", "",
+								 {
 
-				DoubleNestedEnemy{"DOOKU", {89, 85}, geonosian},
-				DoubleNestedEnemy{"DOOKU", {91, 85}, geonosian},
-				DoubleNestedEnemy{"DOOKU", {93, 85}, geonosian},
-				DoubleNestedEnemy{"DOOKU", {95, 85}, geonosian},
-				DoubleNestedEnemy{"DOOKU", {97, 85}, geonosian},
+									 DoubleNestedEnemy{"DOOKU", {89, 85}, geonosian},
+									 DoubleNestedEnemy{"DOOKU", {91, 85}, geonosian},
+									 DoubleNestedEnemy{"DOOKU", {93, 85}, geonosian},
+									 DoubleNestedEnemy{"DOOKU", {95, 85}, geonosian},
+									 DoubleNestedEnemy{"DOOKU", {97, 85}, geonosian},
 
-			}}},
+								 }}},
 		{
 			{'B',
 				{
@@ -544,7 +569,8 @@ void makeLevels() {
 			{'E', {{AstroPanel, 0xF82},      //turns off gas
 					  {AstroPanel, 0xFB1}}}, //end of room
 			{'G', {{AstroPanel, 0x11FF}}}},  //elevator (room 2)
-		{},
+		{});
+	Chancellor->enemies = Enemies(
 		{
 			{'A', spawnattack, "DROID", "Base", {}, func("Update", "", "FollowPlayer"), {28, 13},
 				{{
@@ -556,8 +582,8 @@ void makeLevels() {
 					DoubleNestedEnemy{"GRIEVOUS", {41, 86}, battledroid_security},
 				}}},
 
-			{'B', "DESTROYER", "Base", {}, 3, ""},
-			{'B', "STATICATTACK", "Base", {0x318C, 0x3251, 0x3316, 0x33DB, 0x34A0}, 14, ""},
+			{'B', "DESTROYER", "Base", {}, 3, "", ""},
+			{'B', "STATICATTACK", "Base", {0x318C, 0x3251, 0x3316, 0x33DB, 0x34A0}, 14, "", ""},
 		},
 		{
 			{'B',
@@ -627,18 +653,19 @@ void makeLevels() {
 
 		{{'B', {0x33a2, 0x338b, 0x31ed}}}, {}, //carrots
 
-		{{'A', {{RandomHat, 0x642E}}}}, //hat dispenser
-		{}, {}, {}, {5, 6, 7, 9, 10});
+		{{'A', {{RandomHat, 0x642E}}}});
+	Kashyyyk->enemies = Enemies({}, {}, {}, {5, 6, 7, 9, 10});
 
 	Ruin = new Level("TEMPLE", "TEMPLE", "/LEVELS/EPISODE_III/TEMPLE/", false, {obiwankenobi_ep3, yoda}, {},
 		{macewindu_ep3, disguisedclone, trainingremote},
 		{{'A', {0x5330, 0x5319, 0x5302, 0x517b, 0x5164, 0x514d}},
 			{'B', {0x420b, 0x41f4, 0x41dd, 0x413c, 0x4125, 0x410e}},
 			{'C', {0x5221, 0x520a, 0x51f3, 0x51dc, 0x5197, 0x5180, 0x382a, 0x3813, 0x37fc}}},
-		{}, {{'B', {{ImperialPanel, 0x42D3}}}, {'C', {{ProtoPanel, 0x55FF}}}}, {},
+		{}, {{'B', {{ImperialPanel, 0x42D3}}}, {'C', {{ProtoPanel, 0x55FF}}}}, {});
+	Ruin->enemies = Enemies(
 		{
 			{'B', "PIZZAEATERS", "Attack", {0x31CD, 0x3272, 0x3317, 0x33BC, 0x3461, 0x3506, 0x35AB, 0x3650, 0x36F5}, 14,
-				retreat("base")},
+				retreat("base"), ""},
 		},
 		{
 			{'A',
@@ -712,11 +739,13 @@ void makeLevels() {
 				{{ImperialPanel, 0x4CFE}, {ProtoPanel, 0x4DBA}, {ProtoPanel, 0x4DE9}, //There goes another one.
 					{AstroPanel, 0x4D2D}, {AstroPanel, 0x4E18}, {ProtoPanel, 0x4D8B}, {AstroPanel, 0x4D5C}}}}, //last 4
 
-		{{'A', {{RandomHat, 0x6EF7}}}},
+		{{'A', {{RandomHat, 0x6EF7}}}});
+	SecretPlans->enemies = Enemies(
 		//{{'A', chatting, "WAVE_TROOPER", "Update", {/*nums*/},
 		//	func("Update", "", "DontPush \"FALSE\"\n\t\tGoToOrigin \"waittime=10\""), {60, 13}}},
 		std::vector<SpecialScp>{
-			{'A', chatting, "WAVE_TROOPER", "Update", {}, func("Update", "", "DontPush \"FALSE\""), {60, 13},
+			{'A', chatting, "WAVE_TROOPER", "Update", {},
+				func("Update", "", "DontPush \"FALSE\"\n\t\tGoToOrigin \"GoToOrigin \"waittime=10\""), {60, 13},
 				{
 					DoubleNestedEnemy{"LEVEL", {69, 43}, stormtrooper},
 					DoubleNestedEnemy{"LEVEL", {70, 43}, stormtrooper},
@@ -733,10 +762,10 @@ void makeLevels() {
 					DoubleNestedEnemy{"LEVEL", {100, 43}, stormtrooper},
 					DoubleNestedEnemy{"LEVEL", {101, 43}, stormtrooper},
 				}},
-			{'B', chatting, "WAVE1_TROOPER", "Update", {0x704D, 0x7396, 0x744B, 0x7500}, func("Update", "", ""),
-				{27, 13}},
-			{'B', chatting, "WAVE2_TROOPER", "Update", {0x75B5, 0x75B5, 0x771F, 0x77D4}, func("Update", "", ""),
-				{27, 13}},
+			{'B', chatting, "WAVE1_TROOPER", "Update", {0x704D, 0x7396, 0x744B, 0x7500},
+				func("Update", "", "GoToLocator"), {27, 13}},
+			{'B', chatting, "WAVE2_TROOPER", "Update", {0x75B5, 0x75B5, 0x771F, 0x77D4},
+				func("Update", "", "GoToLocator"), {27, 13}},
 			{'B', chatting, "VADER_TROOPER", "Update", {}, func("Update", "", "UseTimeBasedUpdate\n\t\tFollowPlayer"),
 				{17, 13},
 				{
@@ -744,12 +773,14 @@ void makeLevels() {
 					DoubleNestedEnemy{"AI_VADER2", {66, 43}, stormtrooper},
 				},
 				true},
-			{'C', "LIFT_TROOPER", "Update", {0x196C, 0x1A11}, 70, ""},
-			{'D', attack, "BEACHTROOPER", "Attack", {0x220B, 0x22C0}, func("Attack", "", ""), {28, 13}},
-			{'D', "BLOCKCHATTING", "Fight", {0x2375, 0x242A, 0x24DF, 0x2584, 0x2629, 0x26CE, 0x2773, 0x2818}, 83, ""},
+			{'C', "LIFT_TROOPER", "Update", {0x196C, 0x1A11}, 70, "GoToLocator", ""},
+			{'D', attack, "BEACHTROOPER", "Attack", {0x220B, 0x22C0},
+				func("Attack", "if GotOpponent == 0 goto WaitBeforeJacuzziing", ""), {28, 13}},
+			{'D', "BLOCKCHATTING", "Fight", {0x2375, 0x242A, 0x24DF, 0x2584, 0x2629, 0x26CE, 0x2773, 0x2818}, 83,
+				retreat("Base"), ""},
 			{'D', chatting, "ESCORT", "UpdatePhase1", {0x2A27, 0x2ADC, 0x2B91, 0x2C46},
 				func("UpdatePhase1", "", "FacePlayer"), {32, 19}},
-			{'D', chatting, "SPAWNED_TROOPER", "Update", {}, func("Update", "", ""), {53, 13},
+			{'D', chatting, "SPAWNED_TROOPER", "Update", {}, func("Update", "", "FollowPlayer"), {53, 13},
 				{
 
 					DoubleNestedEnemy{"LEVEL", {84, 44}, stormtrooper},
@@ -790,21 +821,25 @@ void makeLevels() {
 
 			{'C', {{ProtoPanel, 0x6A0D}, {ProtoPanel, 0x6A3C}, {ProtoPanel, 0x6A6B}}}, //quicksand
 			{'E', {{AstroPanel, 0x4CD9}}}},                                            //useless
-		{},
+		{});
+	Jundland->enemies = Enemies(
 		{
-			{'A', "TUSKEN_SNIPER", "Engage", {0x5E0A, 0x5EAF}, 24, ""},
-			{'C', "TUSKENRAIDER", "Fight", {0x6895, 0x69EF, 0x6BFE, 0x6CB3, 0x6D68}, 54, ""},
-			{'D', "TUSKEN_SNIPER", "Snipe", {0x39B1, 0x3A66}, 25, ""},
-			{'A', "PENGUARD", "Fight", {}, 34, "",
+			{'A', "TUSKEN_SNIPER", "Engage", {0x5E0A, 0x5EAF}, 24, retreat("Lookout"), ""},
+			{'C', "TUSKENRAIDER", "Fight", {0x6895, 0x69EF, 0x6BFE, 0x6CB3, 0x6D68}, 54, retreat("Base"), ""},
+			{'D', "TUSKEN_SNIPER", "Snipe", {0x39B1, 0x3A66}, 25,
+				retreat("LookOut") "\n\n\t\t" trigger(
+					"Snipers", "Engage") "\n\n\t\tif GotLocator == 1 and\n\t\tif LocatorRange > 0.25 goto Snipe",
+				""},
+			{'A', "PENGUARD", "Fight", {}, 34, retreat("Aproach"), "",
 				{
 					{"LEVEL", {111, 47}, tuskenraider},
 					{"LEVEL", {112, 49}, tuskenraider},
 				}},
-			{'A', "TUSKEN_LEDGE", "Engage", {}, 43, "",
+			{'A', "TUSKEN_LEDGE", "Engage", {}, 43, retreat("LookOut"), "",
 				{
 					{"LEVEL", {124, 50}, tuskenraider},
 				}},
-			{'A', "TUSKEN_SET1", "Fight", {}, 21, "",
+			{'A', "TUSKEN_SET1", "Fight", {}, 21, retreat("Approach"), "",
 				{
 					{"LEVEL1", {18, 25}, tuskenraider},
 					{"LEVEL1", {21, 25}, tuskenraider},
@@ -817,34 +852,34 @@ void makeLevels() {
 					{chatting, 0x562E},
 					{chatting, 0x56E3},
 				}},
-			{'B',
-				{
-					{chatting, 0x30F3},
-					{chatting, 0x3198},
-					{chatting, 0x323D},
-					{chatting, 0x32E2},
-					{chatting, 0x3387},
-					{chatting, 0x342C},
-					{chatting, 0x34D1},
-					{chatting, 0x3576},
-				}},
+			//{'B',
+			//{
+			//{chatting, 0x30F3},
+			//{chatting, 0x3198},
+			//{chatting, 0x323D},
+			//{chatting, 0x32E2},
+			//{chatting, 0x3387},
+			//{chatting, 0x342C},
+			//{chatting, 0x34D1},
+			//{chatting, 0x3576},
+			//}},
 			{'C',
 				{
 					{sniper, 0x636D},
 					{chatting, 0x6412},
 					{chatting, 0x64B7},
 					{chatting, 0x655C},
-					{chatting, 0x674B},
-					{chatting, 0x67F0},
+					//{chatting, 0x674B},
+					//{chatting, 0x67F0},
 					{sniper, 0x694A},
 					{chatting, 0x6AA4},
 					{chatting, 0x6B59},
 				}},
-			{'D',
-				{
-					{chatting, 0x3B1B},
-					{chatting, 0x3BC0},
-				}},
+			//{'D',
+			//{
+			//{chatting, 0x3B1B},
+			//{chatting, 0x3BC0},
+			//}},
 			{'E',
 				{
 					{chatting, 0xFEB},
@@ -854,7 +889,7 @@ void makeLevels() {
 					{chatting, 0x127F},
 				}},
 		},
-		{}, {});
+		{}, {9, 11});
 
 	Spaceport = new Level("MOSEISLEY", "MOSEISLEY", "/LEVELS/EPISODE_IV/MOSEISLEY/", false,
 		{lukeskywalker_tatooine, benkenobi, r2d2, c3po, hansolo, chewbacca}, {},
@@ -878,7 +913,77 @@ void makeLevels() {
 					  {AstroPanel, 0xA29B}}}},                     //theatre
 
 		{{'D', {{StormtrooperHat, 0xA2E9}}}});
+	Spaceport->enemies = Enemies(
+		{{'B', "TAKEOVER", "CheckFight",
+			 {0x2FFF, 0x30A4, 0x33DD, 0x3482, 0x3527, 0x3671, 0x3726, 0x37DB, 0x3890, 0x3945, 0x3A8F, 0x3B44}, 74,
+			 "if Timer > 15 goto CheckEmpty\n\t\tif OriginRange > 5 goto GoToOrigin", "",
+			 {
+				 {"LEVEL", {149, 41}, sandtrooper},
+			 }},
+			{'D', "TAKEOVER", "CheckFight", {0xC4EB, 0xC77F, 0xC824, 0xC8C9, 0xC96E, 0xCA13, 0xCCA7, 0xCE96}, 74,
+				"if Timer > 15 goto CheckEmpty\n\t\tif OpponentInTriggerArea \"Dewback\" == 0 and \n\t\tif OriginRange "
+				"> 15 goto GoToOrigin\n\n\t\tif TakenOver == 1 goto TakenOverFight",
+				""},
+			{'B', "STORM", "Engage", {0x3338}, 63, "if GotOpponent == 0 goto GoToLocator", ""},
+			{'D', "STORM", "Engage", {0xC10D, 0xC1B2, 0xC257, 0xC2FC, 0xC3A1, 0xC446}, 61,
+				"if GotOpponent == 0 and\n\t\tif Timer > 20 gotoLocator", ""},
+			{'A', "STORMREINFORCE", "Fight", {}, 29, "", "", {{"LEVEL", {140, 51}, sandtrooper}}},
+			{'A', "STORMGATE", "Engage", {}, 59, "if GotOpponent == 0 goto LookOut", "",
+				{{"LEVEL", {154, 46}, sandtrooper}}},
+			{'D', "HANGARATTACK", "Standard_Fight", {}, 115, "if GotOpponent == 0 goto Standard_Approach", "",
+				{
+					{"LEVEL1", {26, 48}, sandtrooper},
+					{"LEVEL1", {28, 48}, sandtrooper},
+					{"LEVEL1", {30, 48}, sandtrooper},
+					{"LEVEL1", {32, 51}, sandtrooper},
+					{"LEVEL1", {34, 51}, sandtrooper},
+					{"LEVEL1", {45, 51}, sandtrooper},
+					{"LEVEL1", {47, 51}, sandtrooper},
+					{"LEVEL1", {49, 51}, sandtrooper},
+					{"LEVEL1", {51, 49}, sandtrooper},
+					{"LEVEL1", {53, 49}, sandtrooper},
+					{"LEVEL1", {64, 51}, sandtrooper},
+					{"LEVEL1", {66, 51}, sandtrooper},
+					{"LEVEL1", {68, 51}, sandtrooper},
+					{"LEVEL1", {70, 48}, sandtrooper},
+					{"LEVEL1", {72, 48}, sandtrooper},
+					{"LEVEL1", {101, 46}, sandtrooper},
+				}}},
+		{{'B',
+			 {
+				 {patrol, 0x2E10},
+				 {patrol, 0x2F5A},
+				 {chatting, 0x3BF9}, //sentrydroid
+				 {chatting, 0x3CAE}, //sentrydroid
+				 {chatting, 0x3D63},
+			 }},
+			{'D',
+				{
+					{sniper, 0xCAB8},
+					{sniper, 0xCB5D},
+					{sniper, 0xCC02},
 
+				}}},
+		{
+			{'A', "LEVEL",
+				{
+					{storm, {43, 50}, {43, 71}, sandtrooper, 5},
+					{storm, {44, 50}, {44, 71}, sandtrooper, 5},
+					{storm, {128, 46}, {128, 67}, sandtrooper, 5},
+				}},
+			{'B', "LEVEL",
+				{
+					{spawnattack, {133, 41}, {133, 62}, sandtrooper, 11},
+					{spawnattack, {162, 41}, {162, 62}, sandtrooper, 11},
+				}},
+			{'B', "LEVEL2",
+				{
+					{NONE, {71, 41}, {71, 62}, sandtrooper, 11},
+				}},
+		},
+		{9});
+
+	//EXTRAACTIONS STARTS HERE
 	Princess = new Level("DEATHSTARRESCUE", "DEATHSTARRESCUE", "/LEVELS/EPISODE_IV/DEATHSTARRESCUE/", false,
 		{hansolo_stormtrooper, lukeskywalker_stormtrooper, chewbacca, r2d2, c3po, benkenobi}, {princessleia},
 		{hansolo_stormtrooper, lukeskywalker_stormtrooper, beachtrooper, deathstartrooper, tiefighterpilot,
@@ -907,6 +1012,127 @@ void makeLevels() {
 			{'C', {{StormtrooperHat, 0x58F8}}}, //turnstyle room
 
 			{'D', {{RandomHat, 0x5CB}, {RandomHat, 0x5FB}, {RandomHat, 0x62B}, {RandomHat, 0x65B}}}}); //bonus hat room
+	Princess->enemies = Enemies( //scene E has flying enemies
+		{
+			{'B', "BRIDGE_TROOPS", {0x7733, 0x77F8, 0x78BD, 0x7982, 0x7A47, 0x7B0C},
+				{
+					//THESE MUST BE IN ORDER
+					{"LookForLocator_Engage", 30,
+						/*	retreat("LookForLocator") "\n\n\t\tif GotLocator == 1 goto "
+													  "ShootAtObiWan\n\t\tif Timer > 1 goto LookForLocator",
+							"ReleaseLocator\n\t\tResetTimer\n\t\tGetLocatorFromSet \"name=bridge\""*/
+						"if AlwaysTrue == 1 goto ShootAtObiWan", "ReleaseLocator"},
+					{"ShootAtObiWan", 46, "", "SetOpponent \"opponent=ai_obiwankenobi\""},
+					{"FreePlay_Fight", 95, "if GotOpponent == 0 goto FreePlay_Wait", ""},
+				}},
+			{'C', attack, "CALLCENTRE", "Attack", {0x444A, 0x44EF, 0x4594, 0x4639, 0x46DE, 0x4783, 0x4828, 0x48CD},
+				func("Attack", "", ""), {28, 13}},
+		},
+		{
+			{'A',
+				{
+					{chatting, 0x1274},
+					{chatting, 0x1319},
+					{chatting, 0x13BE},
+					{chatting, 0x1463},
+					{NONE, 0x1508},
+					{NONE, 0x15AD},
+					{NONE, 0x1652},
+					{NONE, 0x16F7},
+					{NONE, 0x179C},
+					{NONE, 0x1841},
+					{chatting, 0x18E6},
+					{chatting, 0x199B},
+					{NONE, 0x1AF5},
+					{NONE, 0x1B9A},
+					{NONE, 0x1C3F},
+				}},
+			{'B',
+				{
+					{chatting, 0x68CA},
+					{chatting, 0x6A24},
+					{chatting, 0x6AD9},
+					{patrol, 0x6B8E}, //strolling
+					{chatting, 0x6C33},
+					{chatting, 0x6CE8},
+					{chatting, 0x6D9D},
+					{patrol, 0x6E52},
+					{attack, 0x6EF7},
+					{attack, 0x6F9C},
+					{chatting, 0x70E6},
+					{chatting, 0x719B},
+					{chatting, 0x7250},
+					{chatting, 0x7305},
+					{chatting, 0x73BA},
+					{sniper, 0x746F},
+					{chatting, 0x7514},
+					{chatting, 0x75C9},
+					{chatting, 0x767E},
+					{chatting, 0x7BD1},
+					{chatting, 0x7C86},
+					{chatting, 0x7D2B},
+					{chatting, 0x7DD0},
+					{chatting, 0x7E75},
+					{chatting, 0x7F2A},
+					{chatting, 0x7FCF},
+
+				}},
+			{'C',
+				{
+					{attack, 0x36C1},
+					{attack, 0x3766},
+					{attack, 0x380B},
+					{chatting, 0x38B0},
+					{chatting, 0x3955},
+					{chatting, 0x39FA},
+					{NONE, 0x3B44}, //beach
+					{NONE, 0x3BE9},
+					{NONE, 0x3C8E},
+					{NONE, 0x3D33},
+					{NONE, 0x3DD8},
+					{chatting, 0x3E7D},
+					{chatting, 0x3F22},
+					{chatting, 0x3FC7},
+					{block, 0x406C},
+					{block, 0x4111},
+					{block, 0x41B6},
+					{block, 0x425B},
+					{chatting, 0x4300},
+					{chatting, 0x43A5},
+
+				}},
+		},
+		{
+			{'A', "LEVEL2",
+				{
+					{NONE, {29, 93}, {1, 1}, tiefighterpilot, 0},
+					{NONE, {29, 73}, {1, 1}, stormtrooper, 0},
+					{NONE, {51, 93}, {1, 1}, tiefighterpilot, 0},
+					{NONE, {51, 73}, {1, 1}, stormtrooper, 0},
+				}},
+			{'B', "LEVEL1",
+				{
+					{spawnattack, {33, 42}, {33, 64}, stormtrooper, 11},
+				}},
+			{'B', "LEVEL2",
+				{
+					{spawnattack, {32, 42}, {32, 64}, stormtrooper, 11},
+				}},
+			{'C', "LEVEL1",
+				{
+					{spawnattack, {34, 42}, {34, 64}, stormtrooper, 11},
+				}},
+			{'C', "LEVEL3",
+				{
+					{spawnattack, {35, 42}, {35, 68}, deathstartrooper, 11},
+				}},
+			{'B', "LEVEL4",
+				{
+					{spawnattack, {28, 40}, {28, 65}, tiefighterpilot, 11},
+					{spawnattack, {31, 40}, {31, 65}, tiefighterpilot, 11},
+				}},
+		},
+		{26, 28, 29, 30, 31, 32});
 
 	DSE = new Level("DEATHSTARESCAPE", "DEATHSTARESCAPE", "/LEVELS/EPISODE_IV/DEATHSTARESCAPE/", false,
 		{hansolo, chewbacca, princessleia, lukeskywalker_tatooine, r2d2, c3po}, {}, {},
