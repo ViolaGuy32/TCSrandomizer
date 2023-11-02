@@ -16,9 +16,9 @@ struct scpInfo {
 	std::string appendix;
 };
 
-constexpr uint64_t p(int x) {
-	return std::pow(2, x);
-}
+///*constexpr */uint64_t p(int x) {
+//	return std::pow(2, x);
+//}
 
 const uint64_t Hat                = 0x1;
 const uint64_t Lever              = 0x2;
@@ -74,7 +74,7 @@ const uint64_t LeiaAlt            = 0x40000000000000;
 const uint64_t LandoAlt           = 0x80000000000000;
 const uint64_t LukeAlt            = 0x100000000000000;
 const uint64_t Extratoggle        = 0x200000000000000;
-const uint64_t Baddy              = 0x400000000000000;
+//const uint64_t Baddy              = 0x400000000000000;
 const uint64_t DefaultCharacter   = 0x800000000000000;
 const uint64_t Fake               = 0x1000000000000000;
 const uint64_t NoLevel            = 0x2000000000000000;
@@ -107,8 +107,8 @@ struct Playable {
 	scpInfo nSnipeInfo;
 
 	Playable(std::string myName, std::string myRealName, int myPrice, int myAddress, float mySpeed,
-		uint64_t myAttributes, std::unordered_map<enemyScp, std::string> myChart = {}, scpInfoArr myAtInfo = {},
-		scpInfoArr myBlockInfo = {}, scpInfoArr mySnipeInfo = {});
+		uint64_t myAttributes, std::unordered_map<enemyScp, std::string> myChart = {}/*, scpInfoArr myAtInfo = {},
+		scpInfoArr myBlockInfo = {}, scpInfoArr mySnipeInfo = {}*/);
 
 	bool check(uint64_t a);
 

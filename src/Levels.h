@@ -2,6 +2,7 @@
 
 #include "Characters.h"
 #include "Defines.h"
+#include "Enemies.h"
 #include "pch.h"
 #include <stdint.h>
 
@@ -47,110 +48,110 @@ struct SpecialCollectable {
 	SpecialCollectable(std::initializer_list<std::pair<char, int>> mySceneAddress);
 };
 
-enum enemyWhere { scp, ai2, both, chain };
-
-struct Enemy {
-	enemyWhere enemywhere;
-	enemyScp scpFile;
-	coord type;
-	coord script;
-	int address;
-
-	std::string chainStr;
-	Playable* newEn;
-	Enemy(enemyScp myScp, coord myType, coord myScript);
-	Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere = ai2);
-	//Enemy( enemyScp myScp, int myAddress, coord myType, coord myScript);
-};
-
-struct EnemySet {
-	char scene;
-	std::vector<Enemy> enemy;
-};
-
-struct DoubleNestedEnemy {
-	std::string fileName;
-	coord type;
-	Playable* oldEn;
-	coord script = {0, 0};
-    enemyScp scpFile = special;
-	Playable* newEn = nullptr;
-};
-
-struct NestedEnemy {
-	enemyScp scpType;
-	coord type;
-	coord script;
-	Playable* oldEn;
-	int scpLen;
-	int chainAdd = -1;
-	Playable* newEn;
-};
-
-struct NestedEnemySet {
-	char scene;
-	std::string fileName;
-	std::vector<NestedEnemy> nEns;
-};
-
-struct SpecialScpOverwrite {
-    std::string oldFunName;
-    unsigned int ln;
-    std::string extraConditions;
-    std::string extraActions;
-};
-
-struct SpecialScp {
-	char scene;
-	enemyScp scpFile;
-	attackType atType;
-	std::string fileName;
-	//std::string fun;
-	const char* fun;
-	std::vector<Enemy> specialEnemies;
-	std::string oldFunName;
-	std::vector<Playable*> spEnemyTypes;
-	std::vector<DoubleNestedEnemy> dNestEn;
-	//bool redirect = false;
-	bool inliner = false;
-	bool newWay = false;
-
-	std::string scpName;
-
-	std::string attackPattern = "";
-	std::string extraConditions = "";
-	coord lnCol;
-	//std::vector<unsigned int> linesToDelete;
-
-    std::vector<SpecialScpOverwrite> overwriters;
-	unsigned int start;
-	unsigned int end;
-
-	bool useAltScript;
-
-	SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
-		std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn = {},
-		bool myUseAltScript = false);
-
-	//SpecialScp(char myScene, attackType myAtType, const char* myFileName, const char* myOldFunName,
-	//    std::vector<int> myAddresses, const char* myFun, unsigned int myStart, unsigned int myEnd);
-
-	SpecialScp(char myScene, const char* myFileName, const char* myOldFunFame, std::vector<int> myAddresses,
-		unsigned int myLn, const char* myExtraConditions, const char* myExtraActions, std::vector<DoubleNestedEnemy> myDNestEn = {},
-		bool myUseAltScript = false);
-    
-	SpecialScp(char myScene, const char* myFileName, std::vector<int> myAddresses,
-		std::vector<SpecialScpOverwrite> myOverwriters, std::vector<DoubleNestedEnemy> myDNestEn = {},
-		bool myUseAltScript = false);
-};
-
-struct Enemies {
-	std::vector<SpecialScp> specialscp;
-	std::vector<EnemySet> enemies;
-	std::vector<NestedEnemySet> nestedEns;
-	std::vector<unsigned int> enemyRes;
-	std::vector<Playable*> enemyTypes = {};
-};
+//enum enemyWhere { scp, ai2, both, chain };
+//
+//struct Enemy {
+//	enemyWhere enemywhere;
+//	enemyScp scpFile;
+//	coord type;
+//	coord script;
+//	int address;
+//
+//	std::string chainStr;
+//	Playable* newEn;
+//	Enemy(enemyScp myScp, coord myType, coord myScript);
+//	Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere = ai2);
+//	//Enemy( enemyScp myScp, int myAddress, coord myType, coord myScript);
+//};
+//
+//struct EnemySet {
+//	char scene;
+//	std::vector<Enemy> enemy;
+//};
+//
+//struct DoubleNestedEnemy {
+//	std::string fileName;
+//	coord type;
+//	Playable* oldEn;
+//	coord script = {0, 0};
+//    enemyScp scpFile = special;
+//	Playable* newEn = nullptr;
+//};
+//
+//struct NestedEnemy {
+//	enemyScp scpType;
+//	coord type;
+//	coord script;
+//	Playable* oldEn;
+//	int scpLen;
+//	int chainAdd = -1;
+//	Playable* newEn;
+//};
+//
+//struct NestedEnemySet {
+//	char scene;
+//	std::string fileName;
+//	std::vector<NestedEnemy> nEns;
+//};
+//
+//struct SpecialScpOverwrite {
+//    std::string oldFunName;
+//    unsigned int ln;
+//    std::string extraConditions;
+//    std::string extraActions;
+//};
+//
+//struct SpecialScp {
+//	char scene;
+//	enemyScp scpFile;
+//	attackType atType;
+//	std::string fileName;
+//	//std::string fun;
+//	const char* fun;
+//	std::vector<Enemy> specialEnemies;
+//	std::string oldFunName;
+//	std::vector<Playable*> spEnemyTypes;
+//	std::vector<DoubleNestedEnemy> dNestEn;
+//	//bool redirect = false;
+//	bool inliner = false;
+//	bool newWay = false;
+//
+//	std::string scpName;
+//
+//	std::string attackPattern = "";
+//	std::string extraConditions = "";
+//	coord lnCol;
+//	//std::vector<unsigned int> linesToDelete;
+//
+//    std::vector<SpecialScpOverwrite> overwriters;
+//	unsigned int start;
+//	unsigned int end;
+//
+//	bool useAltScript;
+//
+//	SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
+//		std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn = {},
+//		bool myUseAltScript = false);
+//
+//	//SpecialScp(char myScene, attackType myAtType, const char* myFileName, const char* myOldFunName,
+//	//    std::vector<int> myAddresses, const char* myFun, unsigned int myStart, unsigned int myEnd);
+//
+//	SpecialScp(char myScene, const char* myFileName, const char* myOldFunFame, std::vector<int> myAddresses,
+//		unsigned int myLn, const char* myExtraConditions, const char* myExtraActions, std::vector<DoubleNestedEnemy>
+//myDNestEn = {}, 		bool myUseAltScript = false);
+//
+//	SpecialScp(char myScene, const char* myFileName, std::vector<int> myAddresses,
+//		std::vector<SpecialScpOverwrite> myOverwriters, std::vector<DoubleNestedEnemy> myDNestEn = {},
+//		bool myUseAltScript = false);
+//};
+//
+//struct Enemies {
+//	std::vector<SpecialScp> specialscp;
+//	std::vector<EnemySet> enemies;
+//	std::vector<NestedEnemySet> nestedEns;
+//	std::vector<unsigned int> enemyRes;
+//	std::vector<Playable*> enemyTypes = {};
+//};
 
 struct Level {
 	std::vector<Playable*> party;
@@ -170,13 +171,16 @@ struct Level {
 	std::vector<Collectable> collectables;
 	std::vector<SpecialCollectable> specialCollectables;
 
-	Enemies enemies;
+	//Enemies enemies;
+
+	std::vector<EnemySet> enemies;
+	std::vector<unsigned int> enemyLines;
 
 	Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
 		std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 		std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
 		std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
-		std::vector<DispenserSet> myDispensers);
+		std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines = {});
 };
 
 extern std::vector<DispenserType> availableHats;

@@ -1,7 +1,7 @@
 #pragma once
 //#include "Defines.h"
 #include "Characters.h"
-
+#include "Enemies.h"
 
 extern Playable* quigonjinn;
 extern Playable* obiwankenobi;
@@ -175,6 +175,16 @@ extern Playable* kaminodroid;
 extern Playable* sentrydroid;
 extern Playable* bat;
 
+extern Playable* att;
+extern Playable* mtt;
+extern Playable* atst_lowres;
+extern Playable* hailfiredroid;
+extern Playable* jumbohomingdroid;
+
+extern Playable* probedroid;
+extern Playable* speederbike_snow;
+extern Playable* droidstarfighter;
+
 extern Level* Negotiations;
 extern Level* Invasion;
 extern Level* EscapeNaboo;
@@ -217,4 +227,46 @@ extern Level* ANewHope;
 extern Level* BHM;
 extern Level* Cantina;
 
-extern std::unordered_map<Playable*, const char*> SpecialScripts;
+//extern std::unordered_map<Playable*, const char*> SpecialScripts;
+
+extern EnemyType* clone_ep3_sand_en;
+extern EnemyType* battledroid_en;
+extern EnemyType* battledroid_security_en;
+extern EnemyType* battledroid_commander_en;
+extern EnemyType* destroyer_en;
+extern EnemyType* geonosian_en;
+extern EnemyType* battledroid_geonosian_en;
+extern EnemyType* superbattledroid_en;
+extern EnemyType* bodyguard_en;
+extern EnemyType* clone_ep3_en;
+extern EnemyType* clone_ep3_swamp_en;
+extern EnemyType* disguisedclone_en;
+extern EnemyType* stormtrooper_en;
+extern EnemyType* imperialshuttlepilot_en;
+extern EnemyType* tuskenraider_en;
+extern EnemyType* sandtrooper_en;
+extern EnemyType* beachtrooper_en;
+extern EnemyType* deathstartrooper_en;
+extern EnemyType* tiefighterpilot_en;
+extern EnemyType* imperialofficer_en;
+extern EnemyType* snowtrooper_en;
+extern EnemyType* gamorreanguard_en;
+extern EnemyType* skiffguard_en;
+extern EnemyType* imperialguard_en;
+extern EnemyType* scouttrooper_en;
+extern EnemyType* kaminodroid_en;
+extern EnemyType* sentrydroid_en;
+extern EnemyType* bat_en;
+
+extern EnemyType* att_en;
+extern EnemyType* mtt_en;
+extern EnemyType* atst_lowres_en;
+extern EnemyType* hailfiredroid_en;
+extern EnemyType* jumbohomingdroid_en;
+
+extern EnemyType* droidstarfighter_en;
+extern EnemyType* tiefighter_en;
+extern EnemyType* tieinterceptor_en;
+extern EnemyType* tiebomber_en;
+extern EnemyType* probedroid_en;
+extern EnemyType* speederbike_snow_en;

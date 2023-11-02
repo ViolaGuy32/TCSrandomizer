@@ -12,8 +12,6 @@
 extern bool extog;
 extern bool greenVeh;
 
-extern std::vector<Playable*> enemies;
-
 extern Playable* defaultCharacter;
 
 extern LogicType logicType;
@@ -23,16 +21,16 @@ extern std::vector<Playable*> chs; //Characters
 extern std::vector<Playable*> vhs; //Vehicles
 
 Playable::Playable(std::string myName, std::string myRealName, int myPrice, int myAddress, float mySpeed,
-	uint64_t myAttributes, std::unordered_map<enemyScp, std::string> myChart, scpInfoArr myAtInfo,
-	scpInfoArr myBlockInfo, scpInfoArr mySnipeInfo)
+	uint64_t myAttributes, std::unordered_map<enemyScp, std::string> myChart/*, scpInfoArr myAtInfo,
+	scpInfoArr myBlockInfo, scpInfoArr mySnipeInfo*/)
     : name(myName), realName(myRealName), price(myPrice), address(myAddress), speed(mySpeed), enemyChart(myChart),
-      nAttackInfo(myAtInfo.conditions, myAtInfo.actions, myAtInfo.appendix),
+      /*nAttackInfo(myAtInfo.conditions, myAtInfo.actions, myAtInfo.appendix),
       nBlockInfo(myBlockInfo.conditions, myBlockInfo.actions, myBlockInfo.appendix),
-      nSnipeInfo(mySnipeInfo.conditions, mySnipeInfo.actions, mySnipeInfo.appendix), att(myAttributes) {
+      nSnipeInfo(mySnipeInfo.conditions, mySnipeInfo.actions, mySnipeInfo.appendix), */att(myAttributes) {
 
 	if (!check(Passive)) att |= Active;
 
-	if (att & Baddy) enemies.push_back(this);
+	//if (att & Baddy) enemies.push_back(this);
 	if (att & Fake) return;
 	pls.push_back(this);
 	if (att & Vehicle) {

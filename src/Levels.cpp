@@ -1,4 +1,5 @@
 #include "Levels.h"
+#include "Enemies.cpp"
 #include "externData.h"
 
 extern std::vector<Playable*> enemies;
@@ -17,39 +18,38 @@ extern std::mt19937_64* randoPTR;
 extern LogicType logicType;
 extern Level* BHM;
 
-Enemy::Enemy(enemyScp myScp, coord myType, coord myScript)
-	: enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
-
-Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
-	: enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
-
-SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
-	std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn,
-	bool myUseAltScript)
-	: scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol),
-	  dNestEn(myDNestEn), useAltScript(myUseAltScript) {
-	for (int address : myAddresses) {
-		specialEnemies.push_back({scpFile, address, ai2});
-	}
-}
-
-SpecialScp::SpecialScp(char myScene, const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses,
-	unsigned int myLn, const char* myExtraConditions, const char* myExtraActions, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
-	: scene(myScene), fileName(myFileName), newWay(true), dNestEn(myDNestEn), useAltScript(myUseAltScript) {
-	overwriters.push_back({myOldFunName, myLn, myExtraConditions, myExtraActions});
-	for (int address : myAddresses) {
-		specialEnemies.push_back({scpFile, address, ai2});
-	}
-}
-
-SpecialScp::SpecialScp(char myScene, const char* myFileName, std::vector<int> myAddresses,
-	std::vector<SpecialScpOverwrite> myOverwriters, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
-	: scene(myScene), fileName(myFileName), overwriters(myOverwriters), newWay(true), dNestEn(myDNestEn),
-	  useAltScript(myUseAltScript) {
-	for (int address : myAddresses) {
-		specialEnemies.push_back({scpFile, address, ai2});
-	}
-}
+//Enemy::Enemy(enemyScp myScp, coord myType, coord myScript)
+//	: enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
+//
+//Enemy::Enemy(enemyScp myScp, int myAddress, enemyWhere myWhere)
+//	: enemywhere(myWhere), scpFile(myScp), type({0, 0}), script({0, 0}), address(myAddress) {}
+//
+//SpecialScp::SpecialScp(char myScene, enemyScp myScpFile, const char* myFileName, const char* myOldFunName,
+//	std::vector<int> myAddresses, const char* myFun, coord myLnCol, std::vector<DoubleNestedEnemy> myDNestEn,
+//	bool myUseAltScript)
+//	: scene(myScene), scpFile(myScpFile), fileName(myFileName), fun(myFun), oldFunName(myOldFunName), lnCol(myLnCol),
+//	  dNestEn(myDNestEn), useAltScript(myUseAltScript) {
+//	for (int address : myAddresses) {
+//		specialEnemies.push_back({scpFile, address, ai2});
+//	}
+//}
+//
+//SpecialScp::SpecialScp(char myScene, const char* myFileName, const char* myOldFunName, std::vector<int> myAddresses,
+//	unsigned int myLn, const char* myExtraConditions, const char* myExtraActions, std::vector<DoubleNestedEnemy>
+//myDNestEn, bool myUseAltScript) 	: scene(myScene), fileName(myFileName), newWay(true), dNestEn(myDNestEn),
+//useAltScript(myUseAltScript) { 	overwriters.push_back({myOldFunName, myLn, myExtraConditions, myExtraActions});
+//for (int address : myAddresses) { 		specialEnemies.push_back({scpFile, address, ai2});
+//	}
+//}
+//
+//SpecialScp::SpecialScp(char myScene, const char* myFileName, std::vector<int> myAddresses,
+//	std::vector<SpecialScpOverwrite> myOverwriters, std::vector<DoubleNestedEnemy> myDNestEn, bool myUseAltScript)
+//	: scene(myScene), fileName(myFileName), overwriters(myOverwriters), newWay(true), dNestEn(myDNestEn),
+//	  useAltScript(myUseAltScript) {
+//	for (int address : myAddresses) {
+//		specialEnemies.push_back({scpFile, address, ai2});
+//	}
+//}
 
 //SpecialScp::SpecialScp(char myScene, attackType myAtType, const char* myFileName, const char* myOldFunName,
 //    std::vector<int> myAddresses, const char* myFun, unsigned int myStart, unsigned int myEnd)
@@ -93,11 +93,11 @@ Level::Level(std::string myName, std::string myShortName, std::string myPath, bo
 	std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 	std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
 	std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
-	std::vector<DispenserSet> myDispensers)
+	std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines)
 	: name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel), vanillaParty(myVanillaParty),
 	  party(myVanillaParty), vanillaBonusCharacters(myVanillaBonusCharacters),
 	  bonusCharacters(myVanillaBonusCharacters), collectables(myCollectables),
-	  specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers) {
+	  specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers), enemyLines(myEnemyLines) {
 	for (Playable* p : myUnlocks) {
 		p->lev = this;
 	}
@@ -207,6 +207,19 @@ void mix(Level* lev) {
 		}
 	}
 
+	if (enemyOp) {
+		std::uniform_int_distribution<int> enemyDist(0, enemyTypes.size() - 1);
+		std::uniform_int_distribution<int> flyerDist(0, flyerTypes.size() - 1);
+		std::uniform_int_distribution<int> walkerDist(0, walkerTypes.size() - 1);
+		for (EnemySet& enSet : lev->enemies) {
+			for (Enemy& en : enSet.enemy) {
+				if (en.category == normal) en.newType = enemyTypes[enemyDist(*randoPTR)];
+				else if (en.category == flyer) en.newType = flyerTypes[flyerDist(*randoPTR)];
+				else if (en.category == walker) en.newType = walkerTypes[walkerDist(*randoPTR)];
+			}
+		}
+	}
+
 	if (lev->party.size() != 0) {
 		add(0);
 		if (!lev->vehicleLevel || logicType != casual)
@@ -214,30 +227,30 @@ void mix(Level* lev) {
 					//because casual logic does not have 1p2c
 	}
 
-	if (enemyOp) {
-		std::uniform_int_distribution<int> distrib(0, enemies.size() - 1);
-		for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
-			for (NestedEnemy& nest : nestSet.nEns) {
-				nest.newEn = enemies[distrib(*randoPTR)];
-			}
-		}
-		for (EnemySet& enSet : lev->enemies.enemies) {
-			for (Enemy& en : enSet.enemy) {
-
-				en.newEn = enemies[distrib(*randoPTR)];
-			}
-		}
-		for (SpecialScp& sp : lev->enemies.specialscp) {
-			for (Enemy& spEn : sp.specialEnemies) {
-
-				spEn.newEn = enemies[distrib(*randoPTR)];
-			}
-			for (DoubleNestedEnemy& dne : sp.dNestEn) {
-
-				dne.newEn = enemies[distrib(*randoPTR)];
-			}
-		}
-	}
+	//if (enemyOp) {
+	//	std::uniform_int_distribution<int> distrib(0, enemies.size() - 1);
+	//	for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
+	//		for (NestedEnemy& nest : nestSet.nEns) {
+	//			nest.newEn = enemies[distrib(*randoPTR)];
+	//		}
+	//	}
+	//	for (EnemySet& enSet : lev->enemies.enemies) {
+	//		for (Enemy& en : enSet.enemy) {
+	//
+	//			en.newEn = enemies[distrib(*randoPTR)];
+	//		}
+	//	}
+	//	for (SpecialScp& sp : lev->enemies.specialscp) {
+	//		for (Enemy& spEn : sp.specialEnemies) {
+	//
+	//			spEn.newEn = enemies[distrib(*randoPTR)];
+	//		}
+	//		for (DoubleNestedEnemy& dne : sp.dNestEn) {
+	//
+	//			dne.newEn = enemies[distrib(*randoPTR)];
+	//		}
+	//	}
+	//}
 }
 
 std::string panelString(int panSet, int pan) {

@@ -1,5 +1,5 @@
 #include "CharacterData.h"
-#include "Characters.h"
+//#include "Characters.h"
 #include "Defines.h"
 #include "externData.h"
 #include "pch.h"
@@ -74,9 +74,9 @@ void makeCharacters() {
 		Hat | Lever | Build | Box | Jump | Chokeable | Lightningable);
 
 	clone_ep3_sand = new Playable("clone_ep3_sand", "Commander Cody", 12000, 0x7f1cb0, 1.0f,
-		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable |
-			Baddy,
-		{
+		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
+			Trickable /* \| Baddy,
+		*{
 			{chatting, "disguisedclone"},
 			{sniper, "sniper"},
 			{storm, "storm"},
@@ -85,7 +85,7 @@ void makeCharacters() {
 			{spawnattack, "spawnattack"},
 			{patrol, "patrol"},
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	chewbacca = new Playable("chewbacca", "Chewbacca", 18000, 0x7f1d50, 1.2f,
 		Hat | Lever | Build | Box | Jump | Attack | Shoot | Grapple | Chokeable | Lightningable);
@@ -191,8 +191,8 @@ void makeCharacters() {
 		"pkdroid", "PK droid", 1500, 0x7f1ce8, 0.828538f, Droid | Passive | Gas | Pushable | Zappable | NoLevel);
 
 	battledroid = new Playable("battledroid", "Battle droid", 6500, 0x7f1c88, 1.2f,
-		Attack | Shoot | Droid | Gas | Pushable | Zappable | Baddy,
-		{
+		Attack | Shoot | Droid | Gas | Pushable | Zappable /*| Baddy,*/
+		/*{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
 			{storm, "storm"},
@@ -202,10 +202,10 @@ void makeCharacters() {
 			{patrol, "commanderpatrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock*/);
 
 	battledroid_security = new Playable("battledroid_security", "Battle droid (Security)", 8500, 0x7f1ca0, 1.2f,
-		Attack | Shoot | Droid | Gas | Pushable | Zappable,
+		Attack | Shoot | Droid | Gas | Pushable | Zappable /*|Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -216,11 +216,11 @@ void makeCharacters() {
 			{patrol, "commanderpatrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock*/);
 
 	//maybe use goalrange 2
 	battledroid_commander = new Playable("battledroid_commander", "Battle droid (Commander)", 10000, 0x7f1c90, 1.2f,
-		Attack | Shoot | Droid | Gas | Pushable | Zappable | Baddy,
+		Attack | Shoot | Droid | Gas | Pushable | Zappable /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -231,21 +231,21 @@ void makeCharacters() {
 			{patrol, "commanderpatrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
-	destroyer =
-		new Playable("destroyer", "droideka", 40000, 0x7f1d78, 1.8f, Attack | Shoot | Droid | Gas | Zappable | Baddy,
-			{
-				{chatting, "chatting"},
-				{sniper, "sniper"},
-				{storm, "storm"},
-				{attack, "attack"},
-				{block, "block"},
-				{spawnattack, "spawnattack"},
-				{patrol, "storm"},
+	destroyer = new Playable("destroyer", "droideka", 40000, 0x7f1d78, 1.8f,
+		Attack | Shoot | Droid | Gas | Zappable /*\| Baddy,
+		{
+			{chatting, "chatting"},
+			{sniper, "sniper"},
+			{storm, "storm"},
+			{attack, "attack"},
+			{block, "block"},
+			{spawnattack, "spawnattack"},
+			{patrol, "storm"},
 
-			},
-			normalAttack);
+		},
+		normalAttack\*/);
 
 	captaintarpals = new Playable("captaintarpals", "Captain Tarpals", 17500, 0x7f1c60, 1.32f,
 		Build | Box | Jump | DoubleJump | HighJump | RealDoubleJump | HighDoubleJump | GunganJump | Attack | Chokeable |
@@ -285,7 +285,7 @@ void makeCharacters() {
 		new Playable("taunwe", "Taun We", 9000, 0x7f2098, 1.2f, Lever | Build | Box | Jump | Chokeable | Lightningable);
 
 	geonosian = new Playable("geonosian", "Geonosian", 20000, 0x7f1d30, 1.5f,
-		Lever | Flutter | Attack | Shoot | Pushable | Chokeable | Lightningable | Baddy,
+		Lever | Flutter | Attack | Shoot | Pushable | Chokeable | Lightningable /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -296,10 +296,10 @@ void makeCharacters() {
 			{patrol, "storm"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	battledroid_geonosian = new Playable("battledroid_geonosian", "Battle droid (Geonosis)", 8500, 0x7f1c98, 1.2f,
-		Attack | Shoot | Droid | Gas | Pushable | Zappable | Baddy,
+		Attack | Shoot | Droid | Gas | Pushable | Zappable /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -310,10 +310,10 @@ void makeCharacters() {
 			{patrol, "commanderpatrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	superbattledroid = new Playable("superbattledroid", "Super Battle droid", 25000, 0x7f1d80, 1.07f,
-		Attack | Shoot | Droid | Gas | Pushable | Zappable | Baddy,
+		Attack | Shoot | Droid | Gas | Pushable | Zappable /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -324,7 +324,7 @@ void makeCharacters() {
 			{patrol, "commanderpatrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	jangofett = new Playable("jangofett", "Jango Fett", 70000, 0x7f1f38, 1.2f,
 		Lever | Build | Box | Jump | Fly | Fett | Attack | Shoot | Grapple | Bounty | Chokeable | Lightningable |
@@ -362,7 +362,7 @@ void makeCharacters() {
 			Lightning | Chokeable | Lightningable);
 
 	bodyguard = new Playable("bodyguard", "Grievous' Bodyguard", 24000, 0x7f1c70, 1.4f,
-		Jump | DoubleJump | HighJump | ExtraHighJump | Saber | Gas | Tall | Baddy,
+		Jump | DoubleJump | HighJump | ExtraHighJump | Saber | Gas | Tall /*\| Baddy,
 		{
 			{chatting, "bodyguard"},
 			{sniper, "bodyguard"},
@@ -373,7 +373,7 @@ void makeCharacters() {
 			{patrol, "bodyguard"},
 
 		},
-		{"", "AttackOpponent \"range 0.15\"", ""});
+		{"", "AttackOpponent \"range 0.15\"", ""}\*/);
 
 	grievous = new Playable("grievous", "General Grievous", 70000, 0x7f1e48, 1.2f,
 		Build | Jump | DoubleJump | HighJump | ExtraHighJump | RealDoubleJump | HighDoubleJump | Saber | Deflect);
@@ -382,7 +382,7 @@ void makeCharacters() {
 		Hat | Lever | Build | Box | Jump | Attack | Shoot | Grapple | Chokeable | Lightningable);
 
 	clone_ep3 = new Playable("clone_ep3", "Clone (Episode III)", 10000, 0x7f1ca8, 1.0f,
-		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable |
+		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable /*|
 			Baddy,
 		{
 			{chatting, "disguisedclone"},
@@ -395,13 +395,13 @@ void makeCharacters() {
 
 		},
 
-		normalAttack, normalBlock);
+		normalAttack, normalBlock*/);
 
 	clone_ep3_pilot = new Playable("clone_ep3_pilot", "Clone (Episode III, Pilot)", 11000, 0x0, 1.0f,
 		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable);
 
 	clone_ep3_swamp = new Playable("clone_ep3_swamp", "Clone (Episode III, Swamp)", 12000, 0x0, 1.0f,
-		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable |
+		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable /*|
 			Baddy,
 		{
 			{chatting, "disguisedclone"},
@@ -414,7 +414,7 @@ void makeCharacters() {
 
 		},
 
-		normalAttack, normalBlock);
+		normalAttack, normalBlock*/);
 
 	clone_ep3_walker = new Playable("clone_ep3_walker", "Clone (Episode III, Walker)", 12000, 0x0, 1.0f,
 		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable);
@@ -424,7 +424,7 @@ void makeCharacters() {
 			Lightningable);
 
 	disguisedclone = new Playable("disguisedclone", "Disguised Clone", 12000, 0x0, 1.0f,
-		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable |
+		Lever | Build | Box | Jump | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable | Trickable /*|
 			Baddy,
 		{
 			{chatting, "disguisedclone"},
@@ -437,7 +437,7 @@ void makeCharacters() {
 
 		},
 
-		normalAttack, normalBlock);
+		normalAttack, normalBlock*/);
 
 	rebelscum = new Playable("rebelscum", "Rebel Trooper", 10000, 0x0, 1.2f,
 		Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Chokeable | Lightningable |
@@ -445,7 +445,7 @@ void makeCharacters() {
 
 	stormtrooper = new Playable("stormtrooper", "Stormtrooper", 10000, 0x7f1ff0, 1.2f,
 		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Storm | Baddy,
+			Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -455,11 +455,11 @@ void makeCharacters() {
 			{spawnattack, "spawnattack"},
 			{patrol, "strolling"},
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	imperialshuttlepilot = new Playable("imperialshuttlepilot", "imperial Shuttle Pilot", 25000, 0x7f2000, 1.2f,
 		Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Imperial | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump | Baddy,
+			Lightningable | Trickable | SlightlyHigherJump /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -470,11 +470,11 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	tuskenraider = new Playable("tuskenraider", "Tusken Raider", 23000, 0x0, 1.2f,
 		Hat | Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Baddy,
+			Trickable | SlightlyHigherJump /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -485,11 +485,11 @@ void makeCharacters() {
 			{patrol, "patrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	jawa = new Playable("jawa", "Jawa", 24000, 0x7f1e88, 0.9f,
 		Lever | Build | Box | Jump | SlightlyBetterJump | Zapper | Hatch | Chokeable | Lightningable | Trickable
-		//| Baddy
+		///*| Baddy*/
 		//,
 		//{
 		//	{chatting, "jawa"},
@@ -506,7 +506,7 @@ void makeCharacters() {
 
 	sandtrooper = new Playable("sandtrooper", "Sandtrooper", 14000, 0x0, 1.2f,
 		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Storm | Baddy,
+			Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -517,7 +517,7 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	greedo = new Playable("greedo", "Greedo", 60000, 0x7f2050, 1.3f,
 		Lever | Build | Box | Jump | Dive | Attack | Shoot | Grapple | Bounty | Chokeable | Lightningable | Trickable |
@@ -528,7 +528,7 @@ void makeCharacters() {
 
 	beachtrooper = new Playable("beachtrooper", "Beach Trooper", 20000, 0x7f1ff8, 1.2f,
 		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Storm | Baddy,
+			Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -539,11 +539,11 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	deathstartrooper = new Playable("deathstartrooper", "Death Star Trooper", 19000, 0x7f1ea8, 1.2f,
 		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Storm | Baddy,
+			Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -554,11 +554,11 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	tiefighterpilot = new Playable("tiefighterpilot", "TIE Fighter Pilot", 21000, 0x0, 1.2f,
 		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Storm | Baddy,
+			Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -569,11 +569,11 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	imperialofficer = new Playable("imperialofficer", "imperial Officer", 28000, 0x7f2008, 1.2f,
 		Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Imperial | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump | Baddy,
+			Lightningable | Trickable | SlightlyHigherJump /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -584,7 +584,7 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	grandmofftarkin = new Playable("grandmofftarkin", "Grand Moff Tarkin", 38000, 0x7f2010, 1.2f,
 		Hat | Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Imperial | Chokeable |
@@ -603,7 +603,7 @@ void makeCharacters() {
 
 	snowtrooper = new Playable("snowtrooper", "Snowtrooper", 16000, 0x7f1ea0, 1.2f,
 		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Storm | Baddy,
+			Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -614,7 +614,7 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	lukeskywalker_hoth = new Playable("lukeskywalker_hoth", "Luke Skywalker (Hoth)", 14000, 0x0, 1.2f,
 		Lever | Build | Box | Jump | Dive | Attack | Shoot | Grapple | Chokeable | Lightningable | SlightlyHigherJump);
@@ -625,7 +625,7 @@ void makeCharacters() {
 
 	ugnaught = new Playable("ugnaught", "Ugnaught", 36000, 0x7f1fd8, 0.9f,
 		Lever | Build | Box | Jump | Zapper | Hatch | Chokeable | Lightningable | Trickable
-		//| Baddy
+		///*| Baddy*/
 		//,
 		//{
 		//	{chatting, "jawa"},
@@ -649,7 +649,7 @@ void makeCharacters() {
 			SlightlyHigherJump | LeiaAlt);
 
 	gamorreanguard = new Playable("gamorreanguard", "Gamorrean Guard", 40000, 0x7f1c80, 0.75f,
-		Lever | Build | Box | Jump | Attack | Chokeable | Lightningable | Trickable | Baddy,
+		Lever | Build | Box | Jump | Attack | Chokeable | Lightningable | Trickable /*\| Baddy,
 		{
 			{chatting, "gamorreanguard"},
 			{sniper, "gamorreanguard"},
@@ -660,7 +660,7 @@ void makeCharacters() {
 			{patrol, "gamorreanguard"},
 
 		},
-		{"", "AttackOpponent \"range 0.20\"", ""});
+		{"", "AttackOpponent \"range 0.20\"", ""}\*/);
 
 	bibfortuna = new Playable("bibfortuna", "Bib Fortuna", 16000, 0x0, 1.2f,
 		Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Chokeable | Lightningable | Trickable |
@@ -675,7 +675,7 @@ void makeCharacters() {
 
 	skiffguard = new Playable("skiffguard", "Skiff Guard", 12000, 0x0, 1.2f,
 		Hat | Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Chokeable | Lightningable |
-			Trickable | SlightlyHigherJump | Baddy,
+			Trickable | SlightlyHigherJump /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -686,7 +686,7 @@ void makeCharacters() {
 			{patrol, "patrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	bobafett = new Playable("bobafett", "Boba Fett", 100000, 0x7f1d88, 1.2f,
 		Lever | Build | Box | Jump | Fly | Fett | Attack | Shoot | Grapple | Bounty | Chokeable | Lightningable |
@@ -697,7 +697,7 @@ void makeCharacters() {
 
 	imperialguard = new Playable("imperialguard", "imperial Guard", 45000, 0x7f1c68, 1.2f,
 		Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Imperial | Chokeable | Lightningable | Trickable |
-			SlightlyHigherJump | Storm | Baddy,
+			SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "impguard"},
 			{sniper, "impguard"},
@@ -708,7 +708,7 @@ void makeCharacters() {
 			{patrol, "impguard"},
 
 		},
-		{"", "AttackOpponent \"range 0.15\"", ""});
+		{"", "AttackOpponent \"range 0.15\"", ""}\*/);
 
 	theemperor = new Playable("theemperor", "The Emperor", 275000, 0x7f1eb8, 1.2f,
 		Lever | Build | Box | Jump | DoubleJump | RealDoubleJump | Attack | Saber | Deflect | Jedi | Sith | Lightning |
@@ -753,24 +753,26 @@ void makeCharacters() {
 	buzzdroid = new Playable(
 		"buzzdroid", "Buzz droid", 1500, 0x7f20a0, 1.2f, Extratoggle | Attack | Droid | Gas | Pushable | Zappable);
 
-	trainingremote = new Playable("trainingremote", "Training Remote", 2000, 0x7f1d98, 1.05f,
-		Extratoggle | Hovering | FakeShoot | Droid | Gas /*| Baddy*/,
-		{
-			{chatting, "trainingremote"},
-			{sniper, "trainingremote"},
-			{storm, "trainingremote"},
-			{attack, "trainingremote"},
-			{block, "trainingremote"},
-			{spawnattack, "trainingremote"},
-			{patrol, "trainingremote"},
-		},
+	trainingremote =
+		new Playable("trainingremote", "Training Remote", 2000, 0x7f1d98, 1.05f,
+			Extratoggle | Hovering | FakeShoot | Droid |
+				Gas /* | Baddy ,
+			{
+				{chatting, "trainingremote"},
+				{sniper, "trainingremote"},
+				{storm, "trainingremote"},
+				{attack, "trainingremote"},
+				{block, "trainingremote"},
+				{spawnattack, "trainingremote"},
+				{patrol, "trainingremote"},
+			},
 
-		{"SetSide \"Baddy\"\n\t\tSetCircleDirection \"Random\"\n\t\tSetState \"NotCircle0\"", "",
-			funcNoRef("NotCircle", "if Timer > 1 goto CircleAttack0\n\t\t1",
-				"ResetTimer\n\t\tEngageOpponent \"goalrange 0.5\" \"firerange 1\"")
-				funcNoRef("CircleAttack", "if Timer > 1 goto NotCircle0\n\t\t1",
-					"ResetTimer\n\t\tEngageOpponent \"goalrange 0.5\" \"firerange 1\" \"circle\"")},
-		normalBlock);
+			{"SetSide \"Baddy\"\n\t\tSetCircleDirection \"Random\"\n\t\tSetState \"NotCircle0\"", "",
+				funcNoRef("NotCircle", "if Timer > 1 goto CircleAttack0\n\t\t1",
+					"ResetTimer\n\t\tEngageOpponent \"goalrange 0.5\" \"firerange 1\"")
+					funcNoRef("CircleAttack", "if Timer > 1 goto NotCircle0\n\t\t1",
+						"ResetTimer\n\t\tEngageOpponent \"goalrange 0.5\" \"firerange 1\" \"circle\"")},
+			normalBlock*/);
 
 	engineer = new Playable("engineer", "Rebel Engineer", 8000, 0x0, 1.2f,
 		Extratoggle | Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Chokeable |
@@ -805,7 +807,7 @@ void makeCharacters() {
 
 	scouttrooper = new Playable("scouttrooper", "Scout Trooper", 16000, 0x0, 1.2f,
 		Extratoggle | Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump | Storm | Baddy,
+			Lightningable | Trickable | SlightlyHigherJump | Storm /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -816,7 +818,7 @@ void makeCharacters() {
 			{patrol, "strolling"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
 	newanakinspod = new Playable("newanakinspod", "Anakin's Pod", 20000, 0x7f21e0, 1.2f, Vehicle);
 
@@ -889,7 +891,7 @@ void makeCharacters() {
 
 	fakeAnakinsPodGreen = new Playable("anakinspod_green", "", 0, 0, 0.0f, Fake | Vehicle);
 
-	kaminodroid = new Playable("kaminoandroid", "", 0, 0x7f1fe8, 1.05f, Fake | Shoot | Hovering | Baddy,
+	kaminodroid = new Playable("kaminoandroid", "", 0, 0x7f1fe8, 1.05f, Fake | Shoot | Hovering /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -900,9 +902,9 @@ void makeCharacters() {
 			{patrol, "patrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
-	sentrydroid = new Playable("sentrydroid", "", 0, 0x7f1fe0, 1.2f, Fake | Shoot | Hovering | Baddy,
+	sentrydroid = new Playable("sentrydroid", "", 0, 0x7f1fe0, 1.2f, Fake | Shoot | Hovering /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -913,9 +915,9 @@ void makeCharacters() {
 			{patrol, "patrol"},
 
 		},
-		normalAttack, normalBlock);
+		normalAttack, normalBlock\*/);
 
-	bat = new Playable("bat", "", 0, 0x7f1cf8, 0.75f, Fake | Hovering | Baddy,
+	bat = new Playable("bat", "", 0, 0x7f1cf8, 0.75f, Fake | Hovering /*\| Baddy,
 		{
 			{chatting, "bat"},
 			{sniper, "bat"},
@@ -936,8 +938,63 @@ void makeCharacters() {
 				funcNoRef("Circle", "if Timer > 2 goto Attack1",
 					"ResetTimer \"mintime=0\" \"maxtime=1\"\n\t\tSetCircleDirection "
 					"\"Reverse\"\n\t\tCircleOpponent "
-					"\"0.5\" \"can_go_off_path\"")});
+					"\"0.5\" \"can_go_off_path\"")}\*/);
 
-	SpecialScripts = {{bat, "bat"}, /*{jawa, "jawa"}, {ugnaught, "jawa"},*/ {bodyguard, "bodyguard"},
-		{trainingremote, "trainingremote"}, {gamorreanguard, "gamorreanguard"}, {imperialguard, "impguard"}};
+	//	SpecialScripts = {{bat, "bat"}, /*{jawa, "jawa"}, {ugnaught, "jawa"},*/ {bodyguard, "bodyguard"},
+	//		{trainingremote, "trainingremote"}, {gamorreanguard, "gamorreanguard"}, {imperialguard, "impguard"}};
+
+	att = new Playable("att", "", 0, 0x0, 6.0f, Fake | Vehicle | Shoot);
+	mtt = new Playable("mtt", "", 0, 0x0, 12.0f, Fake | Vehicle | Shoot);
+	atst_lowres = new Playable("atst_lowres", "", 0, 0x7f1d68, 2.16f, Fake | Vehicle | Shoot);
+	hailfiredroid = new Playable("hailfiredroid", "", 0, 0x0, 10.0f, Fake | Vehicle | Shoot);
+	jumbohomingdroid = new Playable("jumbohomingdroid", "", 0, 0x0, 2.3549f, Fake | Vehicle | Shoot);
+
+	droidstarfighter = new Playable("droidstarfighter", "", 0, 0x7f2218, 24.0f, Fake | Vehicle | Shoot);
+	probedroid = new Playable("probedroid", "", 0, 0x7f1ce0, 9.0f, Fake | Vehicle | Shoot);
+	speederbike_snow = new Playable("speederbike_snow", "", 0, 0x0, 13.0f, Fake | Vehicle | Shoot);
+}
+
+void makeEnemyTypes() {
+
+	clone_ep3_sand_en = new EnemyType(clone_ep3_sand);
+	battledroid_en = new EnemyType(battledroid);
+	battledroid_security_en = new EnemyType(battledroid_security);
+	battledroid_commander_en = new EnemyType(battledroid_commander);
+	destroyer_en = new EnemyType(destroyer);
+	geonosian_en = new EnemyType(geonosian);
+	battledroid_geonosian_en = new EnemyType(battledroid_geonosian);
+	superbattledroid_en = new EnemyType(superbattledroid);
+	bodyguard_en = new EnemyType(bodyguard);
+	clone_ep3_en = new EnemyType(clone_ep3);
+	clone_ep3_swamp_en = new EnemyType(clone_ep3_swamp);
+	disguisedclone_en = new EnemyType(disguisedclone);
+	stormtrooper_en = new EnemyType(stormtrooper);
+	imperialshuttlepilot_en = new EnemyType(imperialshuttlepilot);
+	tuskenraider_en = new EnemyType(tuskenraider);
+	sandtrooper_en = new EnemyType(sandtrooper);
+	beachtrooper_en = new EnemyType(beachtrooper);
+	deathstartrooper_en = new EnemyType(deathstartrooper);
+	tiefighterpilot_en = new EnemyType(tiefighterpilot);
+	imperialofficer_en = new EnemyType(imperialofficer);
+	snowtrooper_en = new EnemyType(snowtrooper);
+	gamorreanguard_en = new EnemyType(gamorreanguard);
+	skiffguard_en = new EnemyType(skiffguard);
+	imperialguard_en = new EnemyType(imperialguard);
+	scouttrooper_en = new EnemyType(scouttrooper);
+	kaminodroid_en = new EnemyType(kaminodroid);
+	sentrydroid_en = new EnemyType(sentrydroid);
+	bat_en = new EnemyType(bat);
+
+	att_en = new EnemyType(att, walker);
+	mtt_en = new EnemyType(mtt, walker);
+	atst_lowres_en = new EnemyType(atst_lowres, walker);
+	hailfiredroid_en = new EnemyType(hailfiredroid, walker);
+	jumbohomingdroid_en = new EnemyType(jumbohomingdroid, walker);
+
+	droidstarfighter_en = new EnemyType(droidstarfighter, flyer);
+	tiefighter_en = new EnemyType(tiefighter, flyer);
+	tieinterceptor_en = new EnemyType(tieinterceptor, flyer);
+	tiebomber_en = new EnemyType(tiebomber, flyer);
+	probedroid_en = new EnemyType(probedroid, flyer);
+	speederbike_snow_en = new EnemyType(speederbike_snow, flyer);
 }

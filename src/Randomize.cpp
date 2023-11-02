@@ -7,6 +7,7 @@
 #include "CharacterData.h"
 #include "Characters.h"
 #include "Defines.h"
+#include "Enemies.h"
 #include "FileGen.h"
 #include "LevelData.h"
 #include "Levels.h"
@@ -186,6 +187,16 @@ Playable* kaminodroid;
 Playable* sentrydroid;
 Playable* bat;
 
+Playable* att;
+Playable* mtt;
+Playable* atst_lowres;
+Playable* hailfiredroid;
+Playable* jumbohomingdroid;
+
+Playable* probedroid;
+Playable* speederbike_snow;
+Playable* droidstarfighter;
+
 Level* Negotiations;
 Level* Invasion;
 Level* EscapeNaboo;
@@ -228,6 +239,48 @@ Level* ANewHope;
 Level* BHM;
 Level* Cantina;
 
+EnemyType* clone_ep3_sand_en;
+EnemyType* battledroid_en;
+EnemyType* battledroid_security_en;
+EnemyType* battledroid_commander_en;
+EnemyType* destroyer_en;
+EnemyType* geonosian_en;
+EnemyType* battledroid_geonosian_en;
+EnemyType* superbattledroid_en;
+EnemyType* bodyguard_en;
+EnemyType* clone_ep3_en;
+EnemyType* clone_ep3_swamp_en;
+EnemyType* disguisedclone_en;
+EnemyType* stormtrooper_en;
+EnemyType* imperialshuttlepilot_en;
+EnemyType* tuskenraider_en;
+EnemyType* sandtrooper_en;
+EnemyType* beachtrooper_en;
+EnemyType* deathstartrooper_en;
+EnemyType* tiefighterpilot_en;
+EnemyType* imperialofficer_en;
+EnemyType* snowtrooper_en;
+EnemyType* gamorreanguard_en;
+EnemyType* skiffguard_en;
+EnemyType* imperialguard_en;
+EnemyType* scouttrooper_en;
+EnemyType* kaminodroid_en;
+EnemyType* sentrydroid_en;
+EnemyType* bat_en;
+
+EnemyType* att_en;
+EnemyType* mtt_en;
+EnemyType* atst_lowres_en;
+EnemyType* hailfiredroid_en;
+EnemyType* jumbohomingdroid_en;
+
+EnemyType* droidstarfighter_en;
+EnemyType* tiefighter_en;
+EnemyType* tieinterceptor_en;
+EnemyType* tiebomber_en;
+EnemyType* probedroid_en;
+EnemyType* speederbike_snow_en;
+
 std::unordered_map<Playable*, const char*> SpecialScripts;
 
 extern bool character;
@@ -258,11 +311,13 @@ std::vector<Playable*> chs;                    //Characters
 std::vector<Playable*> vhs;                    //Vehicles
 std::vector<Playable*> testing = {};           //Current logic;
 std::vector<DispenserType> availableHats = {}; //Current logic;
-std::vector<Playable*> enemies;                //AvailableEnemies
+std::vector<EnemyType*> enemyTypes;            //AvailableEnemies
+std::vector<EnemyType*> flyerTypes;
+std::vector<EnemyType*> walkerTypes;
 Level* currentLev;
 
-int addressPointer;
-int junkCharacters;
+size_t addressPointer;
+size_t junkCharacters;
 
 void Randomize() {
 	std::cout << "Randomizing\n";
@@ -275,6 +330,7 @@ void Randomize() {
 	randoPTR = &rando;
 
 	makeCharacters();
+	makeEnemyTypes();
 	makeLevels();
 
 	currentLev = BHM;
@@ -891,7 +947,7 @@ princess:
 	addHat(0, 0);
 
 	if (logicType == casual) {
-		if (!panel(0, 1)) goto princess;
+		if (!panel(0, 0)) goto princess;
 		if (!panel(0, 2)) goto princess;
 	}
 
@@ -905,7 +961,7 @@ princess:
 
 	{
 		bool gotHats = false;
-		if ((panel(1, 1) || panel(1, 2)) && logicType != casual) {
+		if ((panel(1, 0) || panel(1, 2)) && logicType != casual) {
 			//bonus room with lots of hat machines
 			addHat(3, 0);
 			addHat(3, 1);
@@ -1088,7 +1144,7 @@ cct:
 		//probability of getting valid seed is so low that using mix() takes too long.
 
 	cctCasual:
-
+		mix(CCT);
 		testing.clear();
 		availableHats.clear();
 
@@ -1309,8 +1365,8 @@ bespin:
 		}
 
 		while (!room2) {
-			int tempSize = testing.size();
-			int hatSize = availableHats.size();
+			size_t tempSize = testing.size();
+			size_t hatSize = availableHats.size();
 			if (!bonusHat) {
 				if (panel(0, 0)) {
 					addHat(0, 0);
@@ -1863,48 +1919,48 @@ bhm:
 		if (allMinikitsCharacter->StoryMode) goto allMinikits;
 	}
 
-	if (enemyOp && 1) {
-		for (Level* lev : allLevels) {
-			for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
-				for (NestedEnemy& nest : nestSet.nEns) {
-					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), nest.newEn) ==
-						lev->enemies.enemyTypes.end()) {
-						lev->enemies.enemyTypes.push_back(nest.newEn);
-					}
-				}
-			}
-			for (EnemySet& enSet : lev->enemies.enemies) {
-				for (Enemy& en : enSet.enemy) {
-					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), en.newEn) ==
-						lev->enemies.enemyTypes.end()) {
-						lev->enemies.enemyTypes.push_back(en.newEn);
-					}
-				}
-			}
-			for (SpecialScp& sp : lev->enemies.specialscp) {
-				for (Enemy& spEn : sp.specialEnemies) {
-					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), spEn.newEn) ==
-						lev->enemies.enemyTypes.end()) {
-						lev->enemies.enemyTypes.push_back(spEn.newEn);
-					}
-					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), spEn.newEn) ==
-						sp.spEnemyTypes.end()) {
-						sp.spEnemyTypes.push_back(spEn.newEn);
-					}
-					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), spEn.newEn) ==
-						sp.spEnemyTypes.end()) {
-						sp.spEnemyTypes.push_back(spEn.newEn);
-					}
-				}
-				for (DoubleNestedEnemy& dne : sp.dNestEn) {
-					if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), dne.newEn) ==
-						lev->enemies.enemyTypes.end()) {
-						lev->enemies.enemyTypes.push_back(dne.newEn);
-					}
-				}
-			}
-		}
-	}
+	//if (enemyOp && 1) {
+	//	for (Level* lev : allLevels) {
+	//		for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
+	//			for (NestedEnemy& nest : nestSet.nEns) {
+	//				if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), nest.newEn) ==
+	//					lev->enemies.enemyTypes.end()) {
+	//					lev->enemies.enemyTypes.push_back(nest.newEn);
+	//				}
+	//			}
+	//		}
+	//		for (EnemySet& enSet : lev->enemies.enemies) {
+	//			for (Enemy& en : enSet.enemy) {
+	//				if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), en.newEn) ==
+	//					lev->enemies.enemyTypes.end()) {
+	//					lev->enemies.enemyTypes.push_back(en.newEn);
+	//				}
+	//			}
+	//		}
+	//		for (SpecialScp& sp : lev->enemies.specialscp) {
+	//			for (Enemy& spEn : sp.specialEnemies) {
+	//				if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), spEn.newEn) ==
+	//					lev->enemies.enemyTypes.end()) {
+	//					lev->enemies.enemyTypes.push_back(spEn.newEn);
+	//				}
+	//				if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), spEn.newEn) ==
+	//					sp.spEnemyTypes.end()) {
+	//					sp.spEnemyTypes.push_back(spEn.newEn);
+	//				}
+	//				if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), spEn.newEn) ==
+	//					sp.spEnemyTypes.end()) {
+	//					sp.spEnemyTypes.push_back(spEn.newEn);
+	//				}
+	//			}
+	//			for (DoubleNestedEnemy& dne : sp.dNestEn) {
+	//				if (std::find(lev->enemies.enemyTypes.begin(), lev->enemies.enemyTypes.end(), dne.newEn) ==
+	//					lev->enemies.enemyTypes.end()) {
+	//					lev->enemies.enemyTypes.push_back(dne.newEn);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 	cantina1->StoryMode = true;
 	cantina2->StoryMode = true;
 	indy->StoryMode = true;
@@ -1914,7 +1970,7 @@ bhm:
 	//FILE GEN IS HERE
 	//system("cls");
 
-    std::cout << "Cutscenes removed\n";
+	std::cout << "Cutscenes removed\n";
 	//TESTING THIS
 
 	{
@@ -1928,157 +1984,182 @@ bhm:
 			binaryWrite(EXE, "b8177f", address);
 	}
 
-    std::cout << "Dummy characters done\n";
-	if (enemyOp && 1) {
+	std::cout << "Dummy characters done\n";
 
-		////I want these scripts accessable from the entire game.
-		std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
-		std::filesystem::rename(getSCP(Destiny, 'A', "IMPGUARD"), SCR + "IMPGUARD.SCP");
-		//std::filesystem::copy("files/trainingremote.scp", SCR + "trainingremote.scp");
-		appendFile(SCR + "SCRIPT.TXT", "\nimpguard\nbodyguard\ntrainingremote");
-
-		//fixScript(
-		//    "Fight", enemies, normalAttack, "if GotOpponent == 0 goto Approach", {45, 1}, SCR + "STORM.SCP");
-
+	if (enemyOp) {
 		for (Level* lev : allLevels) {
-            std::cout << lev->name << std::endl;
-			std::string tf = getMainTxt(lev);
-			lineDeleter(tf, lev->enemies.enemyRes);
-
-			for (Playable* p : lev->enemies.enemyTypes) {
-				appendFile(tf, "character \"" + p->name + "\" resident");
-			}
-			for (EnemySet& enSet : lev->enemies.enemies) {
-				for (Enemy& en : enSet.enemy) {
-
-					if (en.enemywhere == ai2) {
-						hexWrite(getAI2(lev, enSet.scene), en.newEn->name, en.address);
-						if (en.scpFile != NONE) {
-							hexWrite(
-								getAI2(lev, enSet.scene), en.newEn->enemyChart[en.scpFile], en.address - 0x10, 0x10);
-						}
-						//if (SpecialScripts.contains(en.newEn)) {
-						//	hexWrite(getAI2(lev, enSet.scene), SpecialScripts[en.newEn],
-						//	    en.address - 0x10);
-						//}
+			std::string appendix;
+			for (EnemySet& enset : lev->enemies) {
+				for (Enemy& en : enset.enemy) {
+					if (en.address != 0) {
+						hexWrite(getAI2(lev, enset.scene), en.newType->type->name, en.address);
+					}
+					if (en.file != "") {
+						txtIns(getSCP(lev, enset.scene, en.file), en.newType->type->name, {en.lncol},
+							en.vanillaType->type->name.length());
+					}
+					if (appendix.find('\"' + en.newType->type->name + '\"') == std::string::npos) {
+						appendix += "character \"" + en.newType->type->name + "\" resident\n";
 					}
 				}
 			}
-			for (NestedEnemySet nestSet : lev->enemies.nestedEns) {
-				for (NestedEnemy nest : nestSet.nEns) {
-					std::cout << lev->name.c_str() << ' ' << nestSet.scene << ' ' << nestSet.fileName << ' '
-							  << nest.type << std::endl;
-					if (nest.scpType != NONE) {
-						txtIns(getSCP(lev, nestSet.scene, nestSet.fileName), nest.newEn->enemyChart[nest.scpType],
-							{nest.script}, nest.scpLen);
-					}
-					txtIns(getSCP(lev, nestSet.scene, nestSet.fileName), nest.newEn->name, {nest.type},
-						nest.oldEn->name.length());
-					if (nest.chainAdd > -1) {
-						std::vector<Playable*>& spTemp = lev->enemies.specialscp[nest.chainAdd].spEnemyTypes;
-						if (std::find(spTemp.begin(), spTemp.end(), nest.newEn) == spTemp.end()) {
-							spTemp.push_back(nest.newEn);
-						}
-					}
-				}
-			}
-			for (SpecialScp& sp : lev->enemies.specialscp) {
-                std::cout << '\t' << sp.fileName << std::endl;
-				for (Enemy& spEn : sp.specialEnemies) {
-
-					hexWrite(getAI2(lev, sp.scene), spEn.newEn->name, spEn.address);
-				}
-				//if (sp.redirect) {
-				//fixScript(sp.oldFunName, sp.spEnemyTypes, sp.attackPattern, sp.extraConditions,
-				//sp.lnCol, getSCP(lev, sp.scene, sp.fileName));
-				/*} else */
-				for (DoubleNestedEnemy& dne : sp.dNestEn) {
-					if (sp.useAltScript && SpecialScripts.contains(dne.newEn)) {
-						//std::cout << dne.type.ln << ',' << dne.type.col << ' ' << dne.newEn->name << ' ' <<
-						//dne.fileName
-						//		  << ' ' << dne.script.ln << ',' << dne.script.col << ' ' << dne.oldEn << std::endl;
-						txtIns(getSCP(lev, sp.scene, dne.fileName), SpecialScripts[dne.newEn], {dne.script},
-							dne.fileName.length());
-					}
-					txtIns(getSCP(lev, sp.scene, dne.fileName), dne.newEn->name, {dne.type}, dne.oldEn->name.length());
-					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(), dne.newEn) == sp.spEnemyTypes.end()) {
-						sp.spEnemyTypes.push_back(dne.newEn);
-					}
-				}
-
-				if (sp.newWay) {
-					//for (NestedEnemy nest : sp.nestedSource.nEns) {
-					//	//scpRep(sp.nestedSource.scene, sp.nestedSource.fileName,
-					//	//	nest.newEn->name, nest.oldEn->name.length(), nest.type);
-					//	if (nest.scpType != NONE) {
-					//		txtIns(getSCP(lev, sp.nestedSource.scene,
-					//			       sp.nestedSource.fileName),
-					//			nest.newEn->enemyChart[nest.scpType], {nest.script},
-					//			nest.scpLen);
-					//		//scpRep(sp.nestedSource.scene, sp.nestedSource.fileName,
-					//		//	nest.newEn->enemyChart[nest.scpType], nest.scpLen,
-					//		//	nest.script);
-					//	}
-					//	txtIns(getSCP(lev, sp.nestedSource.scene, sp.nestedSource.fileName),
-					//		nest.newEn->name, {nest.type}, nest.oldEn->name.length());
-					//
-					//	if (nest.chainAdd > -1) {
-					//		lev->specialscp[nest.chainAdd].spEnemyTypes.push_back(
-					//			nest.newEn);
-					//	}
-					//}
-
-					std::string tf = getSCP(lev, sp.scene, sp.fileName);
-
-					for (int j = sp.overwriters.size() - 1; j >= 0; j--) {
-#define overwrite sp.overwriters[j]
-						std::string redirect;
-						std::string ending;
-						for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-							if (!(sp.useAltScript && !SpecialScripts.contains(sp.spEnemyTypes[i]))) {
-								if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
-									redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " +
-												overwrite.oldFunName + std::to_string(i) + "\n";
-
-									ending += "state " + overwrite.oldFunName + std::to_string(i) + " {\n";
-									ending += "\tReferenceScript {\n"
-											  "\t\tScript=";
-
-									ending += SpecialScripts[sp.spEnemyTypes[i]];
-
-									ending += "\n\t\tSource=Global\n"
-											  "\t\tReturnState=" +
-											  overwrite.oldFunName + std::to_string(i) +
-											  "\n"
-											  "\t\tConditions {\n"
-											  "\t\t}\n"
-											  "\t}\n";
-									ending += "\tConditions {\n"
-											  "\t\t" +
-											  //spEnemyTypes[i]->conditions + "\n\t\t" +
-											  overwrite.extraConditions +
-											  "\n\t}\n"
-											  "\tActions {\n"
-											  "\t\t" +
-											  overwrite.extraActions +
-											  //sp.spEnemyTypes[i]->nAttackInfo.actions +
-											  "\n\t}\n"
-											  "}\n";
-								}
-							}
-						}
-						txtIns(tf, redirect, {{overwrite.ln, 1}}, 0);
-						appendFile(tf, ending);
-					}
-
-				} else {
-					redirrector(lev, sp);
-				}
-			}
+			lineDeleter(getMainTxt(lev), lev->enemyLines);
+			appendFile(getMainTxt(lev), appendix);
 		}
 	}
 
-    std::cout << "Enemies patched";
+	//	if (enemyOp && 1) {
+	//
+	//		////I want these scripts accessable from the entire game.
+	//		std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
+	//		std::filesystem::rename(getSCP(Destiny, 'A', "IMPGUARD"), SCR + "IMPGUARD.SCP");
+	//		//std::filesystem::copy("files/trainingremote.scp", SCR + "trainingremote.scp");
+	//		appendFile(SCR + "SCRIPT.TXT", "\nimpguard\nbodyguard\ntrainingremote");
+	//
+	//		//fixScript(
+	//		//    "Fight", enemies, normalAttack, "if GotOpponent == 0 goto Approach", {45, 1}, SCR + "STORM.SCP");
+	//
+	//		for (Level* lev : allLevels) {
+	//            std::cout << lev->name << std::endl;
+	//			std::string tf = getMainTxt(lev);
+	//			lineDeleter(tf, lev->enemies.enemyRes);
+	//
+	//			for (Playable* p : lev->enemies.enemyTypes) {
+	//				appendFile(tf, "character \"" + p->name + "\" resident");
+	//			}
+	//			for (EnemySet& enSet : lev->enemies.enemies) {
+	//				for (Enemy& en : enSet.enemy) {
+	//
+	//					if (en.enemywhere == ai2) {
+	//						hexWrite(getAI2(lev, enSet.scene), en.newEn->name, en.address);
+	//						if (en.scpFile != NONE) {
+	//							hexWrite(
+	//								getAI2(lev, enSet.scene), en.newEn->enemyChart[en.scpFile], en.address - 0x10,
+	//0x10);
+	//						}
+	//						//if (SpecialScripts.contains(en.newEn)) {
+	//						//	hexWrite(getAI2(lev, enSet.scene), SpecialScripts[en.newEn],
+	//						//	    en.address - 0x10);
+	//						//}
+	//					}
+	//				}
+	//			}
+	//			for (NestedEnemySet nestSet : lev->enemies.nestedEns) {
+	//				for (NestedEnemy nest : nestSet.nEns) {
+	//					std::cout << lev->name.c_str() << ' ' << nestSet.scene << ' ' << nestSet.fileName << ' '
+	//							  << nest.type << std::endl;
+	//					if (nest.scpType != NONE) {
+	//						txtIns(getSCP(lev, nestSet.scene, nestSet.fileName),
+	//nest.newEn->enemyChart[nest.scpType], 							{nest.script}, nest.scpLen);
+	//					}
+	//					txtIns(getSCP(lev, nestSet.scene, nestSet.fileName), nest.newEn->name, {nest.type},
+	//						nest.oldEn->name.length());
+	//					if (nest.chainAdd > -1) {
+	//						std::vector<Playable*>& spTemp = lev->enemies.specialscp[nest.chainAdd].spEnemyTypes;
+	//						if (std::find(spTemp.begin(), spTemp.end(), nest.newEn) == spTemp.end()) {
+	//							spTemp.push_back(nest.newEn);
+	//						}
+	//					}
+	//				}
+	//			}
+	//			for (SpecialScp& sp : lev->enemies.specialscp) {
+	//                std::cout << '\t' << sp.fileName << std::endl;
+	//				for (Enemy& spEn : sp.specialEnemies) {
+	//
+	//					hexWrite(getAI2(lev, sp.scene), spEn.newEn->name, spEn.address);
+	//				}
+	//				//if (sp.redirect) {
+	//				//fixScript(sp.oldFunName, sp.spEnemyTypes, sp.attackPattern, sp.extraConditions,
+	//				//sp.lnCol, getSCP(lev, sp.scene, sp.fileName));
+	//				/*} else */
+	//				for (DoubleNestedEnemy& dne : sp.dNestEn) {
+	//					if (sp.useAltScript && SpecialScripts.contains(dne.newEn)) {
+	//						//std::cout << dne.type.ln << ',' << dne.type.col << ' ' << dne.newEn->name << ' ' <<
+	//						//dne.fileName
+	//						//		  << ' ' << dne.script.ln << ',' << dne.script.col << ' ' << dne.oldEn <<
+	//std::endl; 						txtIns(getSCP(lev, sp.scene, dne.fileName), SpecialScripts[dne.newEn],
+	//{dne.script}, 							dne.fileName.length());
+	//					}
+	//					txtIns(getSCP(lev, sp.scene, dne.fileName), dne.newEn->name, {dne.type},
+	//dne.oldEn->name.length()); 					if (std::find(sp.spEnemyTypes.begin(), sp.spEnemyTypes.end(),
+	//dne.newEn)
+	//== sp.spEnemyTypes.end()) { 						sp.spEnemyTypes.push_back(dne.newEn);
+	//					}
+	//				}
+	//
+	//				if (sp.newWay) {
+	//					//for (NestedEnemy nest : sp.nestedSource.nEns) {
+	//					//	//scpRep(sp.nestedSource.scene, sp.nestedSource.fileName,
+	//					//	//	nest.newEn->name, nest.oldEn->name.length(), nest.type);
+	//					//	if (nest.scpType != NONE) {
+	//					//		txtIns(getSCP(lev, sp.nestedSource.scene,
+	//					//			       sp.nestedSource.fileName),
+	//					//			nest.newEn->enemyChart[nest.scpType], {nest.script},
+	//					//			nest.scpLen);
+	//					//		//scpRep(sp.nestedSource.scene, sp.nestedSource.fileName,
+	//					//		//	nest.newEn->enemyChart[nest.scpType], nest.scpLen,
+	//					//		//	nest.script);
+	//					//	}
+	//					//	txtIns(getSCP(lev, sp.nestedSource.scene, sp.nestedSource.fileName),
+	//					//		nest.newEn->name, {nest.type}, nest.oldEn->name.length());
+	//					//
+	//					//	if (nest.chainAdd > -1) {
+	//					//		lev->specialscp[nest.chainAdd].spEnemyTypes.push_back(
+	//					//			nest.newEn);
+	//					//	}
+	//					//}
+	//
+	//					std::string tf = getSCP(lev, sp.scene, sp.fileName);
+	//
+	//					for (int j = sp.overwriters.size() - 1; j >= 0; j--) {
+	//#define overwrite sp.overwriters[j]
+	//						std::string redirect;
+	//						std::string ending;
+	//						for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
+	//							if (!(sp.useAltScript && !SpecialScripts.contains(sp.spEnemyTypes[i]))) {
+	//								if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+	//									redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " +
+	//												overwrite.oldFunName + std::to_string(i) + "\n";
+	//
+	//									ending += "state " + overwrite.oldFunName + std::to_string(i) + " {\n";
+	//									ending += "\tReferenceScript {\n"
+	//											  "\t\tScript=";
+	//
+	//									ending += SpecialScripts[sp.spEnemyTypes[i]];
+	//
+	//									ending += "\n\t\tSource=Global\n"
+	//											  "\t\tReturnState=" +
+	//											  overwrite.oldFunName + std::to_string(i) +
+	//											  "\n"
+	//											  "\t\tConditions {\n"
+	//											  "\t\t}\n"
+	//											  "\t}\n";
+	//									ending += "\tConditions {\n"
+	//											  "\t\t" +
+	//											  //spEnemyTypes[i]->conditions + "\n\t\t" +
+	//											  overwrite.extraConditions +
+	//											  "\n\t}\n"
+	//											  "\tActions {\n"
+	//											  "\t\t" +
+	//											  overwrite.extraActions +
+	//											  //sp.spEnemyTypes[i]->nAttackInfo.actions +
+	//											  "\n\t}\n"
+	//											  "}\n";
+	//								}
+	//							}
+	//						}
+	//						txtIns(tf, redirect, {{overwrite.ln, 1}}, 0);
+	//						appendFile(tf, ending);
+	//					}
+	//
+	//				} else {
+	//					redirrector(lev, sp);
+	//				}
+	//			}
+	//		}
+	//	}
+
+	std::cout << "Enemies patched";
 	if (panelOp) {
 		for (Level* lev : allLevels) {
 			for (PanelSet& panSet : lev->panels) {
@@ -2201,7 +2282,7 @@ bhm:
 		lineDeleter(getBasePath(Kashyyyk, 'B', "GIT"), {170});
 	}
 
-    std::cout << "Collectables patched\n";
+	std::cout << "Collectables patched\n";
 	if (extra) {
 #ifdef _DEBUG
 		logR("Starting extras");
@@ -2233,8 +2314,8 @@ bhm:
 		characterPointer(cantina1, 0xca35a);
 		characterPointer(cantina2, 0xca360);
 
-		std::remove("files/cantina.txt");
-		std::ofstream can("files/cantina.txt", std::ios_base::out);
+		std::remove("cantina.txt");
+		std::ofstream can("cantina.txt", std::ios_base::out);
 		can << cantina1->name << std::endl;
 		can << cantina2->name << std::endl;
 		can.close();
@@ -2667,7 +2748,7 @@ bhm:
 		scpRep('E', "LEVEL",
 			"\t\tif FreePlay == 0 goto "
 			"MakeSurePlayersNotDroids\n",
-			0, {4, 1});
+			0, {3, 1});
 
 		scpAppend('E', "LEVEL",
 			"state MakeSurePlayersNotDroids {\n"
@@ -3118,6 +3199,10 @@ outro:
 		delete p;
 	for (Level* lev : allLevels)
 		delete lev;
+	for (EnemyType* en : enemyTypes)
+		delete en;
+	for (EnemyType* en : walkerTypes)
+		delete en;
 	pls.clear();
 	allLevels.clear();
 

@@ -34,10 +34,10 @@ struct writeSet {
 
 struct writeSingle {
 	std::string newStr;
-	unsigned int len;
+	size_t len;
 	coord lnCol;
 
-	writeSingle(std::string myStr, unsigned int myLen, coord myLnCol);
+	writeSingle(std::string myStr, size_t myLen, coord myLnCol);
 	writeSingle(int chNum, coord myLnCol, std::vector<Playable*> Level::* chType = &Level::party);
 	writeSingle(int chNum, unsigned int line, std::vector<Playable*> Level::* chType = &Level::party);
 };
@@ -174,4 +174,11 @@ void appendFile( std::string file,  std::string appendix);
 
 void fixScript(std::string oldFunName,std::vector<Playable*>spEnemyTypes, std::string attackPattern, std::string extraConditions, coord lnCol, std::string tf);
 
-void redirrector(Level* lev, SpecialScp& sp);
+//void redirrector(Level* lev, SpecialScp& sp);
+
+
+std::array<unsigned int, 55> getLevPtr(unsigned int first); 
+std::string littleEnd(unsigned int num);
+std::string littleEndSigned(int num);
+std::string unlockAsm(unsigned int levelptr);
+

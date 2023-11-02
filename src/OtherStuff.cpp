@@ -204,20 +204,19 @@ std::string cdstr(coord cd) {
 //	os << "(" + std::to_string(lncol.ln) + ", " + std::to_string(lncol.col) + ")";
 //}
 
-writeSingle::writeSingle(std::string myStr, unsigned int myLen, coord myLnCol)
-    : newStr(myStr), len(myLen), lnCol(myLnCol) {}
+writeSingle::writeSingle(std::string myStr, size_t myLen, coord myLnCol) : newStr(myStr), len(myLen), lnCol(myLnCol) {}
 
 writeSingle::writeSingle(int chNum, coord myLnCol, std::vector<Playable*> Level::*chType)
-    : newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {}
+	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {}
 
 writeSingle::writeSingle(int chNum, unsigned int line, std::vector<Playable*> Level::*chType)
-    : newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol({line, 1}) {}
+	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol({line, 1}) {}
 
 writeSet::writeSet(std::string myStr, unsigned int myLen, std::vector<coord> myLnCol)
-    : newStr(myStr), len(myLen), lnCol(myLnCol) {}
+	: newStr(myStr), len(myLen), lnCol(myLnCol) {}
 
 writeSet::writeSet(int chNum, std::vector<coord> myLnCol, std::vector<Playable*> Level::*chType)
-    : newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol){};
+	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol){};
 
 ////void rgbTemp(std::string file, rgb color, int ID) {
 ////	int address = 0x31CC40 + (0x2c4 * ID) + 0x54;
@@ -367,8 +366,8 @@ void ai2Write(char scene, int chNum, std::initializer_list<int> address, std::ve
 }
 
 //0xca35a
-extern int addressPointer;
-extern int junkCharacters;
+extern size_t addressPointer;
+extern size_t junkCharacters;
 
 //int junkCharacters = 0x3f1b74;
 
@@ -563,8 +562,7 @@ void appendFile(std::string file, std::string appendix) {
 
 std::string getBasePath(Level* lev, char scene, std::string fileType) {
 	if (scene != '\0')
-		return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + "." +
-		       fileType;
+		return out + lev->path + lev->shortName + '_' + scene + '/' + lev->shortName + '_' + scene + "." + fileType;
 
 	return out + lev->path + lev->shortName + '/' + lev->shortName + "." + fileType;
 }
@@ -753,76 +751,116 @@ rgb::rgb() {
 	bF = (float)b / 255.0f;
 }
 
-//change to not always use nAttackInfo
-void fixScript(std::string oldFunName, std::vector<Playable*> spEnemyTypes, std::string attackPattern,
-	std::string extraConditions, coord lnCol, std::string tf) {
+////change to not always use nAttackInfo
+//void fixScript(std::string oldFunName, std::vector<Playable*> spEnemyTypes, std::string attackPattern,
+//	std::string extraConditions, coord lnCol, std::string tf) {
+//
+//	std::string redirect;
+//	std::string ending;
+//	for (int i = 0; i < spEnemyTypes.size(); i++) {
+//		if (spEnemyTypes[i]->nAttackInfo.actions != attackPattern) {
+//			redirect += "\t\tif iAm \"" + spEnemyTypes[i]->name + "\" == 1 goto " + oldFunName +
+//				    std::to_string(i) + "\n";
+//
+//			ending += "state " + oldFunName + std::to_string(i) + " {\n";
+//			if (SpecialScripts.contains(spEnemyTypes[i])) {
+//				ending += "\tReferenceScript {\n"
+//					  "\t\tScript=";
+//
+//				ending += SpecialScripts[spEnemyTypes[i]];
+//
+//				ending += "\n\t\tSource=Global\n"
+//					  "\t\tReturnState=" +
+//					  oldFunName + std::to_string(i) +
+//					  "\n"
+//					  "\t\tConditions {\n"
+//					  "\t\t}\n"
+//					  "\t}\n";
+//			}
+//			ending += "\tConditions {\n"
+//				  "\t\t" +
+//				  //spEnemyTypes[i]->conditions + "\n\t\t" +
+//				  extraConditions +
+//				  "\n\t}\n"
+//				  "\tActions {\n"
+//				  "\t\t" +
+//				  spEnemyTypes[i]->nAttackInfo.actions +
+//				  "\n\t}\n"
+//				  "}\n";
+//			std::string temp = std::vformat(
+//				spEnemyTypes[i]->nAttackInfo.appendix, std::make_format_args(i, extraConditions));
+//			appendFile(tf, temp);
+//		}
+//	}
+//
+//	txtIns(tf, redirect, {lnCol}, 0);
+//	appendFile(tf, ending);
+//}
 
-	std::string redirect;
-	std::string ending;
-	for (int i = 0; i < spEnemyTypes.size(); i++) {
-		if (spEnemyTypes[i]->nAttackInfo.actions != attackPattern) {
-			redirect += "\t\tif iAm \"" + spEnemyTypes[i]->name + "\" == 1 goto " + oldFunName +
-				    std::to_string(i) + "\n";
+//void redirrector(Level* lev, SpecialScp& sp) {
+//
+//	std::string tf = getSCP(lev, sp.scene, sp.fileName);
+//	//lineDeleter(tf, sp.linesToDelete);
+//	std::string redirect;
+//	std::string ending;
+//
+//	for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
+//		if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+//			redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " + sp.oldFunName +
+//				    std::to_string(i) + "\n";
+//			ending += std::vformat(sp.fun, std::make_format_args(i, SpecialScripts[sp.spEnemyTypes[i]]));
+//		}
+//	}
+//
+//	redirect += "\t\tif AlwaysTrue == 1 goto " + sp.oldFunName + "vanilla" + "\n";
+//	txtIns(tf, "vanilla", {sp.lnCol}, 0);
+//	appendFile(tf, "state " + sp.oldFunName +
+//			       " {\n"
+//			       "\tConditions {\n" +
+//			       redirect +
+//			       "\t}\n"
+//			       "\tActions {\n"
+//			       "\t}\n"
+//			       "}\n");
+//	appendFile(tf, ending);
+//}j
 
-			ending += "state " + oldFunName + std::to_string(i) + " {\n";
-			if (SpecialScripts.contains(spEnemyTypes[i])) {
-				ending += "\tReferenceScript {\n"
-					  "\t\tScript=";
-
-				ending += SpecialScripts[spEnemyTypes[i]];
-
-				ending += "\n\t\tSource=Global\n"
-					  "\t\tReturnState=" +
-					  oldFunName + std::to_string(i) +
-					  "\n"
-					  "\t\tConditions {\n"
-					  "\t\t}\n"
-					  "\t}\n";
-			}
-			ending += "\tConditions {\n"
-				  "\t\t" +
-				  //spEnemyTypes[i]->conditions + "\n\t\t" +
-				  extraConditions +
-				  "\n\t}\n"
-				  "\tActions {\n"
-				  "\t\t" +
-				  spEnemyTypes[i]->nAttackInfo.actions +
-				  "\n\t}\n"
-				  "}\n";
-			std::string temp = std::vformat(
-				spEnemyTypes[i]->nAttackInfo.appendix, std::make_format_args(i, extraConditions));
-			appendFile(tf, temp);
-		}
-	}
-
-	txtIns(tf, redirect, {lnCol}, 0);
-	appendFile(tf, ending);
+std::array<unsigned int, 55> getLevPtr(unsigned int first) {
+  std::array<unsigned int, 55> out;
+  for (unsigned int i = 0; i < 55; i++) {
+    out[i] = first + 0x4 * i;
+  }
+  return out;
 }
 
-void redirrector(Level* lev, SpecialScp& sp) {
+std::string littleEnd(unsigned int num) {
+	unsigned int swapped = (unsigned int)_byteswap_ulong(num);
+	std::ostringstream oss;
+	oss << std::hex << swapped;
+	std::string output = oss.str();
+	output = output.substr(0, output.length() - 2);
+	while (output.length() < 6)
+		output = "0" + output;
+	return output;
+}
 
-	std::string tf = getSCP(lev, sp.scene, sp.fileName);
-	//lineDeleter(tf, sp.linesToDelete);
-	std::string redirect;
-	std::string ending;
+std::string littleEndSigned(int num /*, int numBytes*/) {
+	int swapped = (unsigned int)_byteswap_ulong(num);
+	std::ostringstream oss;
+	oss << std::hex << swapped;
+	std::string output = oss.str();
+	//while (out.length() < numBytes * 2)
+	//out += "00";
+	//output = output.substr(0, output.length() - 2);
+	return output;
+}
 
-	for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-		if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
-			redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " + sp.oldFunName +
-				    std::to_string(i) + "\n";
-			ending += std::vformat(sp.fun, std::make_format_args(i, SpecialScripts[sp.spEnemyTypes[i]]));
-		}
-	}
-
-	redirect += "\t\tif AlwaysTrue == 1 goto " + sp.oldFunName + "vanilla" + "\n";
-	txtIns(tf, "vanilla", {sp.lnCol}, 0);
-	appendFile(tf, "state " + sp.oldFunName +
-			       " {\n"
-			       "\tConditions {\n" +
-			       redirect +
-			       "\t}\n"
-			       "\tActions {\n"
-			       "\t}\n"
-			       "}\n");
-	appendFile(tf, ending);
+std::string unlockAsm(unsigned int levelptr) {
+	return "a1" + littleEnd(levelptr) +
+		   "00"
+		   "3bc3"
+		   "740f"
+		   "0fb6407c"
+		   "8d1440"
+		   "c6049514e1860001";
 }

@@ -13,6 +13,7 @@ extern std::string out;
 extern std::string vanillaDirectory;
 extern Level* currentLev;
 extern std::vector<Level*> allLevels;
+extern bool unlockAll;
 
 void speedUp(int episode, std::string file, std::initializer_list<unsigned int> ln = {}, std::string goLev = "") {
 	std::string eps[] = {"EPISODEI", "EPISODEII", "EPISODEIII", "EPISODEIV", "EPISODEV", "EPISODEVI"};
@@ -22,7 +23,7 @@ void speedUp(int episode, std::string file, std::initializer_list<unsigned int> 
 	appendFile(realFile, "fpsec 500000");
 	if (ln.size() != 0) lineDeleter(realFile, ln);
 	if (goLev != "") appendFile(realFile, "goto_level \"" + goLev + "\"");
-    std::cout << "Sped up " << realFile << std::endl;
+	std::cout << "Sped up " << realFile << std::endl;
 }
 
 void fileGen() {
@@ -34,11 +35,11 @@ void fileGen() {
 
 	std::filesystem::remove_all(out);
 	std::filesystem::copy(vanillaDirectory, out,
-		std::filesystem::copy_options::recursive /*| std::filesystem::copy_options::overwrite_existing*/);
+		std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 
 	//std::string cmd = ("files\\quickbms.exe -F \"*.DAT\" -o files\\ttgames.bms " + out + " " + out);
 	//system(cmd.c_str());
-        
+	std::cout << "Done copying." << std::endl;
 	std::remove((out + "EPISODE_I.DAT").c_str());
 	std::remove((out + "EPISODE_II.DAT").c_str());
 	std::remove((out + "EPISODE_III.DAT").c_str());
@@ -53,9 +54,10 @@ void fileGen() {
 	for (Level* lev : allLevels) {
 		for (char scene = 'A'; scene < 'H'; scene++)
 			std::remove((out + lev->path + lev->shortName + '_' + scene + "/AI/AI.PAK").c_str());
-        std::cout << lev->name << " AI2s deleted." << std::endl;
+		std::cout << lev->name << " AI2s deleted." << std::endl;
 	}
 
+	std::remove((out + "\\LEVELS\\MAP\\MAP\\AI\\AI.PAK").c_str());
 	//system(("del /S " + LEV + "\\*.PAK").c_str());
 	//system(("del " + out + "\\SCRIPTS\\AI.PAK").c_str());
 	//system(("del " + out + "\\ALLTXT.PAK").c_str());
@@ -399,7 +401,7 @@ void fileGen() {
 	txtIns(ANH + "DEATHSTARRESCUE/DEATHSTARRESCUE_C/DEATHSTARRESCUE_C.GIT", "newlevel=deathstarrescue_status",
 		{{2525, 18}}, 30);
 
-	speedUp(4, "DEATHSTARESCAPE_INTRO", {1, 8});
+	speedUp(4, "DEATHSTARESCAPE_INTRO", {8});
 	txtIns(ANH + "DEATHSTARESCAPE/DEATHSTARESCAPE_C/DEATHSTARESCAPE_C.TXT", "status", {{154, 25}}, 5);
 	txtIns(ANH + "DEATHSTARESCAPE/DEATHSTARESCAPE_C/DEATHSTARESCAPE_C.TXT", "status", {{197, 25}}, 5);
 
@@ -414,7 +416,7 @@ void fileGen() {
 
 	speedUp(5, "HOTHBATTLE_INTRO4");
 
-	speedUp(5, "HOTHESCAPE_INTRO", {1, 2});
+	speedUp(5, "HOTHESCAPE_INTRO", {1});
 	txtIns(EMP + "HOTHESCAPE/HOTHESCAPE_C/HOTHESCAPE_C.TXT", "status", {{162, 20}}, 6);
 
 	speedUp(5, "ASTEROIDCHASE_INTRO", {1});
@@ -430,13 +432,13 @@ void fileGen() {
 
 	speedUp(5, "CLOUDCITYTRAP_INTRO", {1});
 
-	speedUp(5, "CLOUDCITYESCAPE_INTRO2", {1});
+	speedUp(5, "CLOUDCITYESCAPE_INTRO2", {});
 	txtIns(EMP + "CLOUDCITYESCAPE/CLOUDCITYESCAPE_B/CLOUDCITYESCAPE_B.TXT", "//", {36, 37, 38});
 	txtIns(EMP + "CLOUDCITYESCAPE/CLOUDCITYESCAPE_C/CLOUDCITYESCAPE_C.TXT", "status", {{132, 25}}, 5);
 
 	//txtIns(EMP + "ENDING/EPISODE5ENDING_A/EPISODE5ENDING_A.TXT", { 2 });
 
-	speedUp(6, "JABBASPALACE_INTRO2", {1});
+	speedUp(6, "JABBASPALACE_INTRO2", {});
 	txtIns(JDI + "JABBASPALACE/JABBASPALACE_A/JABBASPALACE_A.TXT", "//", {43, 44, 45});
 	txtIns(JDI + "JABBASPALACE/JABBASPALACE_D/JABBASPALACE_D.GIT", "e", {{1413, 36}}, 7);
 
@@ -452,19 +454,43 @@ void fileGen() {
 
 	speedUp(2, "KAMINO_INTRO1", {1, 8, 12}, "endorbattle_a");
 	lineDeleter(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", {2});
-	appendFile(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", "cutscene \"episodeii\\kamino_intro1\"");
+	appendFile(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", "cutscene \"episodeii\\ep2_kamino_intro1\"");
 	txtIns(JDI + "ENDORBATTLE/ENDORBATTLE_D/ENDORBATTLE_D.GIT", "status", {{3218, 35}}, 5);
 
 	speedUp(2, "FACTORY_INTRO2", {1, 8}, "emperorfight_a");
 	lineDeleter(JDI + "EMPERORFIGHT/EMPERORFIGHT_INTRO/EMPERORFIGHT_INTRO.TXT", {2});
 	appendFile(
-		JDI + "EMPERORFIGHT/EMPERORFIGHT_INTRO/EMPERORFIGHT_INTRO.TXT", "cutscene \"episodeii\\factory_intro2\"");
+		JDI + "EMPERORFIGHT/EMPERORFIGHT_INTRO/EMPERORFIGHT_INTRO.TXT", "cutscene \"episodeii\\ep2_factory_intro2\"");
 	//txtIns(JDI + "EMPERORFIGHT/EMPERORFIGHT_A/EMPERORFIGHT_A.TXT", { 28,
 	//29, 30 });
 
 	speedUp(6, "DEATHSTAR2BATTLE_INTRO2");
+	lineDeleter(JDI + "DEATHSTAR2BATTLE/DEATHSTAR2BATTLE_INTRO/DEATHSTAR2BATTLE_INTRO.TXT", {2});
 	txtIns(JDI + "DEATHSTAR2BATTLE/DEATHSTAR2BATTLE_A/DEATHSTAR2BATTLE_A.GIT", "b", {{426, 40}}, 6);
 	txtIns(JDI + "DEATHSTAR2BATTLE/DEATHSTAR2BATTLE_G/DEATHSTAR2BATTLE_G.TXT", "status", {{72, 26}}, 5);
 
 	//system("cls");
+
+	if (unlockAll) {
+		const unsigned int jumpFrom = 0x42ad25;
+		const unsigned int jumpTo = 0x785EA0;
+		//binaryWrite(EXE, jmp(jumpTo), jumpFrom - 0x400000);
+		std::string temp = "E8" + littleEndSigned(jumpTo - jumpFrom - 5); //call
+		std::cout << temp << std::endl;
+		binaryWrite(EXE, temp, jumpFrom - 0x400000);
+		std::array<unsigned int, 55> levPtrs = getLevPtr(0x87af70);
+		std::string func; //make this a function
+		func += "55"      //push ebp
+				"89e5"    //mov ebp, esp
+				"33db";   //xor ebx, ebx
+		for (unsigned int i : levPtrs) {
+			func += unlockAsm(i);
+		}
+		func += "a164b08700" //code I hade to erase to make room for call
+				"89ec"       //mov esp, ebp
+				"5d"         //pop ebp
+				"c3";        //ret
+		std::cout << func << std::endl;
+		binaryWrite(EXE, func, jumpTo - 0x400000);
+	}
 }

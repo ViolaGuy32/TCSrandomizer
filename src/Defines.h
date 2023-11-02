@@ -110,8 +110,10 @@ struct coord {
 };
 
 /*
-
+story characters interfere with bhm
 specialscp additional actions
+
+finish story sometimes puts you buy the shop
 
 fix geonosian rename
 
@@ -161,6 +163,7 @@ check geonosians in Jedi Battle
 	remove KeepWeaponOut
 	last room - super jump
 	backflip 50hz for no grapple
+	jump boost crane room
 
 4-2:
 dropout intro
@@ -172,7 +175,6 @@ second to last room ledge trooper won't attack
 
 
 	4-3:
-    intro not skipped
     A ledge fails spawns (super battle droid blocks it?)
 	cleaClearTakeOverTarget?
     B deathstartrooper spawnattack t-poses
@@ -183,9 +185,14 @@ hangerattack is broken
 
 	4-4:
 	Ben AI when not Jedi
+	tie fighter minigame has 4 characters
+
+	5-1:
+	fix scaling
 
 	5-5:
 	dv1 and dv3 ai
+	dv1 casual
 
 	5-6:
 	sometimes puts you by shop?
@@ -200,7 +207,6 @@ hangerattack is broken
 	fix special character for padme
 	fix name length limit for scp
 
-	check playable attributes in log
 
 	allow custom seeds
 
