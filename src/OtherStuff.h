@@ -172,7 +172,7 @@ void baseFile(char scene, std::string fileType, int chNum, coord lnCol,
 
 void appendFile( std::string file,  std::string appendix);
 
-void fixScript(std::string oldFunName,std::vector<Playable*>spEnemyTypes, std::string attackPattern, std::string extraConditions, coord lnCol, std::string tf);
+//void fixScript(std::string oldFunName,std::vector<Playable*>spEnemyTypes, std::string attackPattern, std::string extraConditions, coord lnCol, std::string tf);
 
 //void redirrector(Level* lev, SpecialScp& sp);
 
@@ -181,4 +181,6 @@ std::array<unsigned int, 55> getLevPtr(unsigned int first);
 std::string littleEnd(unsigned int num);
 std::string littleEndSigned(int num);
 std::string unlockAsm(unsigned int levelptr);
+
+void regexFile(std::string file, std::string pattern, std::string replacement);
 

@@ -826,11 +826,11 @@ rgb::rgb() {
 //}j
 
 std::array<unsigned int, 55> getLevPtr(unsigned int first) {
-  std::array<unsigned int, 55> out;
-  for (unsigned int i = 0; i < 55; i++) {
-    out[i] = first + 0x4 * i;
-  }
-  return out;
+	std::array<unsigned int, 55> out;
+	for (unsigned int i = 0; i < 55; i++) {
+		out[i] = first + 0x4 * i;
+	}
+	return out;
 }
 
 std::string littleEnd(unsigned int num) {
@@ -863,4 +863,16 @@ std::string unlockAsm(unsigned int levelptr) {
 		   "0fb6407c"
 		   "8d1440"
 		   "c6049514e1860001";
+}
+
+void regexFile(std::string file, std::string pattern, std::string replacement) {
+	std::fstream filestr(file, std::fstream::in);
+	std::string contents;
+	std::getline(filestr, contents, '\0');
+	std::regex reg(pattern, std::regex_constants::icase);
+
+	std::string out = std::regex_replace(contents, reg, replacement);
+	std::cout << out << std::endl;
+	//filestr << out;
+	filestr.close();
 }

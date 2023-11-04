@@ -320,6 +320,7 @@ size_t addressPointer;
 size_t junkCharacters;
 
 void Randomize() {
+
 	std::cout << "Randomizing\n";
 	addressPointer = 0x2B0;
 	junkCharacters = 0x3f1b6c;
