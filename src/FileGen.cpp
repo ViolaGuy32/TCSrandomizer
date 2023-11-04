@@ -281,15 +281,17 @@ void fileGen() {
 	txtIns(LEV + "ANAKINSFLIGHT/ANAKINSFLIGHT_C/ANAKINSFLIGHT_C.GIT", "status", {{1602, 41}}, 6);
 
 	speedUp(2, "PURSUIT_INTRO2", {1});
+	lineDeleter(CLN + "PURSUIT/PURSUIT_INTRO/PURSUIR_INTRO.TXT", {1});
 	txtIns(CLN + "PURSUIT/PURSUIT_B/AI/LEVEL.SCP", "alwaystrue == 1", {{5, 6}}, 41);
 	txtIns(CLN + "PURSUIT/PURSUIT_B/AI/LEVEL.SCP", "//", {6});
+	txtIns(CLN + "PURSUIT/PURSUIT_B/PURSUIT_B.TXT", "//", {1});
 	txtIns(CLN + "PURSUIT/PURSUIT_D/PURSUIT_D.TXT", "//", {21});
 	txtIns(CLN + "PURSUIT/PURSUIT_D/PURSUIT_D.GIT", "status", {{1538, 35}}, 5);
 	txtIns(CLN + "PURSUIT/PURSUIT_D/AI/LEVEL.SCP", "alwaystrue == 1", {{5, 6}}, 41);
 	txtIns(CLN + "PURSUIT/PURSUIT_D/AI/LEVEL.SCP", "//", {6});
 	txtIns(CLN + "PURSUIT/PURSUIT_E/AI/AI_ZAM.SCP", "status", {{67, 35}}, 5);
 
-	speedUp(2, "KAMINO_INTRO_2", {1});
+	speedUp(2, "KAMINO_INTRO2", {1});
 	speedUp(2, "KAMINO_DISCOVERJANGO", {8});
 	txtIns(CLN + "KAMINO/KAMINO_A/KAMINO_A.TXT", "//", {1, 408});
 	txtIns(CLN + "KAMINO/KAMINO_A/AI/KAMINO.SCP", "//", {69});
@@ -348,7 +350,7 @@ void fileGen() {
 	txtIns(STH + "CRUISER/CRUISER_F/CRUISER_F.GIT", "status", {{57, 35}}, 6);
 
 	speedUp(3, "GENERALGRIEVOUS_INTRO2", {1});
-	txtIns(STH + "GRIEVOUS/GRIEVOUS_A/GRIEVOUS_A.TXT", "//", {2});
+	txtIns(STH + "GRIEVOUS/GRIEVOUS_A/GRIEVOUS_A.TXT", "//", {1});
 
 	speedUp(3, "KASHYYYK_INTRO2", {1});
 	txtIns(STH + "KASHYYYK/KASHYYYK_A/KASHYYYK_A.TXT", "//", {1, 3});
@@ -361,9 +363,9 @@ void fileGen() {
 	txtIns(STH + "TEMPLE/TEMPLE_C/TEMPLE_C.TXT", "//", {27});
 	txtIns(STH + "TEMPLE/TEMPLE_C/TEMPLE_C.GIT", "newlevel=temple_status", {{905, 18}}, 32);
 
-	speedUp(3, "DARTHVADER_INTRO2");
+	speedUp(3, "DARTHVADER_INTRO1", {6, 7}, "vader_a");
 	txtIns(STH + "VADER/VADER_B/VADER_B.TXT", "//", {4, 5});
-	txtIns(STH + "VADER/VADER_INTRO/VADER_INTRO.TXT", "//", {1});
+	txtIns(STH + "VADER/VADER_INTRO/VADER_INTRO.TXT", "//", {2});
 	txtIns(STH + "VADER/VADER_B/AI/LEVEL1.SCP", "//", {19, 22});
 	txtIns(STH + "VADER/VADER_B/AI/LEVEL1.SCP", "alwaystrue == 1", {{18, 6}}, 44);
 	txtIns(STH + "VADER/VADER_C/VADER_C.TXT", "//", {4, 5});
@@ -454,7 +456,8 @@ void fileGen() {
 
 	speedUp(2, "KAMINO_INTRO1", {1, 8, 12}, "endorbattle_a");
 	lineDeleter(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", {2});
-	appendFile(JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", "cutscene \"episodeii\\ep2_kamino_intro1\"");
+	appendFile(
+		JDI + "ENDORBATTLE/ENDORBATTLE_INTRO/ENDORBATTLE_INTRO.TXT", "cutscene \"episodeii\\ep2_kamino_intro1\"");
 	txtIns(JDI + "ENDORBATTLE/ENDORBATTLE_D/ENDORBATTLE_D.GIT", "status", {{3218, 35}}, 5);
 
 	speedUp(2, "FACTORY_INTRO2", {1, 8}, "emperorfight_a");

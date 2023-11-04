@@ -632,7 +632,7 @@ void makeLevels() {
 
 				{battledroid_commander_en, "LEVEL", {52, 50}},
 				{destroyer_en, "LEVEL", {83, 49}},
-				{destroyer_en, "LEVEL", {74, 50}},
+				{destroyer_en, "LEVEL", {84, 50}},
 			}},
 	};
 

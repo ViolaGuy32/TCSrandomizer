@@ -541,7 +541,7 @@ factory:
 	if (!atrb(Attack)) goto factory;
 
 	add(2); //r2
-	if (!panelOr(1, 1, Fly | Jump)) goto factory;
+	if (!panelAnd(1, 1, Fly | Jump)) goto factory;
 
 	if (logicType == casual) {
 		if (!atrb(Jedi) && !atrb(ExtraHighJump)) goto factory;
@@ -568,7 +568,6 @@ factory2:
 	if (logicType == casual) {
 		if (panelAnd(3, 1, DoubleJump)) goto jedibattle;
 		if (panelAnd(3, 1, Fly)) goto jedibattle;
-
 		if (panelAnd(3, 0, DoubleJump) && panel(3, 1)) goto jedibattle;
 		if (panelAnd(3, 0, Fly) && panel(3, 1)) goto jedibattle;
 
@@ -644,7 +643,7 @@ chancellor:
 	if (logicType == casual && GetSlowest() < 1.0) goto chancellor;
 
 	bool gasOff = false;
-	if (panelOr(3, 0, Gas | Fly)) gasOff = true;
+	if (panelAnd(3, 0, Gas | Fly)) gasOff = true;
 	if (logicType != casual && panelOr(3, 0, DoubleJump | Dive | Flop)) gasOff = true;
 	if (gasOff && panel(3, 1)) goto grievous;
 	if (panelAnd(3, 1, Gas | Fly)) goto grievous;
