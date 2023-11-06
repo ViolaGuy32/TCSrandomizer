@@ -214,6 +214,7 @@ void mix(Level* lev) {
 		for (EnemySet& enSet : lev->enemies) {
 			for (Enemy& en : enSet.enemy) {
 				if (en.category == normal) en.newType = enemyTypes[enemyDist(*randoPTR)];
+				//if (en.category == normal) en.newType = gamorreanguard_en;
 				else if (en.category == flyer) en.newType = flyerTypes[flyerDist(*randoPTR)];
 				else if (en.category == walker) en.newType = walkerTypes[walkerDist(*randoPTR)];
 			}

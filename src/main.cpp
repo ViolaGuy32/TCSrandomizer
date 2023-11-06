@@ -15,7 +15,7 @@ bool panelOp = true;
 bool hatOp = true;
 bool colorOp = true;
 bool enemyOp = true;
-bool unlockAll = true;
+bool unlockAll = false;
 //bool advanceMus;
 LogicType logicType = casual;
 //std::unique_ptr<std::ofstream> loggingIt;

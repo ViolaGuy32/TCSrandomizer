@@ -192,6 +192,7 @@ void getfile(std::string file, std::vector<std::string>& contents) {
 	while (getline(reader, s)) {
 		contents.push_back(s);
 	}
+	reader.close();
 	return;
 }
 
@@ -206,17 +207,17 @@ std::string cdstr(coord cd) {
 
 writeSingle::writeSingle(std::string myStr, size_t myLen, coord myLnCol) : newStr(myStr), len(myLen), lnCol(myLnCol) {}
 
-writeSingle::writeSingle(int chNum, coord myLnCol, std::vector<Playable*> Level::*chType)
+writeSingle::writeSingle(int chNum, coord myLnCol, std::vector<Playable*> Level::* chType)
 	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {}
 
-writeSingle::writeSingle(int chNum, unsigned int line, std::vector<Playable*> Level::*chType)
-	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol({line, 1}) {}
+writeSingle::writeSingle(int chNum, unsigned int line, std::vector<Playable*> Level::* chType)
+	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol({ line, 1 }) {}
 
 writeSet::writeSet(std::string myStr, unsigned int myLen, std::vector<coord> myLnCol)
 	: newStr(myStr), len(myLen), lnCol(myLnCol) {}
 
-writeSet::writeSet(int chNum, std::vector<coord> myLnCol, std::vector<Playable*> Level::*chType)
-	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol){};
+writeSet::writeSet(int chNum, std::vector<coord> myLnCol, std::vector<Playable*> Level::* chType)
+	: newStr(getName(chNum, chType)), len(getVanilla(chNum, chType).length()), lnCol(myLnCol) {};
 
 ////void rgbTemp(std::string file, rgb color, int ID) {
 ////	int address = 0x31CC40 + (0x2c4 * ID) + 0x54;
@@ -344,6 +345,7 @@ int readEXE(int address) {
 	int val = 0;
 	is.read((char*)&val, sizeof(val));
 	//is.get(val, 4);
+	is.close();
 	return val;
 }
 
@@ -360,7 +362,7 @@ void ai2Write(char scene, std::string writ, std::initializer_list<int> address) 
 		hexWrite(getAI2(currentLev, scene), writ, a);
 }
 
-void ai2Write(char scene, int chNum, std::initializer_list<int> address, std::vector<Playable*> Level::*chType) {
+void ai2Write(char scene, int chNum, std::initializer_list<int> address, std::vector<Playable*> Level::* chType) {
 	for (int a : address)
 		hexWrite(getAI2(currentLev, scene), getName(chNum, chType), a);
 }
@@ -375,7 +377,8 @@ void characterPointer(Playable* play, int address) {
 	if (play->address != 0x0) {
 		numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), address);
 		//numWrite(EXE, play->address + 0x4, address);
-	} else {
+	}
+	else {
 		hexWrite(EXE, play->name, addressPointer);
 		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
 		play->address = junkCharacters + 0x400000 - 0x4;
@@ -394,7 +397,8 @@ void multiPointer(Playable* play, std::vector<int> address) {
 	if (play->address != 0x0) {
 		for (int ad : address)
 			numWrite(EXE, readEXE(play->address - 0x400000 + 0x4), ad);
-	} else {
+	}
+	else {
 		hexWrite(EXE, play->name, addressPointer);
 		numWrite(EXE, addressPointer + 0x400000, junkCharacters - 0x4);
 		play->address = junkCharacters + 0x400000 - 0x4;
@@ -533,7 +537,7 @@ void lineDel(std::vector<unsigned int> lines, std::vector<std::string>& contents
 	}
 }
 
-void fileDeleter(char scene, int characterNum, std::vector<Playable*> Level::*chType) {
+void fileDeleter(char scene, int characterNum, std::vector<Playable*> Level::* chType) {
 	//deletes file
 
 	std::remove(getSCP(currentLev, scene, getVanilla(characterNum, chType)).c_str());
@@ -593,16 +597,17 @@ void renamer(std::string oldName, std::string newName) {
 	}
 }
 
-std::string getName(int characterNum, std::vector<Playable*> Level::*chType) {
+std::string getName(int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character
 	return (*currentLev.*chType)[characterNum]->name;
 }
 
-std::string getVanilla(int characterNum, std::vector<Playable*> Level::*chType) {
+std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType) {
 	//gets name of character to be replaced
 	if (chType == &Level::bonusCharacters) {
 		return currentLev->vanillaBonusCharacters[characterNum]->name;
-	} else {
+	}
+	else {
 		return currentLev->vanillaParty[characterNum]->name;
 	}
 }
@@ -626,7 +631,7 @@ void mainTxtIns(std::string txt, int len, coord lnCol) {
 	writer(oneWrite, getMainTxt(currentLev), writeSingle(txt, len, lnCol));
 }
 
-void scpIns(char scene, std::string script, int chNum, coord lnCol, std::vector<Playable*> Level::*chType) {
+void scpIns(char scene, std::string script, int chNum, coord lnCol, std::vector<Playable*> Level::* chType) {
 	//replaces string in scp file
 	writer(oneWrite, getSCP(currentLev, scene, script), writeSingle(chNum, lnCol, chType));
 };
@@ -666,7 +671,7 @@ void batchAnywhere(std::string file, std::vector<writeSet> writers) {
 	writer(manyWrite, file, writers);
 };
 
-void scpName(char scene, int characterNum, std::vector<Playable*> Level::*chType) {
+void scpName(char scene, int characterNum, std::vector<Playable*> Level::* chType) {
 	//renames scp file
 	//std::string temp = getSCP(currentLev, scene, getVanilla(characterNum, chType));
 	//std::transform(temp.begin(), temp.end(), temp.begin(), ::toupper);
@@ -686,9 +691,9 @@ void scriptTxtAppend(char scene, std::string appendix) {
 	writer(appender, getScriptTxt(currentLev, scene), appendix);
 }
 
-void scriptTxt(char scene, int characterNum, unsigned int line, std::vector<Playable*> Level::*chType) {
+void scriptTxt(char scene, int characterNum, unsigned int line, std::vector<Playable*> Level::* chType) {
 	//updates script.txt
-	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(characterNum, {line, 1}, chType));
+	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(characterNum, { line, 1 }, chType));
 
 	scpName(scene, characterNum);
 };
@@ -702,7 +707,7 @@ void multiScriptTxt(char scene, std::vector<twoNum> pairs) {
 	//}
 	std::vector<writeSingle> writ;
 	for (twoNum p : pairs)
-		writ.push_back({p.chNum, p.line});
+		writ.push_back({ p.chNum, p.line });
 
 	writer(multiWrite, getScriptTxt(currentLev, scene), writ);
 
@@ -713,7 +718,7 @@ void multiScriptTxt(char scene, std::vector<twoNum> pairs) {
 
 void scriptTxtRep(char scene, std::string newStr, std::string oldStr, unsigned int line) {
 	//replaces text in script.txt
-	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(newStr, oldStr.length(), {line, 1}));
+	writer(oneWrite, getScriptTxt(currentLev, scene), writeSingle(newStr, oldStr.length(), { line, 1 }));
 	renamer(getSCP(currentLev, scene, oldStr), getSCP(currentLev, scene, newStr));
 };
 
@@ -737,8 +742,8 @@ void scpDeleter(char scene, std::string script) {
 	std::remove(getSCP(currentLev, scene, script).c_str());
 }
 
-void baseFile(char scene, std::string fileType, int chNum, coord lnCol, std::vector<Playable*> Level::*chType) {
-	writer(oneWrite, getBasePath(currentLev, scene, fileType), {chNum, lnCol, chType});
+void baseFile(char scene, std::string fileType, int chNum, coord lnCol, std::vector<Playable*> Level::* chType) {
+	writer(oneWrite, getBasePath(currentLev, scene, fileType), { chNum, lnCol, chType });
 }
 
 rgb::rgb() {
@@ -857,22 +862,92 @@ std::string littleEndSigned(int num /*, int numBytes*/) {
 
 std::string unlockAsm(unsigned int levelptr) {
 	return "a1" + littleEnd(levelptr) +
-		   "00"
-		   "3bc3"
-		   "740f"
-		   "0fb6407c"
-		   "8d1440"
-		   "c6049514e1860001";
+		"00"
+		"3bc3"
+		"740f"
+		"0fb6407c"
+		"8d1440"
+		"c6049514e1860001";
 }
 
-void regexFile(std::string file, std::string pattern, std::string replacement) {
-	std::fstream filestr(file, std::fstream::in);
-	std::string contents;
-	std::getline(filestr, contents, '\0');
-	std::regex reg(pattern, std::regex_constants::icase);
+void regexFile(std::string file, std::regex reg, std::string replacement) {
+	std::fstream filestr(file, std::ios::in | std::ios::out);
+	//std::string contents;
+	std::vector<std::string> contents;
+	getfile(file, contents);
+	//std::vector<std::string> parts;
 
-	std::string out = std::regex_replace(contents, reg, replacement);
-	std::cout << out << std::endl;
-	//filestr << out;
+	bool inState = false;
+	std::string current;
+	std::string wholePart;
+	int counter = 0;
+	for (std::string line : contents) {
+		wholePart += line + '\n';
+		current = line + '\n';
+		if (current.substr(0, 5) == "state") {
+			inState = true;
+			counter = 0;
+		}
+		if (inState) {
+			if (current.contains("{")) counter++;
+			else if (current.contains("}")) counter--;
+			if (counter == 0) {
+				//parts.push_back(wholePart);
+				//std::cout << "------NEW-PART------" << std::endl;
+				//std::cout << wholePart << std::endl;
+				std::string temp;
+
+				// >:(
+				if (wholePart.contains("EngageOpponent")) temp = std::regex_replace(wholePart, reg, replacement);
+				else temp = wholePart;
+
+				//std::cout << "------REPLACEMENT------" << std::endl;
+				//std::cout << temp << std::endl;
+				filestr << temp;
+
+				wholePart = "";
+			}
+		}
+	}
+
 	filestr.close();
 }
+
+void regexTest(std::string file, std::string pattern, std::string replacement) {
+	std::fstream filestr(file, std::fstream::in, std::fstream::out);
+	//std::string contents;
+	std::vector<std::string> contents;
+	getfile(file, contents);
+	std::vector<std::string> parts;
+
+	bool inState = false;
+	std::string current;
+	int counter = 0;
+	for (std::string line : contents) {
+		current += line + '\n';
+		if (current.substr(0, 5) == "state") {
+			inState = true;
+			counter = 0;
+		}
+		if (inState) {
+			if (current.contains("{")) counter++;
+			else if (current.contains("}")) counter--;
+			if (counter == 0) {
+				parts.push_back(current);
+				current = "";
+			}
+		}
+	}
+
+	//std::getline(filestr, contents, '\0');
+
+	std::regex reg(pattern, std::regex_constants::icase);
+	for (std::string part : parts) {
+		std::cout << std::regex_replace(part, reg, replacement) << "\n";
+		//filestr << out;
+	}
+
+
+	filestr.close();
+}
+
