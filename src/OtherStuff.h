@@ -52,6 +52,8 @@ struct writeSingle {
 //void manyWrite( std::initializer_list<writeSet>& stuff, std::vector<std::string>& contents);
 
 
+bool CIcompare(std::string first, std::string second);
+
 void logR(std::string lg);
 
 void writer(void(*fun)(writeSingle, std::vector<std::string>&), std::string file, writeSingle stuff);

@@ -13,6 +13,13 @@ extern std::string out;
 
 //extern std::unique_ptr<std::ofstream> loggingIt;
 
+bool CIcompare(std::string first, std::string second) {
+	transform(first.begin(), first.end(), first.begin(), ::tolower);
+	transform(second.begin(), second.end(), second.begin(), ::tolower);
+
+	return first == second;
+}
+
 void logR(std::string lg) {
 	std::cout << lg << std::endl;
 #ifdef _DEBUG
@@ -768,7 +775,7 @@ rgb::rgb() {
 //				    std::to_string(i) + "\n";
 //
 //			ending += "state " + oldFunName + std::to_string(i) + " {\n";
-//			if (SpecialScripts.contains(spEnemyTypes[i])) {
+//			if (SpecialScripts.find(spEnemyTypes[i]) != std::string::npos) {
 //				ending += "\tReferenceScript {\n"
 //					  "\t\tScript=";
 //
@@ -810,7 +817,7 @@ rgb::rgb() {
 //	std::string ending;
 //
 //	for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-//		if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+//		if (SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos) {
 //			redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " + sp.oldFunName +
 //				    std::to_string(i) + "\n";
 //			ending += std::vformat(sp.fun, std::make_format_args(i, SpecialScripts[sp.spEnemyTypes[i]]));
@@ -884,13 +891,13 @@ void regexFile(std::string file, std::regex reg, std::string replacement) {
 	for (std::string line : contents) {
 		wholePart += line + '\n';
 		current = line + '\n';
-		if (current.substr(0, 5) == "state") {
+		if (current.substr(0, 5) == "state" || current.substr(0,5) == "Refer") {
 			inState = true;
 			counter = 0;
 		}
 		if (inState) {
-			if (current.contains("{")) counter++;
-			else if (current.contains("}")) counter--;
+			if (current.find("{") != std::string::npos) counter++;
+			else if (current.find("}") != std::string::npos) counter--;
 			if (counter == 0) {
 				//parts.push_back(wholePart);
 				//std::cout << "------NEW-PART------" << std::endl;
@@ -898,7 +905,7 @@ void regexFile(std::string file, std::regex reg, std::string replacement) {
 				std::string temp;
 
 				// >:(
-				if (wholePart.contains("EngageOpponent")) temp = std::regex_replace(wholePart, reg, replacement);
+				if (wholePart.find("EngageOpponent") != std::string::npos || wholePart.find("ReferenceScript") != std::string::npos) temp = std::regex_replace(wholePart, reg, replacement);
 				else temp = wholePart;
 
 				//std::cout << "------REPLACEMENT------" << std::endl;
@@ -906,6 +913,7 @@ void regexFile(std::string file, std::regex reg, std::string replacement) {
 				filestr << temp;
 
 				wholePart = "";
+				inState = false;
 			}
 		}
 	}
@@ -930,8 +938,8 @@ void regexTest(std::string file, std::string pattern, std::string replacement) {
 			counter = 0;
 		}
 		if (inState) {
-			if (current.contains("{")) counter++;
-			else if (current.contains("}")) counter--;
+			if (current.find("{") != std::string::npos) counter++;
+			else if (current.find("}") != std::string::npos) counter--;
 			if (counter == 0) {
 				parts.push_back(current);
 				current = "";
@@ -949,5 +957,20 @@ void regexTest(std::string file, std::string pattern, std::string replacement) {
 
 
 	filestr.close();
+}
+
+void addRedirrect(std::string file, std::string state) {
+	std::regex reg(("state " + state + 
+		" \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
+			"Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}").c_str());
+	std::string rep = "state " + state + " {\n\tConditions {\n\t"
+		"if IAmA \"gamorreanguard\" == 1 goto gamorreanguard"
+		"if IAmA \"imperialguard\" == 1 goto imperialguard"
+		"if IAmA \"bodyguard\" == 1 goto imperialguard"
+		"\n\t\t}\n\tActions{\n\t}\n}\n\n"
+		"state " + state + "vanilla {\n\tConditions {$1}\n\tActions {$2}\n\t}\n}\n\n"
+		"state " + state + "gamorreanguard {ReferenceScript {\n\t\tScript=bodyguardg\n\t\tSource=Global\n\t\tReturnState=" + state + "\n\t\tConditions {\n\t\t}\n\t}\n\tConditions {\n\t}\n\tActions {\n\t}\n\t}\n}\n\n"
+		"state " + state + "impguard {ReferenceScript {\n\t\tScript=bodyguard\n\t\tSource=Global\n\t\tReturnState=" + state + "\n\t\tConditions {\n\t\t}\n\t}\n\tConditions {\n\t}\n\tActions {\n\t}\n\t}\n}\n\n";
+	regexFile(file, reg, rep);
 }
 

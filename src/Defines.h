@@ -110,6 +110,10 @@ struct coord {
 };
 
 /*
+modify conditions in redirrect
+
+BLOCK_CHATTING
+
 story characters interfere with bhm
 specialscp additional actions
 

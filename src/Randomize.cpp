@@ -321,31 +321,10 @@ size_t junkCharacters;
 
 void Randomize() {
 
-	//regexTest("out/SCRIPTS/CHATTING.SCP",
-	//	//"state (\\w+) \\{\\s*Conditions \\{((.|\\n|\\r)+?)\\}\\s*Actions \\{((.|\\n|\\r)+?)EngageOpponent \"goalrange 1\\.5\" \"firerange=3\"((.|\\n|\\r)+?)\\}\\s*\\}",
-	//	//"state (\\w+) \\{\\s+Conditions \\{((.|\\s)+)?\\}\s+Actions \\{((.|\\s)+)?EngageOpponent \"goalrange 1\\.5\" \"firerange=3\"((.|\\s)+)?\\}\\s\\}",
-	//	//"state (\\w+)[.\\n\\r]+?EngageOpponent \"goalrange 1\\.5\" \"firerange=3\"[.\\n\\r]+?\\}\\s+\\}",
-	//	//"state (\\w+)(.+?)EngageOpponent",
-	//	//"state (\\w+)[\\s\\S]+?EngageOpponent\\s1\\.5\"\\s\"firefange=3\"[\\s\\S]+?\\}\\s+\\}",
-	//	//"^state (\\w+)[\\s\\S]+?Conditions((?!Conditions)[\\s\\S]+?)Actions[\\s\\S]+?EngageOpponent \"goalrange 1\\.5\"[\\s\\S]+?\\}\\s+?\\}",
-	//	//"state (\\w+) \\{\\s+Conditions \\{[\\s\\S]+?Actions \\{((?!Actions)[\\s\\S])+?EngageOpponent \"goalrange 1\\.5\" \"firerange=3\"[\\s\\S]+?\\}\\s+?\\}",
-	//	//"^\\s*EngageOpponent \"goalrange 1\\.5\" \"firerange=3\"\\s+?$",
-	//	//"state $1 {\n\tConditions {$2}\n\tActions {$3AttackOpponent \"goalrange 0.15\"$4}\n}");
 
-	//	//"state (\\w+) \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)Actions((?:(?!Actions)[\\s\\S])+?)EngageOpponent \"goalrange 1\\.5\" \"firerange=3\"([\\s\\S]+?)\\}\\s+?\\}",
-	//	"state (\\w+) \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)Actions((?:(?!Actions)[\\s\\S])+?)EngageOpponent \"goalrange ((?:\\w|\\d|\\.)+)\" \"firerange=((?:\\w|\\d|\\.)+)\"([\\s\\S]+?)\\}\\s+?\\}",
-	//	"state $1 {\n\tConditions {"
-	//	"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
-	//	"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
-	//	"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
-	//	"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
-	//	"\n\t}\n\tActions {\n\t}\n}\n\n"
-	//	"state $1vanilla {\n\tConditions $2Actions $3EngageOpponent \"goalrange $4\" \"firerange=$5\"$6}\n}\n\n"
-	//	"state $1impguard {\n\tConditions $2Actions $3AttackOpponent \"goalrange 0.15\"$6}\n}\n\n"
-	//	"state $1gamorreanguard {\n\tConditions $2Actions $3AttackOpponent \"goalrange 0.20\"$6}\n}\n\n"
-
-	//);
-
+	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(out)) {
+		if (!(dirEntry.path().extension() == ".GSC") && !(dirEntry.is_directory())) std::filesystem::remove(dirEntry);
+	}
 
 	std::cout << "Randomizing\n";
 	addressPointer = 0x2B0;
@@ -2054,6 +2033,23 @@ bhm:
 				for (Enemy& en : enset.enemy) {
 					if (en.address != 0) {
 						hexWrite(getAI2(lev, enset.scene), en.newType->type->name, en.address);
+
+						std::string scrip;
+						std::fstream fs(getAI2(lev, enset.scene), std::ios::binary | std::ios::in | std::ios::out);
+						fs.seekg(en.address - 0x10);
+						char c = fs.get();
+						while (c != '\0') {
+							scrip += c;
+							c = fs.get();
+						}
+						fs.close();
+						std::string temp;
+						if (CIcompare(scrip, "chatting") || CIcompare(scrip, "storm")) {
+							if (en.newType == gamorreanguard_en) temp = "gamorreanguard";
+							else if (en.newType == imperialguard_en) temp = "impguard";
+							else if (en.newType == bodyguard_en) temp = "impguard";
+						}
+						if (temp != "") hexWrite(getAI2(lev, enset.scene), temp, en.address - 0x10);
 					}
 					if (en.file != "") {
 						txtIns(getSCP(lev, enset.scene, en.file), en.newType->type->name, { en.lncol },
@@ -2063,9 +2059,10 @@ bhm:
 						appendix += "character \"" + en.newType->type->name + "\" resident\n";
 					}
 				}
+
+				lineDeleter(getMainTxt(lev), lev->enemyLines);
+				appendFile(getMainTxt(lev), appendix);
 			}
-			lineDeleter(getMainTxt(lev), lev->enemyLines);
-			appendFile(getMainTxt(lev), appendix);
 		}
 	}
 
@@ -2098,7 +2095,7 @@ bhm:
 	//								getAI2(lev, enSet.scene), en.newEn->enemyChart[en.scpFile], en.address - 0x10,
 	//0x10);
 	//						}
-	//						//if (SpecialScripts.contains(en.newEn)) {
+	//						//if (SpecialScripts.find(en.newEn) != std::string::npos) {
 	//						//	hexWrite(getAI2(lev, enSet.scene), SpecialScripts[en.newEn],
 	//						//	    en.address - 0x10);
 	//						//}
@@ -2134,7 +2131,7 @@ bhm:
 	//				//sp.lnCol, getSCP(lev, sp.scene, sp.fileName));
 	//				/*} else */
 	//				for (DoubleNestedEnemy& dne : sp.dNestEn) {
-	//					if (sp.useAltScript && SpecialScripts.contains(dne.newEn)) {
+	//					if (sp.useAltScript && SpecialScripts.find(dne.newEn) != std::string::npos) {
 	//						//std::cout << dne.type.ln << ',' << dne.type.col << ' ' << dne.newEn->name << ' ' <<
 	//						//dne.fileName
 	//						//		  << ' ' << dne.script.ln << ',' << dne.script.col << ' ' << dne.oldEn <<
@@ -2177,8 +2174,8 @@ bhm:
 	//						std::string redirect;
 	//						std::string ending;
 	//						for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-	//							if (!(sp.useAltScript && !SpecialScripts.contains(sp.spEnemyTypes[i]))) {
-	//								if (SpecialScripts.contains(sp.spEnemyTypes[i])) {
+	//							if (!(sp.useAltScript && !SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos)) {
+	//								if (SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos) {
 	//									redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " +
 	//												overwrite.oldFunName + std::to_string(i) + "\n";
 	//
@@ -3155,7 +3152,6 @@ outro:
 
 	//fixes ET characters
 	if (extog) {
-		//UNCOMMENT THIS
 		writer(oneWrite, ENGLISH, writeSingle{ "Nothing", 13, {839, 6} });
 
 		lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", { 7 });
@@ -3175,34 +3171,93 @@ outro:
 	}
 
 	if (enemyOp) {
-		std::regex reg("state (\\w+) \\{\\s*Conditions \\{((?:(?!Conditions)[\\s\\S])+?)\\}\\s+"
+
+
+		std::filesystem::rename(getSCP(Chancellor, 'F', "BODYGUARD"), SCR + "BODYGUARD.SCP");
+		std::filesystem::rename(getSCP(Destiny, 'A', "IMPGUARD"), SCR + "IMPGUARD.SCP");
+		std::filesystem::copy(SCR + "BODYGUARD.SCP", SCR + "BODYGUARDG.SCP");
+		appendFile(SCR + "SCRIPT.TXT", "\nimpguard\nbodyguard\nbodyguardg");
+		txtIns(SCR + "BODYGUARDG.SCP", "0.20", { 31, 25 }, 4);
+
+		const std::regex reg("state (\\w+) \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
 			"Actions((?:(?!Actions)[\\s\\S])+?)"
 			"EngageOpponent \"goalrange ((?:\\w|\\d|\\.)+)\" \"firerange(?:=| )((?:\\w|\\d|\\.)+)\""
 			"([\\s\\S]+?)\\}\\s+?\\}");
-		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(out)) {
+		const std::regex reg2("state (\\w+) \\{\\s*ReferenceScript \\{\\s*Script=Chatting([\\s\\S]*?)Conditions \\{([\\s\\S]*?)\\}\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
+		const std::regex reg3("state (\\w+) \\{\\s*ReferenceScript \\{\\s*Script=Attack([\\s\\S]*?)Conditions \\{([\\s\\S]*?)\\}\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
+		const std::regex regSnipe("state (\\w+) \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
+			"Actions((?:(?!Actions)[\\s\\S])+?)"
+			"EngageOpponent \"static\" \"offscreen\""
+			"([\\s\\S]+?)\\}\\s+?\\}");
+
+		auto mainRegex = [&reg](std::string name) {
+			regexFile(name, reg,
+				"state $1 {\n\tConditions {"
+				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
+				"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
+				"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
+				"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
+				"\n\t}\n\tActions {\n\t}\n}\n\n"
+				"state $1vanilla {\n\tConditions $2Actions $3EngageOpponent \"goalrange $4\" \"firerange=$5\"$6}\n}\n\n"
+				"state $1imperialguard {\n\tConditions $2Actions $3AttackOpponent \"goalrange 0.15\"$6}\n}\n\n"
+				"state $1gamorreanguard {\n\tConditions $2Actions $3AttackOpponent \"goalrange 0.20\"$6}\n}\n\n"
+			);
+			};
+
+		auto fixSnipe = [&regSnipe](std::string name) {
+			regexFile(name, regSnipe,
+				"state $1 {\n\tConditions {"
+				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1togamorreanguard"
+				"\n\t\tif IAmA \"imperialguard\" == 1 goto $1toimpguard"
+				"\n\t\tif IAmA \"bodyguard\" == 1 goto $1toimpguard"
+				"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
+				"\n\t}\n\tActions {\n\t}\n}\n\n"
+				"state $1vanilla {\n\tConditions {$2}\n\tActions $3EngageOpponent \"goalrange $4\" \"firerange=$5\"$6}\n}\n\n"
+				"state $1toimpguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer \"run\"$6}\n}\n\n"
+				"state $1impguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.15\"$6}\n}\n\n"
+				"state $1togamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer \"run\"$6}\n}\n\n"
+				"state $1gamorreanguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.20\"$6}\n}\n\n"
+			);
+			};
+		mainRegex(SCR + "PATROL.SCP");
+		mainRegex(SCR + "COMMANDER_PATROL.SCP");
+		fixSnipe(SCR + "SNIPER.SCP");
+
+		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(LEV)) {
 			if (dirEntry.path().extension() == ".SCP" && dirEntry.path().filename().string().substr(0, 5) != "LEVEL") {
 				//if (dirEntry.file_size() < 916) {
 				std::cout << "Patching SCP: " << dirEntry.path().string() << " " << dirEntry.file_size() << " bytes" << std::endl;
+				mainRegex(dirEntry.path().string());
+				fixSnipe(dirEntry.path().string());
 				regexFile(dirEntry.path().string(),
-					reg,
+					reg2,
 					"state $1 {\n\tConditions {"
 					"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
-					"\n\t\tif IAmA \"imperialguard\" == 1 goto $1toimpguard"
-					"\n\t\tif IAmA \"bodyguard\" == 1 goto $1tobodyguard"
+					"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
+					"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
 					"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
 					"\n\t}\n\tActions {\n\t}\n}\n\n"
-					"state $1vanilla {\n\tConditions {$2}\n\tActions $3EngageOpponent \"goalrange $4\" \"firerange=$5\"$6}\n}\n\n"
-					"state $1toimpguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer \"run\"$6}\n}\n\n"
-					"state $1impguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.15\"$6}\n}\n\n"
-					"state $1togamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer \"run\"$6}\n}\n\n"
-					"state $1gamorreanguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.20\"$6}\n}\n\n"
-					"state $1togamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer$6}\n}\n\n"
-					"state $1gamorreanguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.20\"$6}\n}\n\n"
+					"state $1vanilla {\n\tReferenceScript {\n\t\tScript=Chatting$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
+					"state $1imperialguard {\n\tReferenceScript {\n\t\tScript=impguard$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
+					"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=gamorreanguard$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
+				);
+				regexFile(dirEntry.path().string(),
+					reg3,
+					"state $1 {\n\tConditions {"
+					"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
+					"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
+					"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
+					"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
+					"\n\t}\n\tActions {\n\t}\n}\n\n"
+					"state $1vanilla {\n\tReferenceScript {\n\t\tScript=Attack$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
+					"state $1imperialguard {\n\tReferenceScript {\n\t\tScript=bodyguard$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
+					"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=bodyguardG$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
 				);
 				//} else {
 					//std::cout << "TOO BIG: " << dirEntry.path().string() << " " << dirEntry.file_size() << " bytes" << std::endl;
 				//}
 			}
+
 		}
 		std::cout << "Enemies patched";
 	}
@@ -3307,4 +3362,5 @@ outro:
 	//loggingIt->close();
 	std::cout << "Done.\n";
 	//wxLogStatus("Done.");
-} //randomize
+
+}
