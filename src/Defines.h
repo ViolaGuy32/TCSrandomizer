@@ -179,6 +179,10 @@ second to last room ledge trooper won't attack
 
 
 	4-3:
+	intro drops out
+	SET MESSAGE
+	they don't jump off the ledge
+	force push through the sensors
     A ledge fails spawns (super battle droid blocks it?)
 	cleaClearTakeOverTarget?
     B deathstartrooper spawnattack t-poses
@@ -186,6 +190,7 @@ second to last room ledge trooper won't attack
     spy spawns don't always work 
 hangerattack is broken
     bodyguards follow me into block pushing room
+	bridgetroops melee "followcharacter
 
 	4-4:
 	Ben AI when not Jedi

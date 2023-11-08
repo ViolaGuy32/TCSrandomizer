@@ -322,9 +322,6 @@ size_t junkCharacters;
 void Randomize() {
 
 
-	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(out)) {
-		if (!(dirEntry.path().extension() == ".GSC") && !(dirEntry.is_directory())) std::filesystem::remove(dirEntry);
-	}
 
 	std::cout << "Randomizing\n";
 	addressPointer = 0x2B0;
@@ -2005,6 +2002,9 @@ bhm:
 	cantina2->StoryMode = true;
 	indy->StoryMode = true;
 
+	//regexTest(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->name + "\" \"run\"");
+	//return;
+
 	//FILE GEN IS HERE
 	fileGen();
 	//FILE GEN IS HERE
@@ -2060,7 +2060,8 @@ bhm:
 					}
 				}
 
-				lineDeleter(getMainTxt(lev), lev->enemyLines);
+				//PUT THIS BACK IN
+				//lineDeleter(getMainTxt(lev), lev->enemyLines);
 				appendFile(getMainTxt(lev), appendix);
 			}
 		}
@@ -3179,17 +3180,14 @@ outro:
 		appendFile(SCR + "SCRIPT.TXT", "\nimpguard\nbodyguard\nbodyguardg");
 		txtIns(SCR + "BODYGUARDG.SCP", "0.20", { 31, 25 }, 4);
 
-		const std::regex reg("state (\\w+) \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
+		const std::string reg("state (\\w+)\\s*\\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
 			"Actions((?:(?!Actions)[\\s\\S])+?)"
 			"EngageOpponent \"goalrange ((?:\\w|\\d|\\.)+)\" \"firerange(?:=| )((?:\\w|\\d|\\.)+)\""
 			"([\\s\\S]+?)\\}\\s+?\\}");
-		const std::regex reg2("state (\\w+) \\{\\s*ReferenceScript \\{\\s*Script=Chatting([\\s\\S]*?)Conditions \\{([\\s\\S]*?)\\}\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
-		const std::regex reg3("state (\\w+) \\{\\s*ReferenceScript \\{\\s*Script=Attack([\\s\\S]*?)Conditions \\{([\\s\\S]*?)\\}\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
-		const std::regex regSnipe("state (\\w+) \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
-			"Actions((?:(?!Actions)[\\s\\S])+?)"
-			"EngageOpponent \"static\" \"offscreen\""
-			"([\\s\\S]+?)\\}\\s+?\\}");
+		const std::string reg2("state (\\w+)\\s*\\{\\s*ReferenceScript\\s*\\{\\s*Script=Chatting\\s*Source=(\\w+)\\s*ReturnState=(\\w+)\\s*Conditions\\s*\\{([\\s\\S]*?)\\}\\s*\\}\\s*?Conditions\\s*\\{((?:(?!Conditions)[\\s\\S])+?)\\}\\s*Actions\\s*\\{((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
+		const std::string reg3("state (\\w+)\\s*\\{\\s*ReferenceScript\\s*\\{\\s*Script=Attack\\s*Source=(\\w+)\\s*ReturnState=(\\w+)\\s*Conditions\\s*\\{([\\s\\S]*?)\\}\\s*\\}\\s*?Conditions\\s*\\{((?:(?!Conditions)[\\s\\S])+?)\\}\\s*Actions\\s*\\{((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
 
+		const std::string regSnipe("state (\\w+)\\s*\\{\\s*Conditions\\s*\\{((?:(?!Conditions)[\\s\\S])+?)\\}\\s*Actions\\s*\\{((?:(?!Actions)[\\s\\S])+?)EngageOpponent \"static\" \"(.*?)\"([\\s\\S]+?)\\}\\s+?\\}");
 		auto mainRegex = [&reg](std::string name) {
 			regexFile(name, reg,
 				"state $1 {\n\tConditions {"
@@ -3212,16 +3210,47 @@ outro:
 				"\n\t\tif IAmA \"bodyguard\" == 1 goto $1toimpguard"
 				"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
 				"\n\t}\n\tActions {\n\t}\n}\n\n"
-				"state $1vanilla {\n\tConditions {$2}\n\tActions $3EngageOpponent \"goalrange $4\" \"firerange=$5\"$6}\n}\n\n"
-				"state $1toimpguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer \"run\"$6}\n}\n\n"
-				"state $1impguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.15\"$6}\n}\n\n"
-				"state $1togamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and\n\t\t$2}\n\tActions $3ResetTimer\n\t\tFollowPlayer \"run\"$6}\n}\n\n"
-				"state $1gamorreanguard {\n\tConditions {$2}\n\tActions $3AttackOpponent \"goalrange 0.20\"$6}\n}\n\n"
+				"state $1vanilla {\n\tConditions {$2}\n\tActions {$3EngageOpponent \"static\" \"$4\"$5\n\t}\n}\n\n"
+				"state $1toimpguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1impguard\n\t\tif Timer > 5 and$2}\n\tActions {\n\t\tResetTimer\n\t\tFollowPlayer \"run\"$6\n\t}\n}\n\n"
+				"state $1impguard {\n\tConditions {\n\t\tif GotOpponent == 0 goto $1toimpguard\n\t}\n\tActions {\n\t\tAttackOpponent \"goalrange 0.15\"\n\t}\n}\n\n"
+				"state $1togamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and$2}\n\tActions {\n\t\tResetTimer\n\t\tFollowPlayer \"run\"$6\n\t}\n}\n\n"
+				"state $1gamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 0 goto $1togamorreanguard\n\t}\n\tActions {\n\t\tAttackOpponent \"goalrange 0.20\"\n\t}\n}\n\n"
+				//"state $1toimpguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1impguard\n\t\tif Timer > 5 and$2}\n\tActions {$3ResetTimer\n\t\tFollowPlayer \"run\"$6\n\t}\n}\n\n"
+				//"state $1impguard {\n\tConditions {$2}\n\tActions {\n\t\tAttackOpponent \"goalrange 0.15\"\n\t}\n}\n\n"
+				//"state $1togamorreanguard {\n\tConditions {\n\t\tif GotOpponent == 1 goto $1gamorreanguard\n\t\tif Timer > 5 and$2}\n\tActions {$3ResetTimer\n\t\tFollowPlayer \"run\"$6\n\t}\n}\n\n"
+				//"state $1gamorreanguard {\n\tConditions {$2}\n\tActions {\n\t\tAttackOpponent \"goalrange 0.20\"\n\t}\n}\n\n"
 			);
+			};
+		auto reAttack = [&reg3](std::string name) {
+			regexFile(name, reg3,
+				"state $1 {\n\tConditions {"
+				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
+				"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
+				"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
+				"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
+				"\n\t}\n\tActions {\n\t}\n}\n\n"
+				"state $1vanilla {\n\tReferenceScript {\n\t\tScript=Attack\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {$5}\n\tActions {$6}\n}\n\n"
+				"state $1imperialguard {\n\tReferenceScript {\n\t\tScript=bodyguard\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {\n\t\tif Timer > 5 and$5}\n\tActions {\n\t\tResetTimer$6}\n}\n\n"
+				"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=bodyguardG\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {\n\t\tif Timer > 5 and$5}\n\tActions {\n\t\tResetTimer$6}\n}\n\n",
+				true);
+			};
+		auto reChatting = [&reg2](std::string name) {
+			regexFile(name, reg2,
+				"state $1 {\n\tConditions {"
+				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
+				"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
+				"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
+				"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
+				"\n\t}\n\tActions {\n\t}\n}\n\n"
+				"state $1vanilla {\n\tReferenceScript {\n\t\tScript=Chatting\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {$5}\n\tActions {$6}\n}\n\n"
+				"state $1imperialguard {\n\tReferenceScript {\n\t\tScript=impguard\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {\n\t\tif Timer > 5 and$5}\n\tActions {\n\t\tResetTimer$6}\n}\n\n"
+				"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=gamorreanguard\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {\n\t\tif Timer > 5 and$5}\n\tActions {\n\t\tResetTimer$6}\n}\n\n",
+				true);
 			};
 		mainRegex(SCR + "PATROL.SCP");
 		mainRegex(SCR + "COMMANDER_PATROL.SCP");
 		fixSnipe(SCR + "SNIPER.SCP");
+		reAttack(SCR + "BEACHTROOPER.SCP");
 
 		for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(LEV)) {
 			if (dirEntry.path().extension() == ".SCP" && dirEntry.path().filename().string().substr(0, 5) != "LEVEL") {
@@ -3229,36 +3258,18 @@ outro:
 				std::cout << "Patching SCP: " << dirEntry.path().string() << " " << dirEntry.file_size() << " bytes" << std::endl;
 				mainRegex(dirEntry.path().string());
 				fixSnipe(dirEntry.path().string());
-				regexFile(dirEntry.path().string(),
-					reg2,
-					"state $1 {\n\tConditions {"
-					"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
-					"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
-					"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
-					"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
-					"\n\t}\n\tActions {\n\t}\n}\n\n"
-					"state $1vanilla {\n\tReferenceScript {\n\t\tScript=Chatting$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
-					"state $1imperialguard {\n\tReferenceScript {\n\t\tScript=impguard$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
-					"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=gamorreanguard$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
-				);
-				regexFile(dirEntry.path().string(),
-					reg3,
-					"state $1 {\n\tConditions {"
-					"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
-					"\n\t\tif IAmA \"imperialguard\" == 1 goto $1imperialguard"
-					"\n\t\tif IAmA \"bodyguard\" == 1 goto $1imperialguard"
-					"\n\t\tif AlwaysTrue == 1 goto $1vanilla"
-					"\n\t}\n\tActions {\n\t}\n}\n\n"
-					"state $1vanilla {\n\tReferenceScript {\n\t\tScript=Attack$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
-					"state $1imperialguard {\n\tReferenceScript {\n\t\tScript=bodyguard$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
-					"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=bodyguardG$2Conditions$3Conditions$4Actions$5\n\t}\n}\n\n"
-				);
+				reChatting(dirEntry.path().string());
+				reAttack(dirEntry.path().string());
 				//} else {
 					//std::cout << "TOO BIG: " << dirEntry.path().string() << " " << dirEntry.file_size() << " bytes" << std::endl;
 				//}
 			}
 
 		}
+//((?:(?!Actions)[\\s\\S])+?)
+		regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->name + "\" \"run\"");
+		regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state lookforlocator_engageto((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state lookforlocator_engageto$1                  ");
+
 		std::cout << "Enemies patched";
 	}
 
@@ -3336,7 +3347,7 @@ outro:
 		//	rgbFloat(TNG, green, 0x31CC98 + (i *
 		//0x2c4));
 		//}
-}
+	}
 #endif
 
 	//free memory

@@ -1634,6 +1634,7 @@ void makeLevels() {
 		{'A',
 			{
 				{tuskenraider_en, 0x562E},
+				{tuskenraider_en, 0x56E3},
 				{tuskenraider_en, 0x5E0A},
 				{tuskenraider_en, 0x5EAF},
 

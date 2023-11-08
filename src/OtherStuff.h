@@ -184,7 +184,7 @@ std::string littleEnd(unsigned int num);
 std::string littleEndSigned(int num);
 std::string unlockAsm(unsigned int levelptr);
 
-void regexFile(std::string file, std::regex reg, std::string replacement);
+void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript = false);
 
-void regexTest(std::string file, std::string pattern, std::string replacement);
+void regexTest(std::string file, std::string pattern, std::string replacement, bool refScript = false);
 

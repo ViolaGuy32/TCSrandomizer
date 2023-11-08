@@ -877,7 +877,7 @@ std::string unlockAsm(unsigned int levelptr) {
 		"c6049514e1860001";
 }
 
-void regexFile(std::string file, std::regex reg, std::string replacement) {
+void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript) {
 	std::fstream filestr(file, std::ios::in | std::ios::out);
 	//std::string contents;
 	std::vector<std::string> contents;
@@ -888,24 +888,39 @@ void regexFile(std::string file, std::regex reg, std::string replacement) {
 	std::string current;
 	std::string wholePart;
 	int counter = 0;
+	bool firstLine = false;
+	std::string stateName;
+
+	std::regex reg(pattern, std::regex_constants::icase);
 	for (std::string line : contents) {
 		wholePart += line + '\n';
 		current = line + '\n';
-		if (current.substr(0, 5) == "state" || current.substr(0,5) == "Refer") {
+		if (CIcompare(current.substr(0, 5), "state") || CIcompare(current.substr(0, 5), "Refer")) {
 			inState = true;
 			counter = 0;
+			firstLine = true;
+			std::smatch temp;
+			std::regex_search(current, temp, std::regex("state (\\w+)"));
+			stateName = temp[1];
 		}
 		if (inState) {
 			if (current.find("{") != std::string::npos) counter++;
-			else if (current.find("}") != std::string::npos) counter--;
-			if (counter == 0) {
+			if (current.find("}") != std::string::npos) counter--;
+			if (counter == 0 && !firstLine) {
 				//parts.push_back(wholePart);
 				//std::cout << "------NEW-PART------" << std::endl;
 				//std::cout << wholePart << std::endl;
 				std::string temp;
 
 				// >:(
-				if (wholePart.find("EngageOpponent") != std::string::npos || wholePart.find("ReferenceScript") != std::string::npos) temp = std::regex_replace(wholePart, reg, replacement);
+				//if (wholePart.find("EngageOpponent") != std::string::npos || wholePart.find("ReferenceScript") != std::string::npos) {
+				//if (wholePart.find("CameraCut") == std::string::npos) {
+				if (wholePart.length() < 512) {
+					temp = std::regex_replace(wholePart, reg, replacement);
+					if (refScript) {
+						temp = std::regex_replace(temp, std::regex("state " + stateName + "(\\w+) \\{([\\s\\S]*?)ReturnState=" + stateName), "state " + stateName + "$1 {$2ReturnState=" + stateName + "$1");
+					}
+				}
 				else temp = wholePart;
 
 				//std::cout << "------REPLACEMENT------" << std::endl;
@@ -916,53 +931,76 @@ void regexFile(std::string file, std::regex reg, std::string replacement) {
 				inState = false;
 			}
 		}
+		firstLine = false;
 	}
 
 	filestr.close();
 }
 
-void regexTest(std::string file, std::string pattern, std::string replacement) {
-	std::fstream filestr(file, std::fstream::in, std::fstream::out);
+void regexTest(std::string file, std::string pattern, std::string replacement, bool refScript) {
+	std::fstream filestr(file, std::ios::in);
 	//std::string contents;
 	std::vector<std::string> contents;
 	getfile(file, contents);
-	std::vector<std::string> parts;
+	filestr.close();
+	//std::vector<std::string> parts;
 
 	bool inState = false;
 	std::string current;
+	std::string wholePart;
 	int counter = 0;
+	bool firstLine = false;
+	std::string stateName;
+
+	std::regex reg(pattern, std::regex_constants::icase);
 	for (std::string line : contents) {
-		current += line + '\n';
-		if (current.substr(0, 5) == "state") {
+		wholePart += line + '\n';
+		current = line + '\n';
+		if (CIcompare(current.substr(0, 5), "state") || CIcompare(current.substr(0, 5), "Refer")) {
 			inState = true;
 			counter = 0;
+			firstLine = true;
+			std::smatch temp;
+			std::regex_search(current, temp, std::regex("state (\\w+)"));
+			stateName = temp[1];
 		}
 		if (inState) {
 			if (current.find("{") != std::string::npos) counter++;
-			else if (current.find("}") != std::string::npos) counter--;
-			if (counter == 0) {
-				parts.push_back(current);
-				current = "";
+			if (current.find("}") != std::string::npos) counter--;
+			if (counter == 0 && !firstLine) {
+				//parts.push_back(wholePart);
+				std::cout << "------NEW-PART------" << std::endl;
+				std::cout << wholePart << std::endl;
+				std::string temp;
+
+				// >:(
+				//if (wholePart.find("EngageOpponent") != std::string::npos || wholePart.find("ReferenceScript") != std::string::npos) {
+				//if (wholePart.find("CameraCut") == std::string::npos) {
+				if (wholePart.length() < 512) {
+					temp = std::regex_replace(wholePart, reg, replacement);
+					if (refScript) {
+						temp = std::regex_replace(temp, std::regex("state " + stateName + "(\\w+) \\{([\\s\\S]*?)ReturnState=" + stateName, std::regex_constants::icase), "state " + stateName + "$1 {$2ReturnState=" + stateName + "$1");
+					}
+				}
+				else temp = wholePart;
+
+				std::cout << "------REPLACEMENT------" << std::endl;
+				std::cout << temp << std::endl;
+				//filestr << temp;
+
+				wholePart = "";
+				inState = false;
 			}
 		}
+		firstLine = false;
 	}
 
-	//std::getline(filestr, contents, '\0');
-
-	std::regex reg(pattern, std::regex_constants::icase);
-	for (std::string part : parts) {
-		std::cout << std::regex_replace(part, reg, replacement) << "\n";
-		//filestr << out;
-	}
-
-
-	filestr.close();
 }
 
 void addRedirrect(std::string file, std::string state) {
-	std::regex reg(("state " + state + 
+	std::string reg(("state " + state +
 		" \\{\\s*Conditions((?:(?!Conditions)[\\s\\S])+?)"
-			"Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}").c_str());
+		"Actions((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}").c_str());
 	std::string rep = "state " + state + " {\n\tConditions {\n\t"
 		"if IAmA \"gamorreanguard\" == 1 goto gamorreanguard"
 		"if IAmA \"imperialguard\" == 1 goto imperialguard"

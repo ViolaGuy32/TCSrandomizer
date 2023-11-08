@@ -26,8 +26,5 @@ std::string vanillaDirectory = "C:/TCS";
 bool enemy = true;
 
 int main() {
-#ifdef _DEBUG
-	std::cout << "TEST\n";
-#endif
 	Randomize();
 }

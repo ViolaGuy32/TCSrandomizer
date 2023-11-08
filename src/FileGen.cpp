@@ -36,6 +36,9 @@ void fileGen() {
 	//std::filesystem::remove_all(out);
 
 
+	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(out)) {
+		if (!(dirEntry.path().extension() == ".GSC") && !(dirEntry.is_directory())) std::filesystem::remove(dirEntry);
+	}
 	std::filesystem::copy(vanillaDirectory, out,
 		std::filesystem::copy_options::recursive | std::filesystem::copy_options::skip_existing);
 
