@@ -24,4 +24,5 @@
 #include <algorithm>
 #include <format>
 #include <cassert>
+#include <ranges>
 #include <regex>

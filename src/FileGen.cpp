@@ -15,8 +15,8 @@ extern Level* currentLev;
 extern std::vector<Level*> allLevels;
 extern bool unlockAll;
 
-void speedUp(int episode, std::string file, std::initializer_list<unsigned int> ln = {}, std::string goLev = "") {
-	std::string eps[] = { "EPISODEI", "EPISODEII", "EPISODEIII", "EPISODEIV", "EPISODEV", "EPISODEVI" };
+void speedUp(int episode, const std::string& file, const std::initializer_list<unsigned int>& ln = {}, const std::string& goLev = "") {
+	std::array<std::string, 6> eps = { "EPISODEI", "EPISODEII", "EPISODEIII", "EPISODEIV", "EPISODEV", "EPISODEVI" };
 	std::string realFile = out + "/CUT/" + eps[episode - 1] + "/";
 	if (episode < 4) realFile += "EP" + std::to_string(episode) + "_";
 	realFile += file + ".TXT";

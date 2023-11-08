@@ -4,6 +4,7 @@
 //#include "App.h"
 //#endif
 
+#include "externData.h"
 #include "CharacterData.h"
 #include "Characters.h"
 #include "Defines.h"
@@ -15,294 +16,294 @@
 #include "Randomize.h"
 #include <fstream>
 
-Playable* quigonjinn;
-Playable* obiwankenobi;
-Playable* tc14;
-Playable* jarjarbinks;
-Playable* amidala;
-Playable* captainpanaka;
-Playable* padmebattle;
-Playable* r2d2;
-Playable* anakin_boy;
-Playable* obiwankenobi_jedimaster;
-Playable* r4_p17;
-Playable* anakin_padawan;
-Playable* padmegeo;
-Playable* c3po;
-Playable* macewindu;
-Playable* padmeclawed;
-Playable* yoda;
-Playable* obiwankenobi_ep3;
-Playable* anakin_jedi;
-Playable* palpatine;
-Playable* clone_ep3_sand;
-Playable* chewbacca;
-Playable* princessleia;
-Playable* captainantilles;
-Playable* rebelfriend;
-Playable* lukeskywalker_tatooine;
-Playable* benkenobi;
-Playable* hansolo;
-Playable* hansolo_stormtrooper;
-Playable* lukeskywalker_stormtrooper;
-Playable* hansolo_hoth;
-Playable* princessleia_hoth;
-Playable* lukeskywalker_pilot;
-Playable* lukeskywalker_dagobah;
-Playable* lukeskywalker_bespin;
-Playable* landocalrissian;
-Playable* princessleia_bespin;
-Playable* lukeskywalker_jedi;
-Playable* princessleia_boushh;
-Playable* lando_palaceguard;
-Playable* hansolo_skiff;
-Playable* princessleia_slave;
-Playable* princessleia_endor;
-Playable* lukeskywalker_endor;
-Playable* hansolo_endor;
-Playable* wicket;
-Playable* darthvader;
-Playable* gonkdroid;
-Playable* pkdroid;
-Playable* battledroid;
-Playable* battledroid_security;
-Playable* battledroid_commander;
-Playable* destroyer;
-Playable* captaintarpals;
-Playable* bossnass;
-Playable* royalguard;
-Playable* padme;
-Playable* watto;
-Playable* pitdroid;
-Playable* darthmaul;
-Playable* zamwesell;
-Playable* dexter;
-Playable* clone_ep2;
-Playable* lamasu;
-Playable* taunwe;
-Playable* geonosian;
-Playable* battledroid_geonosian;
-Playable* superbattledroid;
-Playable* jangofett;
-Playable* bobafett_boy;
-Playable* luminara;
-Playable* kiadimundi;
-Playable* kitfisto;
-Playable* shaakti;
-Playable* aylasecura;
-Playable* plokoon;
-Playable* countdooku;
-Playable* bodyguard;
-Playable* grievous;
-Playable* wookie;
-Playable* clone_ep3;
-Playable* clone_ep3_pilot;
-Playable* clone_ep3_swamp;
-Playable* clone_ep3_walker;
-Playable* macewindu_ep3;
-Playable* disguisedclone;
-Playable* rebelscum;
-Playable* stormtrooper;
-Playable* imperialshuttlepilot;
-Playable* tuskenraider;
-Playable* jawa;
-Playable* sandtrooper;
-Playable* greedo;
-Playable* imperialspy;
-Playable* beachtrooper;
-Playable* deathstartrooper;
-Playable* tiefighterpilot;
-Playable* imperialofficer;
-Playable* grandmofftarkin;
-Playable* hansolo_hood;
-Playable* rebelhoth;
-Playable* rebelpilot;
-Playable* snowtrooper;
-Playable* lukeskywalker_hoth;
-Playable* lobot;
-Playable* ugnaught;
-Playable* bespinguard;
-Playable* princessleia_prisoner;
-Playable* gamorreanguard;
-Playable* bibfortuna;
-Playable* palaceguard;
-Playable* bossk;
-Playable* skiffguard;
-Playable* bobafett;
-Playable* ewok;
-Playable* imperialguard;
-Playable* theemperor;
-Playable* admiralackbar;
-Playable* ig88;
-Playable* dengar;
-Playable* fourlom;
-Playable* ghostbenkenobi;
-Playable* anakin_ghost;
-Playable* yoda_ghost;
-Playable* r2q5;
-Playable* hansolo_indy;
-Playable* skeleton;
-Playable* buzzdroid;
-Playable* trainingremote;
-Playable* engineer;
-Playable* naffdroid1;
-Playable* naffdroid2;
-Playable* naffdroid3;
-Playable* naffdroid4;
-Playable* womprat;
-Playable* mousedroid;
-Playable* imperialengineer;
-Playable* hanincarbonite;
-Playable* atat_driver;
-Playable* scouttrooper;
-Playable* newanakinspod;
-Playable* naboostarfighter;
-Playable* anakinsspeeder;
-Playable* newrepublicgunship;
-Playable* jedistarfighter_yellow_ep3;
-Playable* jedistarfighter_red_ep3;
-Playable* xwing;
-Playable* ywing;
-Playable* snowspeeder;
-Playable* millenniumfalcon;
-Playable* sebulbaspod;
-Playable* zamsspeeder;
-Playable* droidtrifighter;
-Playable* vulturedroid;
-Playable* clonearc;
-Playable* tiefighter;
-Playable* tieinterceptor;
-Playable* tiefighterdarth;
-Playable* tiebomber;
-Playable* imperialshuttle;
-Playable* slave1;
-Playable* newanakinspod_green;
-Playable* naboostarfighter_lime;
-Playable* anakinsspeeder_green;
-Playable* newrepublicgunship_green;
-Playable* defaultCharacter;
-Playable* fakeAnakinsPod;
-Playable* fakeAnakinsPodGreen;
-Playable* kaminodroid;
-Playable* sentrydroid;
-Playable* bat;
+//Playable* quigonjinn;
+//Playable* obiwankenobi;
+//Playable* tc14;
+//Playable* jarjarbinks;
+//Playable* amidala;
+//Playable* captainpanaka;
+//Playable* padmebattle;
+//Playable* r2d2;
+//Playable* anakin_boy;
+//Playable* obiwankenobi_jedimaster;
+//Playable* r4_p17;
+//Playable* anakin_padawan;
+//Playable* padmegeo;
+//Playable* c3po;
+//Playable* macewindu;
+//Playable* padmeclawed;
+//Playable* yoda;
+//Playable* obiwankenobi_ep3;
+//Playable* anakin_jedi;
+//Playable* palpatine;
+//Playable* clone_ep3_sand;
+//Playable* chewbacca;
+//Playable* princessleia;
+//Playable* captainantilles;
+//Playable* rebelfriend;
+//Playable* lukeskywalker_tatooine;
+//Playable* benkenobi;
+//Playable* hansolo;
+//Playable* hansolo_stormtrooper;
+//Playable* lukeskywalker_stormtrooper;
+//Playable* hansolo_hoth;
+//Playable* princessleia_hoth;
+//Playable* lukeskywalker_pilot;
+//Playable* lukeskywalker_dagobah;
+//Playable* lukeskywalker_bespin;
+//Playable* landocalrissian;
+//Playable* princessleia_bespin;
+//Playable* lukeskywalker_jedi;
+//Playable* princessleia_boushh;
+//Playable* lando_palaceguard;
+//Playable* hansolo_skiff;
+//Playable* princessleia_slave;
+//Playable* princessleia_endor;
+//Playable* lukeskywalker_endor;
+//Playable* hansolo_endor;
+//Playable* wicket;
+//Playable* darthvader;
+//Playable* gonkdroid;
+//Playable* pkdroid;
+//Playable* battledroid;
+//Playable* battledroid_security;
+//Playable* battledroid_commander;
+//Playable* destroyer;
+//Playable* captaintarpals;
+//Playable* bossnass;
+//Playable* royalguard;
+//Playable* padme;
+//Playable* watto;
+//Playable* pitdroid;
+//Playable* darthmaul;
+//Playable* zamwesell;
+//Playable* dexter;
+//Playable* clone_ep2;
+//Playable* lamasu;
+//Playable* taunwe;
+//Playable* geonosian;
+//Playable* battledroid_geonosian;
+//Playable* superbattledroid;
+//Playable* jangofett;
+//Playable* bobafett_boy;
+//Playable* luminara;
+//Playable* kiadimundi;
+//Playable* kitfisto;
+//Playable* shaakti;
+//Playable* aylasecura;
+//Playable* plokoon;
+//Playable* countdooku;
+//Playable* bodyguard;
+//Playable* grievous;
+//Playable* wookie;
+//Playable* clone_ep3;
+//Playable* clone_ep3_pilot;
+//Playable* clone_ep3_swamp;
+//Playable* clone_ep3_walker;
+//Playable* macewindu_ep3;
+//Playable* disguisedclone;
+//Playable* rebelscum;
+//Playable* stormtrooper;
+//Playable* imperialshuttlepilot;
+//Playable* tuskenraider;
+//Playable* jawa;
+//Playable* sandtrooper;
+//Playable* greedo;
+//Playable* imperialspy;
+//Playable* beachtrooper;
+//Playable* deathstartrooper;
+//Playable* tiefighterpilot;
+//Playable* imperialofficer;
+//Playable* grandmofftarkin;
+//Playable* hansolo_hood;
+//Playable* rebelhoth;
+//Playable* rebelpilot;
+//Playable* snowtrooper;
+//Playable* lukeskywalker_hoth;
+//Playable* lobot;
+//Playable* ugnaught;
+//Playable* bespinguard;
+//Playable* princessleia_prisoner;
+//Playable* gamorreanguard;
+//Playable* bibfortuna;
+//Playable* palaceguard;
+//Playable* bossk;
+//Playable* skiffguard;
+//Playable* bobafett;
+//Playable* ewok;
+//Playable* imperialguard;
+//Playable* theemperor;
+//Playable* admiralackbar;
+//Playable* ig88;
+//Playable* dengar;
+//Playable* fourlom;
+//Playable* ghostbenkenobi;
+//Playable* anakin_ghost;
+//Playable* yoda_ghost;
+//Playable* r2q5;
+//Playable* hansolo_indy;
+//Playable* skeleton;
+//Playable* buzzdroid;
+//Playable* trainingremote;
+//Playable* engineer;
+//Playable* naffdroid1;
+//Playable* naffdroid2;
+//Playable* naffdroid3;
+//Playable* naffdroid4;
+//Playable* womprat;
+//Playable* mousedroid;
+//Playable* imperialengineer;
+//Playable* hanincarbonite;
+//Playable* atat_driver;
+//Playable* scouttrooper;
+//Playable* newanakinspod;
+//Playable* naboostarfighter;
+//Playable* anakinsspeeder;
+//Playable* newrepublicgunship;
+//Playable* jedistarfighter_yellow_ep3;
+//Playable* jedistarfighter_red_ep3;
+//Playable* xwing;
+//Playable* ywing;
+//Playable* snowspeeder;
+//Playable* millenniumfalcon;
+//Playable* sebulbaspod;
+//Playable* zamsspeeder;
+//Playable* droidtrifighter;
+//Playable* vulturedroid;
+//Playable* clonearc;
+//Playable* tiefighter;
+//Playable* tieinterceptor;
+//Playable* tiefighterdarth;
+//Playable* tiebomber;
+//Playable* imperialshuttle;
+//Playable* slave1;
+//Playable* newanakinspod_green;
+//Playable* naboostarfighter_lime;
+//Playable* anakinsspeeder_green;
+//Playable* newrepublicgunship_green;
+//Playable* defaultCharacter;
+//Playable* fakeAnakinsPod;
+//Playable* fakeAnakinsPodGreen;
+//Playable* kaminodroid;
+//Playable* sentrydroid;
+//Playable* bat;
+//
+//Playable* att;
+//Playable* mtt;
+//Playable* atst_lowres;
+//Playable* hailfiredroid;
+//Playable* jumbohomingdroid;
+//
+//Playable* probedroid;
+//Playable* speederbike_snow;
+//Playable* droidstarfighter;
+//
+//Level* Negotiations;
+//Level* Invasion;
+//Level* EscapeNaboo;
+//Level* Podrace;
+//Level* Theed;
+//Level* Maul;
+//Level* BHP;
+//Level* Kamino;
+//Level* Factory;
+//Level* JediBattle;
+//Level* Gunship;
+//Level* Dooku;
+//Level* Coruscant;
+//Level* Chancellor;
+//Level* Grievous;
+//Level* Kashyyyk;
+//Level* Ruin;
+//Level* Vader;
+//Level* SecretPlans;
+//Level* Jundland;
+//Level* Spaceport;
+//Level* Princess;
+//Level* DSE;
+//Level* RebelAttack;
+//Level* Hoth;
+//Level* EchoBase;
+//Level* FalconFlight;
+//Level* Dagobah;
+//Level* CCT;
+//Level* Bespin;
+//Level* Jabbas;
+//Level* Carkoon;
+//Level* Showdown;
+//Level* Endor;
+//Level* Destiny;
+//Level* ITDS;
+////Level* PodraceOriginal;
+//Level* Anakinsflight;
+//Level* ANewHope;
+//Level* BHM;
+//Level* Cantina;
+//
+//EnemyType* clone_ep3_sand_en;
+//EnemyType* battledroid_en;
+//EnemyType* battledroid_security_en;
+//EnemyType* battledroid_commander_en;
+//EnemyType* destroyer_en;
+//EnemyType* geonosian_en;
+//EnemyType* battledroid_geonosian_en;
+//EnemyType* superbattledroid_en;
+//EnemyType* bodyguard_en;
+//EnemyType* clone_ep3_en;
+//EnemyType* clone_ep3_swamp_en;
+//EnemyType* disguisedclone_en;
+//EnemyType* stormtrooper_en;
+//EnemyType* imperialshuttlepilot_en;
+//EnemyType* tuskenraider_en;
+//EnemyType* sandtrooper_en;
+//EnemyType* beachtrooper_en;
+//EnemyType* deathstartrooper_en;
+//EnemyType* tiefighterpilot_en;
+//EnemyType* imperialofficer_en;
+//EnemyType* snowtrooper_en;
+//EnemyType* gamorreanguard_en;
+//EnemyType* skiffguard_en;
+//EnemyType* imperialguard_en;
+//EnemyType* scouttrooper_en;
+//EnemyType* kaminodroid_en;
+//EnemyType* sentrydroid_en;
+//EnemyType* bat_en;
+//
+//EnemyType* att_en;
+//EnemyType* mtt_en;
+//EnemyType* atst_lowres_en;
+//EnemyType* hailfiredroid_en;
+//EnemyType* jumbohomingdroid_en;
+//
+//EnemyType* droidstarfighter_en;
+//EnemyType* tiefighter_en;
+//EnemyType* tieinterceptor_en;
+//EnemyType* tiebomber_en;
+//EnemyType* probedroid_en;
+//EnemyType* speederbike_snow_en;
+//
+//std::unordered_map<Playable*, const char*> SpecialScripts;
 
-Playable* att;
-Playable* mtt;
-Playable* atst_lowres;
-Playable* hailfiredroid;
-Playable* jumbohomingdroid;
+extern const bool character;
+extern const bool extog;
+extern const bool greenVeh;
 
-Playable* probedroid;
-Playable* speederbike_snow;
-Playable* droidstarfighter;
-
-Level* Negotiations;
-Level* Invasion;
-Level* EscapeNaboo;
-Level* Podrace;
-Level* Theed;
-Level* Maul;
-Level* BHP;
-Level* Kamino;
-Level* Factory;
-Level* JediBattle;
-Level* Gunship;
-Level* Dooku;
-Level* Coruscant;
-Level* Chancellor;
-Level* Grievous;
-Level* Kashyyyk;
-Level* Ruin;
-Level* Vader;
-Level* SecretPlans;
-Level* Jundland;
-Level* Spaceport;
-Level* Princess;
-Level* DSE;
-Level* RebelAttack;
-Level* Hoth;
-Level* EchoBase;
-Level* FalconFlight;
-Level* Dagobah;
-Level* CCT;
-Level* Bespin;
-Level* Jabbas;
-Level* Carkoon;
-Level* Showdown;
-Level* Endor;
-Level* Destiny;
-Level* ITDS;
-//Level* PodraceOriginal;
-Level* Anakinsflight;
-Level* ANewHope;
-Level* BHM;
-Level* Cantina;
-
-EnemyType* clone_ep3_sand_en;
-EnemyType* battledroid_en;
-EnemyType* battledroid_security_en;
-EnemyType* battledroid_commander_en;
-EnemyType* destroyer_en;
-EnemyType* geonosian_en;
-EnemyType* battledroid_geonosian_en;
-EnemyType* superbattledroid_en;
-EnemyType* bodyguard_en;
-EnemyType* clone_ep3_en;
-EnemyType* clone_ep3_swamp_en;
-EnemyType* disguisedclone_en;
-EnemyType* stormtrooper_en;
-EnemyType* imperialshuttlepilot_en;
-EnemyType* tuskenraider_en;
-EnemyType* sandtrooper_en;
-EnemyType* beachtrooper_en;
-EnemyType* deathstartrooper_en;
-EnemyType* tiefighterpilot_en;
-EnemyType* imperialofficer_en;
-EnemyType* snowtrooper_en;
-EnemyType* gamorreanguard_en;
-EnemyType* skiffguard_en;
-EnemyType* imperialguard_en;
-EnemyType* scouttrooper_en;
-EnemyType* kaminodroid_en;
-EnemyType* sentrydroid_en;
-EnemyType* bat_en;
-
-EnemyType* att_en;
-EnemyType* mtt_en;
-EnemyType* atst_lowres_en;
-EnemyType* hailfiredroid_en;
-EnemyType* jumbohomingdroid_en;
-
-EnemyType* droidstarfighter_en;
-EnemyType* tiefighter_en;
-EnemyType* tieinterceptor_en;
-EnemyType* tiebomber_en;
-EnemyType* probedroid_en;
-EnemyType* speederbike_snow_en;
-
-std::unordered_map<Playable*, const char*> SpecialScripts;
-
-extern bool character;
-extern bool extog;
-extern bool greenVeh;
-
-extern bool extra;
-extern bool collectable;
-extern bool enemy;
-extern bool panelOp;
-extern bool hatOp;
-extern bool colorOp;
-extern bool enemyOp;
+extern const bool extra;
+extern const bool collectable;
+extern const bool enemy;
+extern const bool panelOp;
+extern const bool hatOp;
+extern const bool colorOp;
+extern const bool enemyOp;
 //extern bool advanceMus;
-extern LogicType logicType;
+extern const LogicType logicType;
 //extern std::unique_ptr<std::ofstream> loggingIt;
 
-uint64_t seed = 0;
-std::mt19937_64* randoPTR;
+const uint64_t seed = 0;
+const std::mt19937_64* randoPTR;
 
-extern std::string out;
-extern std::string vanillaDirectory;
+extern const std::string out;
+extern const std::string vanillaDirectory;
 
 std::vector<Level*> allLevels;
 
@@ -314,27 +315,27 @@ std::vector<DispenserType> availableHats = {}; //Current logic;
 std::vector<EnemyType*> enemyTypes;            //AvailableEnemies
 std::vector<EnemyType*> flyerTypes;
 std::vector<EnemyType*> walkerTypes;
-Level* currentLev;
+const Level* currentLev;
 
-size_t addressPointer;
-size_t junkCharacters;
+size_t* const addressPointer;
+size_t* const junkCharacters;
 
 void Randomize() {
 
 
 
 	std::cout << "Randomizing\n";
-	addressPointer = 0x2B0;
-	junkCharacters = 0x3f1b6c;
+	*addressPointer = 0x2B0;
+	*junkCharacters = 0x3f1b6c;
 
 	std::random_device rd;
 
 	std::mt19937_64 rando(rd());
 	randoPTR = &rando;
 
-	makeCharacters();
-	makeEnemyTypes();
-	makeLevels();
+	//makeCharacters();
+	//makeEnemyTypes();
+	//makeLevels();
 
 	currentLev = BHM;
 
@@ -713,7 +714,7 @@ vader:
 
 secretplans:
 	bool supercraneDoor = false;
-	auto plansthing = [&supercraneDoor](std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
+	auto plansthing = [&supercraneDoor](const std::vector<Playable*>& current, Playable* shield, Playable* redGuy) {
 		//This is for scene 3 super jump
 		if (logicType != superGlitched) return false;
 
@@ -3130,7 +3131,7 @@ outro:
 
 	collectWrite(vhs);
 
-	std::string minis[] = { "mini_republic_cruiser", "mini_gungan_bongo", "mini_royal_starship", "mini_sebulba_pod",
+	std::array<std::string, 36> minis = { "mini_republic_cruiser", "mini_gungan_bongo", "mini_royal_starship", "mini_sebulba_pod",
 		"mini_naboo_starfighter", "mini_sith_infiltrator",
 
 		"mini_zam_speeder", "mini_jedi_starfighter", "mini_droideka", "mini_gunship", "mini_atte", "mini_solar_sailor",
@@ -3188,7 +3189,7 @@ outro:
 		const std::string reg3("state (\\w+)\\s*\\{\\s*ReferenceScript\\s*\\{\\s*Script=Attack\\s*Source=(\\w+)\\s*ReturnState=(\\w+)\\s*Conditions\\s*\\{([\\s\\S]*?)\\}\\s*\\}\\s*?Conditions\\s*\\{((?:(?!Conditions)[\\s\\S])+?)\\}\\s*Actions\\s*\\{((?:(?!Actions)[\\s\\S])+?)\\}\\s+?\\}");
 
 		const std::string regSnipe("state (\\w+)\\s*\\{\\s*Conditions\\s*\\{((?:(?!Conditions)[\\s\\S])+?)\\}\\s*Actions\\s*\\{((?:(?!Actions)[\\s\\S])+?)EngageOpponent \"static\" \"(.*?)\"([\\s\\S]+?)\\}\\s+?\\}");
-		auto mainRegex = [&reg](std::string name) {
+		auto mainRegex = [&reg](const std::string& name) {
 			regexFile(name, reg,
 				"state $1 {\n\tConditions {"
 				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
@@ -3202,7 +3203,7 @@ outro:
 			);
 			};
 
-		auto fixSnipe = [&regSnipe](std::string name) {
+		auto fixSnipe = [&regSnipe](const std::string& name) {
 			regexFile(name, regSnipe,
 				"state $1 {\n\tConditions {"
 				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1togamorreanguard"
@@ -3221,7 +3222,7 @@ outro:
 				//"state $1gamorreanguard {\n\tConditions {$2}\n\tActions {\n\t\tAttackOpponent \"goalrange 0.20\"\n\t}\n}\n\n"
 			);
 			};
-		auto reAttack = [&reg3](std::string name) {
+		auto reAttack = [&reg3](const std::string& name) {
 			regexFile(name, reg3,
 				"state $1 {\n\tConditions {"
 				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
@@ -3234,7 +3235,7 @@ outro:
 				"state $1gamorreanguard {\n\tReferenceScript {\n\t\tScript=bodyguardG\n\t\tSource=$2\n\t\tReturnState=$3\n\t\tConditions {$4}\n\t}\n\tConditions {\n\t\tif Timer > 5 and$5}\n\tActions {\n\t\tResetTimer$6}\n}\n\n",
 				true);
 			};
-		auto reChatting = [&reg2](std::string name) {
+		auto reChatting = [&reg2](const std::string& name) {
 			regexFile(name, reg2,
 				"state $1 {\n\tConditions {"
 				"\n\t\tif IAmA \"gamorreanguard\" == 1 goto $1gamorreanguard"
@@ -3266,7 +3267,7 @@ outro:
 			}
 
 		}
-//((?:(?!Actions)[\\s\\S])+?)
+		//((?:(?!Actions)[\\s\\S])+?)
 		regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->name + "\" \"run\"");
 		regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state lookforlocator_engageto((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state lookforlocator_engageto$1                  ");
 
