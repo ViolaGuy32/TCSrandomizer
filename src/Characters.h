@@ -92,7 +92,7 @@ struct Playable {
 	//std::string vanillaName = "";
 	float speed = 1.2f;
 	Level* lev;
-	size_t address     = 0;
+	int address     = 0;
 	int price       = 0;
 	bool alwaysTrue = true; //lol
 	bool StoryMode = false;

@@ -43,9 +43,9 @@ struct Collectable {
 struct SpecialCollectable {
 	char type;
 	std::vector<std::pair<char, int>> sceneAddress;
-	explicit SpecialCollectable(char c, std::initializer_list<int> addresses);
+	SpecialCollectable(char c, std::initializer_list<int> addresses);
 	//SpecialCollectable(std::vector<Collectable> spawnPoints);
-	explicit SpecialCollectable(std::initializer_list<std::pair<char, int>> mySceneAddress);
+	SpecialCollectable(std::initializer_list<std::pair<char, int>> mySceneAddress);
 };
 
 //enum enemyWhere { scp, ai2, both, chain };
@@ -176,20 +176,20 @@ struct Level {
 	std::vector<EnemySet> enemies;
 	std::vector<unsigned int> enemyLines;
 
-	Level(const std::string& myName, const std::string& myShortName, const std::string& myPath, bool isVehicleLevel,
+	Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
 		std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 		std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
 		std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
 		std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines = {});
 };
 
-extern const std::vector<DispenserType> availableHats;
-extern const std::vector<Playable*> testing;
-extern const Level* currentLev;
+extern std::vector<DispenserType> availableHats;
+extern std::vector<Playable*> testing;
+extern Level* currentLev;
 
 void mix(Level*);
 void add(int a);
-void addHat(int set, int hat, const Level* lev = currentLev);
+void addHat(int set, int hat, Level* lev = currentLev);
 
 bool atrb(uint64_t req, const std::vector<Playable*>& current = testing);
 

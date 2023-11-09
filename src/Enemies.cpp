@@ -4,7 +4,7 @@ extern std::vector<EnemyType*> enemyTypes;
 extern std::vector<EnemyType*> walkerTypes;
 extern std::vector<EnemyType*> flyerTypes;
 
-EnemyType::EnemyType(const Playable* myType, const enemyCategory myCategory, const float myRange)
+EnemyType::EnemyType(Playable* myType, enemyCategory myCategory, float myRange)
 	: type(myType), category(myCategory), range(myRange) {
 
 	if (category == normal) enemyTypes.push_back(this);

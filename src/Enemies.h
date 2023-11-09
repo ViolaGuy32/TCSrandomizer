@@ -3,10 +3,10 @@
 enum enemyCategory { normal, walker, flyer };
 
 struct EnemyType {
-	const Playable* const type;
-	const float range = 3.5;
-	const enemyCategory category;
-	EnemyType(const Playable* myType, const enemyCategory myCategory = normal, const float myRange = 3.5);
+	Playable* type;
+	float range = 3.5;
+	enemyCategory category;
+	EnemyType(Playable* myType, enemyCategory myCategory = normal, float myRange = 3.5);
 };
 
 struct Enemy {
