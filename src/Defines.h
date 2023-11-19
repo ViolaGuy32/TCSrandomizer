@@ -110,6 +110,9 @@ struct coord {
 };
 
 /*
+imperial spy shooting after dodge
+use scripts from bonuses and arcade maps
+
 story characters interfere with bhm
 specialscp additional actions
 
