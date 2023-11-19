@@ -110,6 +110,8 @@ struct coord {
 };
 
 /*
+shaddowed scipts
+
 modify conditions in redirrect
 
 BLOCK_CHATTING
