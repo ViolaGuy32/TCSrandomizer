@@ -879,6 +879,7 @@ std::string unlockAsm(unsigned int levelptr) {
 
 void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript) {
 	std::fstream filestr(file, std::ios::in | std::ios::out);
+	std::cout << "Patching SCP: " << file << " " <<  filestr.tellg() << " bytes" << std::endl;
 	//std::string contents;
 	std::vector<std::string> contents;
 	getfile(file, contents);
@@ -939,6 +940,10 @@ void regexFile(std::string file, std::string pattern, std::string replacement, b
 
 void regexTest(std::string file, std::string pattern, std::string replacement, bool refScript) {
 	std::fstream filestr(file, std::ios::in);
+	if (!filestr) {
+		std::cout << "FILE NOT FOUND: " << file << std::endl;
+		std::terminate();
+	}
 	//std::string contents;
 	std::vector<std::string> contents;
 	getfile(file, contents);

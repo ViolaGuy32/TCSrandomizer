@@ -110,6 +110,8 @@ struct coord {
 };
 
 /*
+shaddowed scipts
+
 imperial spy shooting after dodge
 use scripts from bonuses and arcade maps
 
