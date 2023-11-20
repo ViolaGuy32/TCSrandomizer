@@ -52,6 +52,8 @@ struct writeSingle {
 //void manyWrite( std::initializer_list<writeSet>& stuff, std::vector<std::string>& contents);
 
 
+bool CIcompare(std::string first, std::string second);
+
 void logR(std::string lg);
 
 void writer(void(*fun)(writeSingle, std::vector<std::string>&), std::string file, writeSingle stuff);
@@ -182,5 +184,7 @@ std::string littleEnd(unsigned int num);
 std::string littleEndSigned(int num);
 std::string unlockAsm(unsigned int levelptr);
 
-void regexFile(std::string file, std::string pattern, std::string replacement);
+void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript = false);
+
+void regexTest(std::string file, std::string pattern, std::string replacement, bool refScript = false);
 

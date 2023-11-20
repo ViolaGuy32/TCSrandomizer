@@ -983,7 +983,7 @@ void makeEnemyTypes() {
 	scouttrooper_en = new EnemyType(scouttrooper);
 	kaminodroid_en = new EnemyType(kaminodroid);
 	sentrydroid_en = new EnemyType(sentrydroid);
-	bat_en = new EnemyType(bat);
+	//bat_en = new EnemyType(bat);
 
 	att_en = new EnemyType(att, walker);
 	mtt_en = new EnemyType(mtt, walker);

@@ -7,6 +7,8 @@
 #include <wx/filepicker.h>
 #endif
 
+#define _REGEX_MAX_COMPLEXITY_COUNT 0 // set to 0 to disable
+#define _REGEX_MAX_STACK_COUNT 0 // set to 0 to disable
 #include <iostream>
 #include <filesystem>
 #include <sstream>
