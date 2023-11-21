@@ -9,6 +9,7 @@
 #include "Characters.h"
 #include "Defines.h"
 #include "Enemies.h"
+#include "EnemyData.h"
 #include "FileGen.h"
 #include "LevelData.h"
 #include "Levels.h"
@@ -336,6 +337,7 @@ void Randomize() {
 	makeCharacters();
 	makeEnemyTypes();
 	makeLevels();
+	//makeEnemies();
 
 	currentLev = BHM;
 
@@ -3172,9 +3174,9 @@ outro:
 		lineDeleter(CHR + "WOMPRAT/WOMPRAT.TXT", { 18 });
 	}
 
-	if (enemyOp) {
-		PatchEnemies();
-	}
+	//if (enemyOp) {
+	//	PatchEnemies();
+	//}
 
 	/*
 	blue	3fb112

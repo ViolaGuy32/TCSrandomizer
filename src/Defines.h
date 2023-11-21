@@ -227,4 +227,26 @@ hangerattack is broken
 	make unlocks dependent on residents
 
 	fix spawnattack
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	active npcs:
+
+	passive npcs:
+
 	*/
