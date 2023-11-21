@@ -18,6 +18,36 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CharacterData.cpp" />
+    <ClCompile Include="Characters.cpp" />
+    <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="EnemyData.cpp" />
+    <ClCompile Include="EnemyPatch.cpp" />
+    <ClCompile Include="FileGen.cpp" />
+    <ClCompile Include="gui.cpp" />
+    <ClCompile Include="LevelData.cpp" />
+    <ClCompile Include="Levels.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="OtherStuff.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Randomize.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CharacterData.h" />
+    <ClInclude Include="Characters.h" />
+    <ClInclude Include="Defines.h" />
+    <ClInclude Include="Enemies.h" />
+    <ClInclude Include="EnemyData.h" />
+    <ClInclude Include="EnemyPatch.h" />
+    <ClInclude Include="externData.h" />
+    <ClInclude Include="FileGen.h" />
+    <ClInclude Include="LevelData.h" />
+    <ClInclude Include="Levels.h" />
+    <ClInclude Include="OtherStuff.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Randomize.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{92B39C6F-3639-4DF2-AF38-7CAB7C987AFD}</ProjectGuid>
@@ -111,36 +141,6 @@
       <AdditionalDependencies />
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\CharacterData.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Characters.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Enemies.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyData.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyPatch.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\FileGen.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\gui.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\LevelData.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Levels.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\main.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\OtherStuff.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\pch.cpp" />
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Randomize.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\CharacterData.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Characters.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Defines.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Enemies.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyData.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyPatch.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\externData.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\FileGen.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\LevelData.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Levels.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\OtherStuff.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\pch.h" />
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Randomize.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

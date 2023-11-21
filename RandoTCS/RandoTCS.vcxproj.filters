@@ -15,84 +15,84 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\CharacterData.cpp">
+    <ClCompile Include="CharacterData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Characters.cpp">
+    <ClCompile Include="Characters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Enemies.cpp">
+    <ClCompile Include="Enemies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyData.cpp">
+    <ClCompile Include="EnemyData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyPatch.cpp">
+    <ClCompile Include="EnemyPatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\FileGen.cpp">
+    <ClCompile Include="FileGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\gui.cpp">
+    <ClCompile Include="gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\LevelData.cpp">
+    <ClCompile Include="LevelData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Levels.cpp">
+    <ClCompile Include="Levels.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\main.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\OtherStuff.cpp">
+    <ClCompile Include="OtherStuff.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\pch.cpp">
+    <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Documents\code\TCSrandomizer\src\Randomize.cpp">
+    <ClCompile Include="Randomize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\CharacterData.h">
+    <ClInclude Include="CharacterData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Characters.h">
+    <ClInclude Include="Characters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Defines.h">
+    <ClInclude Include="Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Enemies.h">
+    <ClInclude Include="Enemies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyData.h">
+    <ClInclude Include="EnemyData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\EnemyPatch.h">
+    <ClInclude Include="EnemyPatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\externData.h">
+    <ClInclude Include="externData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\FileGen.h">
+    <ClInclude Include="FileGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\LevelData.h">
+    <ClInclude Include="LevelData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Levels.h">
+    <ClInclude Include="Levels.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\OtherStuff.h">
+    <ClInclude Include="OtherStuff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\pch.h">
+    <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Documents\code\TCSrandomizer\src\Randomize.h">
+    <ClInclude Include="Randomize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
