@@ -170,8 +170,8 @@ void PatchEnemies() {
 	}
 
 	//((?:(?!Actions)[\\s\\S])+?)
-	regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->getSCP(pd.lev, pd.scene, pd.scp) + "\" \"run\"");
-	regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state lookforlocator_engageto((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state lookforlocator_engageto$1                  ");
+	//regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->getSCP(pd.lev, pd.scene, pd.scp) + "\" \"run\"");
+	//regexFile(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state lookforlocator_engageto((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state lookforlocator_engageto$1                  ");
 
 	std::cout << "Enemies patched";
 

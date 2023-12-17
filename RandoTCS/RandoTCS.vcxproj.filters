@@ -33,9 +33,6 @@
     <ClCompile Include="FileGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LevelData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,10 +45,10 @@
     <ClCompile Include="OtherStuff.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Randomize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Randomize.cpp">
+    <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Randomize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

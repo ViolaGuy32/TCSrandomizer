@@ -179,10 +179,10 @@ void appendFile( std::string file,  std::string appendix);
 //void redirrector(Level* lev, SpecialScp& sp);
 
 
-std::array<unsigned int, 55> getLevPtr(unsigned int first); 
-std::string littleEnd(unsigned int num);
-std::string littleEndSigned(int num);
-std::string unlockAsm(unsigned int levelptr);
+//std::array<unsigned int, 55> getLevPtr(unsigned int first); 
+//std::string littleEnd(unsigned int num);
+//std::string littleEndSigned(int num);
+//std::string unlockAsm(unsigned int levelptr);
 
 void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript = false);
 

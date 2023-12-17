@@ -1,30 +1,30 @@
 
 #include "Defines.h"
 #include "MyForm.h"
+#include "Randomize.h"
 #include "pch.h"
+
+bool collectable = false;
+bool character = false;
+bool extog = false;
+bool greenVeh = false;
+
+bool extra = false;
+bool panelOp = false;
+bool hatOp = false;
+bool colorOp = false;
+bool enemyOp = false;
+bool enemy = false;
+bool unlockAll = false;
+LogicType logicType = casual;
+std::string out = "out";
+std::string vanillaDirectory = "C:/TCS";
+//std::unique_ptr<std::ofstream> loggingIt;
 
 using namespace System;
 using namespace System::Windows::Forms;
 
 [STAThreadAttribute] void main(array<String ^> ^ args) {
-	std::ifstream saver("files/data");
-	if (saver.good()) {
-		std::string savedat;
-		getline(saver, savedat);
-		vanillaDirectory = savedat;
-
-		getline(saver, savedat);
-		logicType = (LogicType)(savedat[0] - 48);
-		character = savedat[1] - 48;
-		extog = savedat[2] - 48;
-		greenVeh = savedat[3] - 48;
-		extra = savedat[4] - 48;
-		collectable = savedat[5] - 48;
-		panelOp = savedat[6] - 48;
-		hatOp = savedat[7] - 48;
-	}
-	saver.close();
-
 	Application::SetCompatibleTextRenderingDefault(false);
 	Application::EnableVisualStyles();
 	RandoTCS::MyForm frm;
@@ -41,11 +41,14 @@ int mainDebug() {
 	extra = true;
 	panelOp = true;
 	hatOp = true;
-
-	colorOp = false;
+	colorOp = true;
 	enemyOp = false;
-	//enemy = true;
+	enemy = true;
 	Randomize();
 
 	return 0;
+}
+
+void refresher() {
+	MyForm.Refresh();
 }

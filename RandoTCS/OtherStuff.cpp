@@ -837,45 +837,45 @@ rgb::rgb() {
 //	appendFile(tf, ending);
 //}j
 
-std::array<unsigned int, 55> getLevPtr(unsigned int first) {
-	std::array<unsigned int, 55> out;
-	for (unsigned int i = 0; i < 55; i++) {
-		out[i] = first + 0x4 * i;
-	}
-	return out;
-}
-
-std::string littleEnd(unsigned int num) {
-	unsigned int swapped = (unsigned int)_byteswap_ulong(num);
-	std::ostringstream oss;
-	oss << std::hex << swapped;
-	std::string output = oss.str();
-	output = output.substr(0, output.length() - 2);
-	while (output.length() < 6)
-		output = "0" + output;
-	return output;
-}
-
-std::string littleEndSigned(int num /*, int numBytes*/) {
-	int swapped = (unsigned int)_byteswap_ulong(num);
-	std::ostringstream oss;
-	oss << std::hex << swapped;
-	std::string output = oss.str();
-	//while (out.length() < numBytes * 2)
-	//out += "00";
-	//output = output.substr(0, output.length() - 2);
-	return output;
-}
-
-std::string unlockAsm(unsigned int levelptr) {
-	return "a1" + littleEnd(levelptr) +
-		"00"
-		"3bc3"
-		"740f"
-		"0fb6407c"
-		"8d1440"
-		"c6049514e1860001";
-}
+//std::array<unsigned int, 55> getLevPtr(unsigned int first) {
+//	std::array<unsigned int, 55> out;
+//	for (unsigned int i = 0; i < 55; i++) {
+//		out[i] = first + 0x4 * i;
+//	}
+//	return out;
+//}
+//
+//std::string littleEnd(unsigned int num) {
+//	unsigned int swapped = (unsigned int)_byteswap_ulong(num);
+//	std::ostringstream oss;
+//	oss << std::hex << swapped;
+//	std::string output = oss.str();
+//	output = output.substr(0, output.length() - 2);
+//	while (output.length() < 6)
+//		output = "0" + output;
+//	return output;
+//}
+//
+//std::string littleEndSigned(int num /*, int numBytes*/) {
+//	int swapped = (unsigned int)_byteswap_ulong(num);
+//	std::ostringstream oss;
+//	oss << std::hex << swapped;
+//	std::string output = oss.str();
+//	//while (out.length() < numBytes * 2)
+//	//out += "00";
+//	//output = output.substr(0, output.length() - 2);
+//	return output;
+//}
+//
+//std::string unlockAsm(unsigned int levelptr) {
+//	return "a1" + littleEnd(levelptr) +
+//		"00"
+//		"3bc3"
+//		"740f"
+//		"0fb6407c"
+//		"8d1440"
+//		"c6049514e1860001";
+//}
 
 void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript) {
 	std::fstream filestr(file, std::ios::in | std::ios::out);

@@ -232,7 +232,9 @@ bool panel(int panSet, int pan, const std::vector<Playable*>& current = testing,
 
 bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats = availableHats);
 
-bool panelAnd(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current = testing);
+bool panelAll(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current = testing);
+
+bool panelAny(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current = testing);
 
 bool panelOr(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current = testing);
 

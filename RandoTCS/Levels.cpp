@@ -1,5 +1,5 @@
 #include "Levels.h"
-#include "Enemies.cpp"
+#include "Enemies.h"
 #include "externData.h"
 
 extern std::vector<Playable*> enemies;
@@ -18,6 +18,9 @@ extern std::mt19937_64* randoPTR;
 extern LogicType logicType;
 extern Level* BHM;
 
+extern std::vector<EnemyType*> enemyTypes;
+extern std::vector<EnemyType*> walkerTypes;
+extern std::vector<EnemyType*> flyerTypes;
 //Enemy::Enemy(enemyScp myScp, coord myType, coord myScript)
 //	: enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
 //
@@ -228,6 +231,10 @@ void mix(Level* lev) {
 					//because casual logic does not have 1p2c
 	}
 
+	//if (!character) {
+	//	lev->party = lev->vanillaParty;
+	//}
+
 	//if (enemyOp) {
 	//	std::uniform_int_distribution<int> distrib(0, enemies.size() - 1);
 	//	for (NestedEnemySet& nestSet : lev->enemies.nestedEns) {
@@ -302,7 +309,7 @@ bool bhPanel(Level* lev, int panSet, int pan, std::vector<DispenserType> theHats
 	return false;
 }
 
-bool panelAnd(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current) {
+bool panelAll(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current) {
 	uint64_t panType = getPanel(panSet, pan);
 	uint64_t req2 = req | panType;
 	if (All(req2, current)) return true;
@@ -313,6 +320,13 @@ bool panelAnd(int panSet, int pan, uint64_t req, const std::vector<Playable*>& c
 			if (disp == StormtrooperHat && panType == Imperial) return true;
 			if (disp == BountyHat && panType == Bounty) return true;
 		}
+	}
+	return false;
+}
+
+bool panelAny(int panSet, int pan, uint64_t req, const std::vector<Playable*>& current) {
+	for (Playable* p : current) {
+		if (panel(panSet, pan, {p}, availableHats) && atrb(req, {p})) return true;
 	}
 	return false;
 }

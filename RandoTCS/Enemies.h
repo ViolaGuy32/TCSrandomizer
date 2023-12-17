@@ -1,4 +1,6 @@
 #pragma once
+#include "pch.h"
+#include "Characters.h"
 
 enum enemyCategory { normal, walker, flyer };
 

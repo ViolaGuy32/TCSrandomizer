@@ -4,12 +4,12 @@
 //#include "App.h"
 //#endif
 
-#include "EnemyPatch.h"
 #include "CharacterData.h"
 #include "Characters.h"
 #include "Defines.h"
 #include "Enemies.h"
 #include "EnemyData.h"
+#include "EnemyPatch.h"
 #include "FileGen.h"
 #include "LevelData.h"
 #include "Levels.h"
@@ -323,8 +323,6 @@ size_t junkCharacters;
 
 void Randomize() {
 
-
-
 	std::cout << "Randomizing\n";
 	addressPointer = 0x2B0;
 	junkCharacters = 0x3f1b6c;
@@ -360,12 +358,12 @@ void Randomize() {
 #endif
 
 	//std::array<std::string, 36> extras = {
-	std::array<std::string, 36> extras = { "supergonk", "poomoney", "walkietalkiedisable", "powerbrickdetector",
+	std::array<std::string, 36> extras = {"supergonk", "poomoney", "walkietalkiedisable", "powerbrickdetector",
 		"superslap", "forcezipup", "coinmagnet", "disarmtroopers", "characterstuds", "perfectdeflect",
 		"explodingblasterbolts", "forcepull", "vehiclesmartbomb", "superastromech", "superjedislam",
 		"superthermaldetonator", "deflectbolts", "darkside", "superblasters", "fastforce", "supersabres", "tractorbeam",
 		"invincibility", "scorex2", "selfdestruct", "fastbuild", "scorex4", "regenerate", "scorex6", "minikitdetector",
-		"superzapper", "rockets", "scorex8", "superewokcatapult", "scorex10", "infinitetorpedos" };
+		"superzapper", "rockets", "scorex8", "superewokcatapult", "scorex10", "infinitetorpedos"};
 
 	std::array<std::string, 36> vanillaExtras = extras;
 
@@ -376,8 +374,8 @@ void Randomize() {
 	if (collectable) {
 		for (int i = 0; i < 36; i++) {
 			int q = 0;
-			std::array<char, 21> collect = { 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'c', 'c', 'c', 'c', 'c',
-				'c', 'c', 'c', 'c', 'c', 'r' };
+			std::array<char, 21> collect = {'m', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'c', 'c', 'c', 'c', 'c',
+				'c', 'c', 'c', 'c', 'c', 'r'};
 			std::shuffle(collect.begin(), collect.end(), rando);
 			for (Collectable& col : allLevels[i]->collectables) {
 				for (std::pair<char, int>& pairr : col.typeAddress) {
@@ -401,7 +399,7 @@ void Randomize() {
 		//SCP files do not work if name is too long
 		if (currentLev->party[ch]->name.length() > 16) return true;
 		else return false;
-		};
+	};
 
 negotiations:
 	mix(Negotiations);
@@ -413,8 +411,7 @@ negotiations:
 	add(2);
 	if (logicType == casual) {
 		if (!panel(2, 1) || !panel(0, 2) || !panel(0, 3) || !Multi((DoubleJump), 2)) goto negotiations;
-	}
-	else {
+	} else {
 
 		if (!Multi(Jump | Flutter, 2)) goto negotiations;
 
@@ -431,8 +428,7 @@ invasion:
 	if (logicType == casual) {
 		if (atrb(Jedi)) goto invasion2;
 
-	}
-	else {
+	} else {
 		if (atrb(Jedi) || atrb(HighJump)) goto invasion2;
 	}
 	goto invasion;
@@ -441,8 +437,7 @@ invasion2:
 	add(2);
 	if (logicType == casual) {
 		if (!atrb(HighJump)) goto invasion;
-	}
-	else {
+	} else {
 		if (atrb(Jedi)) goto escape;
 		if (atrb(Fett) && atrb(HighDoubleJump)) goto escape;
 		goto invasion;
@@ -468,11 +463,10 @@ theed:
 	add(5); //0 and 1 are in->mix function.
 
 	if (logicType == casual) {
-		if (panel(0, 0) && panelOr(1, 0, Jedi | Grapple | Hatch | Fly) && panel(2, 0) && Multi(Jedi, 2) &&
+		if (panel(0, 0) && panelAny(1, 0, Jedi | Grapple | Hatch | Fly) && panel(2, 0) && Multi(Jedi, 2) &&
 			atrb(Hatch) && Multi(DoubleJump | Grapple | Hatch | Fly, 6))
 			goto maul;
-	}
-	else {
+	} else {
 		if (logicType != superGlitched) {
 			//button room
 			std::vector<Playable*> overGap;
@@ -483,15 +477,14 @@ theed:
 				else if (atrb(Jedi)) {
 					if (p->check(Jump) && p->speed >= 0.79f) overGap.push_back(p);
 					else if (p->check(Flutter)) overGap.push_back(p);
-				}
-				else if (atrb(Choke) && p->check(Chokeable)) overGap.push_back(p);
+				} else if (atrb(Choke) && p->check(Chokeable)) overGap.push_back(p);
 				else if (atrb(Lightning) && p->check(Lightningable)) overGap.push_back(p);
 			}
 			if (overGap.size() < 6) goto theed;
 		}
 
-		if (panelOr(1, 0, Fly | Grapple | HighJump)) goto theed2;
-		if (atrb(Jedi) && panelOr(1, 0, Jump | Fly | Flutter)) goto theed2;
+		if (panelAny(1, 0, Fly | Grapple | HighJump)) goto theed2;
+		if (atrb(Jedi) && panelAny(1, 0, Jump | Fly | Flutter)) goto theed2;
 		goto theed;
 
 	theed2:
@@ -511,8 +504,7 @@ maul:
 
 	if (logicType == casual) {
 		if (Multi(Jedi, 2) && LivingJedi()) goto bhp;
-	}
-	else {
+	} else {
 		if (Multi(Jedi, 2)) goto bhp;
 	}
 	goto maul;
@@ -537,8 +529,7 @@ kamino:
 		if (!panel(4, 0)) goto kamino; //to elevator
 		if (!atrb(Fly)) goto kamino;
 
-	}
-	else { //worst superjump ever
+	} else { //worst superjump ever
 		if (atrb(Jedi) && atrb(Fly) && SuperJump(Jump)) goto factory;
 
 		if (!panel(2, 1)) goto kamino;                //clone room
@@ -554,17 +545,17 @@ factory:
 	if (!atrb(Attack)) goto factory;
 
 	add(2); //r2
-	if (!panelAnd(1, 1, Fly | Jump)) goto factory;
+	if (!panelAny(1, 1, Fly | Jump)) goto factory;
+	//if (!panelAnd(1, 1, Fly) && !panelAnd(1, 1, Jump)) goto factory;
 
 	if (logicType == casual) {
 		if (!atrb(Jedi) && !atrb(ExtraHighJump)) goto factory;
-	}
-	else {
+	} else {
 		if (!atrb(Jedi) && !atrb(HighJump)) goto factory;
 
-		if (atrb(Jedi) && panelAnd(1, 1, Fly)) goto factory2;
+		if (atrb(Jedi) && panelAny(1, 1, Fly)) goto factory2;
 
-		if (panelAnd(1, 1, Jedi)) goto factory2;
+		if (panelAny(1, 1, Jedi)) goto factory2;
 	}
 
 	if (atrb(Grapple)) goto factory2;
@@ -580,18 +571,17 @@ factory2:
 	if (!panel(4, 1)) goto factory; //end room
 
 	if (logicType == casual) {
-		if (panelAnd(3, 1, DoubleJump)) goto jedibattle;
-		if (panelAnd(3, 1, Fly)) goto jedibattle;
-		if (panelAnd(3, 0, DoubleJump) && panel(3, 1)) goto jedibattle;
-		if (panelAnd(3, 0, Fly) && panel(3, 1)) goto jedibattle;
+		if (panelAny(3, 1, DoubleJump)) goto jedibattle;
+		if (panelAny(3, 1, Fly)) goto jedibattle;
+		if (panelAny(3, 0, DoubleJump) && panel(3, 1)) goto jedibattle;
+		if (panelAny(3, 0, Fly) && panel(3, 1)) goto jedibattle;
 
 		goto factory;
-	}
-	else {
+	} else {
 		//extending bridge
 		if (panelOr(3, 0, DoubleJump | Pushable | Fly)) goto factory3;
-		if (panelAnd(3, 0, Chokeable) && atrb(Choke)) goto factory3;
-		if (panelAnd(3, 0, Lightningable) && atrb(Lightning)) goto factory3;
+		if (panelAny(3, 0, Chokeable) && atrb(Choke)) goto factory3;
+		if (panelAny(3, 0, Lightningable) && atrb(Lightning)) goto factory3;
 
 		//if you can't extend the bridge
 		testing.clear();
@@ -626,8 +616,7 @@ dooku:
 		goto dooku;
 	if (logicType == casual) {
 		if (!Multi(Jedi, 2)) goto dooku;
-	}
-	else {
+	} else {
 		if (!atrb(Jedi | Shoot)) goto dooku;
 	}
 	//Yoda cutscene
@@ -651,7 +640,7 @@ chancellor:
 
 	add(2);                            //r2
 	if (!panel(0, 2)) goto chancellor; //bomb, might be possible to skip
-	if (!panel(0, 3)) goto chancellor; //top of room
+	if (!panel(0, 3) && logicType == casual) goto chancellor; //top of room
 
 	add(3); //palpatine
 	if (!Multi(Jedi, 2)) goto chancellor;
@@ -659,11 +648,11 @@ chancellor:
 	if (logicType == casual && GetSlowest() < 1.0) goto chancellor;
 
 	bool gasOff = false;
-	if (panelAnd(3, 0, Gas | Fly)) gasOff = true;
-	if (logicType != casual && panelOr(3, 0, DoubleJump | Dive | Flop)) gasOff = true;
+	if (panelAny(3, 0, Gas | Fly)) gasOff = true;
+	if (logicType != casual && panelAny(3, 0, DoubleJump | Dive | Flop)) gasOff = true;
 	if (gasOff && panel(3, 1)) goto grievous;
-	if (panelAnd(3, 1, Gas | Fly)) goto grievous;
-	if (logicType != casual && panelOr(3, 1, DoubleJump | Dive | Flop)) goto grievous;
+	if (panelAny(3, 1, Gas | Fly)) goto grievous;
+	if (logicType != casual && panelAny(3, 1, DoubleJump | Dive | Flop)) goto grievous;
 	goto chancellor;
 
 grievous:
@@ -671,8 +660,7 @@ grievous:
 	if (logicType == casual) {
 		if (!atrb(Jedi)) goto grievous;
 		if (!atrb(Grapple)) goto grievous;
-	}
-	else {
+	} else {
 		if (atrb(Jedi)) goto kashyyyk;
 		if (All(Jump | Shoot)) goto kashyyyk;
 
@@ -684,8 +672,7 @@ kashyyyk:
 	if (!atrb(Jedi)) goto kashyyyk;
 	if (logicType == casual) {
 		if (!atrb(Grapple)) goto kashyyyk;
-	}
-	else {
+	} else {
 		if (!Multi(Jump | Flutter, 2)) goto kashyyyk;
 		if (logicType != superGlitched) {
 			//no enemies on buttons except in super glitched
@@ -702,8 +689,7 @@ vader:
 	if (Multi(Ghost, 2)) goto vader;
 	if (logicType == casual) {
 		if (Multi(Jedi, 2)) goto secretplans;
-	}
-	else {
+	} else {
 		if (!atrb(Jedi)) goto vader;
 		if (GetSlowest() <= 1.01) goto vader;
 		if (Multi(DoubleJump, 2)) goto secretplans;
@@ -755,16 +741,16 @@ secretplans:
 						}
 						//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
 #define plnp SecretPlans->party
-						if (panel(2, 2, { x, shield }) && panel(2, 1, { plnp[1], plnp[2], plnp[3], plnp[4] })) {
+						if (panel(2, 2, {x, shield}) && panel(2, 1, {plnp[1], plnp[2], plnp[3], plnp[4]})) {
 							supercraneDoor = true;
 							return true;
 						}
-						if (panel(2, 1, { x, otherX }) && atrb(Box | Bounty, { x, otherX })) {
+						if (panel(2, 1, {x, otherX}) && atrb(Box | Bounty, {x, otherX})) {
 							supercraneDoor = true;
 							return true;
 						}
-						if (panel(2, 1, { redGuy }) && (atrb(DoubleJump | Fly, { x, otherX }) ||
-							(atrb(Box | Bounty, { x }) && atrb(Lever, { redGuy })))) {
+						if (panel(2, 1, {redGuy}) && (atrb(DoubleJump | Fly, {x, otherX}) ||
+														 (atrb(Box | Bounty, {x}) && atrb(Lever, {redGuy})))) {
 							supercraneDoor = true;
 							return true;
 						}
@@ -774,7 +760,7 @@ secretplans:
 			}
 		}
 		return false;
-		};
+	};
 
 	mix(SecretPlans);
 
@@ -783,16 +769,15 @@ secretplans:
 		if (!atrb(Lever)) goto secretplans;
 		if (!atrb(Shoot) && !atrb(FakeShoot)) goto secretplans;
 
-	}
-	else {
+	} else {
 		addHat(0, 0);
 
 		if (!atrb(Attack)) goto secretplans;
 		if (!atrb(Build)) goto secretplans;
 		if (!atrb(Lever)) goto secretplans;
 		if (((All(Grapple | Build) || atrb(YodaJump) || //Both Yodas can build
-			All(ExtraHighJump | Build)) &&
-			(atrb(Shoot) || atrb(FakeShoot))) ||
+				 All(ExtraHighJump | Build)) &&
+				(atrb(Shoot) || atrb(FakeShoot))) ||
 			SuperJump(Jump | Flutter) || DoubleTransitionSkip(Jump | Flutter))
 			goto secretplans2;
 		goto secretplans;
@@ -803,23 +788,22 @@ secretplans2:
 	if (logicType == casual) {
 		if (!panel(2, 0)) //midtro panel
 			goto secretplans;
-	}
-	else {
+	} else {
 		//Bounties can get the car
-		if (atrb(Jedi | Bounty) && panel(2, 2, { SecretPlans->party[4] })) goto secretplans3;
+		if (atrb(Jedi | Bounty) && panel(2, 2, {SecretPlans->party[4]})) goto secretplans3;
 
-		if (atrb(Hat) && availableHats[0] == BountyHat && panel(2, 2, { SecretPlans->party[4] })) goto secretplans3;
+		if (atrb(Hat) && availableHats[0] == BountyHat && panel(2, 2, {SecretPlans->party[4]})) goto secretplans3;
 
-		if (panel(2, 0) && panel(2, 2, { SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4] }))
+		if (panel(2, 0) && panel(2, 2, {SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4]}))
 			goto secretplans3;
 
 		//droids and rebel friend area with super jumps
-		if (plansthing({ SecretPlans->party[0], SecretPlans->party[1], SecretPlans->party[3] }, SecretPlans->party[4],
-			SecretPlans->party[2]))
+		if (plansthing({SecretPlans->party[0], SecretPlans->party[1], SecretPlans->party[3]}, SecretPlans->party[4],
+				SecretPlans->party[2]))
 			goto secretplans3;
 
-		if (panel(2, 0) && plansthing({ SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4] },
-			defaultCharacter, SecretPlans->party[2]))
+		if (panel(2, 0) && plansthing({SecretPlans->party[1], SecretPlans->party[3], SecretPlans->party[4]},
+							   defaultCharacter, SecretPlans->party[2]))
 			goto secretplans3;
 
 		goto secretplans;
@@ -863,8 +847,7 @@ jundland:
 	if (logicType == casual) {
 		if (!atrb(Jedi)) goto jundland;
 		if (!All(Grapple | Lever)) goto jundland;
-	}
-	else {
+	} else {
 		if (atrb(Jedi)) goto jundland4;
 		//if (HighJump() && DoubleTransitionSkip(Jump)) goto jundland4; //can get inside but cannot
 		//get past first area
@@ -876,8 +859,7 @@ jundland4:
 	if (logicType == casual) {
 		if (!panel(0, 2)) goto jundland;
 		if (!Multi(Lever, 2)) goto jundland;
-	}
-	else {
+	} else {
 		if (panel(0, 2)) goto jundland2;
 		if (InstantSuperJump()) //&& atrb(Proto)
 			goto jundland2;
@@ -893,16 +875,17 @@ jundland2:
 		for (Playable* p : testing) {
 			if (p->check(Fly) || p->check(DoubleJump)) temp.push_back(p);
 		}
-		if (panel(0, 3)) temp.push_back(Jundland->party[2]);
-		if (panel(0, 4)) goto spaceport;
+		if (panel(0, 3, temp)) temp.push_back(Jundland->party[2]);
+		if (panel(0, 4, temp)) goto spaceport;
 
 		goto jundland;
 	}
 
 jundland3:
-	add(2); //3po
+	if (panel(0, 3)) add(2); //3po
 	if (!panel(0, 4)) goto jundland;
 
+	testing  = Jundland->party;
 	if (logicType == casual) {
 		if (!panel(1, 0)) {
 			std::vector<Playable*> temp = testing;
@@ -930,14 +913,13 @@ spaceport3:
 	if (logicType == casual) {
 		if (!panel(0, 3) && !panel(0, 4)) goto spaceport;
 		//jump off speeder to skip forcing ramp
-		if (!atrb(Jedi) && !panelAnd(0, 3, Jump) && !panelAnd(0, 4, Jump)) goto spaceport;
+		if (!atrb(Jedi) && !panelAny(0, 3, Jump) && !panelAny(0, 4, Jump)) goto spaceport;
 
 		if (atrb(Bounty)) goto spaceport2;
 		if (panel(1, 0) && panel(1, 1)) goto spaceport2;
 
 		goto spaceport;
-	}
-	else {
+	} else {
 		if (!atrb(Box)) goto spaceport;
 	}
 
@@ -947,8 +929,7 @@ spaceport2:
 	add(5);
 	if (logicType == casual) {
 		if (!atrb(Box)) goto spaceport;
-	}
-	else {
+	} else {
 		if (!atrb(Box) && !atrb(DoubleJump)) goto spaceport;
 		if (GetFastest() > 1.2001) //test exact number
 			goto princess;
@@ -1034,18 +1015,18 @@ dse:
 	if (!Multi(Lever, 2)) goto dse;
 
 	//first area
-	if (panelAnd(0, 1, Grapple)) goto dse3;
-	if (panelAnd(0, 1, DoubleJump)) goto dse3;
+	if (panelAny(0, 1, Grapple)) goto dse3;
+	if (panelAny(0, 1, DoubleJump)) goto dse3;
 	goto dse;
 
 dse3:
 	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
-	if (!panelAnd(1, 0, Grapple)) goto dse;
+	if (!panelAny(1, 0, Grapple)) goto dse;
 
 	if (logicType == casual) availableHats.clear();
 	addHat(2, 0);
-	if (!panelAnd(2, 0, Grapple)) goto dse;
+	if (!panelAny(2, 0, Grapple)) goto dse;
 
 	if (logicType == casual) {
 		add(4); //droids
@@ -1073,8 +1054,7 @@ echobase:
 		if (!atrb(Build)) goto echobase;
 		if (!atrb(Box)) goto echobase;
 		if (!atrb(Attack | FakeShoot)) goto echobase;
-	}
-	else {
+	} else {
 		if (atrb(Build) && atrb(Box) && atrb(Attack | FakeShoot)) goto echobase2;
 		if (panel(0, 0) && SuperJump()) goto echobase2;
 		goto echobase;
@@ -1124,10 +1104,9 @@ dagobah:
 		add(1);
 		add(2);
 		if (!atrb(Jedi)) goto dagobah;
-		if (!panelAnd(4, 0, Fly) && !panelAnd(4, 0, DoubleJump)) goto dagobah;
+		if (!panelAny(4, 0, Fly) && !panelAny(4, 0, DoubleJump)) goto dagobah;
 
-	}
-	else {
+	} else {
 		if (Multi(Jump | Fly | Flutter | Tall | Hovering, 2) && atrb(AstroZapper)) goto dagobah2;
 		//test
 		testing.clear();
@@ -1156,8 +1135,7 @@ dagobah2:
 
 		if (!panel(2, 0)) goto dagobah;
 
-	}
-	else {
+	} else {
 		if (!atrb(Jedi)) goto dagobah;
 		if (!panel(2, 0)) goto dagobah;
 	}
@@ -1197,7 +1175,7 @@ cct:
 			if (panelOp) {
 				CCT->panels[panSet].panels[pan].type = (PanelType)panDist(*randoPTR);
 			}
-			};
+		};
 
 		auto rPan = [&rPanMake](int panSet, int pan) {
 			//Greatly speeds up seed generation; not sure about seed distribution
@@ -1206,14 +1184,14 @@ cct:
 				if (panel(panSet, pan)) break;
 			}
 			return panel(panSet, pan);
-			};
+		};
 
 		rPanMake(1, 1);
 
 		rPanMake(1, 2);
 
 		if (All(Fly | Active)) goto cct8;
-		if (panelAnd(1, 1, Fly) && panelAnd(1, 2, Fly)) goto cct8;
+		if (panelAny(1, 1, Fly) && panelAny(1, 2, Fly)) goto cct8;
 		goto cctCasual;
 	cct8:
 
@@ -1233,7 +1211,7 @@ cct:
 		int bridgeUp = false;
 		rPanMake(0, 0);
 
-		if (panelAnd(0, 0, Fly)) bridgeUp = true;
+		if (panelAny(0, 0, Fly)) bridgeUp = true;
 
 		std::vector<Playable*> overBridge;
 
@@ -1262,7 +1240,11 @@ cct:
 
 		if (rPan(0, 5)) {
 			for (Playable* p : testing) {
-				if (panel(0, 7, { p })) balcony = testing;
+				for (Playable* q : testing) {
+					if (p != q) {
+						if (panel(0, 7, {p}) && atrb(Box, {q})) balcony = testing;
+					}
+				}
 			}
 		}
 
@@ -1285,8 +1267,7 @@ cct:
 			}
 		}
 
-	}
-	else {
+	} else {
 
 	cctGlitch:
 
@@ -1297,7 +1278,7 @@ cct:
 
 		//first room
 		int bridgeUp = false;
-		if (panelAnd(0, 0, Fly)) bridgeUp = true;
+		if (panelAny(0, 0, Fly)) bridgeUp = true;
 
 		std::vector<Playable*> overBridge;
 
@@ -1310,8 +1291,7 @@ cct:
 		if (logicType != superGlitched) {
 			if (!atrb(Build, overBridge)) goto cctGlitch;
 			if (!panel(0, 1, overBridge)) goto cctGlitch;
-		}
-		else {
+		} else {
 			if (overBridge.size() == 0) goto cctGlitch;
 		}
 
@@ -1403,7 +1383,7 @@ bespin:
 				}
 			}
 			if (panel(0, 1)) pastFight = testing;
-			if (panel(0, 1, { bobafett }) && atrb(Attack)) pastFight = testing;
+			if (panel(0, 1, {bobafett}) && atrb(Attack)) pastFight = testing;
 
 			//slave 1
 			if (!gotr2 && pastFight.size() != 0) {
@@ -1414,11 +1394,10 @@ bespin:
 					pastFight.push_back(Bespin->party[3]);
 					gotr2 = true;
 
-				}
-				else {
+				} else {
 					for (Playable* p : temp) {
 						if ((p->check(Gas) || (logicType != casual && p->check(Jump))) //BTS
-							&& (panel(0, 5, { p }) || (r2Door && logicType != casual))) {
+							&& (panel(0, 5, {p}) || (r2Door && logicType != casual))) {
 							add(3);
 							pastFight.push_back(Bespin->party[3]);
 							gotr2 = true;
@@ -1491,7 +1470,7 @@ bespin2:
 	if (!All(Lever | Grapple)) goto bespin;
 
 	if (logicType == casual) {
-		if (!panelAnd(1, 0, Fly)) goto bespin;
+		if (!panelAny(1, 0, Fly)) goto bespin;
 
 		if (!All(Box | DoubleJump) && !All(Box | Grapple)) goto bespin;
 
@@ -1499,10 +1478,9 @@ bespin2:
 		if (!panel(1, 2)) goto bespin;
 		if (!panel(1, 3)) goto bespin;
 
-	}
-	else {
+	} else {
 		std::vector<Playable*> overGap;
-		if (panelAnd(1, 0, Fly)) overGap = testing;
+		if (panelAny(1, 0, Fly)) overGap = testing;
 		else
 			for (Playable* p : testing) {
 				if (p->check(Fly)) overGap.push_back(p);
@@ -1514,8 +1492,8 @@ bespin2:
 		////fix this
 		if (panel(1, 1, overGap)) {
 			if (atrb(Gas, overGap)) {
-				if (panelAnd(1, 2, Gas)) goto jabbas;
-				if (panelAnd(1, 3, Gas)) {
+				if (panelAny(1, 2, Gas)) goto jabbas;
+				if (panelAny(1, 3, Gas)) {
 					if (panel(1, 2)) goto jabbas;
 				}
 			}
@@ -1523,8 +1501,8 @@ bespin2:
 
 		if (Separate(Box, Fly, overGap)) goto jabbas;
 		if (Separate(Box, Gas, overGap)) {
-			if (panelAnd(1, 2, Gas)) goto jabbas;
-			if (panelAnd(1, 3, Gas)) {
+			if (panelAny(1, 2, Gas)) goto jabbas;
+			if (panelAny(1, 3, Gas)) {
 				if (panel(1, 2)) goto jabbas;
 			}
 		}
@@ -1543,8 +1521,7 @@ jabbas:
 
 	if (panel(0, 2)) {
 		pastGate = testing;
-	}
-	else if (logicType != casual) {
+	} else if (logicType != casual) {
 		for (Playable* p : testing) {
 			if (p->check(YodaJump)) pastGate.push_back(p);
 
@@ -1580,7 +1557,7 @@ jabbas2: //scene B
 
 		std::vector<Playable*> droidRoom;
 		for (Playable* t : testing)
-			if (atrb(Jump | Fly | Flutter, { t })) //can get into droid room
+			if (atrb(Jump | Fly | Flutter, {t})) //can get into droid room
 				droidRoom.push_back(t);
 
 		if (atrb(Jedi, droidRoom)) {
@@ -1589,8 +1566,7 @@ jabbas2: //scene B
 		}
 		if (panel(1, 1, droidRoom) && panel(1, 2, droidRoom) && panel(1, 3, droidRoom)) goto jabbas3;
 
-	}
-	else {
+	} else {
 		if (atrb(Jedi)) goto jabbas3;
 
 		std::vector<Playable*> droidRoom;
@@ -1624,16 +1600,15 @@ jabbas3: //long room
 	add(4);
 	if (logicType == casual) {
 		if (!panel(2, 0)) goto jabbas;
-		if (!panelAnd(2, 1, Fly) && !panelAnd(2, 0, Fly)) goto jabbas;
+		if (!panelAny(2, 1, Fly) && !panelAny(2, 0, Fly)) goto jabbas;
 		addHat(2, 0);
 		addHat(2, 1);
 		if (!panel(2, 3)) goto jabbas;
 
-	}
-	else {
+	} else {
 		if (atrb(Jedi)) goto jabbas4;
 
-		if (panelAnd(2, 0, Fly | Box | DoubleJump)) goto jabbas4;
+		if (panelAny(2, 0, Fly | Box | DoubleJump)) goto jabbas4;
 
 		if (SuperJump(Jump | Flutter)) goto jabbas4;
 		goto jabbas;
@@ -1651,7 +1626,7 @@ jabbas4: //rancor
 	add(2);
 	add(3);
 	add(4);
-	if (!panel(3, 0) && !panel(3, 1) && !panel(3, 0, { Jabbas->party[5] }, {}) && !panel(3, 1, { Jabbas->party[5] }, {})) {
+	if (!panel(3, 0) && !panel(3, 1) && !panel(3, 0, {Jabbas->party[5]}, {}) && !panel(3, 1, {Jabbas->party[5]}, {})) {
 
 		goto jabbas;
 	}
@@ -1678,8 +1653,7 @@ carkoon2: //second skiff
 	if (logicType == casual) {
 		if (!atrb(Grapple)) goto carkoon;
 		if (!atrb(Jedi)) goto carkoon;
-	}
-	else {
+	} else {
 		if (atrb(Jedi)) goto carkoon3;
 		if (!atrb(Build)) goto carkoon;
 		if (!atrb(Box)) goto carkoon;
@@ -1713,8 +1687,7 @@ carkoon3: //inside
 	add(5);
 	if (logicType == casual) {
 		if (!panel(1, 0)) goto carkoon;
-	}
-	else {
+	} else {
 		if (!atrb(Saber)) //double jump slam into room 3
 			goto carkoon;
 	}
@@ -1726,6 +1699,7 @@ carkoon3: //inside
 showdown:
 	mix(Showdown);
 
+	if (!Multi(Lever, 2)) goto showdown;
 	if (Multi(Jedi, 2)) goto endor;
 	if (atrb(Jedi) && All(Grapple | SlightlyHigherJump)) goto endor;
 
@@ -1753,15 +1727,14 @@ endor:
 		addHat(0, 0);
 		if (!panel(3, 0)) goto endor;
 		if (!panel(3, 1)) goto endor;
-		if (!panelAnd(3, 2, Fly)) goto endor;
+		if (!panelAny(3, 2, Fly)) goto endor;
 		if (!panel(3, 3)) goto endor;
 
 		if (!atrb(Hatch)) goto endor;
 		if (!atrb(Grapple)) goto endor;
 		if (!Multi(Grapple | DoubleJump | Hatch, 4)) //left side
 			goto endor;
-	}
-	else {
+	} else {
 		if (logicType != superGlitched) {
 			if (!panel(2, 0)) goto endor;
 		}
@@ -1783,8 +1756,7 @@ destiny:
 	if (logicType == casual) {
 		if (!atrb(Sith)) goto destiny;
 		if (!Multi(Jedi, 2)) goto destiny;
-	}
-	else {
+	} else {
 		if (!atrb(Saber)) goto destiny;
 	}
 
@@ -1807,8 +1779,7 @@ anewhope:
 		if (!panel(0, 0)) goto anewhope;
 		if (!panel(0, 1)) goto anewhope;
 		if (!panel(0, 2)) goto anewhope;
-	}
-	else {
+	} else {
 		if (DoubleTransitionSkip()) goto bhm;
 		if (atrb(Attack) || atrb(FakeShoot)) {
 			add(2); //3po
@@ -1819,6 +1790,7 @@ anewhope:
 
 bhm:
 	mix(BHM);
+	if (!character) goto cantinaX; //DELETE THIS
 
 	//logR("BOUNTIES MIXED");
 	//for (Playable* p : BHM->party) {
@@ -1897,8 +1869,7 @@ bhm:
 
 		availableHats.clear();
 
-	}
-	else {
+	} else {
 
 		if (bhPanel(Bespin, 0, 0)) addHat(0, 0, Bespin);
 		if (bhPanel(Bespin, 0, 1)) goto bhm7;
@@ -1928,16 +1899,17 @@ bhm:
 	//ghost cannot be captured
 	if (atrb(Ghost, BHM->bonusCharacters)) goto bhm;
 
+cantinaX:
 	mix(Cantina);
 
+	for (Level* lev : allLevels) {
+		if (!lev->fakeLevel)
+			for (Playable* p : lev->party) {
+				//p->storyMode = true;
+				p->StoryMode = true;
+			}
+	}
 	if (character) {
-		for (Level* lev : allLevels) {
-			if (!lev->fakeLevel)
-				for (Playable* p : lev->party) {
-					//p->storyMode = true;
-					p->StoryMode = true;
-				}
-		}
 #ifdef _DEBUG
 		logR("Cantina");
 #endif
@@ -2005,8 +1977,8 @@ bhm:
 	cantina2->StoryMode = true;
 	indy->StoryMode = true;
 
-	//regexTest(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer \"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->name + "\" \"run\"");
-	//return;
+	//regexTest(getSCP(Princess, 'B', "BRIDGE_TROOPS"), "state shootatobiwan((?:(?!state)[\\s\\S])+?)FollowPlayer
+	//\"run\"", "state shootatobiwan$1FollowCharacter \"character=" + Princess->party[5]->name + "\" \"run\""); return;
 
 	//FILE GEN IS HERE
 	fileGen();
@@ -2019,9 +1991,9 @@ bhm:
 	{
 		//Diverts references for nonexistent characters to dummy character so I can
 		//use override said characters.
-		int addresses[] = { 0x4f13, 0x4f33, 0x4fc6, 0x1a7af, 0x29322, 0x895e9, 0xca382, 0x1de5f, 0x31774, 0x8727a,
+		int addresses[] = {0x4f13, 0x4f33, 0x4fc6, 0x1a7af, 0x29322, 0x895e9, 0xca382, 0x1de5f, 0x31774, 0x8727a,
 			0x317a2, 0x317b2, 0x1f29f, 0x2d314, 0x400a6, 0x400c2, 0x400c9, 0x400e5, 0x4005c, 0x40078, 0x400ec, 0x40108,
-			0x4007f, 0x317c2, 0xb57e5, 0x87288, 0xa91ca, 0x1e3e2, 0x1e3eb, 0xa91d7, 0x40039, 0x40055 };
+			0x4007f, 0x317c2, 0xb57e5, 0x87288, 0xa91ca, 0x1e3e2, 0x1e3eb, 0xa91d7, 0x40039, 0x40055};
 
 		for (int address : addresses)
 			binaryWrite(EXE, "b8177f", address);
@@ -2055,7 +2027,7 @@ bhm:
 						if (temp != "") hexWrite(getAI2(lev, enset.scene), temp, en.address - 0x10);
 					}
 					if (en.file != "") {
-						txtIns(getSCP(lev, enset.scene, en.file), en.newType->type->name, { en.lncol },
+						txtIns(getSCP(lev, enset.scene, en.file), en.newType->type->name, {en.lncol},
 							en.vanillaType->type->name.length());
 					}
 					if (appendix.find('\"' + en.newType->type->name + '\"') == std::string::npos) {
@@ -2178,10 +2150,9 @@ bhm:
 	//						std::string redirect;
 	//						std::string ending;
 	//						for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
-	//							if (!(sp.useAltScript && !SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos)) {
-	//								if (SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos) {
-	//									redirect += "\t\tif iAm \"" + sp.spEnemyTypes[i]->name + "\" == 1 goto " +
-	//												overwrite.oldFunName + std::to_string(i) + "\n";
+	//							if (!(sp.useAltScript && !SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos))
+	//{ 								if (SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos) { 									redirect += "\t\tif iAm \"" +
+	//sp.spEnemyTypes[i]->name + "\" == 1 goto " + 												overwrite.oldFunName + std::to_string(i) + "\n";
 	//
 	//									ending += "state " + overwrite.oldFunName + std::to_string(i) + " {\n";
 	//									ending += "\tReferenceScript {\n"
@@ -2221,7 +2192,6 @@ bhm:
 	//		}
 	//	}
 
-
 	if (panelOp) {
 		for (Level* lev : allLevels) {
 			for (PanelSet& panSet : lev->panels) {
@@ -2238,7 +2208,7 @@ bhm:
 		//Makes the actual panel visible once you build
 		//it since I could not figure out how to replace
 		//the icon on the fake one.
-		txtIns(getBasePath(Princess, 'A', "GIT"), "\t\tStartInvisible\n", { 439 });
+		txtIns(getBasePath(Princess, 'A', "GIT"), "\t\tStartInvisible\n", {439});
 		binaryWrite(getBasePath(Princess, 'A', "GIZ"), "00", 0x3035);
 	}
 
@@ -2277,9 +2247,9 @@ bhm:
 						std::stringstream st;
 						st << std::hex << mk.first;
 						logR(st.str() + " " + file +
-							" is not a "
-							"collectabl"
-							"e.\n");
+							 " is not a "
+							 "collectabl"
+							 "e.\n");
 					}
 #endif
 					if (type == 'c') {
@@ -2314,9 +2284,9 @@ bhm:
 						std::stringstream st;
 						st << std::hex << collect.type;
 						logR(st.str() + " " + file +
-							" is not a "
-							"collectabl"
-							"e.\n");
+							 " is not a "
+							 "collectabl"
+							 "e.\n");
 					}
 #endif
 					if (type == 'c') {
@@ -2336,12 +2306,12 @@ bhm:
 		}
 
 		//fixes camera pan in challenge
-		lineDeleter(getBasePath(SecretPlans, 'B', "GIT"), { 1830 });
+		lineDeleter(getBasePath(SecretPlans, 'B', "GIT"), {1830});
 		//allows spinners to work in challenge mode
-		lineDeleter(getBasePath(Coruscant, 'A', "GIT"), { 274, 302, 330, 358, 386, 414, 442, 470, 498, 526 });
+		lineDeleter(getBasePath(Coruscant, 'A', "GIT"), {274, 302, 330, 358, 386, 414, 442, 470, 498, 526});
 		//allows carrot camerapan to work in challenge
 		//mode
-		lineDeleter(getBasePath(Kashyyyk, 'B', "GIT"), { 170 });
+		lineDeleter(getBasePath(Kashyyyk, 'B', "GIT"), {170});
 	}
 
 	std::cout << "Collectables patched\n";
@@ -2350,12 +2320,12 @@ bhm:
 		logR("Starting extras");
 
 #endif
-		unsigned int lines[] = { 39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286, 332, 351, 363, 377, 392, 406,
-			468, 485, 505, 523, 540, 562, 615, 632, 652, 669, 684, 700, 749, 764, 777, 793, 806, 829 };
+		unsigned int lines[] = {39, 57, 75, 88, 128, 144, 195, 214, 233, 246, 259, 286, 332, 351, 363, 377, 392, 406,
+			468, 485, 505, 523, 540, 562, 615, 632, 652, 669, 684, 700, 749, 764, 777, 793, 806, 829};
 
 		std::vector<writeSet> ex;
 		for (unsigned int i = 0; i < extras.size(); i++) {
-			ex.push_back({ extras[i], static_cast<unsigned int>(vanillaExtras[i].length()), {{lines[i], 18}} });
+			ex.push_back({extras[i], static_cast<unsigned int>(vanillaExtras[i].length()), {{lines[i], 18}}});
 		}
 
 		batchAnywhere(LEV + "AREAS.TXT", ex);
@@ -2376,11 +2346,11 @@ bhm:
 		characterPointer(cantina1, 0xca35a);
 		characterPointer(cantina2, 0xca360);
 
-		std::remove("cantina.txt");
-		std::ofstream can("cantina.txt", std::ios_base::out);
-		can << cantina1->name << std::endl;
-		can << cantina2->name << std::endl;
-		can.close();
+		//std::remove("cantina.txt");
+		//std::ofstream can("cantina.txt", std::ios_base::out);
+		//can << cantina1->name << std::endl;
+		//can << cantina2->name << std::endl;
+		//can.close();
 
 		//Removes name length limit for creature spawns
 		//(this took forever to fix) binaryWrite(EXE,
@@ -2392,78 +2362,78 @@ bhm:
 		//binaryWrite(EXE, "e0", 0x113510);
 
 		currentLev = Negotiations;
-		playerInit({ {0, 1}, {1, 2}, {2, 3} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
 		//playerInit(0, 1);
 		//playerInit(1, 2);
 		//playerInit(2, 3); //tc
 
-		scpIns('A', "LEVEL", 2, { 18, 22 });
-		scpMulti('A', "LEVEL1", { 2, {{17, 22}, {21, 22}, {40, 22}} });
+		scpIns('A', "LEVEL", 2, {18, 22});
+		scpMulti('A', "LEVEL1", {2, {{17, 22}, {21, 22}, {40, 22}}});
 
 		//stops tc from going to panel
-		scpRep('A', "TC14", "alwaystrue", 26, { 35, 6 });
-		lineDeleterScp('A', "TC14", { 39 });
+		scpRep('A', "TC14", "alwaystrue", 26, {35, 6});
+		lineDeleterScp('A', "TC14", {39});
 
 		scriptTxtRep('A', "ai_pk", "PKDROID", 4);
-		ai2Write('A', "ai_pk", { 0x4400, 0x44B5 });
+		ai2Write('A', "ai_pk", {0x4400, 0x44B5});
 		scriptTxtRep('C', "ai_pk", "PKDROID", 6);
-		ai2Write('C', "ai_pk", { 0x3846 });
+		ai2Write('C', "ai_pk", {0x3846});
 
 		scriptTxt('A', 2, 5);
 
 		currentLev = Invasion;
-		playerInit({ {0, 1}, {1, 2}, {2, 3} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
 
 		scriptTxtRep('A', "ai_bdroid", "BATTLEDROID", 4);
 		ai2Write('A', "ai_bdroid", {});
 		scriptTxtRep('E', "ai_bdroid", "BATTLEDROID", 1);
-		ai2Write('E', "ai_bdroid", { 0x854, 0x909, 0x9BE, 0xA73, 0xB28 });
+		ai2Write('E', "ai_bdroid", {0x854, 0x909, 0x9BE, 0xA73, 0xB28});
 
 		scriptTxt('A', 2, 2);
 		fileDeleter('B', 2);
 
 		currentLev = EscapeNaboo;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
 
 		//TCS->checks if character is Jedi instead of who
 		//character is
 		scpRep('A', "PARTY",
 			"if IAm \"" + EscapeNaboo->party[0]->name +
-			"\" == 1 goto Activate\n"
-			"\t\tif IAm \"" +
-			EscapeNaboo->party[1]->name + "\" == 1 goto Activate",
-			39, { 5, 3 });
+				"\" == 1 goto Activate\n"
+				"\t\tif IAm \"" +
+				EscapeNaboo->party[1]->name + "\" == 1 goto Activate",
+			39, {5, 3});
 
 		scpRep('B', "PARTY",
 			"if IAm \"" + EscapeNaboo->party[0]->name +
-			"\" == 1 goto Activate\n"
-			"\t\tif IAm \"" +
-			EscapeNaboo->party[1]->name + "\" == 1 goto Activate",
-			39, { 5, 3 });
+				"\" == 1 goto Activate\n"
+				"\t\tif IAm \"" +
+				EscapeNaboo->party[1]->name + "\" == 1 goto Activate",
+			39, {5, 3});
 
-		scpIns('B', "LEVEL", 2, { 17, 26 });
-		scpIns('B', "LEVEL", 3, { 16, 26 });
-		scpIns('C', "LEVEL", 2, { 26, 28 });
-		scpIns('C', "LEVEL", 3, { 25, 28 });
+		scpIns('B', "LEVEL", 2, {17, 26});
+		scpIns('B', "LEVEL", 3, {16, 26});
+		scpIns('C', "LEVEL", 2, {26, 28});
+		scpIns('C', "LEVEL", 3, {25, 28});
 
 		currentLev = Podrace;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 		//fixes scaling problem
 		binaryWrite(EXE, "0f", 0xB5129);
 		binaryWrite(EXE, "0f", 0x35946);
 
 		currentLev = Theed;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 		//scpMulti('A', "LEVEL", {2, {{20, 25}, {21,
 		//28}}});
 
 		scpMany('A', "LEVEL",
-			{ {2, {{20, 25}, {21, 28}}}, {3, {{18, 25}, {19, 28}}}, {4, {{24, 25}, {25, 28}}},
-				{5, {{22, 25}, {23, 28}}} });
+			{{2, {{20, 25}, {21, 28}}}, {3, {{18, 25}, {19, 28}}}, {4, {{24, 25}, {25, 28}}},
+				{5, {{22, 25}, {23, 28}}}});
 
 		currentLev = Maul;
-		playerInit({ {0, 1}, {1, 2} });
-		scpIns('F', "DARTHMAUL", 0, { 381, 21 });
+		playerInit({{0, 1}, {1, 2}});
+		scpIns('F', "DARTHMAUL", 0, {381, 21});
 
 		//fixes ditto problem
 		scriptTxtRep('A', "dmaul", "DARTHMAUL", 1);
@@ -2471,16 +2441,16 @@ bhm:
 		scriptTxtRep('E', "dmaul", "DARTHMAUL", 2);
 		scriptTxtRep('F', "dmaul", "DARTHMAUL", 2);
 
-		ai2Write('A', "dmaul", { 0x26ae });
-		ai2Write('D', "dmaul", { 0x307B });
-		ai2Write('E', "dmaul", { 0x6F9 });
-		ai2Write('F', "dmaul", { 0x96B });
+		ai2Write('A', "dmaul", {0x26ae});
+		ai2Write('D', "dmaul", {0x307B});
+		ai2Write('E', "dmaul", {0x6F9});
+		ai2Write('F', "dmaul", {0x96B});
 
 		currentLev = BHP;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Kamino;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 		scpMany('C', "LEVEL",
 			{
 				{0, {{47, 28}, {83, 28}}},
@@ -2489,20 +2459,20 @@ bhm:
 
 		//ditto
 		scriptTxtRep('A', "ai_taunwe", "TAUNWE", 3);
-		ai2Write('A', "ai_taunwe", { 0x1439 });
+		ai2Write('A', "ai_taunwe", {0x1439});
 		scriptTxtRep('C', "ai_taunwe", "TAUNWE", 2);
-		ai2Write('C', "ai_taunwe", { 0x1B9F });
+		ai2Write('C', "ai_taunwe", {0x1B9F});
 		scriptTxtRep('D', "ai_taunwe", "TAUNWE", 1);
-		ai2Write('D', "ai_taunwe", { 0x2BAE });
+		ai2Write('D', "ai_taunwe", {0x2BAE});
 
 		scriptTxtRep('C', "ai_jango", "JANGOFETT", 1);
-		ai2Write('C', "ai_jango", { 0x1afa });
+		ai2Write('C', "ai_jango", {0x1afa});
 
 		currentLev = Factory;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {0, 10, bonusCharacter} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {0, 10, bonusCharacter}});
 
-		scpRep('D', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, { 12, 3 });
-		scpRep('E', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, { 12, 3 });
+		scpRep('D', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
+		scpRep('E', "PARTY", "if CategoryIs \"Astromech\" == 1", 18, {12, 3});
 
 		//Do not delete this yet.
 		//if (!Proto({ Factory->party[3] }))
@@ -2524,15 +2494,15 @@ bhm:
 		//				'E',
 		//"PARTY.SCP");
 
-		scpRep('F', "PARTY", "if CategoryIs \"noweapon\" == 1", 18, { 13, 3 });
+		scpRep('F', "PARTY", "if CategoryIs \"noweapon\" == 1", 18, {13, 3});
 
-		lineDeleterScp('F', "PARTY", { 14 });
+		lineDeleterScp('F', "PARTY", {14});
 
-		ai2Write('G', 0, { 0x972 }, bonusCharacter);
+		ai2Write('G', 0, {0x972}, bonusCharacter);
 		characterPointer(Factory->party[0], 0xE010F);
 
-		multiScriptTxt('A', { {2, 2}, {3, 3} });
-		multiScriptTxt('B', { {2, 2}, {3, 3} });
+		multiScriptTxt('A', {{2, 2}, {3, 3}});
+		multiScriptTxt('B', {{2, 2}, {3, 3}});
 		/*scpName('A', 2);
 		scpName('A', 3);
 		scpName('B', 2);
@@ -2581,34 +2551,34 @@ bhm:
 		//"FACTORY_E.AI2"); Factory->binWrite(2, {
 		//0x143D }, 'E', "FACTORY_E.AI2");
 		currentLev = JediBattle;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 8}, {3, 9}, {4, 10} }); //so they still spawn in FP
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 8}, {3, 9}, {4, 10}}); //so they still spawn in FP
 
-		scpMany('B', "PARTY", { {2, {{15, 11}, {31, 11}}}, {3, {{11, 11}, {26, 11}}}, {4, {{7, 11}, {21, 11}}} });
-		scpIns('B', "LEVEL", 4, { 7, 45 });
+		scpMany('B', "PARTY", {{2, {{15, 11}, {31, 11}}}, {3, {{11, 11}, {26, 11}}}, {4, {{7, 11}, {21, 11}}}});
+		scpIns('B', "LEVEL", 4, {7, 45});
 
-		multiPointer(JediBattle->party[2], { 0xDFABF, 0x3fffa4 });
-		multiPointer(JediBattle->party[3], { 0xDFAAB, 0x3fffa0 });
-		multiPointer(JediBattle->party[4], { 0xDFA98, 0x3fff9c });
+		multiPointer(JediBattle->party[2], {0xDFABF, 0x3fffa4});
+		multiPointer(JediBattle->party[3], {0xDFAAB, 0x3fffa0});
+		multiPointer(JediBattle->party[4], {0xDFA98, 0x3fff9c});
 		//fixes green saber
 		//binaryWrite(EXE, 0x0f, 0x190E6);
 
 		currentLev = Gunship;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Dooku;
-		playerInit({ {0, 1}, {1, 2}, {2, 3} });
-		scpMany('C', "DOOKU", { {0, {{209, 45}}}, {1, {{207, 26}, {214, 29}}}, {2, {{208, 43}}} }); //Yoda
-		scpIns('C', "PARTY", 2, { 6, 11 });
-		scpIns('B', "PARTY", 2, { 18, 11 });
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
+		scpMany('C', "DOOKU", {{0, {{209, 45}}}, {1, {{207, 26}, {214, 29}}}, {2, {{208, 43}}}}); //Yoda
+		scpIns('C', "PARTY", 2, {6, 11});
+		scpIns('B', "PARTY", 2, {18, 11});
 
 		currentLev = Coruscant;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Chancellor;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
 
-		scpMany('C', "DOOKU", { {0, {{29, 28}}}, {1, {{28, 28}}} });
-		scpIns('B', "R2D2", 2, { 38, 74 });
+		scpMany('C', "DOOKU", {{0, {{29, 28}}}, {1, {{28, 28}}}});
+		scpIns('B', "R2D2", 2, {38, 74});
 
 		//tall room AI is stupid
 		/*if (!Chancellor->party[2]->astro) {
@@ -2619,163 +2589,163 @@ bhm:
 		//"PARTY.SCP"));
 		std::ofstream party(getSCP(Chancellor, 'B', "PARTY"));
 		party << "state Base {\n"
-			<< "\tConditions {\n"
-			<< "\t\tif FreePlay == 1 goto "
-			"NormalUpdate\n"
-			<< "\t\tif CategoryIs \"Astromech\" == 1 "
-			"goto PanelUpdate\n"
-			<< "\t\tif AlwaysTrue == 1 goto "
-			"NormalUpdate\n"
-			<< "\t}\n"
-			<< "\tActions {\n"
-			<< "\t}\n"
-			<< "}\n"
-			<< "state NormalUpdate {\n"
-			<< "\tReferenceScript {\n"
-			<< "\t\tScript=GeneralParty\n"
-			<< "\t\tSource=Global\n"
-			<< "\t\tReturnState=NormalUpdate\n"
-			<< "\t\tConditions {\n"
-			<< "\t\t}\n"
-			<< "\t}\n"
-			<< "\tConditions{\n"
-			<< "\t}\n"
-			<< "\tActions {\n"
-			<< "\t}\n"
-			<< "}\n"
-			<< "state PanelUpdate {\n"
-			<< "\tConditions{\n"
-			<< "\t}\n"
-			<< "\tActions {\n"
-			<< "\t\tFollowPlayer \"1\"\n"
-			<< "\t}\n"
-			<< "}\n";
+			  << "\tConditions {\n"
+			  << "\t\tif FreePlay == 1 goto "
+				 "NormalUpdate\n"
+			  << "\t\tif CategoryIs \"Astromech\" == 1 "
+				 "goto PanelUpdate\n"
+			  << "\t\tif AlwaysTrue == 1 goto "
+				 "NormalUpdate\n"
+			  << "\t}\n"
+			  << "\tActions {\n"
+			  << "\t}\n"
+			  << "}\n"
+			  << "state NormalUpdate {\n"
+			  << "\tReferenceScript {\n"
+			  << "\t\tScript=GeneralParty\n"
+			  << "\t\tSource=Global\n"
+			  << "\t\tReturnState=NormalUpdate\n"
+			  << "\t\tConditions {\n"
+			  << "\t\t}\n"
+			  << "\t}\n"
+			  << "\tConditions{\n"
+			  << "\t}\n"
+			  << "\tActions {\n"
+			  << "\t}\n"
+			  << "}\n"
+			  << "state PanelUpdate {\n"
+			  << "\tConditions{\n"
+			  << "\t}\n"
+			  << "\tActions {\n"
+			  << "\t\tFollowPlayer \"1\"\n"
+			  << "\t}\n"
+			  << "}\n";
 
 		scriptTxtAppend('B', "party");
 
-		scpMulti('D', "PARTY", { "if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}} }); //test
+		scpMulti('D', "PARTY", {"if Freeplay == 1 and\n", 0, {{22, 3}, {23, 3}}}); //test
 
 		scriptTxtRep('A', "ai_griev", "GRIEVOUS", 3);
-		ai2Write('A', "ai_griev", { 0x8F7 });
+		ai2Write('A', "ai_griev", {0x8F7});
 
 		if (!enemyOp) {
 			scriptTxtRep('F', "ai_guard", "BODYGUARD", 1);
-			ai2Write('F', "ai_guard", { 0x111E, 0x11D3 });
+			ai2Write('F', "ai_guard", {0x111E, 0x11D3});
 		}
 
 		multiScriptTxt('A', {
 								{2, 1},
 								{3, 4},
-			});
+							});
 		multiScriptTxt('B', {
 								{2, 1},
 								{3, 4},
-			});
+							});
 		multiScriptTxt('C', {
 								{2, 2},
 								{3, 4},
-			});
+							});
 		multiScriptTxt('G', {
 								{2, 2},
 								{3, 3},
-			});
+							});
 
 		currentLev = Grievous;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 		//fixes ditto problem
 		scriptTxtRep('A', "ai_griev", "GRIEVOUS", 3);
-		ai2Write('A', "ai_griev", { 0x472d });
+		ai2Write('A', "ai_griev", {0x472d});
 
 		currentLev = Kashyyyk;
-		playerInit({ {0, 1}, {1, 2} });
-		scpMany('A', "LEVEL", { {0, {{44, 28}}}, {1, {{45, 28}}} });
+		playerInit({{0, 1}, {1, 2}});
+		scpMany('A', "LEVEL", {{0, {{44, 28}}}, {1, {{45, 28}}}});
 
 		scriptTxtRep('A', "ai_wookiee", "WOOKIE", 4);
 		ai2Write('A', "ai_wookiee", {});
 
 		currentLev = Ruin;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Vader;
-		playerInit({ {0, 1}, {1, 2} });
-		lineDeleterScp('B', "PARTY", { 37 });
+		playerInit({{0, 1}, {1, 2}});
+		lineDeleterScp('B', "PARTY", {37});
 
 		currentLev = SecretPlans;
-		playerInit({ {0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7} });
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}});
 
 		scpMany('A', "PARTY",
-			{ {0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}}, {4, {{20, 11}}} });
+			{{0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}}, {4, {{20, 11}}}});
 		scpMany('B', "PARTY",
-			{ {0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}}, {4, {{20, 11}}} });
-		scpMany('C', "PARTY", { {0, {{7, 11}, {10, 11}}}, {2, {{34, 11}}}, {3, {{28, 11}, {53, 11}}}, {4, {{31, 11}}} });
-		scpMany('D', "PARTY", { {0, {{38, 26}}}, {1, {{8, 11}}}, {2, {{9, 11}}}, {3, {{6, 11}}}, {4, {{7, 11}}} });
+			{{0, {{23, 11}}}, {1, {{26, 11}}}, {2, {{29, 11}, {14, 11}}}, {3, {{17, 11}}}, {4, {{20, 11}}}});
+		scpMany('C', "PARTY", {{0, {{7, 11}, {10, 11}}}, {2, {{34, 11}}}, {3, {{28, 11}, {53, 11}}}, {4, {{31, 11}}}});
+		scpMany('D', "PARTY", {{0, {{38, 26}}}, {1, {{8, 11}}}, {2, {{9, 11}}}, {3, {{6, 11}}}, {4, {{7, 11}}}});
 
 		scpMany('C', "LEVEL",
-			{ {0, {{53, 26}, {54, 25}}}, {3, {{21, 22}, {36, 27}, {37, 27}, {38, 29}}},
-				{4, {{49, 27}, {50, 27}, {51, 29}}} });
-		scpIns('C', "LIFT_TROOPER", 2, { 34, 25 });
+			{{0, {{53, 26}, {54, 25}}}, {3, {{21, 22}, {36, 27}, {37, 27}, {38, 29}}},
+				{4, {{49, 27}, {50, 27}, {51, 29}}}});
+		scpIns('C', "LIFT_TROOPER", 2, {34, 25});
 
 		scriptTxtRep('D', "ai_beach", "BEACHTROOPER", 7);
-		ai2Write('D', "ai_beach", { 0x21FB, 0x22B0 });
+		ai2Write('D', "ai_beach", {0x21FB, 0x22B0});
 
 		currentLev = Jundland;
-		playerInit({ {0, 3}, {1, 4}, {2, 5}, {3, 6} });
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}});
 
-		scpMany('A', "LEVEL", { {0, {{51, 23}}}, {1, {{52, 23}}}, {2, {{54, 26}}}, {3, {{55, 26}}} });
+		scpMany('A', "LEVEL", {{0, {{51, 23}}}, {1, {{52, 23}}}, {2, {{54, 26}}}, {3, {{55, 26}}}});
 
-		scpMany('A', "PARTY", { {2, {{16, 11}}}, {3, {{17, 11}}} });
-		scpMany('B', "PARTY", { {2, {{6, 11}}}, {3, {{9, 11}}} });
-		scpMany('D', "PARTY", { {2, {{6, 11}, {9, 11}, {32, 11}}}, {3, {{7, 11}, {12, 11}, {35, 11}}} });
+		scpMany('A', "PARTY", {{2, {{16, 11}}}, {3, {{17, 11}}}});
+		scpMany('B', "PARTY", {{2, {{6, 11}}}, {3, {{9, 11}}}});
+		scpMany('D', "PARTY", {{2, {{6, 11}, {9, 11}, {32, 11}}}, {3, {{7, 11}, {12, 11}, {35, 11}}}});
 
 		scriptTxtRep('C', "ai_tusken", "TUSKENRAIDER", 3);
-		ai2Write('C', "ai_tusken", { 0x6885, 0x69DF, 0x6BEE, 0x6CA3, 0x6D58 });
+		ai2Write('C', "ai_tusken", {0x6885, 0x69DF, 0x6BEE, 0x6CA3, 0x6D58});
 
 		currentLev = Spaceport;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
 		scpMany('A', "PARTY",
-			{ {0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}} });
+			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}}});
 		scpMany('B', "PARTY",
-			{ {0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}} });
+			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}}});
 		scpMany('C', "PARTY",
-			{ {0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}} });
+			{{0, {{8, 11}}}, {1, {{11, 11}}}, {2, {{14, 11}}}, {3, {{17, 11}}}, {4, {{24, 11}}}, {5, {{21, 11}}}});
 
 		scpMany('C', "LEVEL",
-			{ {0, {{100, 26}, {101, 25}}}, {1, {{103, 26}, {104, 25}}}, {2, {{106, 26}, {107, 25}}},
-				{3, {{109, 26}, {110, 25}}}, {4, {{97, 23}, {98, 28}}}, {5, {{94, 23}, {95, 28}}} });
+			{{0, {{100, 26}, {101, 25}}}, {1, {{103, 26}, {104, 25}}}, {2, {{106, 26}, {107, 25}}},
+				{3, {{109, 26}, {110, 25}}}, {4, {{97, 23}, {98, 28}}}, {5, {{94, 23}, {95, 28}}}});
 
 		scpMany('D', "LEVEL",
-			{ {0, {{26, 26}, {27, 27}, {28, 27}, {29, 28}, {30, 29}, {108, 26}, {109, 27}, {110, 27}, {111, 29}}},
+			{{0, {{26, 26}, {27, 27}, {28, 27}, {29, 28}, {30, 29}, {108, 26}, {109, 27}, {110, 27}, {111, 29}}},
 				{1, {{32, 26}, {33, 27}, {34, 27}, {35, 28}, {36, 29}, {113, 26}, {114, 27}, {115, 27}, {116, 29}}},
 				{2, {{38, 26}, {39, 27}, {40, 27}, {41, 28}, {42, 29}, {118, 26}, {119, 27}, {120, 27}, {121, 29}}},
-				{3, {{44, 26}, {45, 27}, {46, 27}, {47, 28}, {48, 29}, {123, 26}, {124, 27}, {125, 27}, {126, 29}}} });
+				{3, {{44, 26}, {45, 27}, {46, 27}, {47, 28}, {48, 29}, {123, 26}, {124, 27}, {125, 27}, {126, 29}}}});
 
 		scpMany('E', "LEVEL",
-			{ {0, {{16, 26}, {17, 27}, {18, 27}, {19, 26}}}, {1, {{21, 26}, {22, 27}, {23, 27}, {24, 26}}},
-				{2, {{26, 26}, {27, 27}, {28, 27}, {29, 26}}}, {3, {{31, 26}, {32, 27}, {33, 27}, {34, 26}}} });
+			{{0, {{16, 26}, {17, 27}, {18, 27}, {19, 26}}}, {1, {{21, 26}, {22, 27}, {23, 27}, {24, 26}}},
+				{2, {{26, 26}, {27, 27}, {28, 27}, {29, 26}}}, {3, {{31, 26}, {32, 27}, {33, 27}, {34, 26}}}});
 
 		currentLev = Princess;
-		playerInit({ {0, 17}, {1, 18}, {2, 19}, {3, 20}, {4, 21}, {5, 22}, {0, 25, bonusCharacter} });
+		playerInit({{0, 17}, {1, 18}, {2, 19}, {3, 20}, {4, 21}, {5, 22}, {0, 25, bonusCharacter}});
 
-		scpMany('A', "LEVEL", { {3, {{35, 26}, {36, 25}}}, {4, {{33, 26}, {34, 25}}}, {5, {{37, 26}, {38, 25}}} });
-		scpMany('B', "LEVEL", { {3, {{24, 26}}}, {4, {{25, 26}}}, {5, {{26, 26}}} });
+		scpMany('A', "LEVEL", {{3, {{35, 26}, {36, 25}}}, {4, {{33, 26}, {34, 25}}}, {5, {{37, 26}, {38, 25}}}});
+		scpMany('B', "LEVEL", {{3, {{24, 26}}}, {4, {{25, 26}}}, {5, {{26, 26}}}});
 
-		ai2Write('B', 5, { 0x6825 });
-		ai2Write('C', 0, { 0x3A9F }, bonusCharacter);
+		ai2Write('B', 5, {0x6825});
+		ai2Write('C', 0, {0x3A9F}, bonusCharacter);
 
 		//TCS stupidly->checks weapon instead of
 		//character
 		scpRep('B', "LEVEL",
 			"\t\tdeactivate \"character=" + Princess->party[3]->name + "\"\n" +
-			"\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n", //+
+				"\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n", //+
 			//"\t\tdeactivate\"character=" +
 			//Princess->party[5]->name + "\"\n",
-			0, { 27, 1 });
+			0, {27, 1});
 
 		scpRep('C', "LEVEL",
 			"\t\tif FreePlay == 0 goto "
 			"MakeSurePlayersNotDroids\n",
-			0, { 4, 1 });
+			0, {4, 1});
 
 		scpAppend('C', "LEVEL",
 			"state MakeSurePlayersNotDroids {\n"
@@ -2783,34 +2753,34 @@ bhm:
 			"\t}\n"
 			"\tActions {\n"
 			"\t\tdeactivate \"character=" +
-			Princess->party[3]->name + "\"\n" + "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
-			//"\t\tdeactivate \"character=" +
-			//Princess->party[5]->name + "\"\n" +
-			"\t}\n" + "}");
+				Princess->party[3]->name + "\"\n" + "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
+				//"\t\tdeactivate \"character=" +
+				//Princess->party[5]->name + "\"\n" +
+				"\t}\n" + "}");
 
 		std::ofstream os(getSCP(Princess, 'D', "LEVEL"));
 		os << "state Base {\n"
-			<< "\tConditions {\n"
-			<< "\t\tif FreePlay == 0 goto "
-			"MakeSurePlayersNotDroids\n"
-			<< "\t}\n"
-			<< "\tActions {\n"
-			<< "\t}\n"
-			<< "}\n"
-			<< "state MakeSurePlayersNotDroids {\n"
-			<< "\tConditions {\n"
-			<< "\t}\n"
-			<< "\tActions {\n"
-			<< "\t\tdeactivate \"character=" + Princess->party[3]->name + "\"\n"
-			<< "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n"
-			<< "\t}\n"
-			<< "}\n";
+		   << "\tConditions {\n"
+		   << "\t\tif FreePlay == 0 goto "
+			  "MakeSurePlayersNotDroids\n"
+		   << "\t}\n"
+		   << "\tActions {\n"
+		   << "\t}\n"
+		   << "}\n"
+		   << "state MakeSurePlayersNotDroids {\n"
+		   << "\tConditions {\n"
+		   << "\t}\n"
+		   << "\tActions {\n"
+		   << "\t\tdeactivate \"character=" + Princess->party[3]->name + "\"\n"
+		   << "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n"
+		   << "\t}\n"
+		   << "}\n";
 		os.close();
 
 		scpRep('E', "LEVEL",
 			"\t\tif FreePlay == 0 goto "
 			"MakeSurePlayersNotDroids\n",
-			0, { 3, 1 });
+			0, {3, 1});
 
 		scpAppend('E', "LEVEL",
 			"state MakeSurePlayersNotDroids {\n"
@@ -2818,8 +2788,8 @@ bhm:
 			"\t}\n"
 			"\tActions {\n"
 			"\t\tdeactivate \"character=" +
-			Princess->party[3]->name + "\"\n" + "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
-			"\t}\n" + "}");
+				Princess->party[3]->name + "\"\n" + "\t\tdeactivate \"character=" + Princess->party[4]->name + "\"\n" +
+				"\t}\n" + "}");
 
 		scpDeleter('A', "NOWEAPON");
 		scpDeleter('B', "NOWEAPON");
@@ -2834,105 +2804,105 @@ bhm:
 		scriptTxt('E', 5, 4);
 
 		currentLev = DSE;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
-		scpMany('A', "PARTY", { {4, {{15, 11}}}, {5, {{14, 11}}} });
-		scpMany('B', "PARTY", { {4, {{15, 11}}}, {5, {{14, 11}}} });
-		scpMany('C', "PARTY", { {4, {{12, 11}, {15, 11}}}, {5, {{6, 11}, {9, 11}}} });
+		scpMany('A', "PARTY", {{4, {{15, 11}}}, {5, {{14, 11}}}});
+		scpMany('B', "PARTY", {{4, {{15, 11}}}, {5, {{14, 11}}}});
+		scpMany('C', "PARTY", {{4, {{12, 11}, {15, 11}}}, {5, {{6, 11}, {9, 11}}}});
 
 		currentLev = RebelAttack;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Hoth;
 		mainTxtIns("character \"" + Hoth->party[0]->name +
-			"\" player\n"
-			"character \"" +
-			Hoth->party[1]->name + "\" player",
-			32, { 1, 1 });
+					   "\" player\n"
+					   "character \"" +
+					   Hoth->party[1]->name + "\" player",
+			32, {1, 1});
 
 		currentLev = EchoBase;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}});
 
-		scpMany('A', "PARTY", { {2, {{24, 11}}}, {3, {{5, 11}}} });
+		scpMany('A', "PARTY", {{2, {{24, 11}}}, {3, {{5, 11}}}});
 
 		scpMany('B', "PARTY",
-			{ {"if CategoryIs \"protocol\"", 13, {{23, 3}}}, {"category=protocol", 14, {{111, 29}}},
-				{"protocol", 4, {{112, 60}}}, {3, {{5, 11}}} });
+			{{"if CategoryIs \"protocol\"", 13, {{23, 3}}}, {"category=protocol", 14, {{111, 29}}},
+				{"protocol", 4, {{112, 60}}}, {3, {{5, 11}}}});
 
-		scpIns('C', "PARTY", 3, { 6, 11 });
+		scpIns('C', "PARTY", 3, {6, 11});
 
 		scriptTxtRep('A', "ai_skeleton", "SKELETON", 5);
-		ai2Write('A', "ai_skeleton", { 0x33FB, 0x34B0 });
+		ai2Write('A', "ai_skeleton", {0x33FB, 0x34B0});
 
 		currentLev = FalconFlight;
-		playerInit({ {0, 3}, {1, 4} });
+		playerInit({{0, 3}, {1, 4}});
 
 		currentLev = Dagobah;
-		playerInit({ {0, 3}, {1, 4}, {2, 5}, {3, 6} });
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}});
 
 		scpMany('A', "LEVEL",
-			{ {0, {{21, 26}, {22, 27}, {23, 27}, {24, 25}}}, {2, {{34, 26}, {35, 27}, {36, 27}, {37, 25}}},
-				{3, {{39, 26}, {40, 27}, {41, 27}, {42, 25}}} });
+			{{0, {{21, 26}, {22, 27}, {23, 27}, {24, 25}}}, {2, {{34, 26}, {35, 27}, {36, 27}, {37, 25}}},
+				{3, {{39, 26}, {40, 27}, {41, 27}, {42, 25}}}});
 		scpMany('B', "LEVEL",
-			{ {0, {{41, 26}, {42, 27}, {43, 27}, {44, 25}}}, {1, {{59, 28}, {65, 29}, {84, 29}}},
+			{{0, {{41, 26}, {42, 27}, {43, 27}, {44, 25}}}, {1, {{59, 28}, {65, 29}, {84, 29}}},
 				{2, {{57, 28}, {61, 59}, {63, 29}, {82, 29}, {96, 26}, {97, 27}, {98, 27}, {99, 25}}},
-				{3, {{58, 28}, {64, 29}, {83, 29}, {101, 26}, {102, 27}, {103, 27}, {104, 25}}} });
+				{3, {{58, 28}, {64, 29}, {83, 29}, {101, 26}, {102, 27}, {103, 27}, {104, 25}}}});
 		scpMany('C', "LEVEL",
-			{ {0, {{25, 26}, {26, 27}, {27, 27}, {28, 25}}}, {2, {{38, 26}, {39, 27}, {40, 27}, {41, 25}}},
-				{3, {{43, 26}, {44, 27}, {45, 27}, {46, 25}}} });
+			{{0, {{25, 26}, {26, 27}, {27, 27}, {28, 25}}}, {2, {{38, 26}, {39, 27}, {40, 27}, {41, 25}}},
+				{3, {{43, 26}, {44, 27}, {45, 27}, {46, 25}}}});
 		scpMany('D', "LEVEL",
-			{ {0, {{35, 26}, {36, 27}, {37, 27}, {38, 25}}}, {2, {{48, 26}, {49, 27}, {50, 27}, {51, 25}}},
-				{3, {{53, 26}, {54, 27}, {55, 27}, {56, 25}}} });
+			{{0, {{35, 26}, {36, 27}, {37, 27}, {38, 25}}}, {2, {{48, 26}, {49, 27}, {50, 27}, {51, 25}}},
+				{3, {{53, 26}, {54, 27}, {55, 27}, {56, 25}}}});
 		scpMany('E', "LEVEL",
-			{ {0, {{33, 26}, {34, 27}, {35, 27}, {36, 25}, {54, 26}, {55, 27}, {56, 27}, {57, 25}}}, {3, {{38, 27}}} });
+			{{0, {{33, 26}, {34, 27}, {35, 27}, {36, 25}, {54, 26}, {55, 27}, {56, 27}, {57, 25}}}, {3, {{38, 27}}}});
 
 		//fixes AI
-		scpRep('C', "PARTY", "if CategoryIs \"Jedi\" == 0", 18, { 5, 3 });
+		scpRep('C', "PARTY", "if CategoryIs \"Jedi\" == 0", 18, {5, 3});
 
-		scpMany('E', "PARTY", { {2, {{9, 11}}}, {3, {{7, 11}, {170, 11}}} });
+		scpMany('E', "PARTY", {{2, {{9, 11}}}, {3, {{7, 11}, {170, 11}}}});
 
 		hexWrite(EXE, "\0",
 			0x35E3A0); //unrestricts xwing force
 
 		//training
 		if (Dagobah->party[2]->check(Jedi))
-			multiPointer(Dagobah->party[2], { 0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6 });
+			multiPointer(Dagobah->party[2], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
 		else if (Dagobah->party[1]->check(Jedi))
-			multiPointer(Dagobah->party[1], { 0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6 });
+			multiPointer(Dagobah->party[1], {0x3464d, 0x35b2d, 0x87114, 0xa219a, 0xa23f7, 0xa38b6});
 
 		currentLev = CCT;
-		playerInit({ {0, 3}, {1, 4} });
+		playerInit({{0, 3}, {1, 4}});
 
-		scpRep('A', "PARTY", "if CategoryIs \"Droid\" == 1", 18, { 5, 3 });
-		scpRep('B', "PARTY", "if CategoryIs \"Droid\" == 1", 18, { 5, 3 });
-		scpRep('C', "PARTY", "if CategoryIs \"Droid\" == 1", 18, { 5, 3 });
+		scpRep('A', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
+		scpRep('B', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
+		scpRep('C', "PARTY", "if CategoryIs \"Droid\" == 1", 18, {5, 3});
 
 		currentLev = Bespin;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}});
 
-		scpMany('A', "PARTY", { {3, {{14, 11}, {20, 11}}}, {4, {{15, 11}, {17, 11}}} });
-		scpMulti('B', "PARTY", { 4, {{14, 11}, {16, 11}} });
+		scpMany('A', "PARTY", {{3, {{14, 11}, {20, 11}}}, {4, {{15, 11}, {17, 11}}}});
+		scpMulti('B', "PARTY", {4, {{14, 11}, {16, 11}}});
 
 		scpMany('C', "PARTY",
-			{ {"if CategoryIs \"Protocol\"", 13, {{13, 3}, {24, 3}}},
-				{"if CategoryIs \"Astromech\"", 13, {{18, 3}, {30, 3}}} });
+			{{"if CategoryIs \"Protocol\"", 13, {{13, 3}, {24, 3}}},
+				{"if CategoryIs \"Astromech\"", 13, {{18, 3}, {30, 3}}}});
 
 		//buildable 3po
-		baseFile('A', "TXT", 4, { 494, 13 });
-		baseFile('A', "GIT", 4, { 1598, 22 });
+		baseFile('A', "TXT", 4, {494, 13});
+		baseFile('A', "GIT", 4, {1598, 22});
 
 		if (Bespin->panels[0].panels[1].type != BountyPanel) {
 			//Prevents camera pan if Boba can't open
 			//door
-			lineDeleterScp('A', "AI_BOBAFETT", { 345, 348 });
+			lineDeleterScp('A', "AI_BOBAFETT", {345, 348});
 		}
 
 		currentLev = Jabbas;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
 
-		scpMulti('E', "LEVEL", { 0, {{17, 26}, {18, 25}} });
+		scpMulti('E', "LEVEL", {0, {{17, 26}, {18, 25}}});
 
-		scpMany('A', "PARTY", { {2, {{28, 11}}}, {3, {{7, 11}}}, {4, {{8, 11}, {10, 11}}}, {5, {{6, 11}}} });
+		scpMany('A', "PARTY", {{2, {{28, 11}}}, {3, {{7, 11}}}, {4, {{8, 11}, {10, 11}}}, {5, {{6, 11}}}});
 
 		scpMany('B', "PARTY",
 			{
@@ -2942,37 +2912,37 @@ bhm:
 			});
 
 		//fixes AI
-		scpMulti('B', "PARTY", { "if CategoryIs \"Jedi\"", 27, {{49, 3}, {38, 3}} });
+		scpMulti('B', "PARTY", {"if CategoryIs \"Jedi\"", 27, {{49, 3}, {38, 3}}});
 
 		int leverGuy = -1;
 		if (!Jabbas->party[1]->check(Jedi) && Jabbas->party[1]->check(Lever)) leverGuy = 1;
 		else if (!Jabbas->party[0]->check(Jedi) && Jabbas->party[0]->check(Lever)) leverGuy = 0;
 		else if (!Jabbas->party[2]->check(Jedi) && Jabbas->party[2]->check(Lever)) leverGuy = 2;
 
-		if (leverGuy != -1) scpMulti('B', "PARTY", { leverGuy, {{39, 11}, {50, 11}} });
+		if (leverGuy != -1) scpMulti('B', "PARTY", {leverGuy, {{39, 11}, {50, 11}}});
 
-		scpIns('D', "PARTY", 5, { 6, 11 });
+		scpIns('D', "PARTY", 5, {6, 11});
 
 		scpMany('E', "PARTY",
-			{ {"if CategoryIs \"Astromech\"", 13, {{6, 3}}}, {"if CategoryIs \"Protocol\"", 13, {{8, 3}}} });
+			{{"if CategoryIs \"Astromech\"", 13, {{6, 3}}}, {"if CategoryIs \"Protocol\"", 13, {{8, 3}}}});
 
 		currentLev = Carkoon;
-		playerInit({ {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}});
 
-		scpMany('A', "LEVEL", { {2, {{132, 27}, {133, 27}, {134, 29}}}, {3, {{130, 59}, {136, 27}, {137, 27}}} });
+		scpMany('A', "LEVEL", {{2, {{132, 27}, {133, 27}, {134, 29}}}, {3, {{130, 59}, {136, 27}, {137, 27}}}});
 		scpMany('B', "LEVEL",
-			{ {4, {{56, 27}, {57, 27}, {58, 26}, {59, 29}}}, {5, {{61, 27}, {62, 27}, {63, 26}, {64, 29}}} });
+			{{4, {{56, 27}, {57, 27}, {58, 26}, {59, 29}}}, {5, {{61, 27}, {62, 27}, {63, 26}, {64, 29}}}});
 
 		scpMany('A', "PARTY",
-			{ {2, {{36, 11}}}, {3, {{39, 11}}}, {4, {{8, 11}, {11, 11}}}, {5, {{9, 11}, {14, 11}}},
-				{6, {{7, 11}, {17, 11}}} });
-		scpMany('B', "PARTY", { {4, {{30, 11}}}, {5, {{27, 11}}}, {6, {{6, 11}, {8, 11}}} });
+			{{2, {{36, 11}}}, {3, {{39, 11}}}, {4, {{8, 11}, {11, 11}}}, {5, {{9, 11}, {14, 11}}},
+				{6, {{7, 11}, {17, 11}}}});
+		scpMany('B', "PARTY", {{4, {{30, 11}}}, {5, {{27, 11}}}, {6, {{6, 11}, {8, 11}}}});
 
 		currentLev = Showdown;
-		playerInit({ {0, 3}, {1, 4} });
+		playerInit({{0, 3}, {1, 4}});
 
 		currentLev = Endor;
-		playerInit({ {0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}, {5, 8} });
+		playerInit({{0, 3}, {1, 4}, {2, 5}, {3, 6}, {4, 7}, {5, 8}});
 
 		if (Endor->party[0]->check(Grapple)) leverGuy = 0;
 		else if ((Endor->party[1]->check(Grapple))) leverGuy = 1;
@@ -2981,22 +2951,22 @@ bhm:
 		else if ((Endor->party[4]->check(Grapple))) leverGuy = 4;
 		else if ((Endor->party[5]->check(Grapple))) leverGuy = 5;
 
-		scpIns('B', "PARTY", leverGuy, { 5, 11 });
+		scpIns('B', "PARTY", leverGuy, {5, 11});
 
 		currentLev = Destiny;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = ITDS;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		//currentLev = PodraceOriginal;
 		//playerInit({{0, 1}, {1, 2}});
 
 		currentLev = Anakinsflight;
-		playerInit({ {0, 1}, {1, 2} });
+		playerInit({{0, 1}, {1, 2}});
 
 		currentLev = ANewHope;
-		playerInit({ {0, 1}, {1, 2}, {2, 3} });
+		playerInit({{0, 1}, {1, 2}, {2, 3}});
 
 		scriptTxt('A', 2, 1);
 		scriptTxt('B', 2, 1);
@@ -3008,7 +2978,7 @@ bhm:
 			currentLev = BHM;
 
 			batchAnywhere(LEV + "MISSIONS.TXT",
-				{ {"party \"" + BHM->party[0]->name + "\" \"" + BHM->party[1]->name + "\" \"" + BHM->party[2]->name +
+				{{"party \"" + BHM->party[0]->name + "\" \"" + BHM->party[1]->name + "\" \"" + BHM->party[2]->name +
 						 "\" \"" + BHM->party[3]->name + "\" \"" + BHM->party[4]->name + "\" \"" + BHM->party[5]->name +
 						 "\" ",
 					 56, {{1, 1}}},
@@ -3022,15 +2992,15 @@ bhm:
 					{12, {{19, 15}}, bonusCharacter}, {13, {{20, 15}}, bonusCharacter},
 					{14, {{21, 15}}, bonusCharacter}, {15, {{22, 15}}, bonusCharacter},
 					{16, {{23, 15}}, bonusCharacter}, {17, {{24, 15}}, bonusCharacter},
-					{18, {{25, 15}}, bonusCharacter}, {19, {{26, 15}}, bonusCharacter} });
+					{18, {{25, 15}}, bonusCharacter}, {19, {{26, 15}}, bonusCharacter}});
 
 			auto missionReplace2 = [](int c, unsigned int line, Level* lev, char scene, std::string script) {
 				writer(oneWrite, getSCP(lev, scene, script),
-					{ BHM->bonusCharacters[c]->name,
-						static_cast<unsigned int>(BHM->vanillaBonusCharacters[c]->name.length()), {line, 49} });
+					{BHM->bonusCharacters[c]->name,
+						static_cast<unsigned int>(BHM->vanillaBonusCharacters[c]->name.length()), {line, 49}});
 				//scpIns(scene, script, c,
 				//{line, 49}, bonusCharacter);
-				};
+			};
 
 			missionReplace2(0, 24, Negotiations, 'A', "LEVEL2");
 			missionReplace2(1, 24, EscapeNaboo, 'C', "LEVEL1");
@@ -3057,41 +3027,41 @@ bhm:
 			std::vector<writeSet> bounties;
 
 			auto missionNames = [&bounties](int c, coord lc, unsigned int len) {
-				bounties.push_back({ BHM->bonusCharacters[c]->realName, len, {lc} });
-				};
+				bounties.push_back({BHM->bonusCharacters[c]->realName, len, {lc}});
+			};
 
-			missionNames(0, { 266, 18 }, 12);
-			missionNames(1, { 267, 18 }, 13);
-			missionNames(2, { 268, 18 }, 13);
-			missionNames(3, { 269, 18 }, 10);
-			missionNames(4, { 270, 18 }, 9);
-			missionNames(5, { 271, 18 }, 8);
-			missionNames(6, { 272, 18 }, 12);
-			missionNames(7, { 273, 18 }, 13);
-			missionNames(8, { 274, 18 }, 7);
-			missionNames(9, { 275, 19 }, 14);
+			missionNames(0, {266, 18}, 12);
+			missionNames(1, {267, 18}, 13);
+			missionNames(2, {268, 18}, 13);
+			missionNames(3, {269, 18}, 10);
+			missionNames(4, {270, 18}, 9);
+			missionNames(5, {271, 18}, 8);
+			missionNames(6, {272, 18}, 12);
+			missionNames(7, {273, 18}, 13);
+			missionNames(8, {274, 18}, 7);
+			missionNames(9, {275, 19}, 14);
 
-			missionNames(10, { 9, 17 }, 5);
-			missionNames(11, { 10, 17 }, 14);
-			missionNames(12, { 11, 17 }, 9);
-			missionNames(13, { 12, 17 }, 13);
-			missionNames(14, { 13, 17 }, 14);
-			missionNames(15, { 14, 17 }, 4);
-			missionNames(16, { 15, 17 }, 5);
-			missionNames(17, { 16, 17 }, 16);
-			missionNames(18, { 17, 17 }, 14);
-			missionNames(19, { 18, 17 }, 8);
+			missionNames(10, {9, 17}, 5);
+			missionNames(11, {10, 17}, 14);
+			missionNames(12, {11, 17}, 9);
+			missionNames(13, {12, 17}, 13);
+			missionNames(14, {13, 17}, 14);
+			missionNames(15, {14, 17}, 4);
+			missionNames(16, {15, 17}, 5);
+			missionNames(17, {16, 17}, 16);
+			missionNames(18, {17, 17}, 14);
+			missionNames(19, {18, 17}, 8);
 
 			batchAnywhere(ENGLISH, bounties);
 		}
-		multiPointer(allMinikitsCharacter, { 0x2b0ce, 0x84ef2, 0x5a750, 0x5fd87, 0x5a7db, 0x5fe12 });
+		multiPointer(allMinikitsCharacter, {0x2b0ce, 0x84ef2, 0x5a750, 0x5fd87, 0x5a7db, 0x5fe12});
 
 		//removed 0x86969, 0x86982,
-		multiPointer(indy, { 0x2e585, 0xc1053, 0x83b26, 0xc5098, 0x86969, 0x86982, 0xc50d0, 0xc65b1 });
+		multiPointer(indy, {0x2e585, 0xc1053, 0x83b26, 0xc5098, 0x86969, 0x86982, 0xc50d0, 0xc65b1});
 		numWrite(EXE, indy->price, 0x2e5c7);
 		//txtIns(out + "/STUFF/TEXT/ENGLISH.TXT",
 		//indy->realName, {{1627, 7}}, 13);
-		writer(oneWrite, ENGLISH, writeSingle{ indy->realName, 13, {1627, 7} });
+		writer(oneWrite, ENGLISH, writeSingle{indy->realName, 13, {1627, 7}});
 
 	} //character
 
@@ -3111,10 +3081,9 @@ outro:
 			else {
 				if (p->check(AllEpisodes)) {
 					collect << "all_episodes_complete ";
-				}
-				else if (!(p->check(NoLevel))) {
+				} else if (!(p->check(NoLevel))) {
 					collect << "area_complete "
-						"\"";
+							   "\"";
 					collect << p->lev->name << "\" ";
 				}
 				collect << "buy_in_shop ";
@@ -3124,7 +3093,7 @@ outro:
 			logR(p->realName + " collected.");
 #endif
 		}
-		};
+	};
 
 	collectWrite(chs);
 
@@ -3133,7 +3102,7 @@ outro:
 
 	collectWrite(vhs);
 
-	std::string minis[] = { "mini_republic_cruiser", "mini_gungan_bongo", "mini_royal_starship", "mini_sebulba_pod",
+	std::string minis[] = {"mini_republic_cruiser", "mini_gungan_bongo", "mini_royal_starship", "mini_sebulba_pod",
 		"mini_naboo_starfighter", "mini_sith_infiltrator",
 
 		"mini_zam_speeder", "mini_jedi_starfighter", "mini_droideka", "mini_gunship", "mini_atte", "mini_solar_sailor",
@@ -3147,7 +3116,7 @@ outro:
 		"mini_atat", "mini_snow_speeder", "mini_tie_fighter", "mini_x_wing", "mini_slave1", "mini_cloud_car",
 
 		"mini_desert_skiff", "mini_sail_barge", "mini_tie_bomber", "mini_atst", "mini_tie_interceptor",
-		"mini_imperial_shuttle" };
+		"mini_imperial_shuttle"};
 
 	for (std::string mini : minis) {
 		collect << "collect \"" << mini << "\" minikit" << '\n';
@@ -3156,22 +3125,22 @@ outro:
 
 	//fixes ET characters
 	if (extog) {
-		writer(oneWrite, ENGLISH, writeSingle{ "Nothing", 13, {839, 6} });
+		writer(oneWrite, ENGLISH, writeSingle{"Nothing", 13, {839, 6}});
 
-		lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", { 7 });
-		lineDeleter(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", { 20 });
-		lineDeleter(CHR + "MOUSEDROID/MOUSEDROID.TXT", { 17 });
-		lineDeleter(CHR + "NAFFDROID1/NAFFDROID1.TXT", { 19 });
-		lineDeleter(CHR + "NAFFDROID2/NAFFDROID2.TXT", { 19 });
-		lineDeleter(CHR + "NAFFDROID3/NAFFDROID3.TXT", { 13 });
-		lineDeleter(CHR + "NAFFDROID4/NAFFDROID4.TXT", { 19 });
-		lineDeleter(CHR + "REBELSCUM/ENGINEER.TXT", { 5 });
-		lineDeleter(CHR + "SKELETON/SKELETON.TXT", { 6 });
-		lineDeleter(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", { 4 });
-		lineDeleter(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", { 7 });
-		lineDeleter(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", { 6 });
-		lineDeleter(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", { 4 });
-		lineDeleter(CHR + "WOMPRAT/WOMPRAT.TXT", { 18 });
+		lineDeleter(CHR + "BUZZDROID/BUZZDROID.TXT", {7});
+		lineDeleter(CHR + "HANINCARBONITE/HANINCARBONITE.TXT", {20});
+		lineDeleter(CHR + "MOUSEDROID/MOUSEDROID.TXT", {17});
+		lineDeleter(CHR + "NAFFDROID1/NAFFDROID1.TXT", {19});
+		lineDeleter(CHR + "NAFFDROID2/NAFFDROID2.TXT", {19});
+		lineDeleter(CHR + "NAFFDROID3/NAFFDROID3.TXT", {13});
+		lineDeleter(CHR + "NAFFDROID4/NAFFDROID4.TXT", {19});
+		lineDeleter(CHR + "REBELSCUM/ENGINEER.TXT", {5});
+		lineDeleter(CHR + "SKELETON/SKELETON.TXT", {6});
+		lineDeleter(CHR + "STORMTROOPER/ATAT_DRIVER.TXT", {4});
+		lineDeleter(CHR + "STORMTROOPER/IMPERIALENGINEER.TXT", {7});
+		lineDeleter(CHR + "STORMTROOPER/SCOUTTROOPER.TXT", {6});
+		lineDeleter(CHR + "TRAININGREMOTE/TRAININGREMOTE.TXT", {4});
+		lineDeleter(CHR + "WOMPRAT/WOMPRAT.TXT", {18});
 	}
 
 	//if (enemyOp) {
@@ -3212,25 +3181,25 @@ outro:
 		//rgbWrite(EXE, red, 0x3fb0f2);
 		//rgbWrite(EXE, purple, 0x3fb122);
 
-		rgbBatch(PTL, blue, { 0x4A0, 0x4A8, 0x591A, 0x5922, 0x592A, 0x77D2, 0xF5FD, 0xF689, 0xF691, 0x8357 });
-		rgbBatch(PTL, green, { 0x877, 0x87F, 0x5543, 0x554B, 0x5553, 0xAD94 });
-		rgbBatch(PTL, red, { 0x60C8, 0x60D0, 0x60D8, 0xB542, 0xC0C7, 0xC0CF, 0xFDAB, 0xFE37, 0xFE3F });
-		rgbBatch(PTL, purple, { 0xC4E, 0xC56, 0x5CF1, 0x5CF9, 0x5D01, 0xB16B, 0x19021 });
+		rgbBatch(PTL, blue, {0x4A0, 0x4A8, 0x591A, 0x5922, 0x592A, 0x77D2, 0xF5FD, 0xF689, 0xF691, 0x8357});
+		rgbBatch(PTL, green, {0x877, 0x87F, 0x5543, 0x554B, 0x5553, 0xAD94});
+		rgbBatch(PTL, red, {0x60C8, 0x60D0, 0x60D8, 0xB542, 0xC0C7, 0xC0CF, 0xFDAB, 0xFE37, 0xFE3F});
+		rgbBatch(PTL, purple, {0xC4E, 0xC56, 0x5CF1, 0x5CF9, 0x5D01, 0xB16B, 0x19021});
 
-		rgbBatch(PT1, blue, { 0x4A0, 0x4A8, 0x10628, 0x10630, 0x111B0, 0x111B8, 0x111C0 });
-		rgbBatch(PT1, green, { 0x878, 0x880, 0x10DD8, 0x10DE0, 0x10DE0 });
-		rgbBatch(PT1, red, { 0x1028, 0x1030, 0x11968, 0x11960, 0x11970 });
-		rgbBatch(PT1, purple, { 0xC50, 0xC58, 0x11588, 0x11590, 0x11598, 0x11960, 0x11968 });
+		rgbBatch(PT1, blue, {0x4A0, 0x4A8, 0x10628, 0x10630, 0x111B0, 0x111B8, 0x111C0});
+		rgbBatch(PT1, green, {0x878, 0x880, 0x10DD8, 0x10DE0, 0x10DE0});
+		rgbBatch(PT1, red, {0x1028, 0x1030, 0x11968, 0x11960, 0x11970});
+		rgbBatch(PT1, purple, {0xC50, 0xC58, 0x11588, 0x11590, 0x11598, 0x11960, 0x11968});
 
-		rgbBatch(PTC, blue, { 0x1025, 0x102D });
-		rgbBatch(PTC, green, { 0x13FC, 0x1404 });
-		rgbBatch(PTC, red, { 0x1BAA, 0x1BB2, 0x1F81, 0x1F89 });
-		rgbBatch(PTC, purple, { 0x17D3, 0x17DB });
+		rgbBatch(PTC, blue, {0x1025, 0x102D});
+		rgbBatch(PTC, green, {0x13FC, 0x1404});
+		rgbBatch(PTC, red, {0x1BAA, 0x1BB2, 0x1F81, 0x1F89});
+		rgbBatch(PTC, purple, {0x17D3, 0x17DB});
 
-		rgbBatch(PC1, blue, { 0xC50, 0xC58 });
-		rgbBatch(PC1, green, { 0x1028, 0x1030 });
-		rgbBatch(PC1, red, { 0x17D8, 0x17E0, 0x1BB0, 0x1BB8 });
-		rgbBatch(PC1, purple, { 0x1400, 0x1408 });
+		rgbBatch(PC1, blue, {0xC50, 0xC58});
+		rgbBatch(PC1, green, {0x1028, 0x1030});
+		rgbBatch(PC1, red, {0x17D8, 0x17E0, 0x1BB0, 0x1BB8});
+		rgbBatch(PC1, purple, {0x1400, 0x1408});
 
 		//rgbFloat(TNG, blue, 0x341C70);
 		//rgbFloat(TNG, green, 0x3419AC);
@@ -3242,11 +3211,11 @@ outro:
 		//219	0260ff
 		//rgbFloat(TNG, red, 0x341F34); //double
 
-		rgbBatch(PC1, red, { 0x1BB0, 0x1BB8 });
-		rgbBatch(TNG, blue, { 214, 316, 217, 272 });
-		rgbBatch(TNG, green, { 316, 213, 317, 274, 273 });
-		rgbBatch(TNG, red, { 316, 210, 215, 273, 274 });
-		rgbBatch(TNG, purple, { 316, 212, 271, 272 });
+		rgbBatch(PC1, red, {0x1BB0, 0x1BB8});
+		rgbBatch(TNG, blue, {214, 316, 217, 272});
+		rgbBatch(TNG, green, {316, 213, 317, 274, 273});
+		rgbBatch(TNG, red, {316, 210, 215, 273, 274});
+		rgbBatch(TNG, purple, {316, 212, 271, 272});
 
 		//for (int i = 0; i < 340; i++) {
 		//	rgbFloat(TNG, green, 0x31CC98 + (i *
@@ -3278,5 +3247,4 @@ outro:
 	//loggingIt->close();
 	std::cout << "Done.\n";
 	//wxLogStatus("Done.");
-
 }

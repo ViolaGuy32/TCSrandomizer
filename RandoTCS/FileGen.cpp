@@ -33,17 +33,18 @@ void fileGen() {
 	//wxLogStatus("Generating files. . .");
 	std::cout << "Generating files. . ." << std::endl;
 
-	//std::filesystem::remove_all(out);
+	std::filesystem::remove_all(out);
 
+	//if (std::filesystem::is_directory(out)) for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(out)) {
+	//	if (!(dirEntry.path().extension() == ".GSC") && !(dirEntry.is_directory())) std::filesystem::remove(dirEntry);
+	//}
 
-	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::recursive_directory_iterator(out)) {
-		if (!(dirEntry.path().extension() == ".GSC") && !(dirEntry.is_directory())) std::filesystem::remove(dirEntry);
-	}
-	std::filesystem::copy(vanillaDirectory, out,
-		std::filesystem::copy_options::recursive | std::filesystem::copy_options::skip_existing);
+	//std::filesystem::copy(vanillaDirectory, out, std::filesystem::copy_options::recursive | std::filesystem::copy_options::skip_existing);
+	std::filesystem::copy(vanillaDirectory, out, std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 
-	//std::string cmd = ("files\\quickbms.exe -F \"*.DAT\" -o files\\ttgames.bms " + out + " " + out);
-	//system(cmd.c_str());
+	std::string cmd = ("files\\quickbms.exe -F \"*.DAT\" -o files\\ttgames.bms " + out + " " + out);
+	system(cmd.c_str());
+
 	std::cout << "Done copying." << std::endl;
 	std::remove((out + "EPISODE_I.DAT").c_str());
 	std::remove((out + "EPISODE_II.DAT").c_str());
@@ -286,6 +287,7 @@ void fileGen() {
 	txtIns(LEV + "ANAKINSFLIGHT/ANAKINSFLIGHT_C/ANAKINSFLIGHT_C.GIT", "status", { {1602, 41} }, 6);
 
 	speedUp(2, "PURSUIT_INTRO2", { 1 });
+	appendFile(out + "/CUT/EPISODEII/EP2_PURSUIT_INTRO2.TXT", "level_intro");
 	lineDeleter(CLN + "PURSUIT/PURSUIT_INTRO/PURSUIT_INTRO.TXT", { 1 });
 	txtIns(CLN + "PURSUIT/PURSUIT_B/AI/LEVEL.SCP", "alwaystrue == 1", { {5, 6} }, 41);
 	txtIns(CLN + "PURSUIT/PURSUIT_B/AI/LEVEL.SCP", "//", { 6 });
@@ -479,26 +481,26 @@ void fileGen() {
 
 	//system("cls");
 
-	if (unlockAll) {
-		const unsigned int jumpFrom = 0x42ad25;
-		const unsigned int jumpTo = 0x785EA0;
-		//binaryWrite(EXE, jmp(jumpTo), jumpFrom - 0x400000);
-		std::string temp = "E8" + littleEndSigned(jumpTo - jumpFrom - 5); //call
-		std::cout << temp << std::endl;
-		binaryWrite(EXE, temp, jumpFrom - 0x400000);
-		std::array<unsigned int, 55> levPtrs = getLevPtr(0x87af70);
-		std::string func; //make this a function
-		func += "55"      //push ebp
-			"89e5"    //mov ebp, esp
-			"33db";   //xor ebx, ebx
-		for (unsigned int i : levPtrs) {
-			func += unlockAsm(i);
-		}
-		func += "a164b08700" //code I hade to erase to make room for call
-			"89ec"       //mov esp, ebp
-			"5d"         //pop ebp
-			"c3";        //ret
-		std::cout << func << std::endl;
-		binaryWrite(EXE, func, jumpTo - 0x400000);
-	}
+	//if (unlockAll) {
+	//	const unsigned int jumpFrom = 0x42ad25;
+	//	const unsigned int jumpTo = 0x785EA0;
+	//	//binaryWrite(EXE, jmp(jumpTo), jumpFrom - 0x400000);
+	//	std::string temp = "E8" + littleEndSigned(jumpTo - jumpFrom - 5); //call
+	//	std::cout << temp << std::endl;
+	//	binaryWrite(EXE, temp, jumpFrom - 0x400000);
+	//	std::array<unsigned int, 55> levPtrs = getLevPtr(0x87af70);
+	//	std::string func; //make this a function
+	//	func += "55"      //push ebp
+	//		"89e5"    //mov ebp, esp
+	//		"33db";   //xor ebx, ebx
+	//	for (unsigned int i : levPtrs) {
+	//		func += unlockAsm(i);
+	//	}
+	//	func += "a164b08700" //code I hade to erase to make room for call
+	//		"89ec"       //mov esp, ebp
+	//		"5d"         //pop ebp
+	//		"c3";        //ret
+	//	std::cout << func << std::endl;
+	//	binaryWrite(EXE, func, jumpTo - 0x400000);
+	//}
 }

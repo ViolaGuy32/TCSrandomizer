@@ -1,0 +1,21 @@
+---
+PointerAlignment: Left
+UseTab: ForContinuationAndIndentation
+TabWidth: 4
+IndentWidth: 4
+ContinuationIndentWidth: 4
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+BinPackArguments: true
+BinPackParameters: true
+PackConstructorInitializers: BinPack
+SeparateDefinitionBlocks: Always
+BreakBeforeBraces: Attach
+SpacesInLineCommentPrefix:
+  Maximum: 0
+NamespaceIndentation: All
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortFunctionsOnASingleLine: Inline
+ColumnLimit: 120
+AlignAfterOpenBracket: DontAlign
