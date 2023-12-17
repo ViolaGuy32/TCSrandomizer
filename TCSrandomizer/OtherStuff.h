@@ -2,6 +2,7 @@
 #include "pch.h"
 
 #include "Characters.h"
+#include "Levels.h"
 
 struct rgb {
 	char r;
@@ -15,10 +16,6 @@ struct rgb {
 	rgb();
 };
 
-struct coord {
-	unsigned int ln = 1;
-	unsigned int col = 1;
-};
 
 struct twoNum {
 	int chNum;
@@ -37,10 +34,10 @@ struct writeSet {
 
 struct writeSingle {
 	std::string newStr;
-	unsigned int len;
+	size_t len;
 	coord lnCol;
 
-	writeSingle(std::string myStr, unsigned int myLen, coord myLnCol);
+	writeSingle(std::string myStr, size_t myLen, coord myLnCol);
 	writeSingle(int chNum, coord myLnCol, std::vector<Playable*> Level::* chType = &Level::party);
 	writeSingle(int chNum, unsigned int line, std::vector<Playable*> Level::* chType = &Level::party);
 };
@@ -54,6 +51,8 @@ struct writeSingle {
 //
 //void manyWrite( std::initializer_list<writeSet>& stuff, std::vector<std::string>& contents);
 
+
+bool CIcompare(std::string first, std::string second);
 
 void logR(std::string lg);
 
@@ -115,23 +114,23 @@ void appender(std::string appendix, std::vector<std::string>& contents);
 
 void lineDel(std::vector<unsigned int> lines, std::vector<std::string>& contents);
 
-std::string getBasePath(Level* lev, char scene, std::string fileType);
+ std::string getBasePath(Level* lev, char scene, std::string fileType);
 
-std::string getMainTxt(Level* lev);
+ std::string getMainTxt(Level* lev);
 
-std::string getSCP(Level* lev, char scene, std::string script);
+ std::string getSCP(Level* lev, char scene, std::string script);
 
-std::string getAI2(Level* lev, char scene);
+ std::string getAI2(Level* lev, char scene);
 
 void fileDeleter(char scene, int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
-std::string getScriptTxt(Level* lev, char scene);
+ std::string getScriptTxt(Level* lev, char scene);
 
 void renamer(std::string oldName, std::string newName);
 
-std::string getName(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+ std::string getName(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
-std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
+ std::string getVanilla(int characterNum, std::vector<Playable*> Level::* chType = &Level::party);
 
 void playerInit(std::vector<writeSingle> writers);
 
@@ -164,11 +163,28 @@ void scriptTxtRep(char scene, std::string newStr, std::string oldStr, unsigned i
 
 void lineDeleterScp(char scene, std::string script, std::vector<unsigned int> lines);
 
-
 void lineDeleter(std::string file, std::vector<unsigned int> lines);
+
+void lineDeleter(std::string file, unsigned int start, unsigned int end);
 
 void scpDeleter(char scene, std::string script);
 
 void baseFile(char scene, std::string fileType, int chNum, coord lnCol,
 	std::vector<Playable*> Level::* chType = &Level::party);
+
+void appendFile( std::string file,  std::string appendix);
+
+//void fixScript(std::string oldFunName,std::vector<Playable*>spEnemyTypes, std::string attackPattern, std::string extraConditions, coord lnCol, std::string tf);
+
+//void redirrector(Level* lev, SpecialScp& sp);
+
+
+//std::array<unsigned int, 55> getLevPtr(unsigned int first); 
+//std::string littleEnd(unsigned int num);
+//std::string littleEndSigned(int num);
+//std::string unlockAsm(unsigned int levelptr);
+
+void regexFile(std::string file, std::string pattern, std::string replacement, bool refScript = false);
+
+void regexTest(std::string file, std::string pattern, std::string replacement, bool refScript = false);
 

@@ -1,109 +1,168 @@
 #pragma once
+#include "pch.h"
 
-#define LEV out + "/LEVELS/"
+#define LEV out + "\\LEVELS\\"
 
-#define TPM LEV + "EPISODE_I/"
-#define CLN LEV + "EPISODE_II/"
-#define STH LEV + "EPISODE_III/"
-#define ANH LEV + "EPISODE_IV/"
-#define EMP LEV + "EPISODE_V/"
-#define JDI LEV + "EPISODE_VI/"
+#define TPM LEV + "EPISODE_I\\"
+#define CLN LEV + "EPISODE_II\\"
+#define STH LEV + "EPISODE_III\\"
+#define ANH LEV + "EPISODE_IV\\"
+#define EMP LEV + "EPISODE_V\\"
+#define JDI LEV + "EPISODE_VI\\"
 
-#define EXE out + "/LEGOStarWarsSaga.exe"
-#define ENGLISH out + "/STUFF/TEXT/ENGLISH.TXT"
-#define CHR out + "/CHARS/"
+#define EXE out + "\\LEGOStarWarsSaga.exe"
+#define ENGLISH out + "\\STUFF\\TEXT\\ENGLISH.TXT"
+#define CHR out + "\\CHARS\\"
+#define SCR out + "\\SCRIPTS\\"
 
-//
-//#define TNG out + "/STUFF/THINGS_PC.GSC"
-//#define PTL out + "/STUFF/GENERAL.PTL"
-//#define PT1 out + "/STUFF/GENERAL_LSW1.PTL"
-//#define PTC out + "/STUFF/CHAR.PTL"
-//#define PC1 out + "/STUFF/CHAR_LSW1.PTL"
+#define normalAttack                                                                                                   \
+	{ "", "EngageOpponent \"goalrange 1.5\" \"firerange 3\"", "" }
 
-#define Build &Playable::build
-#define Lever &Playable::lever
-#define Box &Playable::box //also for riding stuff
+#define normalBlock                                                                                                    \
+	{ "", "EngageOpponent \"static\" \"firerange 3\"", "" }
 
-#define Jedi &Playable::jedi
-#define Sith &Playable::sith
-#define Choke &Playable::choke
-#define Lightning &Playable::lightning
-#define Saber &Playable::saber //includes magnaguard
-#define Deflect &Playable::deflect
+#define retreat(exit) "if GotOpponent == 0 goto " exit
+#define target(att) "if GotOpponent == 1 goto " exit
+#define outOfRange(exit, range) "if OpponentRange > " range " goto " exit
+#define underCover(exit) "if PartyUnderCover == 1 goto " exit
+#define trigger(area, exit) "if EitherPlayerInTriggerArea " area "goto" exit
+//{0} number
+//{1} attackpattern
+//[2] extraCondition
+//{3} appendix
+#define scpFun(name, condition, action)                                                                                \
+	"state " name "{0} {{\n"                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t\t{1}\n"                                                                                                        \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t\t{2}\n"                                                                                                        \
+	"\t}}\n"                                                                                                           \
+	"}}\n"                                                                                                             \
+	"{3}\n"
 
-#define Attack &Playable::attack
-#define Grapple &Playable::grapple
-#define Shoot &Playable::shoot
-#define FakeShoot &Playable::fakeshoot //training remote does no damage to enemies but can still destroy objects
+#define funcNoRef(name, condition, action)                                                                             \
+	"state " name "{0} {{\n"                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t}}\n"                                                                                                           \
+	"}}\n"
 
-#define Jump &Playable::jump
-#define DoubleJump &Playable::doubleJump
-#define RealDoubleJump &Playable::realDoubleJump
-#define HighJump &Playable::highJump
-#define ExtraHighJump &Playable::extraHighJump
-#define HighDoubleJump &Playable::highDoubleJump
-#define YodaJump &Playable::yodaJump
-#define GunganJump &Playable::gunganJump
-#define Dive &Playable::dive
-#define Flop &Playable::flop
-#define SlightlyBetterJump &Playable::slightlyBetterJump
-#define SlightlyHigherJump &Playable::slightlyHigherJump
+//{0} number
+//{1} condition
+//{2} action
+#define func(name, condition, action)                                                                                  \
+	"state " name "{0} {{\n"                                                                                           \
+	"\tReferenceScript {{\n"                                                                                           \
+	"\t\tScript={1}\n"                                                                                                 \
+	"\t\tSource=Global\n"                                                                                              \
+	"\t\tReturnState=" name "{0}\n"                                                                                    \
+	"\t\tConditions {{\n"                                                                                              \
+	"\t\t}}\n"                                                                                                         \
+	"\t}}\n"                                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t}}\n"                                                                                                           \
+	"}}\n"
 
-#define Fly &Playable::fly
-#define Flutter &Playable::flutter
-#define Hovering &Playable::hovering //trainingremote
-#define Fett &Playable::fett
-#define Zapper &Playable::zapper
-#define AstroZapper &Playable::astrozapper
+#define funcCustom(name, referenceScript, condition, action)                                                           \
+	"state " name " {{\n"                                                                                              \
+	"\tReferenceScript {{\n"                                                                                           \
+	"\t\tScript=" referenceScript "\n"                                                                                 \
+	"\t\tSource=Global\n"                                                                                              \
+	"\t\tReturnState=" name "\n"                                                                                       \
+	"\t\tConditions {{\n"                                                                                              \
+	"\t\t}}\n"                                                                                                         \
+	"\t}}\n"                                                                                                           \
+	"\tConditions {{\n"                                                                                                \
+	"\t\t" condition "\n"                                                                                              \
+	"\t}}\n"                                                                                                           \
+	"\tActions {{\n"                                                                                                   \
+	"\t\t" action "\n"                                                                                                 \
+	"\t}}\n"                                                                                                           \
+	"}}\n"
 
-#define Hat &Playable::hat
-#define Proto &Playable::proto
-#define Astro &Playable::astro
-#define Imperial &Playable::imperial
-#define Bounty &Playable::bounty
-
-#define Passive &Playable::passive
-#define Ghost &Playable::ghost
-#define Hatch &Playable::hatch
-#define Tall &Playable::tall //can walk in swamp
-
-#define Droid &Playable::droid
-#define Gas &Playable::gas
-#define Pushable &Playable::pushable
-#define Zappable &Playable::zappable
-#define Storm &Playable::storm
-#define Chokeable &Playable::chokeable
-#define Lightningable &Playable::lightningable
-#define ResistZap &Playable::resistZap
-#define Trickable &Playable::trickable
-
-#define Active &Playable::active
-
-#define FakeShoot &Playable::fakeshoot
-
-#define Tow &Playable::tow
-#define TieDoor &Playable::tiedoor
-
-#define Extratoggle &Playable::extratoggle
-#define Vehicle &Playable::vehicle
-#define Vgreen &Playable::vgreen
-
-#define LeiaAlt &Playable::leiaAlt
-#define LandoAlt &Playable::landoAlt
-#define LukeAlt &Playable::lukeAlt
-
-#define NoLevel &Playable::noLevel
-#define AllEpisodes &Playable::allEpisodes
-#define Fake &Playable::fake
-
+//candefend????
 enum LogicType { casual, glitched, superGlitched };
 
+enum PanelType { AstroPanel, ProtoPanel, BountyPanel, ImperialPanel };
 
+enum DispenserType { RandomHat, LeiaHat, Fedora, TopHat, BaseballHat, StormtrooperHat, BountyHat, DroidPanel };
+
+enum enemyScp { chatting, sniper, storm, attack, block, spawnattack, patrol, NONE, special };
+
+enum attackType { nAttack, nBlock, nSnipe };
+
+struct coord {
+	unsigned int ln = 1;
+	unsigned int col = 1;
+
+	friend std::ostream& operator<<(std::ostream& out, const coord& lncol) {
+		return out << '(' << lncol.ln << ", " << lncol.col << ')';
+	}
+};
 
 /*
- 
 
+fix panel color
+
+New skips:
+3-2 DIW
+DVT
+
+
+fix panelOr (theed -1, chancellor gas room)
+wrong characters in shop
+bounties don't work if characters are not randomized
+
+check EVERY panelAnd()
+
+shaddowed scipts
+
+imperial spy shooting after dodge
+use scripts from bonuses and arcade maps
+
+modify conditions in redirrect
+
+BLOCK_CHATTING
+
+story characters interfere with bhm
+specialscp additional actions
+
+finish story sometimes puts you buy the shop
+
+fix geonosian rename
+
+have fixScript do normal scripts
+
+returnstate uses update instead of vanillaupdate
+remove returning to locator for special scripts??
+fix out.TXT
+
+special scripts:
+jawa (unnaught)
+gamorreanguard
+impguard
+bat
+
+floating characters don't finish spawning from grapple
+
+defend and block are DIFFERENT
+
+ sarlacc_a/galley ?????
+check geonosians in Jedi Battle
+ snipers not working.
 	1-1:
+	LAZYDROID not working
+
 	AI gets stuck on force ledge
 
 	1-2:
@@ -116,19 +175,63 @@ enum LogicType { casual, glitched, superGlitched };
 	have spinners only spawn in correct mode
 
 	3-2:
+	casual no flying around?
 	r2 not following in tall room
 
 	3-6:
 	room 1 AI
 
+	4-1:
+    rebel friend enemies keep falling off.
+    CHECK GIT TO REVERT PLANSTHING!!!!!
+	jawa escort t-poses
+	remove KeepWeaponOut
+	last room - super jump
+	backflip 50hz for no grapple
+	jump boost crane room
+
+4-2:
+dropout intro
+hill guys don't infinitely spawn
+disguised clone doesn't work on ledges
+nonjumpers get stuck on top of hill in A
+sj directly into elevator
+second to last room ledge trooper won't attack
+
+
+	4-3:
+	intro drops out
+	SET MESSAGE
+	they don't jump off the ledge
+	force push through the sensors
+    A ledge fails spawns (super battle droid blocks it?)
+	cleaClearTakeOverTarget?
+    B deathstartrooper spawnattack t-poses
+    B takeover kaminodroid is stuck
+    spy spawns don't always work 
+hangerattack is broken
+    bodyguards follow me into block pushing room
+	bridgetroops melee "followcharacter
+
 	4-4:
 	Ben AI when not Jedi
+	tie fighter minigame has 4 characters
+
+	5-1:
+	fix scaling
+
 
 	5-5:
 	dv1 and dv3 ai
+	dv1 casual
 
 	5-6:
 	sometimes puts you by shop?
+
+	6-4:
+	double jump right side
+
+	bhm enemies
 
 
 	oil glitch
@@ -136,9 +239,33 @@ enum LogicType { casual, glitched, superGlitched };
 
 	fix special character for padme
 	fix name length limit for scp
-	
-	check playable attributes in log
+
 
 	allow custom seeds
+
+	make unlocks dependent on residents
+
+	fix spawnattack
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	active npcs:
+
+	passive npcs:
 
 	*/

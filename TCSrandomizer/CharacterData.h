@@ -1,2 +1,3 @@
 #pragma once
-void makeCharactersAndLevels();
+void makeCharacters();
+void makeEnemyTypes();

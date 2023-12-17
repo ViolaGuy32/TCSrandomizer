@@ -18,6 +18,7 @@ bool enemy = 0;
 bool panelOp = 0;
 bool hatOp= 0;
 bool colorOp = 0;
+bool enemyOp = 0;
 std::string out = "out";
 std::string vanillaDirectory = "";
 LogicType logicType = casual;
@@ -99,7 +100,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	std::remove("files/log2.txt");
 	//loggingIt = std::make_unique<std::ofstream>("files/log.txt");
 
-	logR("\n\t\t\t\t\tRandomizing. . .");
+	//logR("\n\t\t\t\t\tRandomizing. . .");
 	wxLogStatus("Randomizing. . .");
 
 	character = characterType->GetValue();
