@@ -115,19 +115,13 @@ struct coord {
 fix panel color
 
 New skips:
-3-2 DIW
 DVT
 
 
-fix panelOr (theed -1, chancellor gas room)
-wrong characters in shop
 bounties don't work if characters are not randomized
-
-check EVERY panelAnd()
 
 shaddowed scipts
 
-imperial spy shooting after dodge
 use scripts from bonuses and arcade maps
 
 modify conditions in redirrect
@@ -175,7 +169,6 @@ check geonosians in Jedi Battle
 	have spinners only spawn in correct mode
 
 	3-2:
-	casual no flying around?
 	r2 not following in tall room
 
 	3-6:
@@ -186,8 +179,6 @@ check geonosians in Jedi Battle
     CHECK GIT TO REVERT PLANSTHING!!!!!
 	jawa escort t-poses
 	remove KeepWeaponOut
-	last room - super jump
-	backflip 50hz for no grapple
 	jump boost crane room
 
 4-2:

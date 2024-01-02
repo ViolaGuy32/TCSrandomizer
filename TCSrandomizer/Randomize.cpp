@@ -638,9 +638,10 @@ chancellor:
 
 	if (!atrb(Jedi)) goto chancellor;
 
-	add(2);                            //r2
-	if (!panel(0, 2)) goto chancellor; //bomb, might be possible to skip
+	add(2);                                                   //r2
+	if (!panel(0, 2)) goto chancellor;                        //bomb, might be possible to skip
 	if (!panel(0, 3) && logicType == casual) goto chancellor; //top of room
+	if (!panel(0, 3) && !LivingJedi()) goto chancellor;
 
 	add(3); //palpatine
 	if (!Multi(Jedi, 2)) goto chancellor;
@@ -649,7 +650,7 @@ chancellor:
 
 	bool gasOff = false;
 	if (panelAny(3, 0, Gas | Fly)) gasOff = true;
-	if (logicType != casual && panelAny(3, 0, DoubleJump | Dive | Flop)) gasOff = true;
+	if (logicType != casual && panelAny(3, 0, DoubleJump | Dive | Flop | SlightlyBetterJump)) gasOff = true;
 	if (gasOff && panel(3, 1)) goto grievous;
 	if (panelAny(3, 1, Gas | Fly)) goto grievous;
 	if (logicType != casual && panelAny(3, 1, DoubleJump | Dive | Flop)) goto grievous;
@@ -775,7 +776,7 @@ secretplans:
 		if (!atrb(Attack)) goto secretplans;
 		if (!atrb(Build)) goto secretplans;
 		if (!atrb(Lever)) goto secretplans;
-		if (((All(Grapple | Build) || atrb(YodaJump) || //Both Yodas can build
+		if (((All(Grapple | Build) || atrb(Jedi) || //Both Yodas can build
 				 All(ExtraHighJump | Build)) &&
 				(atrb(Shoot) || atrb(FakeShoot))) ||
 			SuperJump(Jump | Flutter) || DoubleTransitionSkip(Jump | Flutter))
@@ -837,6 +838,28 @@ secretplans3:
 
 secretplans4:
 	//escape pods
+
+	if (superGlitched == true) {
+		for (Playable* x : testing) {
+			for (Playable* y : testing) {
+				if (x != y) {
+					bool OOB = false;
+					if (x->att & Pushable && y->att & Jedi) OOB = true;
+					else if (x->att & Chokeable && y->att & Choke) OOB = true;
+					else if (x->att & Lightningable && y->att & Lightning) OOB = true;
+					else if (x->att & Trickable && y->att & Jedi) OOB = true;
+					else if (x->att & Zappable && y->att & Zapper) OOB = true;
+					else if (x->att & Storm && y->att & AstroZapper) OOB = true;
+					else if (x->att & LeiaAlt && y->att & LandoAlt) OOB = true;
+					else if (x == gamorreanguard && y->att & LukeAlt) OOB = true;
+					if (OOB) {
+						if (panelAny(3, 6, Jump | Fly, {x})) goto jundland;
+					}
+				}
+			}
+		}
+	}
+
 	if (!panel(3, 3)) goto secretplans;
 	if (!panel(3, 4)) goto secretplans;
 	if (!panel(3, 5)) goto secretplans;
@@ -885,7 +908,7 @@ jundland3:
 	if (panel(0, 3)) add(2); //3po
 	if (!panel(0, 4)) goto jundland;
 
-	testing  = Jundland->party;
+	testing = Jundland->party;
 	if (logicType == casual) {
 		if (!panel(1, 0)) {
 			std::vector<Playable*> temp = testing;
@@ -916,7 +939,7 @@ spaceport3:
 		if (!atrb(Jedi) && !panelAny(0, 3, Jump) && !panelAny(0, 4, Jump)) goto spaceport;
 
 		if (atrb(Bounty)) goto spaceport2;
-		if (panel(1, 0) && panel(1, 1)) goto spaceport2;
+		if (panel(1, 0) && panel(1, 1) && atrb(Jedi)) goto spaceport2;
 
 		goto spaceport;
 	} else {
@@ -964,6 +987,7 @@ princess:
 	addHat(1, 0);
 	addHat(1, 1);
 
+	if (logicType == casual && !Multi(Lever, 2)) goto princess;
 	{
 		bool gotHats = false;
 		if ((panel(1, 0) || panel(1, 2)) && logicType != casual) {
@@ -975,7 +999,7 @@ princess:
 			gotHats = true;
 		}
 
-		if (!Princess->party[5]->check(Jedi) && !atrb(DoubleJump | Fly)) goto princess;
+		if (!Princess->party[5]->check(Jedi) && !atrb(RealDoubleJump | Fly)) goto princess;
 		if (!atrb(Grapple)) goto princess;
 		if (!panel(1, 3)) goto princess; //try oil glitch
 
@@ -1022,6 +1046,7 @@ dse:
 dse3:
 	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
+	if (!All(Lever | Grapple)) goto dse;
 	if (!panelAny(1, 0, Grapple)) goto dse;
 
 	if (logicType == casual) availableHats.clear();
@@ -1297,8 +1322,10 @@ cct:
 
 		//second room
 		if (!atrb(Bounty) && !panel(0, 2)) goto cctGlitch;
-		//you can skip panel at end of hallway with door clip pixel jump
-		//try hitting room 3 transition from OOB
+		if (logicType != superGlitched) {
+			//you can skip panel at end of hallway with door clip pixel jump
+			if (!panel(0, 4)) goto cctGlitch;
+		}
 
 		//dv1
 		addHat(0, 0);
@@ -2151,8 +2178,13 @@ cantinaX:
 	//						std::string ending;
 	//						for (int i = 0; i < sp.spEnemyTypes.size(); i++) {
 	//							if (!(sp.useAltScript && !SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos))
-	//{ 								if (SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos) { 									redirect += "\t\tif iAm \"" +
-	//sp.spEnemyTypes[i]->name + "\" == 1 goto " + 												overwrite.oldFunName + std::to_string(i) + "\n";
+	//{ 								if (SpecialScripts.find(sp.spEnemyTypes[i]) != std::string::npos) {
+	//redirect
+	//+= "\t\tif iAm \"" +
+	//sp.spEnemyTypes[i]->name + "\" == 1 goto " + 												overwrite.oldFunName +
+	//std::to_string(i)
+	//+
+	//"\n";
 	//
 	//									ending += "state " + overwrite.oldFunName + std::to_string(i) + " {\n";
 	//									ending += "\tReferenceScript {\n"
@@ -2554,7 +2586,7 @@ cantinaX:
 		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 8}, {3, 9}, {4, 10}}); //so they still spawn in FP
 
 		scpMany('B', "PARTY", {{2, {{15, 11}, {31, 11}}}, {3, {{11, 11}, {26, 11}}}, {4, {{7, 11}, {21, 11}}}});
-		scpIns('B', "LEVEL", 4, {7, 45});
+		scpIns('B', "LEVEL", 4, {7, 59});
 
 		multiPointer(JediBattle->party[2], {0xDFABF, 0x3fffa4});
 		multiPointer(JediBattle->party[3], {0xDFAAB, 0x3fffa0});
@@ -2802,13 +2834,15 @@ cantinaX:
 		scriptTxt('C', 5, 3);
 		scriptTxt('D', 5, 1);
 		scriptTxt('E', 5, 4);
+		scriptTxtAppend('D', "level");
 
 		currentLev = DSE;
-		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {0, 8, bonusCharacter}});
 
 		scpMany('A', "PARTY", {{4, {{15, 11}}}, {5, {{14, 11}}}});
 		scpMany('B', "PARTY", {{4, {{15, 11}}}, {5, {{14, 11}}}});
 		scpMany('C', "PARTY", {{4, {{12, 11}, {15, 11}}}, {5, {{6, 11}, {9, 11}}}});
+		ai2Write('C', 0, {0x4678}, bonusCharacter);
 
 		currentLev = RebelAttack;
 		playerInit({{0, 1}, {1, 2}});
@@ -2951,7 +2985,7 @@ cantinaX:
 		else if ((Endor->party[4]->check(Grapple))) leverGuy = 4;
 		else if ((Endor->party[5]->check(Grapple))) leverGuy = 5;
 
-		scpIns('B', "PARTY", leverGuy, {5, 11});
+		scpRep('B', "PARTY", Endor->party[leverGuy]->name, hansolo_endor->name.length(), {5, 11});
 
 		currentLev = Destiny;
 		playerInit({{0, 1}, {1, 2}});

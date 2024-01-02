@@ -294,7 +294,7 @@ void makeLevels() {
 		{26, 28, 29, 30, 31, 32, 41});
 
 	DSE = new Level("DEATHSTARESCAPE", "DEATHSTARESCAPE", "/LEVELS/EPISODE_IV/DEATHSTARESCAPE/", false,
-		{hansolo, chewbacca, princessleia, lukeskywalker_tatooine, r2d2, c3po}, {}, {},
+		{hansolo, chewbacca, princessleia, lukeskywalker_tatooine, r2d2, c3po}, {benkenobi}, {},
 		{{'A', {0x2834, 0x281d, 0x2806, 0x27ef}}, {'B', {0x2fe7, 0x2fd0, 0x2fb9, 0x2fa2, 0x2f8b, 0x2ffe}},
 			{'C', {0x474a, 0x4733, 0x471c, 0x4705, 0x46ee, 0x4567, 0x4550, 0x4539, 0x4522}}, {'D', {0x746, 0x72f}}},
 		{},
@@ -526,7 +526,7 @@ void makeLevels() {
 	//	{},
 	//	{}, {}, {}, {});
 
-	Anakinsflight = new Level("ANAKINSFLIGHT", "ANAKINSFLIGHT", "/LEVELS/ANAKINSFLIGHT/", false,
+	Anakinsflight = new Level("ANAKINSFLIGHT", "ANAKINSFLIGHT", "/LEVELS/ANAKINSFLIGHT/", true,
 		{naboostarfighter, naboostarfighter_lime}, {}, {naboostarfighter, naboostarfighter_lime}, {}, {}, {}, {});
 
 	ANewHope =

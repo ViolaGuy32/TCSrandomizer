@@ -30,7 +30,7 @@ void fileGen() {
 	//copies the game files and removes cutscenes
 
 	logR("\n\t\t\t\t\tGenerating files. . .");
-	//wxLogStatus("Generating files. . .");
+	wxLogStatus("Generating files. . .");
 	std::cout << "Generating files. . ." << std::endl;
 
 	std::filesystem::remove_all(out);
@@ -46,13 +46,13 @@ void fileGen() {
 	system(cmd.c_str());
 
 	std::cout << "Done copying." << std::endl;
-	std::remove((out + "EPISODE_I.DAT").c_str());
-	std::remove((out + "EPISODE_II.DAT").c_str());
-	std::remove((out + "EPISODE_III.DAT").c_str());
-	std::remove((out + "EPISODE_IV.DAT").c_str());
-	std::remove((out + "EPISODE_V.DAT").c_str());
-	std::remove((out + "EPISODE_VI.DAT").c_str());
-	std::remove((out + "GAME.DAT").c_str());
+	std::remove((out + "\\EPISODE_I.DAT").c_str());
+	std::remove((out + "\\EPISODE_II.DAT").c_str());
+	std::remove((out + "\\EPISODE_III.DAT").c_str());
+	std::remove((out + "\\EPISODE_IV.DAT").c_str());
+	std::remove((out + "\\EPISODE_V.DAT").c_str());
+	std::remove((out + "\\EPISODE_VI.DAT").c_str());
+	std::remove((out + "\\GAME.DAT").c_str());
 
 	std::remove((out + "\\SCRIPTS\\AI.PAK").c_str());
 	std::remove((out + "\\STUFF\\ATS\\ATS.PAK").c_str());
@@ -126,7 +126,7 @@ void fileGen() {
 	//system(cmd.c_str());
 
 	logR("\n\t\t\t\t\tPatching. . .");
-	//wxLogStatus("Patching. . .");
+	wxLogStatus("Patching. . .");
 	//int freePlay[] = {
 	//	//cutscene=
 	//	0x55f21,

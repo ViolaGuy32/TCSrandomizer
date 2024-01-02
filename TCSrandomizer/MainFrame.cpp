@@ -159,6 +159,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	
 	out = "out6";*/
 	Randomize();
+	wxLogStatus("Done.");
 
 
 	//std::thread randomize{ Randomize };
