@@ -16,4 +16,4 @@ If you clone from source:
 
 Changelog:
  - Bug Fixes
-	- Glitched logic no longer includes CCT Door Clip.
+ - Glitched logic no longer includes CCT Door Clip.
