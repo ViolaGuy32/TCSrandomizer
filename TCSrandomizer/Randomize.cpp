@@ -185,19 +185,50 @@ Playable* newrepublicgunship_green;
 Playable* defaultCharacter;
 Playable* fakeAnakinsPod;
 Playable* fakeAnakinsPodGreen;
-Playable* kaminodroid;
-Playable* sentrydroid;
-Playable* bat;
 
-Playable* att;
-Playable* mtt;
-Playable* atst_lowres;
-Playable* hailfiredroid;
-Playable* jumbohomingdroid;
+Playable* atst;
+Playable* bantha;
+Playable* bomarrmonk;
+Playable* clonewalker;
+Playable* cloudcar;
+Playable* dewback;
+Playable* firetruck;
+Playable* flashspeeder;
+Playable* mapcar;
+Playable* mooncar;
+Playable* service_car;
+Playable* snowmob;
+Playable* speeder_land;
+Playable* speederbike;
+Playable* stap2;
+Playable* tauntaun;
+Playable* towncar;
+Playable* tractor;
+Playable* wookieflyer;
 
-Playable* probedroid;
-Playable* speederbike_snow;
-Playable* droidstarfighter;
+Playable* basketcannon;
+Playable* biggun;
+Playable* cannon;
+Playable* catapult;
+Playable* heavyrepeatingcannon;
+Playable* troopercannon;
+
+Playable* grabber;
+Playable* magnet;
+
+//Playable* kaminodroid;
+//Playable* sentrydroid;
+//Playable* bat;
+//
+//Playable* att;
+//Playable* mtt;
+//Playable* atst_lowres;
+//Playable* hailfiredroid;
+//Playable* jumbohomingdroid;
+//
+//Playable* probedroid;
+//Playable* speederbike_snow;
+//Playable* droidstarfighter;
 
 Level* Negotiations;
 Level* Invasion;
@@ -241,47 +272,47 @@ Level* ANewHope;
 Level* BHM;
 Level* Cantina;
 
-EnemyType* clone_ep3_sand_en;
-EnemyType* battledroid_en;
-EnemyType* battledroid_security_en;
-EnemyType* battledroid_commander_en;
-EnemyType* destroyer_en;
-EnemyType* geonosian_en;
-EnemyType* battledroid_geonosian_en;
-EnemyType* superbattledroid_en;
-EnemyType* bodyguard_en;
-EnemyType* clone_ep3_en;
-EnemyType* clone_ep3_swamp_en;
-EnemyType* disguisedclone_en;
-EnemyType* stormtrooper_en;
-EnemyType* imperialshuttlepilot_en;
-EnemyType* tuskenraider_en;
-EnemyType* sandtrooper_en;
-EnemyType* beachtrooper_en;
-EnemyType* deathstartrooper_en;
-EnemyType* tiefighterpilot_en;
-EnemyType* imperialofficer_en;
-EnemyType* snowtrooper_en;
-EnemyType* gamorreanguard_en;
-EnemyType* skiffguard_en;
-EnemyType* imperialguard_en;
-EnemyType* scouttrooper_en;
-EnemyType* kaminodroid_en;
-EnemyType* sentrydroid_en;
-EnemyType* bat_en;
-
-EnemyType* att_en;
-EnemyType* mtt_en;
-EnemyType* atst_lowres_en;
-EnemyType* hailfiredroid_en;
-EnemyType* jumbohomingdroid_en;
-
-EnemyType* droidstarfighter_en;
-EnemyType* tiefighter_en;
-EnemyType* tieinterceptor_en;
-EnemyType* tiebomber_en;
-EnemyType* probedroid_en;
-EnemyType* speederbike_snow_en;
+//EnemyType* clone_ep3_sand_en;
+//EnemyType* battledroid_en;
+//EnemyType* battledroid_security_en;
+//EnemyType* battledroid_commander_en;
+//EnemyType* destroyer_en;
+//EnemyType* geonosian_en;
+//EnemyType* battledroid_geonosian_en;
+//EnemyType* superbattledroid_en;
+//EnemyType* bodyguard_en;
+//EnemyType* clone_ep3_en;
+//EnemyType* clone_ep3_swamp_en;
+//EnemyType* disguisedclone_en;
+//EnemyType* stormtrooper_en;
+//EnemyType* imperialshuttlepilot_en;
+//EnemyType* tuskenraider_en;
+//EnemyType* sandtrooper_en;
+//EnemyType* beachtrooper_en;
+//EnemyType* deathstartrooper_en;
+//EnemyType* tiefighterpilot_en;
+//EnemyType* imperialofficer_en;
+//EnemyType* snowtrooper_en;
+//EnemyType* gamorreanguard_en;
+//EnemyType* skiffguard_en;
+//EnemyType* imperialguard_en;
+//EnemyType* scouttrooper_en;
+//EnemyType* kaminodroid_en;
+//EnemyType* sentrydroid_en;
+//EnemyType* bat_en;
+//
+//EnemyType* att_en;
+//EnemyType* mtt_en;
+//EnemyType* atst_lowres_en;
+//EnemyType* hailfiredroid_en;
+//EnemyType* jumbohomingdroid_en;
+//
+//EnemyType* droidstarfighter_en;
+//EnemyType* tiefighter_en;
+//EnemyType* tieinterceptor_en;
+//EnemyType* tiebomber_en;
+//EnemyType* probedroid_en;
+//EnemyType* speederbike_snow_en;
 
 std::unordered_map<Playable*, const char*> SpecialScripts;
 
@@ -296,6 +327,7 @@ extern bool panelOp;
 extern bool hatOp;
 extern bool colorOp;
 extern bool enemyOp;
+extern bool mountOp;
 //extern bool advanceMus;
 extern LogicType logicType;
 //extern std::unique_ptr<std::ofstream> loggingIt;
@@ -311,6 +343,9 @@ std::vector<Level*> allLevels;
 std::vector<Playable*> pls;                    //Characters and Vehicles
 std::vector<Playable*> chs;                    //Characters
 std::vector<Playable*> vhs;                    //Vehicles
+std::vector<Playable*> mnts;                   //Mounts
+std::vector<Playable*> trts;                   //Turrets
+std::vector<Playable*> grbs;                   //GrabThings
 std::vector<Playable*> testing = {};           //Current logic;
 std::vector<DispenserType> availableHats = {}; //Current logic;
 std::vector<EnemyType*> enemyTypes;            //AvailableEnemies
@@ -333,7 +368,7 @@ void Randomize() {
 	randoPTR = &rando;
 
 	makeCharacters();
-	makeEnemyTypes();
+	//makeEnemyTypes();
 	makeLevels();
 	//makeEnemies();
 
@@ -485,6 +520,21 @@ theed:
 
 		if (panelAny(1, 0, Fly | Grapple | HighJump)) goto theed2;
 		if (atrb(Jedi) && panelAny(1, 0, Jump | Fly | Flutter)) goto theed2;
+
+		if (logicType == superGlitched) {
+			std::vector<Playable*> overGap;
+			for (Playable* p : testing) {
+				if (p->check(Fly)) overGap.push_back(p);
+				else if (p->check(Grapple)) overGap.push_back(p);
+				else if (p->check(HighJump)) overGap.push_back(p);
+				else if (atrb(Jedi)) {
+					if (p->check(Jump) && p->speed >= 0.79f) overGap.push_back(p);
+					else if (p->check(Flutter)) overGap.push_back(p);
+				} else if (atrb(Choke) && p->check(Chokeable)) overGap.push_back(p);
+				else if (atrb(Lightning) && p->check(Lightningable)) overGap.push_back(p);
+			}
+			if (SuperJump(0, overGap)) goto theed2;
+		}
 		goto theed;
 
 	theed2:
@@ -778,7 +828,8 @@ secretplans:
 		if (!atrb(Lever)) goto secretplans;
 		if (((All(Grapple | Build) || atrb(Jedi) || //Both Yodas can build
 				 All(ExtraHighJump | Build)) &&
-				(atrb(Shoot) || atrb(FakeShoot))) ||
+					(atrb(Shoot) || atrb(FakeShoot)) ||
+				atrb(block)) ||
 			SuperJump(Jump | Flutter) || DoubleTransitionSkip(Jump | Flutter))
 			goto secretplans2;
 		goto secretplans;
@@ -839,7 +890,7 @@ secretplans3:
 secretplans4:
 	//escape pods
 
-	if (superGlitched == true) {
+	if (logicType == superGlitched) {
 		for (Playable* x : testing) {
 			for (Playable* y : testing) {
 				if (x != y) {
@@ -1122,6 +1173,7 @@ falconflight:
 
 dagobah:
 	mix(Dagobah);
+	if (!atrb(Jump, {Dagobah->party[3]})) goto dagobah;
 	if (!atrb(DoubleJump | Fly | Flutter | Tall | Hovering)) goto dagobah;
 	if (logicType == casual) {
 		if (!atrb(Build | Flutter | Tall | Hovering)) goto dagobah;
@@ -1138,7 +1190,7 @@ dagobah:
 		//training
 		add(1);
 		add(2);
-		if (atrb(AstroZapper)) goto dagobah2;
+		if (panelAny(4, 0, Fly)) goto dagobah2;
 		if (atrb(Jedi)) {
 			if (atrb(YodaJump)) goto dagobah2;
 			if (panel(4, 0)) goto dagobah2;
@@ -2028,46 +2080,46 @@ cantinaX:
 
 	std::cout << "Dummy characters done\n";
 
-	if (enemyOp) {
-		for (Level* lev : allLevels) {
-			std::string appendix;
-			for (EnemySet& enset : lev->enemies) {
-				for (Enemy& en : enset.enemy) {
-					if (en.address != 0) {
-						hexWrite(getAI2(lev, enset.scene), en.newType->type->name, en.address);
+	//if (enemyOp) {
+	//	for (Level* lev : allLevels) {
+	//		std::string appendix;
+	//		for (EnemySet& enset : lev->enemies) {
+	//			for (Enemy& en : enset.enemy) {
+	//				if (en.address != 0) {
+	//					hexWrite(getAI2(lev, enset.scene), en.newType->type->name, en.address);
 
-						std::string scrip;
-						std::fstream fs(getAI2(lev, enset.scene), std::ios::binary | std::ios::in | std::ios::out);
-						fs.seekg(en.address - 0x10);
-						char c = fs.get();
-						while (c != '\0') {
-							scrip += c;
-							c = fs.get();
-						}
-						fs.close();
-						std::string temp;
-						if (CIcompare(scrip, "chatting") /* || CIcompare(scrip, "storm")*/) {
-							if (en.newType == gamorreanguard_en) temp = "gamorreanguard";
-							else if (en.newType == imperialguard_en) temp = "impguard";
-							else if (en.newType == bodyguard_en) temp = "impguard";
-						}
-						if (temp != "") hexWrite(getAI2(lev, enset.scene), temp, en.address - 0x10);
-					}
-					if (en.file != "") {
-						txtIns(getSCP(lev, enset.scene, en.file), en.newType->type->name, {en.lncol},
-							en.vanillaType->type->name.length());
-					}
-					if (appendix.find('\"' + en.newType->type->name + '\"') == std::string::npos) {
-						appendix += "character \"" + en.newType->type->name + "\" resident\n";
-					}
-				}
+	//					std::string scrip;
+	//					std::fstream fs(getAI2(lev, enset.scene), std::ios::binary | std::ios::in | std::ios::out);
+	//					fs.seekg(en.address - 0x10);
+	//					char c = fs.get();
+	//					while (c != '\0') {
+	//						scrip += c;
+	//						c = fs.get();
+	//					}
+	//					fs.close();
+	//					std::string temp;
+	//					if (CIcompare(scrip, "chatting") /* || CIcompare(scrip, "storm")*/) {
+	//						if (en.newType == gamorreanguard_en) temp = "gamorreanguard";
+	//						else if (en.newType == imperialguard_en) temp = "impguard";
+	//						else if (en.newType == bodyguard_en) temp = "impguard";
+	//					}
+	//					if (temp != "") hexWrite(getAI2(lev, enset.scene), temp, en.address - 0x10);
+	//				}
+	//				if (en.file != "") {
+	//					txtIns(getSCP(lev, enset.scene, en.file), en.newType->type->name, {en.lncol},
+	//						en.vanillaType->type->name.length());
+	//				}
+	//				if (appendix.find('\"' + en.newType->type->name + '\"') == std::string::npos) {
+	//					appendix += "character \"" + en.newType->type->name + "\" resident\n";
+	//				}
+	//			}
 
-				//PUT THIS BACK IN
-				//lineDeleter(getMainTxt(lev), lev->enemyLines);
-				appendFile(getMainTxt(lev), appendix);
-			}
-		}
-	}
+	//			//PUT THIS BACK IN
+	//			//lineDeleter(getMainTxt(lev), lev->enemyLines);
+	//			appendFile(getMainTxt(lev), appendix);
+	//		}
+	//	}
+	//}
 
 	//	if (enemyOp && 1) {
 	//
@@ -2254,6 +2306,42 @@ cantinaX:
 		}
 	}
 
+	if (mountOp) {
+		for (Level* lev : allLevels) {
+			std::string appendix = "";
+			currentLev = lev;
+			for (MountSet& mountSet : lev->mounts) {
+				for (Mount& mount : mountSet.mount) {
+					if (mount.address != 0x0) ai2Write(mountSet.scene, mount.type->name, {mount.address});
+
+					if (appendix.find('\"' + mount.type->name + '\"') == std::string::npos) {
+						appendix += "character \"" + mount.type->name + "\" resident\n";
+					}
+				}
+			}
+			for (MountSet& mountSet : lev->turrets) {
+				for (Mount& mount : mountSet.mount) {
+					if (mount.address != 0x0) ai2Write(mountSet.scene, mount.type->name, {mount.address});
+
+					if (appendix.find('\"' + mount.type->name + '\"') == std::string::npos) {
+						appendix += "character \"" + mount.type->name + "\" resident\n";
+					}
+				}
+			}
+			for (MountSet& mountSet : lev->grabThings) {
+				for (Mount& mount : mountSet.mount) {
+					if (mount.address != 0x0) ai2Write(mountSet.scene, mount.type->name, {mount.address});
+
+					if (appendix.find('\"' + mount.type->name + '\"') == std::string::npos) {
+						appendix += "character \"" + mount.type->name + "\" resident\n";
+					}
+				}
+			}
+			lineDeleter(getMainTxt(lev), lev->mountLines);
+			appendFile(getMainTxt(lev), appendix);
+		}
+	}
+
 	if (collectable) {
 #ifdef _DEBUG
 		logR("Starting collectables");
@@ -2412,6 +2500,7 @@ cantinaX:
 		ai2Write('C', "ai_pk", {0x3846});
 
 		scriptTxt('A', 2, 5);
+
 
 		currentLev = Invasion;
 		playerInit({{0, 1}, {1, 2}, {2, 3}});
@@ -2694,6 +2783,7 @@ cantinaX:
 
 		scriptTxtRep('A', "ai_wookiee", "WOOKIE", 4);
 		ai2Write('A', "ai_wookiee", {});
+
 
 		currentLev = Ruin;
 		playerInit({{0, 1}, {1, 2}});
@@ -3100,6 +3190,36 @@ cantinaX:
 	} //character
 
 outro:
+
+	if (mountOp) {
+		currentLev = Negotiations;
+		txtIns(getBasePath(Negotiations, 'C', "GIT"), Negotiations->mounts[0].mount[0].type->name,
+			{{686, 22}, {697, 22}}, 5);
+
+		currentLev = Theed;
+		//txtIns(getBasePath(Theed, 'A', "GIT"), Theed->mounts[0].mount[0].type->name, {{686, 22}, {697, 22}}, 5);
+		gitMount('A', 0, 0, {{179, 22}, {190, 22}});
+
+		currentLev = Kashyyyk;
+		gitMount('B', 0, 1, {{59, 8}});
+
+		currentLev = SecretPlans;
+		txtMount('A', 0, 0, {{66, 11}, {73, 11}, {82, 11}, {89, 11}});
+		txtMount('B', 0, 0, {{118, 11}, {125, 11}, {136, 11}, {143, 11}, {151, 11}, {158, 11}, {165, 11}, {172, 11}, {179, 11}, {187, 11}, {195, 11}, {202, 11}});
+		txtMount('C', 0, 0, {{75, 11}, {83, 11}, {90, 11}, {98, 11}, {105, 11}, {113, 11}, {120, 11}});
+		txtMount('D', 0, 0, {{74, 11}, {81, 11}, {88, 11}, {95, 11}, {102, 11}});
+
+		txtMount('A', 0, 1, {{65, 11}, {72, 11}, {81, 11}, {88, 11}});
+		txtMount('B', 0, 1, {{117, 11}, {124, 11}, {135, 11}, {142, 11}, {150, 11}, {157, 11}, {164, 11}, {171, 11}, {180, 11}, {188, 11}, {194, 11}, {201, 11}});
+		txtMount('C', 0, 1, {{74, 11}, {82, 11}, {89, 11}, {97, 11}, {104, 11}, {112, 11}, {119, 11}});
+		txtMount('D', 0, 1, {{73, 11}, {80, 11}, {87, 11}, {94, 11}, {101, 11}});
+
+		if (SecretPlans->grabThings[0].mount[0].type == magnet) {
+			//USE SCALE 2.0
+			txtIns(getBasePath(SecretPlans, 'C', "TXT"), "\ttype \"GRABMAGNET\"\n", {428});
+		}
+	}
+
 	//Character unlocks
 #ifdef _DEBUG
 	logR("starting collection");
@@ -3113,9 +3233,9 @@ outro:
 			if (p == allMinikitsCharacter) collect << "all_minikits_complete" << '\n';
 			else if (p->StoryMode) collect << "story" << '\n';
 			else {
-				if (p->check(AllEpisodes)) {
+				if (p->checkCat(c_AllEpisodes)) {
 					collect << "all_episodes_complete ";
-				} else if (!(p->check(NoLevel))) {
+				} else if (!(p->checkCat(c_NoLevel))) {
 					collect << "area_complete "
 							   "\"";
 					collect << p->lev->name << "\" ";

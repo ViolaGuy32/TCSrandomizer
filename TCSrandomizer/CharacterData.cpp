@@ -185,10 +185,10 @@ void makeCharacters() {
 			Imperial | Chokeable | ResistZap);
 
 	gonkdroid = new Playable(
-		"gonkdroid", "Gonk droid", 3000, 0x7f2018, 0.12f, Droid | Passive | Gas | Pushable | Zappable | NoLevel);
+		"gonkdroid", "Gonk droid", 3000, 0x7f2018, 0.12f, Droid | Passive | Gas | Pushable | Zappable , c_NoLevel);
 
 	pkdroid = new Playable(
-		"pkdroid", "PK droid", 1500, 0x7f1ce8, 0.828538f, Droid | Passive | Gas | Pushable | Zappable | NoLevel);
+		"pkdroid", "PK droid", 1500, 0x7f1ce8, 0.828538f, Droid | Passive | Gas | Pushable | Zappable , c_NoLevel);
 
 	battledroid = new Playable("battledroid", "Battle droid", 6500, 0x7f1c88, 1.2f,
 		Attack | Shoot | Droid | Gas | Pushable | Zappable /*| Baddy,*/
@@ -720,43 +720,44 @@ void makeCharacters() {
 
 	ig88 = new Playable("ig88", "IG-88", 100000, 0x0, 1.2f,
 		Box | Jump | Attack | Shoot | Grapple | Astro | Proto | Bounty | Droid | Gas | Pushable | Chokeable |
-			Lightningable | Zappable | SlightlyHigherJump | AllEpisodes);
+			Lightningable | Zappable | SlightlyHigherJump,
+		c_AllEpisodes);
 
 	dengar = new Playable("dengar", "Dengar", 70000, 0x0, 1.3f,
-		Lever | Build | Box | Jump | Dive | Attack | Shoot | Grapple | Bounty | Chokeable | Lightningable | Trickable |
-			AllEpisodes);
+		Lever | Build | Box | Jump | Dive | Attack | Shoot | Grapple | Bounty | Chokeable | Lightningable | Trickable,
+		c_AllEpisodes);
 
 	fourlom = new Playable("4lom", "4-LOM", 45000, 0x7f1d90, 1.2f,
 		Box | Jump | Attack | Shoot | Grapple | Astro | Proto | Bounty | Droid | Gas | Pushable | Chokeable |
-			Lightningable | Zappable | AllEpisodes);
+			Lightningable | Zappable , c_AllEpisodes);
 
 	ghostbenkenobi = new Playable("ghostbenkenobi", "Ben Kenobi (Ghost)", 1100000, 0x0, 1.2f,
-		Hat | Lever | Build | Box | Jump | DoubleJump | RealDoubleJump | Attack | Deflect | Jedi | Passive | Gas |
-			AllEpisodes);
+		Hat | Lever | Build | Box | Jump | DoubleJump | RealDoubleJump | Attack | Jedi | Passive | Gas | Ghost,
+			c_AllEpisodes);
 
 	anakin_ghost = new Playable("anakin_ghost", "Anakin Skywalker (Ghost)", 1000000, 0x0, 1.2f,
-		Hat | Lever | Build | Box | Jump | DoubleJump | RealDoubleJump | Attack | Deflect | Jedi | Passive | Gas |
-			AllEpisodes);
+		Hat | Lever | Build | Box | Jump | DoubleJump | RealDoubleJump | Attack | Jedi | Passive | Gas | Ghost,
+			c_AllEpisodes);
 
 	yoda_ghost = new Playable("yoda_ghost", "Yoda (Ghost)", 1200000, 0x7f1d10, 1.44f,
-		Lever | Build | Box | Jump | DoubleJump | YodaJump | RealDoubleJump | Attack | Deflect | Jedi | Passive | Gas |
-			AllEpisodes);
+		Lever | Build | Box | Jump | DoubleJump | YodaJump | RealDoubleJump | Attack | Jedi | Passive | Gas | Ghost,
+			c_AllEpisodes);
 
 	r2q5 = new Playable("r2q5", "R2-Q5", 100000, 0x7f1fa8, 1.0f,
-		Fly | Zapper | AstroZapper | Astro | Droid | Passive | Gas | Pushable | Zappable | AllEpisodes);
+		Fly | Zapper | AstroZapper | Astro | Droid | Passive | Gas | Pushable | Zappable , c_AllEpisodes);
 
 	hansolo_indy = new Playable("hansolo_indy", "Indiana Jones", 50000, 0x7f20c0, 1.44f,
-		Hat | Lever | Build | Box | Jump | Dive | Attack | Shoot | Grapple | Chokeable | Lightningable | AllEpisodes);
+		Hat | Lever | Build | Box | Jump | Dive | Attack | Shoot | Grapple | Chokeable | Lightningable , c_AllEpisodes);
 
-	skeleton = new Playable("skeleton", "Skeleton", 3000, 0x7f20d0, 1.2f, Extratoggle);
+	skeleton = new Playable("skeleton", "Skeleton", 3000, 0x7f20d0, 1.2f, 0x0, c_Extratoggle);
 
 	buzzdroid = new Playable(
-		"buzzdroid", "Buzz droid", 1500, 0x7f20a0, 1.2f, Extratoggle | Attack | Droid | Gas | Pushable | Zappable);
+		"buzzdroid", "Buzz droid", 1500, 0x7f20a0, 1.2f, Attack | Droid | Gas | Pushable | Zappable, c_Extratoggle);
 
 	trainingremote =
 		new Playable("trainingremote", "Training Remote", 2000, 0x7f1d98, 1.05f,
-			Extratoggle | Hovering | FakeShoot | Droid |
-				Gas /* | Baddy ,
+			Hovering | FakeShoot | Droid |
+				Gas, c_Extratoggle /* | Baddy ,
 			{
 				{chatting, "trainingremote"},
 				{sniper, "trainingremote"},
@@ -775,39 +776,39 @@ void makeCharacters() {
 			normalBlock*/);
 
 	engineer = new Playable("engineer", "Rebel Engineer", 8000, 0x0, 1.2f,
-		Extratoggle | Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump);
+		Lever | Build | Box | Jump | SlightlyBetterJump | Attack | Shoot | Grapple | Chokeable |
+			Lightningable | Trickable | SlightlyHigherJump, c_Extratoggle);
 
 	naffdroid1 = new Playable("naffdroid1", "droid 1", 1500, 0x7f1cb8, 0.6f,
-		Extratoggle | Shoot | Droid | Passive | Gas | Pushable | Zappable);
+		Shoot | Droid | Passive | Gas | Pushable | Zappable, c_Extratoggle);
 
 	naffdroid2 = new Playable("naffdroid2", "droid 2", 1500, 0x7f1cc0, 0.6f,
-		Extratoggle | Shoot | Droid | Passive | Gas | Pushable | Zappable);
+		Shoot | Droid | Passive | Gas | Pushable | Zappable, c_Extratoggle);
 
 	naffdroid3 = new Playable("naffdroid3", "droid 3", 1500, 0x7f1cc8, 0.4f,
-		Extratoggle | Shoot | Droid | Passive | Gas | Pushable | Zappable);
+		Shoot | Droid | Passive | Gas | Pushable | Zappable, c_Extratoggle);
 
 	naffdroid4 = new Playable("naffdroid4", "droid 4", 1500, 0x7f1cd0, 0.6f,
-		Extratoggle | Shoot | Droid | Passive | Gas | Pushable | Zappable);
+		Shoot | Droid | Passive | Gas | Pushable | Zappable, c_Extratoggle);
 
-	womprat = new Playable("womprat", "Womp Rat", 25000, 0x7f1d00, 1.8f, Extratoggle | Passive);
+	womprat = new Playable("womprat", "Womp Rat", 25000, 0x7f1d00, 1.8f, Passive, c_Extratoggle);
 
 	mousedroid = new Playable(
-		"mousedroid", "Mouse droid", 3000, 0x7f1cd8, 2.4f, Extratoggle | Droid | Passive | Gas | Pushable | Zappable);
+		"mousedroid", "Mouse droid", 3000, 0x7f1cd8, 2.4f, Droid | Passive | Gas | Pushable | Zappable, c_Extratoggle);
 
 	imperialengineer = new Playable("imperialengineer", "imperial Engineer", 9000, 0x0, 1.2f,
-		Extratoggle | Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump | Storm);
+		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
+			Lightningable | Trickable | SlightlyHigherJump | Storm, c_Extratoggle);
 
-	hanincarbonite = new Playable("hanincarbonite", "Han Solo (frozen in carbonite)", 5000, 0x0, 0.75f, Extratoggle);
+	hanincarbonite = new Playable("hanincarbonite", "Han Solo (frozen in carbonite)", 5000, 0x0, 0.75f, 0x0, c_Extratoggle);
 
 	atat_driver = new Playable("atat_driver", "AT-AT Driver", 25000, 0x0, 1.2f,
-		Extratoggle | Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump | Storm);
+		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
+			Lightningable | Trickable | SlightlyHigherJump | Storm, c_Extratoggle);
 
 	scouttrooper = new Playable("scouttrooper", "Scout Trooper", 16000, 0x0, 1.2f,
-		Extratoggle | Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
-			Lightningable | Trickable | SlightlyHigherJump | Storm /*\| Baddy,
+		Lever | Build | Box | Jump | Flop | Attack | Shoot | Grapple | Imperial | Chokeable |
+			Lightningable | Trickable | SlightlyHigherJump | Storm, c_Extratoggle /*\| Baddy,
 		{
 			{chatting, "chatting"},
 			{sniper, "sniper"},
@@ -820,181 +821,212 @@ void makeCharacters() {
 		},
 		normalAttack, normalBlock\*/);
 
-	newanakinspod = new Playable("newanakinspod", "Anakin's Pod", 20000, 0x7f21e0, 1.2f, Vehicle);
+	newanakinspod = new Playable("newanakinspod", "Anakin's Pod", 20000, 0x7f21e0, 1.2f, 0x0, c_Vehicle);
 
 	naboostarfighter =
-		new Playable("naboostarfighter", "Naboo Starfighter", 12000, 0x7f20b0, 1.2f, Vehicle | Attack | Shoot | Tow);
+		new Playable("naboostarfighter", "Naboo Starfighter", 12000, 0x7f20b0, 1.2f,  Attack | Shoot | Tow, c_Vehicle);
 
 	anakinsspeeder =
-		new Playable("anakinsspeeder", "Anakin's Speeder", 15000, 0x7f21f0, 1.2f, Vehicle | Attack | Shoot);
+		new Playable("anakinsspeeder", "Anakin's Speeder", 15000, 0x7f21f0, 1.2f, Attack | Shoot, c_Vehicle);
 
 	newrepublicgunship =
-		new Playable("newrepublicgunship", "Republic Gunship", 18000, 0x7f1f78, 1.2f, Vehicle | Attack | Shoot | Tow);
+		new Playable("newrepublicgunship", "Republic Gunship", 18000, 0x7f1f78, 1.2f, Attack | Shoot | Tow, c_Vehicle);
 
 	jedistarfighter_yellow_ep3 = new Playable(
-		"jedistarfighter_yellow_ep3", "jedi Starfighter (Yellow)", 10000, 0x7f1f40, 1.2f, Vehicle | Attack | Shoot);
+		"jedistarfighter_yellow_ep3", "jedi Starfighter (Yellow)", 10000, 0x7f1f40, 1.2f, Attack | Shoot, c_Vehicle);
 
 	jedistarfighter_red_ep3 = new Playable(
-		"jedistarfighter_red_ep3", "jedi Starfighter (Red)", 10000, 0x7f1f48, 1.2f, Vehicle | Attack | Shoot);
+		"jedistarfighter_red_ep3", "jedi Starfighter (Red)", 10000, 0x7f1f48, 1.2f, Attack | Shoot, c_Vehicle);
 
-	xwing = new Playable("xwing", "X-wing", 25000, 0x7f1fb0, 1.2f, Vehicle | Attack | Shoot);
+	xwing = new Playable("xwing", "X-wing", 25000, 0x7f1fb0, 1.2f, Attack | Shoot, c_Vehicle);
 
-	ywing = new Playable("ywing", "Y-wing", 25000, 0x7f1e38, 1.2f, Vehicle | Attack | Shoot);
+	ywing = new Playable("ywing", "Y-wing", 25000, 0x7f1e38, 1.2f, Attack | Shoot, c_Vehicle);
 
-	snowspeeder = new Playable("snowspeeder", "Snowspeeder", 20000, 0x7f1fc0, 1.2f, Vehicle | Attack | Shoot | Tow);
+	snowspeeder = new Playable("snowspeeder", "Snowspeeder", 20000, 0x7f1fc0, 1.2f, Attack | Shoot | Tow, c_Vehicle);
 
 	millenniumfalcon =
-		new Playable("millenniumfalcon", "Millennium Falcon", 40000, 0x7f1ec0, 1.2f, Vehicle | Attack | Shoot);
+		new Playable("millenniumfalcon", "Millennium Falcon", 40000, 0x7f1ec0, 1.2f, Attack | Shoot, c_Vehicle);
 
-	sebulbaspod = new Playable("sebulbaspod", "Sebulba's Pod", 20000, 0x7f21c0, 1.2f, Vehicle);
+	sebulbaspod = new Playable("sebulbaspod", "Sebulba's Pod", 20000, 0x7f21c0, 1.2f, c_Vehicle);
 
-	zamsspeeder = new Playable("zamsspeeder", "Zam's Airspeeder", 24000, 0x7f2200, 1.2f, Vehicle | Attack | Shoot);
+	zamsspeeder = new Playable("zamsspeeder", "Zam's Airspeeder", 24000, 0x7f2200, 1.2f, Attack | Shoot, c_Vehicle);
 
 	droidtrifighter =
-		new Playable("droidtrifighter", "droid Trifighter", 28000, 0x7f2210, 1.2f, Vehicle | Attack | Shoot);
+		new Playable("droidtrifighter", "droid Trifighter", 28000, 0x7f2210, 1.2f, Attack | Shoot, c_Vehicle);
 
-	vulturedroid = new Playable("vulturedroid", "Vulture droid", 30000, 0x7f2208, 1.2f, Vehicle | Attack | Shoot);
+	vulturedroid = new Playable("vulturedroid", "Vulture droid", 30000, 0x7f2208, 1.2f, Attack | Shoot, c_Vehicle);
 
-	clonearc = new Playable("clonearc", "Clone Arcfighter", 33000, 0x7f20a8, 1.2f, Vehicle | Attack | Shoot);
+	clonearc = new Playable("clonearc", "Clone Arcfighter", 33000, 0x7f20a8, 1.2f, Attack | Shoot, c_Vehicle);
 
-	tiefighter = new Playable("tiefighter", "TIE Fighter", 35000, 0x7f1e58, 1.2f, Vehicle | Attack | Shoot | TieDoor);
+	tiefighter = new Playable("tiefighter", "TIE Fighter", 35000, 0x7f1e58, 1.2f, Attack | Shoot | TieDoor, c_Vehicle);
 
 	tieinterceptor =
-		new Playable("tieinterceptor", "TIE Interceptor", 40000, 0x7f1fc8, 1.2f, Vehicle | Attack | Shoot | TieDoor);
+		new Playable("tieinterceptor", "TIE Interceptor", 40000, 0x7f1fc8, 1.2f, Attack | Shoot | TieDoor, c_Vehicle);
 
 	tiefighterdarth = new Playable(
-		"tiefighterdarth", "TIE Fighter (Darth Vader)", 50000, 0x7f1e50, 1.2f, Vehicle | Attack | Shoot | TieDoor);
+		"tiefighterdarth", "TIE Fighter (Darth Vader)", 50000, 0x7f1e50, 1.2f, Attack | Shoot | TieDoor, c_Vehicle);
 
-	tiebomber = new Playable("tiebomber", "TIE Bomber", 60000, 0x7f1e40, 1.2f, Vehicle | Attack | Shoot | TieDoor);
+	tiebomber = new Playable("tiebomber", "TIE Bomber", 60000, 0x7f1e40, 1.2f, Attack | Shoot | TieDoor, c_Vehicle);
 
 	imperialshuttle =
-		new Playable("imperialshuttle", "imperial Shuttle", 25000, 0x7f1fd0, 1.2f, Vehicle | Attack | Shoot);
+		new Playable("imperialshuttle", "imperial Shuttle", 25000, 0x7f1fd0, 1.2f, Attack | Shoot, c_Vehicle);
 
-	slave1 = new Playable("slave1", "Slave 1", 100000, 0x7f1e30, 1.2f, Vehicle | Attack | Shoot | AllEpisodes);
+	slave1 = new Playable("slave1", "Slave 1", 100000, 0x7f1e30, 1.2f, Attack | Shoot , c_Vehicle | c_AllEpisodes);
 
 	newanakinspod_green =
-		new Playable("newanakinspod_green", "Anakin's Pod (Green)", 20000, 0x7f21b8, 1.2f, Vehicle | Vgreen);
+		new Playable("newanakinspod_green", "Anakin's Pod (Green)", 20000, 0x7f21b8, 1.2f, 0x0, c_Vehicle | c_Vgreen);
 
 	naboostarfighter_lime = new Playable("naboostarfighter_lime", "Naboo Starfighter (Green)", 12000, 0x7f20b8, 1.2f,
-		Vehicle | Vgreen | Attack | Shoot | Tow);
+		Attack | Shoot | Tow, c_Vehicle | c_Vgreen);
 
 	anakinsspeeder_green = new Playable(
-		"anakinsspeeder_green", "Anakin's Speeder (Green)", 15000, 0x7f21f8, 1.2f, Vehicle | Vgreen | Attack | Shoot);
+		"anakinsspeeder_green", "Anakin's Speeder (Green)", 15000, 0x7f21f8, 1.2f, Attack | Shoot, c_Vehicle | c_Vgreen);
 
 	newrepublicgunship_green = new Playable("newrepublicgunship_green", "Republic Gunship (Green)", 18000, 0x7f1f80,
-		1.2f, Vehicle | Vgreen | Attack | Shoot | Tow);
+		1.2f, Attack | Shoot | Tow, c_Vehicle | c_Vgreen);
 
-	defaultCharacter = new Playable("", "", 0, 0, 0.0f, Fake);
+	defaultCharacter = new Playable("", "", 0, 0, 0.0f, 0x0, c_Fake);
 
 	//podrace original uses a different version of the pods
-	fakeAnakinsPod = new Playable("anakinspod", "", 0, 0, 0.0f, Fake | Vehicle);
+	fakeAnakinsPod = new Playable("anakinspod", "", 0, 0, 0.0f, 0x0, c_Fake | c_Vehicle);
 
-	fakeAnakinsPodGreen = new Playable("anakinspod_green", "", 0, 0, 0.0f, Fake | Vehicle);
+	fakeAnakinsPodGreen = new Playable("anakinspod_green", "", 0, 0, 0.0f, 0x0, c_Fake | c_Vehicle);
 
-	kaminodroid = new Playable("kaminoandroid", "", 0, 0x7f1fe8, 1.05f, Fake | Shoot | Hovering /*\| Baddy,
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{spawnattack, "spawnattack"},
-			{patrol, "patrol"},
+	atst = new Playable("atst", "", 0, 0x7f1d64, 0, Shoot | Flatten, c_Mount);
+	bantha = new Playable("bantha", "", 0, 0x7f1de0, 0, 0x0, c_Mount);
+	bomarrmonk = new Playable("bomarrmonk", "", 0, 0x7f1de8, 0, 0x0, c_Mount);
+	clonewalker = new Playable("clonewalker", "", 0, 0x7f1db8, 0, Shoot | Flatten, c_Mount);
+	cloudcar = new Playable("cloudcar", "", 0, 0, 0, 0x0, c_Mount);
+	dewback = new Playable("dewback", "", 0, 0x7f1df0, 0, Buck, c_Mount);
+	firetruck = new Playable("firetruck", "", 0, 0x7f2080,  0, 0, c_Mount);
+	flashspeeder = new Playable("flashspeeder", "", 0, 0x7f20c8, 0, Flatten | Shoot | Hovering, c_Mount);
+	mapcar = new Playable("mapcar", "", 0, 0x7f2038, 0, 0x0, c_Mount);
+	mooncar = new Playable("mooncar", "", 0, 0x7f2030, 0, 0x0, c_Mount);
+	service_car = new Playable("service_car", "", 0, 0x7f1da8, 0, 0x0, c_Mount);
+	snowmob = new Playable("snowmob", "", 0, 0x7f1e98, 0, 0x0, c_Mount);
+	speeder_land = new Playable("speeder_land", "", 0, 0x7f1df8, 0, Hovering, c_Mount);
+	speederbike = new Playable("speederbike", "", 0, 0x7f1e08, 0, Hovering | Shoot, c_Mount);
+	stap2 = new Playable("stap2", "", 0, 0x7f1ef0, 0, Shoot | Hovering, c_Mount);
+	tauntaun = new Playable("tuantaun", "", 0, 0x7f1d00, 0, 0x0, c_Mount);
+	towncar = new Playable("towncar", "", 0, 0x7f2070, 0, 0x0, c_Mount);
+	tractor = new Playable("tractor", "", 0, 0x7f2078, 0, 0x0, c_Mount);
+	wookieflyer = new Playable("wookieflyer", "", 0, 0x7f2044, 0, 0x0, c_Mount);
 
-		},
-		normalAttack, normalBlock\*/);
+	basketcannon = new Playable("basketcannon", "", 0, 0x7f1ddc, 0, 0x0, c_Turret);
+	biggun = new Playable("biggun", "", 0, 0x7f1e18, 0, Shoot, c_Turret);
+	cannon = new Playable("cannon", "", 0, 0, 0, Shoot, c_Turret);
+	catapult = new Playable("catapult", "", 0, 0x7f1dd0, 0, Shoot, c_Turret);
+	heavyrepeatingcannon = new Playable("heavyrepeatingcannon", "", 0, 0x7f1e10, 0, Shoot, c_Turret);
+	troopercannon = new Playable("troopercannon", "", 0, 0x7f1e20, 0, Shoot, c_Turret);
 
-	sentrydroid = new Playable("sentrydroid", "", 0, 0x7f1fe0, 1.2f, Fake | Shoot | Hovering /*\| Baddy,
-		{
-			{chatting, "chatting"},
-			{sniper, "sniper"},
-			{storm, "storm"},
-			{attack, "attack"},
-			{block, "block"},
-			{spawnattack, "spawnattack"},
-			{patrol, "patrol"},
+	grabber = new Playable("grabber", "", 0, 0x7f1e70, 0, 0x0, c_GrabThing);
+	magnet = new Playable("magnet", "", 0, 0x7f1e78, 0, 0x0, c_GrabThing);
 
-		},
-		normalAttack, normalBlock\*/);
 
-	bat = new Playable("bat", "", 0, 0x7f1cf8, 0.75f, Fake | Hovering /*\| Baddy,
-		{
-			{chatting, "bat"},
-			{sniper, "bat"},
-			{storm, "bat"},
-			{attack, "bat"},
-			{block, "bat"},
-			{spawnattack, "bat"},
-			{patrol, "bat"},
-		},
-		{"SetGravityHeight \"reset\"", "if CollidingWithOpponent == 1 goto HitOpponent0\n\t\t1",
-			funcNoRef("HitOpponent", "1", "TakeDamage \"opponent\"\n\t\tSetState \"Circle\"")
-				funcNoRef("Circle", "if Timer > 2 goto Attack1",
-					"ResetTimer \"mintime=0\" \"maxtime=1\"\n\t\tSetCircleDirection "
-					"\"Reverse\"\n\t\tCircleOpponent "
-					"\"0.5\" \"can_go_off_path\"")},
-		{"SetGravityHeight \"reset\"", "if CollidingWithOpponent == 1 goto HitOpponent0\n\t\t1",
-			funcNoRef("HitOpponent", "1", "TakeDamage \"opponent\"\n\t\tSetState \"Circle\"")
-				funcNoRef("Circle", "if Timer > 2 goto Attack1",
-					"ResetTimer \"mintime=0\" \"maxtime=1\"\n\t\tSetCircleDirection "
-					"\"Reverse\"\n\t\tCircleOpponent "
-					"\"0.5\" \"can_go_off_path\"")}\*/);
-
-	//	SpecialScripts = {{bat, "bat"}, /*{jawa, "jawa"}, {ugnaught, "jawa"},*/ {bodyguard, "bodyguard"},
-	//		{trainingremote, "trainingremote"}, {gamorreanguard, "gamorreanguard"}, {imperialguard, "impguard"}};
-
-	att = new Playable("att", "", 0, 0x0, 6.0f, Fake | Vehicle | Shoot);
-	mtt = new Playable("mtt", "", 0, 0x0, 12.0f, Fake | Vehicle | Shoot);
-	atst_lowres = new Playable("atst_lowres", "", 0, 0x7f1d68, 2.16f, Fake | Vehicle | Shoot);
-	hailfiredroid = new Playable("hailfiredroid", "", 0, 0x0, 10.0f, Fake | Vehicle | Shoot);
-	jumbohomingdroid = new Playable("jumbohomingdroid", "", 0, 0x0, 2.3549f, Fake | Vehicle | Shoot);
-
-	droidstarfighter = new Playable("droidstarfighter", "", 0, 0x7f2218, 24.0f, Fake | Vehicle | Shoot);
-	probedroid = new Playable("probedroid", "", 0, 0x7f1ce0, 9.0f, Fake | Vehicle | Shoot);
-	speederbike_snow = new Playable("speederbike_snow", "", 0, 0x0, 13.0f, Fake | Vehicle | Shoot);
+//	kaminodroid = new Playable("kaminoandroid", "", 0, 0x7f1fe8, 1.05f, Fake | Shoot | Hovering /*\| Baddy,
+//		{
+//			{chatting, "chatting"},
+//			{sniper, "sniper"},
+//			{storm, "storm"},
+//			{attack, "attack"},
+//			{block, "block"},
+//			{spawnattack, "spawnattack"},
+//			{patrol, "patrol"},
+//
+//		},
+//		normalAttack, normalBlock\*/);
+//
+//	sentrydroid = new Playable("sentrydroid", "", 0, 0x7f1fe0, 1.2f, Fake | Shoot | Hovering /*\| Baddy,
+//		{
+//			{chatting, "chatting"},
+//			{sniper, "sniper"},
+//			{storm, "storm"},
+//			{attack, "attack"},
+//			{block, "block"},
+//			{spawnattack, "spawnattack"},
+//			{patrol, "patrol"},
+//
+//		},
+//		normalAttack, normalBlock\*/);
+//
+//	bat = new Playable("bat", "", 0, 0x7f1cf8, 0.75f, Fake | Hovering /*\| Baddy,
+//		{
+//			{chatting, "bat"},
+//			{sniper, "bat"},
+//			{storm, "bat"},
+//			{attack, "bat"},
+//			{block, "bat"},
+//			{spawnattack, "bat"},
+//			{patrol, "bat"},
+//		},
+//		{"SetGravityHeight \"reset\"", "if CollidingWithOpponent == 1 goto HitOpponent0\n\t\t1",
+//			funcNoRef("HitOpponent", "1", "TakeDamage \"opponent\"\n\t\tSetState \"Circle\"")
+//				funcNoRef("Circle", "if Timer > 2 goto Attack1",
+//					"ResetTimer \"mintime=0\" \"maxtime=1\"\n\t\tSetCircleDirection "
+//					"\"Reverse\"\n\t\tCircleOpponent "
+//					"\"0.5\" \"can_go_off_path\"")},
+//		{"SetGravityHeight \"reset\"", "if CollidingWithOpponent == 1 goto HitOpponent0\n\t\t1",
+//			funcNoRef("HitOpponent", "1", "TakeDamage \"opponent\"\n\t\tSetState \"Circle\"")
+//				funcNoRef("Circle", "if Timer > 2 goto Attack1",
+//					"ResetTimer \"mintime=0\" \"maxtime=1\"\n\t\tSetCircleDirection "
+//					"\"Reverse\"\n\t\tCircleOpponent "
+//					"\"0.5\" \"can_go_off_path\"")}\*/);
+//
+//	//	SpecialScripts = {{bat, "bat"}, /*{jawa, "jawa"}, {ugnaught, "jawa"},*/ {bodyguard, "bodyguard"},
+//	//		{trainingremote, "trainingremote"}, {gamorreanguard, "gamorreanguard"}, {imperialguard, "impguard"}};
+//
+//	att = new Playable("att", "", 0, 0x0, 6.0f, Fake | Vehicle | Shoot);
+//	mtt = new Playable("mtt", "", 0, 0x0, 12.0f, Fake | Vehicle | Shoot);
+//	atst_lowres = new Playable("atst_lowres", "", 0, 0x7f1d68, 2.16f, Fake | Vehicle | Shoot);
+//	hailfiredroid = new Playable("hailfiredroid", "", 0, 0x0, 10.0f, Fake | Vehicle | Shoot);
+//	jumbohomingdroid = new Playable("jumbohomingdroid", "", 0, 0x0, 2.3549f, Fake | Vehicle | Shoot);
+//
+//	droidstarfighter = new Playable("droidstarfighter", "", 0, 0x7f2218, 24.0f, Fake | Vehicle | Shoot);
+//	probedroid = new Playable("probedroid", "", 0, 0x7f1ce0, 9.0f, Fake | Vehicle | Shoot);
+//	speederbike_snow = new Playable("speederbike_snow", "", 0, 0x0, 13.0f, Fake | Vehicle | Shoot);
 }
 
-void makeEnemyTypes() {
-
-	clone_ep3_sand_en = new EnemyType(clone_ep3_sand);
-	battledroid_en = new EnemyType(battledroid);
-	battledroid_security_en = new EnemyType(battledroid_security);
-	battledroid_commander_en = new EnemyType(battledroid_commander);
-	destroyer_en = new EnemyType(destroyer);
-	geonosian_en = new EnemyType(geonosian);
-	battledroid_geonosian_en = new EnemyType(battledroid_geonosian);
-	superbattledroid_en = new EnemyType(superbattledroid);
-	bodyguard_en = new EnemyType(bodyguard);
-	clone_ep3_en = new EnemyType(clone_ep3);
-	clone_ep3_swamp_en = new EnemyType(clone_ep3_swamp);
-	disguisedclone_en = new EnemyType(disguisedclone);
-	stormtrooper_en = new EnemyType(stormtrooper);
-	imperialshuttlepilot_en = new EnemyType(imperialshuttlepilot);
-	tuskenraider_en = new EnemyType(tuskenraider);
-	sandtrooper_en = new EnemyType(sandtrooper);
-	beachtrooper_en = new EnemyType(beachtrooper);
-	deathstartrooper_en = new EnemyType(deathstartrooper);
-	tiefighterpilot_en = new EnemyType(tiefighterpilot);
-	imperialofficer_en = new EnemyType(imperialofficer);
-	snowtrooper_en = new EnemyType(snowtrooper);
-	gamorreanguard_en = new EnemyType(gamorreanguard);
-	skiffguard_en = new EnemyType(skiffguard);
-	imperialguard_en = new EnemyType(imperialguard);
-	scouttrooper_en = new EnemyType(scouttrooper);
-	kaminodroid_en = new EnemyType(kaminodroid);
-	sentrydroid_en = new EnemyType(sentrydroid);
-	//bat_en = new EnemyType(bat);
-
-	att_en = new EnemyType(att, walker);
-	mtt_en = new EnemyType(mtt, walker);
-	atst_lowres_en = new EnemyType(atst_lowres, walker);
-	hailfiredroid_en = new EnemyType(hailfiredroid, walker);
-	jumbohomingdroid_en = new EnemyType(jumbohomingdroid, walker);
-
-	droidstarfighter_en = new EnemyType(droidstarfighter, flyer);
-	tiefighter_en = new EnemyType(tiefighter, flyer);
-	tieinterceptor_en = new EnemyType(tieinterceptor, flyer);
-	tiebomber_en = new EnemyType(tiebomber, flyer);
-	probedroid_en = new EnemyType(probedroid, flyer);
-	speederbike_snow_en = new EnemyType(speederbike_snow, flyer);
-}
+//void makeEnemyTypes() {
+//
+//	clone_ep3_sand_en = new EnemyType(clone_ep3_sand);
+//	battledroid_en = new EnemyType(battledroid);
+//	battledroid_security_en = new EnemyType(battledroid_security);
+//	battledroid_commander_en = new EnemyType(battledroid_commander);
+//	destroyer_en = new EnemyType(destroyer);
+//	geonosian_en = new EnemyType(geonosian);
+//	battledroid_geonosian_en = new EnemyType(battledroid_geonosian);
+//	superbattledroid_en = new EnemyType(superbattledroid);
+//	bodyguard_en = new EnemyType(bodyguard);
+//	clone_ep3_en = new EnemyType(clone_ep3);
+//	clone_ep3_swamp_en = new EnemyType(clone_ep3_swamp);
+//	disguisedclone_en = new EnemyType(disguisedclone);
+//	stormtrooper_en = new EnemyType(stormtrooper);
+//	imperialshuttlepilot_en = new EnemyType(imperialshuttlepilot);
+//	tuskenraider_en = new EnemyType(tuskenraider);
+//	sandtrooper_en = new EnemyType(sandtrooper);
+//	beachtrooper_en = new EnemyType(beachtrooper);
+//	deathstartrooper_en = new EnemyType(deathstartrooper);
+//	tiefighterpilot_en = new EnemyType(tiefighterpilot);
+//	imperialofficer_en = new EnemyType(imperialofficer);
+//	snowtrooper_en = new EnemyType(snowtrooper);
+//	gamorreanguard_en = new EnemyType(gamorreanguard);
+//	skiffguard_en = new EnemyType(skiffguard);
+//	imperialguard_en = new EnemyType(imperialguard);
+//	scouttrooper_en = new EnemyType(scouttrooper);
+//	kaminodroid_en = new EnemyType(kaminodroid);
+//	sentrydroid_en = new EnemyType(sentrydroid);
+//	//bat_en = new EnemyType(bat);
+//
+//	att_en = new EnemyType(att, walker);
+//	mtt_en = new EnemyType(mtt, walker);
+//	atst_lowres_en = new EnemyType(atst_lowres, walker);
+//	hailfiredroid_en = new EnemyType(hailfiredroid, walker);
+//	jumbohomingdroid_en = new EnemyType(jumbohomingdroid, walker);
+//
+//	droidstarfighter_en = new EnemyType(droidstarfighter, flyer);
+//	tiefighter_en = new EnemyType(tiefighter, flyer);
+//	tieinterceptor_en = new EnemyType(tieinterceptor, flyer);
+//	tiebomber_en = new EnemyType(tiebomber, flyer);
+//	probedroid_en = new EnemyType(probedroid, flyer);
+//	speederbike_snow_en = new EnemyType(speederbike_snow, flyer);
+//}

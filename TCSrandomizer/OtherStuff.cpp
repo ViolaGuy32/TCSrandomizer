@@ -663,6 +663,16 @@ void scpMulti(char scene, std::string script, writeSet writ) {
 	writer(weirdWrite, getSCP(currentLev, scene, script), writ);
 };
 
+void gitMount(char scene, int mountSetNum, int mountNum, std::initializer_list<coord> lncol) {
+	//replaces string with multiple instances in same GIT file
+	txtIns(getBasePath(currentLev, scene, "GIT"), currentLev->mounts[mountSetNum].mount[mountNum].type->name, lncol, currentLev->mounts[mountSetNum].mount[mountNum].vanillaType->name.length());
+};
+
+void txtMount(char scene, int mountSetNum, int mountNum, std::initializer_list<coord> lncol) {
+	//replaces string with multiple instances in same GIT file
+	txtIns(getBasePath(currentLev, scene, "TXT"), currentLev->mounts[mountSetNum].mount[mountNum].type->name, lncol, currentLev->mounts[mountSetNum].mount[mountNum].vanillaType->name.length());
+};
+
 void scpMany(char scene, std::string script, std::vector<writeSet> writers) {
 	//replaces multiple strings which each have multiple instances in scp file
 	//std::vector<writeSet> writ;

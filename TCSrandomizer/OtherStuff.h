@@ -143,6 +143,10 @@ void scpIns(char scene, std::string script, int chNum, coord lnCol,
 
 void scpMulti(char scene, std::string script, writeSet);
 
+void gitMount(char scene, int mountSetNum, int mountNum, std::initializer_list<coord> lncol);
+
+void txtMount(char scene, int mountSetNum, int mountNum, std::initializer_list<coord> lncol);
+
 void scpMany(char scene, std::string script, std::vector<writeSet> writers);
 
 void batchAnywhere(std::string file, std::vector<writeSet> writers);

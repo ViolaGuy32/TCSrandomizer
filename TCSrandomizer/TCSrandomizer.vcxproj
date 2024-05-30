@@ -155,8 +155,6 @@
     <ClCompile Include="CharacterData.cpp" />
     <ClCompile Include="Characters.cpp" />
     <ClCompile Include="Enemies.cpp" />
-    <ClCompile Include="EnemyData.cpp" />
-    <ClCompile Include="EnemyPatch.cpp" />
     <ClCompile Include="FileGen.cpp" />
     <ClCompile Include="LevelData.cpp" />
     <ClCompile Include="Levels.cpp" />
@@ -182,8 +180,6 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="CharacterData.h" />
     <ClInclude Include="Enemies.h" />
-    <ClInclude Include="EnemyData.h" />
-    <ClInclude Include="EnemyPatch.h" />
     <ClInclude Include="externData.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Defines.h" />

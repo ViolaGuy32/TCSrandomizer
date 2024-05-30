@@ -129,7 +129,7 @@ modify conditions in redirrect
 BLOCK_CHATTING
 
 story characters interfere with bhm
-specialscp additional actions
+specialscp additional actionse
 
 finish story sometimes puts you buy the shop
 

@@ -30,7 +30,7 @@ void makeLevels() {
 					{ProtoPanel, 0x38F8}, //end
 				},
 			}},
-		{}, {5, 6, 8});
+		{}, {5, 6, 8}, {{'C', {{stap2, 0x3F6D}}}}, {}, {}, {10});
 
 	Invasion = new Level("GUNGAN", "GUNGAN", "/LEVELS/EPISODE_I/GUNGAN/", false,
 		{quigonjinn, obiwankenobi, jarjarbinks}, {}, {jarjarbinks, captaintarpals, bossnass},
@@ -61,15 +61,14 @@ void makeLevels() {
 		{{'A', {0x36fc, 0x36e5, 0x3689, 0x3672}}, {'B', {0x61be, 0x61a7, 0x6190, 0x6179}},
 			{'D', {0x5abb, 0x5aa4, 0x5a8d, 0x559c, 0x48ac}}, {'E', {0x3799, 0x327a}}, {'F', {0x5f5c, 0x5f45, 0x5f2e}},
 			{'G', {0x3473, 0x345c, 0x2938}}},
-		{},
-
-		{{'A', {{AstroPanel, 0x38BC}}}, {'B', {{AstroPanel, 0x62FE}}}, {'G', {{AstroPanel, 0x35F6}}}}, {},
-		{9, 10, 11, 12});
+		{}, {{'A', {{AstroPanel, 0x38BC}}}, {'B', {{AstroPanel, 0x62FE}}}, {'G', {{AstroPanel, 0x35F6}}}}, {},
+		{9, 10, 11, 12}, {{'A', {{flashspeeder, 0x37F5}}}, {'G', {{service_car, 0x9916}}}}, {}, {}, {13, 14});
 
 	Maul = new Level("MAUL", "MAUL", "/LEVELS/EPISODE_I/MAUL/", false, {obiwankenobi, quigonjinn}, {}, {darthmaul},
 		{{'A', {0x2e7c, 0x2e65, 0x2be1, 0x2bca}}, {'B', {0x2a4e, 0x2a37, 0x2a20, 0x2757, 0x2740, 0x2449, 0x1531}},
 			{'D', {0x1a95, 0x1a67, 0x1a50, 0x1a39, 0x193c}}, {'E', {0x18bc}}, {'F', {0xe76, 0xe1a, 0xe03, 0xdec}}},
-		{}, {{'A', {{ImperialPanel, 0x2F44}}}, {'D', {{ProtoPanel, 0x1C1F}, {ImperialPanel, 0x1C4E}}}}, {}, {5, 6, 7});
+		{}, {{'A', {{ImperialPanel, 0x2F44}}}, {'D', {{ProtoPanel, 0x1C1F}, {ImperialPanel, 0x1C4E}}}}, {}, {5, 6, 7},
+		{{'A', {{service_car, 0x29F7}}}}, {}, {}, {13});
 
 	BHP = new Level("PURSUIT", "PURSUIT", "/LEVELS/EPISODE_II/PURSUIT/", true, {anakinsspeeder, anakinsspeeder_green},
 		{}, {zamwesell, dexter, anakinsspeeder, anakinsspeeder_green, zamsspeeder},
@@ -181,7 +180,9 @@ void makeLevels() {
 		{{'A', {0x6157, 0x6140, 0x6129, 0x6112, 0x5fb9, 0x5dd6, 0x5dbf}}, {'B', {0x3374, 0x335d, 0x3346, 0x3204}},
 			{'C', {0x2d28, 0x2d11, 0x2cfa}}, {'D', {0x41e1, 0x41ca, 0x41b3, 0x419c, 0x4185, 0x416e}}},
 		{{'B', {0x33a2, 0x338b, 0x31ed}}}, {}, //carrots
-		{{'A', {{RandomHat, 0x642E}}}}, {5, 6, 7, 9, 10});
+		{{'A', {{RandomHat, 0x642E}}}}, {5, 6, 7, 9, 10},
+		{{'B', {{clonewalker, 0xE7F}, {clonewalker, 0x15A1}}}, {'D', {{clonewalker, 0x3C63}, {clonewalker, 0x3E72}}}},
+		{}, {}, {8});
 
 	Ruin = new Level("TEMPLE", "TEMPLE", "/LEVELS/EPISODE_III/TEMPLE/", false, {obiwankenobi_ep3, yoda}, {},
 		{macewindu_ep3, disguisedclone, trainingremote},
@@ -219,8 +220,8 @@ void makeLevels() {
 				{{ImperialPanel, 0x4CFE}, {ProtoPanel, 0x4DBA}, {ProtoPanel, 0x4DE9}, //There goes another one.
 					{AstroPanel, 0x4D2D}, {AstroPanel, 0x4E18}, {ProtoPanel, 0x4D8B}, {AstroPanel, 0x4D5C}}}}, //last 4
 
-		{{'A', {{RandomHat, 0x6EF7}}}}, {10, 11, 14, 17});
-
+		{{'A', {{RandomHat, 0x6EF7}}}}, {10, 11, 14, 17}, {{'B', {{mooncar, 0x7B2D}, {towncar, 0x7BD2}}}}, {},
+		{{'C', {{grabber, 0x0}}}}, {12, 16, 19});
 
 	Jundland = new Level("TATOOINE", "TATOOINE", "/LEVELS/EPISODE_IV/TATOOINE/", false,
 		{lukeskywalker_tatooine, benkenobi, c3po, r2d2}, {},

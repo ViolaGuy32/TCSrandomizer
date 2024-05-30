@@ -23,6 +23,12 @@ struct Dispenser {
 	int address;
 };
 
+struct Mount {
+	Playable* type;
+	int address;
+	Playable* vanillaType = type;
+};
+
 struct PanelSet {
 	char scene;
 	std::vector<Panel> panels;
@@ -31,6 +37,11 @@ struct PanelSet {
 struct DispenserSet {
 	char scene;
 	std::vector<Dispenser> dispenser;
+};
+
+struct MountSet {
+	char scene;
+	std::vector<Mount> mount;
 };
 
 struct Collectable {
@@ -161,6 +172,9 @@ struct Level {
 
 	std::vector<PanelSet> panels;
 	std::vector<DispenserSet> dispensers;
+	std::vector<MountSet> mounts;
+	std::vector<MountSet> turrets;
+	std::vector<MountSet> grabThings;
 
 	std::string name;
 	std::string shortName;
@@ -173,14 +187,17 @@ struct Level {
 
 	//Enemies enemies;
 
-	std::vector<EnemySet> enemies;
+	//std::vector<EnemySet> enemies;
 	std::vector<unsigned int> enemyLines;
+	std::vector<unsigned int> mountLines;
 
 	Level(std::string myName, std::string myShortName, std::string myPath, bool isVehicleLevel,
 		std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 		std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
 		std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
-		std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines = {});
+		std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines = {},
+		std::vector<MountSet> myMounts = {}, std::vector<MountSet> myTurrets = {},
+		std::vector<MountSet> myGrabThings = {}, std::vector<unsigned int> myMountLines = {});
 };
 
 extern std::vector<DispenserType> availableHats;

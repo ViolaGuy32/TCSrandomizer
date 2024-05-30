@@ -1,7 +1,7 @@
-#include "pch.h"
 #include "Levels.h"
 #include "Enemies.h"
 #include "externData.h"
+#include "pch.h"
 
 extern std::vector<Playable*> enemies;
 extern std::vector<Level*> allLevels;
@@ -11,10 +11,14 @@ extern bool character;
 extern bool panelOp;
 extern bool hatOp;
 extern bool enemyOp;
+extern bool mountOp;
 
-extern std::vector<Playable*> pls; //Characters and Vehicles
-extern std::vector<Playable*> chs; //Characters
-extern std::vector<Playable*> vhs; //Vehicles
+extern std::vector<Playable*> pls;  //Characters and Vehicles
+extern std::vector<Playable*> chs;  //Characters
+extern std::vector<Playable*> vhs;  //Vehicles
+extern std::vector<Playable*> mnts; //Mounts
+extern std::vector<Playable*> trts; //Turrets
+extern std::vector<Playable*> grbs; //GrabThings
 extern std::mt19937_64* randoPTR;
 extern LogicType logicType;
 extern Level* BHM;
@@ -22,6 +26,7 @@ extern Level* BHM;
 extern std::vector<EnemyType*> enemyTypes;
 extern std::vector<EnemyType*> walkerTypes;
 extern std::vector<EnemyType*> flyerTypes;
+
 //Enemy::Enemy(enemyScp myScp, coord myType, coord myScript)
 //	: enemywhere(scp), scpFile(myScp), type(myType), script(myScript), address(0) {}
 //
@@ -97,11 +102,13 @@ Level::Level(std::string myName, std::string myShortName, std::string myPath, bo
 	std::vector<Playable*> myVanillaParty, std::vector<Playable*> myVanillaBonusCharacters,
 	std::vector<Playable*> myUnlocks, std::vector<Collectable> myCollectables,
 	std::vector<SpecialCollectable> mySpecialCollectables, std::vector<PanelSet> myPanels,
-	std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines)
+	std::vector<DispenserSet> myDispensers, std::vector<unsigned int> myEnemyLines, std::vector<MountSet> myMounts,
+	std::vector<MountSet> myTurrets, std::vector<MountSet> myGrabThings, std::vector<unsigned int> myMountLines)
 	: name(myName), shortName(myShortName), path(myPath), vehicleLevel(isVehicleLevel), vanillaParty(myVanillaParty),
 	  party(myVanillaParty), vanillaBonusCharacters(myVanillaBonusCharacters),
 	  bonusCharacters(myVanillaBonusCharacters), collectables(myCollectables),
-	  specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers), enemyLines(myEnemyLines) {
+	  specialCollectables(mySpecialCollectables), panels(myPanels), dispensers(myDispensers), enemyLines(myEnemyLines),
+	  mounts(myMounts), turrets(myTurrets), grabThings(myGrabThings), mountLines(myMountLines) {
 	for (Playable* p : myUnlocks) {
 		p->lev = this;
 	}
@@ -211,19 +218,40 @@ void mix(Level* lev) {
 		}
 	}
 
-	if (enemyOp) {
-		std::uniform_int_distribution<int> enemyDist(0, enemyTypes.size() - 1);
-		std::uniform_int_distribution<int> flyerDist(0, flyerTypes.size() - 1);
-		std::uniform_int_distribution<int> walkerDist(0, walkerTypes.size() - 1);
-		for (EnemySet& enSet : lev->enemies) {
-			for (Enemy& en : enSet.enemy) {
-				//if (en.category == normal) en.newType = enemyTypes[enemyDist(*randoPTR)];
-				if (en.category == normal) en.newType = bodyguard_en;
-				else if (en.category == flyer) en.newType = flyerTypes[flyerDist(*randoPTR)];
-				else if (en.category == walker) en.newType = walkerTypes[walkerDist(*randoPTR)];
+	if (mountOp) {
+		std::uniform_int_distribution<int> mountDist(0, mnts.size() - 1);
+		for (MountSet& mountSet : lev->mounts) {
+			for (Mount& mount : mountSet.mount) {
+				mount.type = mnts[mountDist(*randoPTR)];
+			}
+		}
+		std::uniform_int_distribution<int> turretDist(0, trts.size() - 1);
+		for (MountSet& mountSet : lev->turrets) {
+			for (Mount& mount : mountSet.mount) {
+				mount.type = trts[turretDist(*randoPTR)];
+			}
+		}
+		std::uniform_int_distribution<int> grabThingDist(0, grbs.size() - 1);
+		for (MountSet& mountSet : lev->grabThings) {
+			for (Mount& mount : mountSet.mount) {
+				mount.type = grbs[grabThingDist(*randoPTR)];
 			}
 		}
 	}
+
+	//if (enemyOp) {
+	//	std::uniform_int_distribution<int> enemyDist(0, enemyTypes.size() - 1);
+	//	std::uniform_int_distribution<int> flyerDist(0, flyerTypes.size() - 1);
+	//	std::uniform_int_distribution<int> walkerDist(0, walkerTypes.size() - 1);
+	//	for (EnemySet& enSet : lev->enemies) {
+	//		for (Enemy& en : enSet.enemy) {
+	//			//if (en.category == normal) en.newType = enemyTypes[enemyDist(*randoPTR)];
+	//			if (en.category == normal) en.newType = bodyguard_en;
+	//			else if (en.category == flyer) en.newType = flyerTypes[flyerDist(*randoPTR)];
+	//			else if (en.category == walker) en.newType = walkerTypes[walkerDist(*randoPTR)];
+	//		}
+	//	}
+	//}
 
 	if (lev->party.size() != 0) {
 		add(0);
