@@ -350,6 +350,16 @@ int readEXE(int address) {
 	return val;
 }
 
+char vanillaEXE(int address, std::string directory) {
+	std::ifstream is(directory, std::ios::in | std::ios::binary);
+	is.seekg(address);
+	char val = 0;
+	is.read((char*)&val, sizeof(val));
+	//is.get(val, 4);
+	return val;
+}
+
+
 void numWrite(std::string file, int newWrite, int address) {
 	std::fstream fs(file, std::ios::in | std::ios::out | std::ios::binary);
 

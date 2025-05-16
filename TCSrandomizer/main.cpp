@@ -15,7 +15,7 @@ bool enemy = true;
 bool panelOp = true;
 bool hatOp = true;
 bool colorOp = true;
-bool enemyOp = true;
+//bool enemyOp = false;
 //bool advanceMus;
 LogicType logicType = glitched;
 //std::unique_ptr<std::ofstream> loggingIt;

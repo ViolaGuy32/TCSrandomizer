@@ -40,7 +40,8 @@ struct Playable {
 		 leiaAlt = false, landoAlt = false, lukeAlt = false, defaultCharacter = false,
 		 storyMode = false, noLevel = false, allEpisodes = false, fake = false,
 		
-		baddy = false;
+		baddy = false,
+		unused = false, block = false;
 
 
 	std::string conditions;
@@ -227,6 +228,8 @@ bool SuperJump(
 
 bool InstantSuperJump(const bool Playable::*atr = &Playable::alwaysTrue,
 	const std::vector<Playable*>& current = testing);
+
+bool SuperJumpPanel(int panSet, int pan, const bool Playable::*atr, const std::vector<Playable*>& current = testing);
 
 bool Instant(
 	std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current = testing);

@@ -6,11 +6,11 @@
 
 void makeCharactersAndLevels() {
 	quigonjinn = new Playable("quigonjinn", "Qui-Gon Jinn", 25000, 0x7f1c30, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	obiwankenobi = new Playable("obiwankenobi", "Obi-Wan Kenobi", 22000, 0x7f1c38, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	tc14 = new Playable(
@@ -38,7 +38,7 @@ void makeCharactersAndLevels() {
 
 	obiwankenobi_jedimaster = new Playable("obiwankenobi_jedimaster",
 		"Obi-Wan Kenobi (jedi Master)", 30000, 0x7f1f18, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	r4_p17 = new Playable("r4_p17", "R4-P17", 4000, 0x0, 1.0f,
@@ -46,7 +46,7 @@ void makeCharactersAndLevels() {
 
 	anakin_padawan =
 		new Playable("anakin_padawan", "Anakin Skywalker (Padawan)", 24000, 0x7f1f10, 1.2f,
-			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 				Chokeable, Lightningable});
 
 	padmegeo = new Playable("padmegeo", "Padmé (Geonosis)", 20000, 0x0, 1.2f,
@@ -56,23 +56,23 @@ void makeCharactersAndLevels() {
 		"c3po", "C-3PO", 5000, 0x7f2020, 0.75f, {Proto, Droid, Passive, Gas, Pushable, Zappable});
 
 	macewindu = new Playable("macewindu", "Mace Windu", 36000, 0x0, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	padmeclawed = new Playable("padmeclawed", "Padmé (Clawed)", 20000, 0x7f1f08, 1.2f,
 		{Hat, Lever, Build, Box, Jump, Attack, Shoot, Grapple, Chokeable, Lightningable});
 
 	yoda = new Playable("yoda", "Yoda", 80000, 0x7f1d08, 1.44f,
-		{Lever, Build, Box, Jump, DoubleJump, YodaJump, RealDoubleJump, Attack, Saber, Deflect,
+		{Lever, Build, Box, Jump, DoubleJump, YodaJump, RealDoubleJump, Attack, Saber, Block, Deflect,
 			Jedi, ResistZap});
 
 	obiwankenobi_ep3 =
 		new Playable("obiwankenobi_ep3", "Obi-Wan Kenobi (Episode III)", 300000, 0x7f1f58, 1.2f,
-			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 				Chokeable, Lightningable});
 
-	anakin_jedi = new Playable("anakin_jedi", "Anakin Skywalker (jedi)", 35000, 0x7f1f60, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+	anakin_jedi = new Playable("anakin_jedi", "Anakin Skywalker (Jedi)", 35000, 0x7f1f60, 1.2f,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	palpatine = new Playable("palpatine", "Chancellor Palpatine", 8000, 0x7f1f90, 1.2f,
@@ -104,7 +104,7 @@ void makeCharactersAndLevels() {
 				SlightlyHigherJump});
 
 	benkenobi = new Playable("benkenobi", "Ben Kenobi", 30000, 0x0, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	hansolo = new Playable("hansolo", "Han Solo", 18000, 0x0, 1.44f,
@@ -133,12 +133,12 @@ void makeCharactersAndLevels() {
 
 	lukeskywalker_dagobah =
 		new Playable("lukeskywalker_dagobah", "Luke Skywalker (Dagobah)", 28000, 0x7f1e90, 1.2f,
-			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 				Chokeable, Lightningable, LukeAlt});
 
 	lukeskywalker_bespin =
 		new Playable("lukeskywalker_bespin", "Luke Skywalker (Bespin)", 30000, 0x0, 1.2f,
-			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 				Chokeable, Lightningable, LukeAlt});
 
 	landocalrissian = new Playable("landocalrissian", "Lando Calrissian", 15000, 0x0, 1.28f,
@@ -152,7 +152,7 @@ void makeCharactersAndLevels() {
 
 	lukeskywalker_jedi =
 		new Playable("lukeskywalker_jedi", "Luke Skywalker (jedi)", 40000, 0x0, 1.2f,
-			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+			{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 				Chokeable, Lightningable, LukeAlt});
 
 	princessleia_boushh =
@@ -179,7 +179,7 @@ void makeCharactersAndLevels() {
 
 	lukeskywalker_endor =
 		new Playable("lukeskywalker_endor", "Luke Skywalker (Endor)", 42000, 0x0, 1.2f,
-			{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+			{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 				Chokeable, Lightningable, LukeAlt});
 
 	hansolo_endor = new Playable("hansolo_endor", "Han Solo (Endor)", 20000, 0x0, 1.44f,
@@ -189,7 +189,7 @@ void makeCharactersAndLevels() {
 		{Lever, Build, Box, Jump, Attack, Shoot, Hatch, Chokeable, Lightningable, Trickable});
 
 	darthvader = new Playable("darthvader", "Darth Vader", 150000, 0x7f1eb0, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi, Sith,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi, Sith,
 			Choke, Imperial, Chokeable, ResistZap});
 
 	gonkdroid = new Playable("gonkdroid", "Gonk droid", 3000, 0x7f2018, 0.12f,
@@ -229,7 +229,7 @@ void makeCharactersAndLevels() {
 		"pitdroid", "Pit droid", 4000, 0x7f2068, 0.8f, {Droid, Passive, Gas, Pushable, Zappable});
 
 	darthmaul = new Playable("darthmaul", "Darth Maul", 60000, 0x7f1c78, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi, Sith,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi, Sith,
 			Chokeable, Lightningable});
 
 	zamwesell = new Playable("zamwesell", "Zam Wesell", 27500, 0x0, 1.2f,
@@ -268,38 +268,38 @@ void makeCharactersAndLevels() {
 		{Lever, Build, Box, Jump, Hatch, Chokeable, Lightningable});
 
 	luminara = new Playable("luminara", "Luminara", 28000, 0x7f1f28, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	kiadimundi = new Playable("kiadimundi", "Ki-Adi Mundi", 30000, 0x0, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	kitfisto = new Playable("kitfisto", "Kit Fisto", 35000, 0x7f1f98, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	shaakti = new Playable("shaakti", "Shaak Ti", 36000, 0x7f1f20, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	aylasecura = new Playable("aylasecura", "Aayla Secura", 37000, 0x0, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	plokoon = new Playable("plokoon", "Plo Koon", 39000, 0x0, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	countdooku = new Playable("countdooku", "Count Dooku", 100000, 0x7f1f88, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Sith, Lightning, Chokeable, Lightningable});
 
 	bodyguard = new Playable("bodyguard", "Grievous' Bodyguard", 24000, 0x7f1c70, 1.4f,
-		{Jump, DoubleJump, HighJump, ExtraHighJump, Saber, Gas, Tall, Baddy}, "", magnaAttack);
+		{Jump, DoubleJump, HighJump, ExtraHighJump, Saber, Block, Gas, Tall, Baddy}, "", magnaAttack);
 
 	grievous = new Playable("grievous", "General Grievous", 70000, 0x7f1e48, 1.2f,
-		{Build, Jump, DoubleJump, HighJump, ExtraHighJump, RealDoubleJump, HighDoubleJump, Saber,
+		{Build, Jump, DoubleJump, HighJump, ExtraHighJump, RealDoubleJump, HighDoubleJump, Saber, Block,
 			Deflect});
 
 	wookie = new Playable("wookie", "Wookiee", 16000, 0x7f1d58, 1.2f,
@@ -327,7 +327,7 @@ void makeCharactersAndLevels() {
 				Trickable});
 
 	macewindu_ep3 = new Playable("macewindu_ep3", "Mace Windu (Episode III)", 38000, 0x0, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
 			Chokeable, Lightningable});
 
 	disguisedclone = new Playable("disguisedclone", "Disguised Clone", 12000, 0x0, 1.0f,
@@ -436,7 +436,7 @@ void makeCharactersAndLevels() {
 				Lightningable, SlightlyHigherJump, LeiaAlt});
 
 	gamorreanguard = new Playable("gamorreanguard", "Gamorrean Guard", 40000, 0x7f1c80, 0.75f,
-		{Lever, Build, Box, Jump, Attack, Chokeable, Lightningable, Trickable, Baddy}, "", "");
+		{Lever, Build, Box, Jump, Attack, Chokeable, Lightningable, Trickable, Baddy, Block}, "", "");
 
 	bibfortuna = new Playable("bibfortuna", "Bib Fortuna", 16000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, SlightlyBetterJump, Attack, Chokeable, Lightningable, Trickable,
@@ -468,7 +468,7 @@ void makeCharactersAndLevels() {
 		"", "");
 
 	theemperor = new Playable("theemperor", "The Emperor", 275000, 0x7f1eb8, 1.2f,
-		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Deflect, Jedi, Sith,
+		{Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi, Sith,
 			Lightning, Imperial, Chokeable, Lightningable});
 
 	admiralackbar = new Playable("admiralackbar", "Admiral Ackbar", 33000, 0x0, 1.44f,
@@ -488,15 +488,15 @@ void makeCharactersAndLevels() {
 			Lightningable, Zappable, AllEpisodes});
 
 	ghostbenkenobi = new Playable("ghostbenkenobi", "Ben Kenobi (Ghost)", 1100000, 0x0, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Deflect, Jedi, Passive,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Jedi, Passive,
 			Gas, AllEpisodes});
 
 	anakin_ghost = new Playable("anakin_ghost", "Anakin Skywalker (Ghost)", 1000000, 0x0, 1.2f,
-		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Deflect, Jedi, Passive,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Jedi, Passive,
 			Gas, AllEpisodes});
 
 	yoda_ghost = new Playable("yoda_ghost", "Yoda (Ghost)", 1200000, 0x7f1d10, 1.44f,
-		{Lever, Build, Box, Jump, DoubleJump, YodaJump, RealDoubleJump, Attack, Deflect, Jedi,
+		{Lever, Build, Box, Jump, DoubleJump, YodaJump, RealDoubleJump, Attack, Jedi,
 			Passive, Gas, AllEpisodes});
 
 	r2q5 = new Playable("r2q5", "R2-Q5", 100000, 0x7f1fa8, 1.0f,
@@ -556,6 +556,21 @@ void makeCharactersAndLevels() {
 			Lightningable, Trickable, SlightlyHigherJump, Storm, Baddy},
 		"", normalAttack);
 
+
+	/*
+//UNUSED
+	anakin_jedi_scarred = new Playable("anakin_jedi_scarred", "Anakin Skywalker (Scarred)", 35000, 0x7f1f60, 1.2f,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
+			Chokeable, Lightningable, Unused});
+
+
+	anakin_vader = new Playable("anakin_jedi_scarred", "Anakin Skywalker (Scarred)", 35000, 0x7f1f60, 1.2f,
+		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Saber, Block, Deflect, Jedi,
+			Chokeable, Lightningable, Unused});
+
+			*/
+
+//VEHICLES
 	newanakinspod = new Playable("newanakinspod", "Anakin's Pod", 20000, 0x7f21e0, 1.2f, {Vehicle});
 
 	naboostarfighter = new Playable("naboostarfighter", "Naboo Starfighter", 12000, 0x7f20b0, 1.2f,

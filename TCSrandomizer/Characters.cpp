@@ -15,7 +15,7 @@ extern bool greenVeh;
 extern bool character;
 extern bool panelOp;
 extern bool hatOp;
-extern bool enemyOp;
+//extern bool enemyOp;
 
 extern std::mt19937_64* randoPTR;
 
@@ -240,7 +240,7 @@ void mix(Level* lev) {
 			add(1); //Only checks P1 in casual vehicle levels
 					//because casual logic does not have 1p2c
 	}
-	if (enemyOp) {
+	/*if (enemyOp) {
 		std::uniform_int_distribution<int> distrib(0, enemies.size() - 1);
 		for (Level* lev : allLevels) {
 			for (EnemySet& enSet : lev->enemies) {
@@ -256,7 +256,7 @@ void mix(Level* lev) {
 				}
 			}
 		}
-	}
+	}*/
 }
 
 std::string panelString(int panSet, int pan) {
@@ -466,7 +466,7 @@ bool SuperJump(const bool Playable::*atr, const std::vector<Playable*>& current)
 	return false;
 }
 
-bool SuperJump(
+bool SuperJump( //any atr
 	std::initializer_list<bool Playable::*> atrs, const std::vector<Playable*>& current) {
 	for (bool Playable::*atr : atrs) {
 		if (SuperJump(atr, current)) return true;
@@ -474,6 +474,25 @@ bool SuperJump(
 	return false;
 }
 
+bool SuperJumpPanel(int panSet, int pan, const bool Playable::*atr, const std::vector<Playable*>& current) {
+	if (logicType != superGlitched) return false;
+	for (Playable* x : current) {
+		for (Playable* y : current) {
+			if (x != y) {
+				if (x->jedi && y->pushable && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->choke && y->chokeable && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->lightning && y->lightningable && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->lightning && y->resistZap && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->zapper && y->zappable && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->jedi && y->trickable && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->astrozapper && y->storm && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->landoAlt && y->leiaAlt && *y.*atr && panel(panSet, pan, {y})) return true;
+				if (x->lukeAlt && y == gamorreanguard && *y.*atr && panel(panSet, pan, {y})) return true;
+			}
+		}
+	}
+	return false;
+}
 bool InstantSuperJump(const bool Playable::*atr, const std::vector<Playable*>& current) {
 	//can act immediatly after SJC
 	if (logicType != superGlitched) return false;

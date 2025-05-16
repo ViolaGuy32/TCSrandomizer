@@ -25,9 +25,10 @@ void speedUp(int episode, std::string file, std::initializer_list<unsigned int> 
 
 void fileGen() {
     //copies the game files and removes cutscenes
-
+    
+   
     logR("\n\t\t\t\t\tGenerating files. . .");
-//    wxLogStatus("Generating files. . .");
+    wxLogStatus("Generating files. . .");
 
     std::filesystem::remove_all(out);
     std::filesystem::copy(vanillaDirectory, out,

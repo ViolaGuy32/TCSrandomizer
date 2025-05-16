@@ -82,6 +82,7 @@ void binaryWrite(std::string file, std::string bin, int address);
 //int readEXE( int address);
 //
 
+char vanillaEXE(int address, std::string directory);
 
 void numWrite(std::string file, int newWrite, int address);
 

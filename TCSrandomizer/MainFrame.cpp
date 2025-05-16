@@ -11,6 +11,7 @@
 bool character = 0;
 bool extog = 0;
 bool greenVeh = 0;
+bool unusedChar = 0;
 
 bool extra = 0;
 bool collectable = 0;
@@ -18,23 +19,31 @@ bool enemy = 0;
 bool panelOp = 0;
 bool hatOp = 0;
 bool colorOp = 0;
-bool enemyOp = 0;
+//bool enemyOp = 0;
 std::string out = "out";
 std::string vanillaDirectory = "";
 LogicType logicType = casual;
 
 wxStaticText* directoryLabel;
+wxStaticText* seedLabel;
 wxDirPickerCtrl* tcsFolder;
+wxTextCtrl* seedSet;
 wxButton* start;
 wxRadioBox* logType;
 wxCheckBox* characterType;
 wxCheckBox* etType;
 wxCheckBox* greenType;
+wxCheckBox* unusedType;
+
 wxCheckBox* extraType;
 wxCheckBox* collectableType;
 wxCheckBox* panelOpType;
 wxCheckBox* hatOpType;
-wxCheckBox* enemyOpType;
+uint64_t seed = 0;
+
+std::mt19937_64* randoPTR;
+
+//wxCheckBox* enemyOpType;
 
 //wxCheckBox* colorType;
 
@@ -49,22 +58,34 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 	logOpt.Add("Glitched");
 	logOpt.Add("Super Glitched");
 
-	directoryLabel = new wxStaticText(panel, wxID_ANY, "Unmoddified TCS Directory with GOG exe:", wxPoint(45, 10));
-	tcsFolder = new wxDirPickerCtrl(panel, wxID_ANY, wxEmptyString, "Game Files", wxPoint(40, 25), wxSize(300, 25));
+	//wxTextValidator valid("abcdefABCDEF1234567890");
+	wxTextValidator valid(wxFILTER_NUMERIC);
 
-	start = new wxButton(panel, wxID_ANY, "Randomize", wxPoint(100, 225), wxSize(200, 50));
 
-	logType = new wxRadioBox(panel, wxID_ANY, "Logic", wxPoint(45, 60), wxDefaultSize, logOpt, 1);
+	directoryLabel = new wxStaticText(
+		panel, wxID_ANY, "Unmoddified TCS Directory with GOG exe:", wxPoint(45, 10));
+	tcsFolder = new wxDirPickerCtrl(
+		panel, wxID_ANY, wxEmptyString, "Game Files", wxPoint(40, 25), wxSize(300, 25));
 
-	characterType = new wxCheckBox(panel, wxID_ANY, "Randomize Characters", wxPoint(165, 60));
-	etType = new wxCheckBox(panel, wxID_ANY, "Include Extra Toggle Characters", wxPoint(185, 80));
-	greenType = new wxCheckBox(panel, wxID_ANY, "Include Green Vehicles", wxPoint(185, 100));
+	seedLabel =
+		new wxStaticText(panel, wxID_ANY, "Seed (leave blank for random seed):", wxPoint(45, 60));
+	seedSet = new wxTextCtrl(panel, wxID_ANY, "", wxPoint(40, 75),
+		wxSize(300, 25), 0, wxTextValidator(valid));
 
-	enemyOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Enemies", wxPoint(165, 120));
-	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 140));
-	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 160));
-	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 180));
-	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 200));
+	start = new wxButton(panel, wxID_ANY, "Randomize", wxPoint(100, 255), wxSize(200, 50));
+
+	logType = new wxRadioBox(panel, wxID_ANY, "Logic", wxPoint(45, 110), wxDefaultSize, logOpt, 1);
+
+	characterType = new wxCheckBox(panel, wxID_ANY, "Randomize Characters", wxPoint(165, 110));
+	etType = new wxCheckBox(panel, wxID_ANY, "Include Extra Toggle Characters", wxPoint(185, 130));
+	greenType = new wxCheckBox(panel, wxID_ANY, "Include Green Vehicles", wxPoint(185, 150));
+	//unusedType = new wxCheckBox(panel, wxID_ANY, "Include Unused Characters", wxPoint(185, 170));
+
+	//enemyOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Enemies", wxPoint(165, 120));
+	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 170));
+	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 190));
+	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 210));
+	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 230));
 	//colorType = new wxCheckBox(panel, wxID_ANY, "Randomize Colors", wxPoint(165, 160));
 
 	//loads save data
@@ -83,7 +104,8 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 		collectableType->SetValue(savedat[5] - 48);
 		panelOpType->SetValue(savedat[6] - 48);
 		hatOpType->SetValue(savedat[7] - 48);
-		enemyOpType->SetValue(savedat[8] - 48);
+		//unusedType->SetValue(savedat[8] - 48);
+		//enemyOpType->SetValue(savedat[8] - 48);
 		//colorType->SetValue(savedat[6] - 48);
 
 		saver.close();
@@ -96,22 +118,27 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 
 void MainFrame::StartRando(wxCommandEvent& evt) {
 
+	vanillaDirectory = tcsFolder->GetPath();
+
+	if (vanillaEXE(0x40, vanillaDirectory + "\\LEGOStarWarsSaga.exe") != 0x0e) {
+		wxLogStatus("You need the GOG exe.");
+		return;
+	}
+
 	std::remove("files/log.txt");
 	std::remove("files/log2.txt");
 	//loggingIt = std::make_unique<std::ofstream>("files/log.txt");
 
-	logR("\n\t\t\t\t\tRandomizing. . .");
-	wxLogStatus("Randomizing. . .");
 
 	character = characterType->GetValue();
 	extog = etType->GetValue();
 	greenVeh = greenType->GetValue();
-	enemyOp = enemyOpType->GetValue();
+	//unusedChar = unusedType->GetValue();
+	//enemyOp = enemyOpType->GetValue();
 	extra = extraType->GetValue();
 	collectable = collectableType->GetValue();
 	panelOp = panelOpType->GetValue();
 	hatOp = hatOpType->GetValue();
-	vanillaDirectory = tcsFolder->GetPath();
 	//colorOp = colorType->GetValue();
 
 	switch (logType->GetSelection()) {
@@ -139,7 +166,7 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	dat << std::to_string(collectable);
 	dat << std::to_string(panelOp);
 	dat << std::to_string(hatOp);
-	dat << std::to_string(enemyOp);
+	//dat << std::to_string(enemyOp);
 	//dat << std::to_string(colorOp);
 
 	dat.close();
@@ -160,7 +187,26 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	Randomize();
 
 	out = "out6";*/
-	Randomize();
+
+
+	if (seedSet->GetValue() == "") {
+		std::random_device rd;
+		seed = rd();
+		wxString temp;
+		temp << seed;
+		seedSet->SetValue(temp);
+	}
+
+	//seed = seedSet->GetValue().c_str();
+	seed = wxAtoi(seedSet->GetValue());
+
+	std::mt19937_64 rando(seed);
+	randoPTR = &rando;
+
+	Update();
+	logR("\n\t\t\t\t\tRandomizing. . .");
+	wxLogStatus("Randomizing. . .");
+	Randomize(rando);
 
 	//std::thread randomize{ Randomize };
 	//randomize.detach();

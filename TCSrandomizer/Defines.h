@@ -30,6 +30,7 @@
 #define Choke &Playable::choke
 #define Lightning &Playable::lightning
 #define Saber &Playable::saber //includes magnaguard
+#define Block &Playable::block //includes Gamorrean and Imperial Guard
 #define Deflect &Playable::deflect
 
 #define Attack &Playable::attack
@@ -87,6 +88,7 @@
 #define TieDoor &Playable::tiedoor
 
 #define Extratoggle &Playable::extratoggle
+#define Unused &Playable::unused
 #define Vehicle &Playable::vehicle
 #define Vgreen &Playable::vgreen
 
@@ -200,5 +202,4 @@ check geonosians in Jedi Battle
 
 	allow custom seeds
 
-	make unlocks dependent on residents
 	*/

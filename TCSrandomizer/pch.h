@@ -1,10 +1,10 @@
 #pragma once
-#ifdef WXWIDGETS
+//#ifdef WXWIDGETS
 #include <wx/wx.h>
 
 //#include <wx/log.h>
 #include <wx/filepicker.h>
-#endif
+//#endif
 
 #include <filesystem>
 #include <sstream>
