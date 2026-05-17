@@ -13,11 +13,12 @@ extern std::string out;
 extern bool extog;
 extern bool greenVeh;
 extern bool character;
+extern bool bdOp;
 extern bool panelOp;
 extern bool hatOp;
 //extern bool enemyOp;
 
-extern std::mt19937_64* randoPTR;
+extern std::mt19937* randoPTR;
 
 extern std::vector<Level*> allLevels;
 
@@ -79,7 +80,9 @@ Playable::Playable(std::string myName, std::string myRealName, int myPrice, int 
 		}
 	} else {
 		if (extog || !extratoggle) {
-			chs.push_back(this);
+			if (!bdOp || !bountyDroid) {
+				chs.push_back(this);
+			}
 		}
 	}
 }

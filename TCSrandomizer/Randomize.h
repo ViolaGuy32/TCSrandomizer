@@ -1,5 +1,5 @@
 #pragma once
 #include "pch.h"
 
-void Randomize(std::mt19937_64 rando);
+void Randomize(std::mt19937 rando);
 

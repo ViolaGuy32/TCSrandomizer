@@ -50,7 +50,7 @@ void makeCharactersAndLevels() {
 				Chokeable, Lightningable});
 
 	padmegeo = new Playable("padmegeo", "Padmé (Geonosis)", 20000, 0x0, 1.2f,
-		{Hat, Lever, Build, Box, Jump, Attack, Shoot, Grapple, Chokeable, Lightningable});
+		{Hat, Lever, Build, Box, Jump, Attack, Shoot, Grapple}); //She doesn't have choke or lightning animations for some reason.
 
 	c3po = new Playable(
 		"c3po", "C-3PO", 5000, 0x7f2020, 0.75f, {Proto, Droid, Passive, Gas, Pushable, Zappable});
@@ -212,7 +212,7 @@ void makeCharactersAndLevels() {
 
 	captaintarpals = new Playable("captaintarpals", "Captain Tarpals", 17500, 0x7f1c60, 1.32f,
 		{Build, Box, Jump, DoubleJump, HighJump, RealDoubleJump, HighDoubleJump, GunganJump, Attack,
-			Chokeable, Lightningable, Trickable});
+			Chokeable, Lightningable, Trickable, Block});
 
 	bossnass = new Playable("bossnass", "Boss Nass", 15000, 0x0, 1.2f,
 		{Lever, Build, Box, Jump, Chokeable, Lightningable, Trickable});
@@ -477,7 +477,7 @@ void makeCharactersAndLevels() {
 
 	ig88 = new Playable("ig88", "IG-88", 100000, 0x0, 1.2f,
 		{Box, Jump, Attack, Shoot, Grapple, Astro, Proto, Bounty, Droid, Gas, Pushable, Chokeable,
-			Lightningable, Zappable, SlightlyHigherJump, AllEpisodes});
+			Lightningable, Zappable, SlightlyHigherJump, AllEpisodes, BountyDroid});
 
 	dengar = new Playable("dengar", "Dengar", 70000, 0x0, 1.3f,
 		{Lever, Build, Box, Jump, Dive, Attack, Shoot, Grapple, Bounty, Chokeable, Lightningable,
@@ -485,7 +485,7 @@ void makeCharactersAndLevels() {
 
 	fourlom = new Playable("4lom", "4-LOM", 45000, 0x7f1d90, 1.2f,
 		{Box, Jump, Attack, Shoot, Grapple, Astro, Proto, Bounty, Droid, Gas, Pushable, Chokeable,
-			Lightningable, Zappable, AllEpisodes});
+			Lightningable, Zappable, AllEpisodes, BountyDroid});
 
 	ghostbenkenobi = new Playable("ghostbenkenobi", "Ben Kenobi (Ghost)", 1100000, 0x0, 1.2f,
 		{Hat, Lever, Build, Box, Jump, DoubleJump, RealDoubleJump, Attack, Jedi, Passive,
@@ -1066,7 +1066,7 @@ void makeCharactersAndLevels() {
 					  {RandomHat, 0x65B}}}}); //bonus hat room
 
 	DSE = new Level("DEATHSTARESCAPE", "DEATHSTARESCAPE", "/LEVELS/EPISODE_IV/DEATHSTARESCAPE/",
-		false, {hansolo, chewbacca, princessleia, lukeskywalker_tatooine, r2d2, c3po}, {}, {},
+		false, {hansolo, chewbacca, princessleia, lukeskywalker_tatooine, r2d2, c3po}, {benkenobi}, {},
 		{{'A', {0x2834, 0x281d, 0x2806, 0x27ef}},
 			{'B', {0x2fe7, 0x2fd0, 0x2fb9, 0x2fa2, 0x2f8b, 0x2ffe}},
 			{'C', {0x474a, 0x4733, 0x471c, 0x4705, 0x46ee, 0x4567, 0x4550, 0x4539, 0x4522}},

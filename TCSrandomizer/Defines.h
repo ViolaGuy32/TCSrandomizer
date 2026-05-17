@@ -98,6 +98,7 @@
 
 #define NoLevel &Playable::noLevel
 #define AllEpisodes &Playable::allEpisodes
+#define BountyDroid &Playable::bountyDroid
 #define Fake &Playable::fake
 #define Baddy &Playable::baddy
 

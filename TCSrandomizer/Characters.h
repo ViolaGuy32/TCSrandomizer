@@ -41,7 +41,7 @@ struct Playable {
 		 storyMode = false, noLevel = false, allEpisodes = false, fake = false,
 		
 		baddy = false,
-		unused = false, block = false;
+		unused = false, block = false, bountyDroid = false;
 
 
 	std::string conditions;

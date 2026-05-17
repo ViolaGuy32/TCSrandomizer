@@ -12,6 +12,7 @@ bool character = 0;
 bool extog = 0;
 bool greenVeh = 0;
 bool unusedChar = 0;
+bool bdOp = 0;
 
 bool extra = 0;
 bool collectable = 0;
@@ -33,15 +34,16 @@ wxRadioBox* logType;
 wxCheckBox* characterType;
 wxCheckBox* etType;
 wxCheckBox* greenType;
+wxCheckBox* bdType;
 wxCheckBox* unusedType;
 
 wxCheckBox* extraType;
 wxCheckBox* collectableType;
 wxCheckBox* panelOpType;
 wxCheckBox* hatOpType;
-uint64_t seed = 0;
+uint32_t seed = 0;
 
-std::mt19937_64* randoPTR;
+std::mt19937* randoPTR;
 
 //wxCheckBox* enemyOpType;
 
@@ -61,7 +63,6 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 	//wxTextValidator valid("abcdefABCDEF1234567890");
 	wxTextValidator valid(wxFILTER_NUMERIC);
 
-
 	directoryLabel = new wxStaticText(
 		panel, wxID_ANY, "Unmoddified TCS Directory with GOG exe:", wxPoint(45, 10));
 	tcsFolder = new wxDirPickerCtrl(
@@ -69,23 +70,24 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 
 	seedLabel =
 		new wxStaticText(panel, wxID_ANY, "Seed (leave blank for random seed):", wxPoint(45, 60));
-	seedSet = new wxTextCtrl(panel, wxID_ANY, "", wxPoint(40, 75),
-		wxSize(300, 25), 0, wxTextValidator(valid));
+	seedSet = new wxTextCtrl(
+		panel, wxID_ANY, "", wxPoint(40, 75), wxSize(300, 25), 0, wxTextValidator(valid));
 
-	start = new wxButton(panel, wxID_ANY, "Randomize", wxPoint(100, 255), wxSize(200, 50));
+	start = new wxButton(panel, wxID_ANY, "Randomize", wxPoint(100, 280), wxSize(200, 50));
 
 	logType = new wxRadioBox(panel, wxID_ANY, "Logic", wxPoint(45, 110), wxDefaultSize, logOpt, 1);
 
 	characterType = new wxCheckBox(panel, wxID_ANY, "Randomize Characters", wxPoint(165, 110));
 	etType = new wxCheckBox(panel, wxID_ANY, "Include Extra Toggle Characters", wxPoint(185, 130));
 	greenType = new wxCheckBox(panel, wxID_ANY, "Include Green Vehicles", wxPoint(185, 150));
+	bdType = new wxCheckBox(panel, wxID_ANY, "Exclude IG-88 and 4-LOM", wxPoint(185, 170));
 	//unusedType = new wxCheckBox(panel, wxID_ANY, "Include Unused Characters", wxPoint(185, 170));
 
 	//enemyOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Enemies", wxPoint(165, 120));
-	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 170));
-	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 190));
-	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 210));
-	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 230));
+	extraType = new wxCheckBox(panel, wxID_ANY, "Randomize Extras", wxPoint(165, 190));
+	collectableType = new wxCheckBox(panel, wxID_ANY, "Randomize Collectables", wxPoint(165, 210));
+	panelOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Panels", wxPoint(165, 230));
+	hatOpType = new wxCheckBox(panel, wxID_ANY, "Randomize Hat Machines", wxPoint(165, 250));
 	//colorType = new wxCheckBox(panel, wxID_ANY, "Randomize Colors", wxPoint(165, 160));
 
 	//loads save data
@@ -100,10 +102,11 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 		characterType->SetValue(savedat[1] - 48);
 		etType->SetValue(savedat[2] - 48);
 		greenType->SetValue(savedat[3] - 48);
-		extraType->SetValue(savedat[4] - 48);
-		collectableType->SetValue(savedat[5] - 48);
-		panelOpType->SetValue(savedat[6] - 48);
-		hatOpType->SetValue(savedat[7] - 48);
+		bdType->SetValue(savedat[4] - 48);
+		extraType->SetValue(savedat[5] - 48);
+		collectableType->SetValue(savedat[6] - 48);
+		panelOpType->SetValue(savedat[7] - 48);
+		hatOpType->SetValue(savedat[8] - 48);
 		//unusedType->SetValue(savedat[8] - 48);
 		//enemyOpType->SetValue(savedat[8] - 48);
 		//colorType->SetValue(savedat[6] - 48);
@@ -129,10 +132,10 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 	std::remove("files/log2.txt");
 	//loggingIt = std::make_unique<std::ofstream>("files/log.txt");
 
-
 	character = characterType->GetValue();
 	extog = etType->GetValue();
 	greenVeh = greenType->GetValue();
+	bdOp = bdType->GetValue();
 	//unusedChar = unusedType->GetValue();
 	//enemyOp = enemyOpType->GetValue();
 	extra = extraType->GetValue();
@@ -188,22 +191,38 @@ void MainFrame::StartRando(wxCommandEvent& evt) {
 
 	out = "out6";*/
 
-
 	if (seedSet->GetValue() == "") {
+
+		//do {
 		std::random_device rd;
 		seed = rd();
-		wxString temp;
-		temp << seed;
-		seedSet->SetValue(temp);
+		//} while (seed >= std::numeric_limits<int32_t>::max()); //wxAtoi thinks that seed is
+		//signed, so I need a seed in the bottom half of numbers.
+
+		std::string temp1 = std::to_string(seed);
+		wxString temp2(temp1);
+		//temp2 << seed;
+		seedSet->SetValue(temp2);
 	}
 
 	//seed = seedSet->GetValue().c_str();
-	seed = wxAtoi(seedSet->GetValue());
 
-	std::mt19937_64 rando(seed);
-	randoPTR = &rando;
+	wxString temp3 = seedSet->GetValue();
+	//std::string temp4 = wxString::ToStdString(temp3);
+	std::string temp4 = std::string(temp3.mb_str());
+	seed = std::stoul(temp4);
+	//seed = wxAtoi(seedSet->GetValue()); //wxAtoi doesn't work.
+
+	//if (seed >= std::numeric_limits<int32_t>::max()) {
+	//	wxLogStatus("Seed out of range.");
+	//	return;
+	//}
 
 	Update();
+
+	std::mt19937 rando(seed);
+	randoPTR = &rando;
+
 	logR("\n\t\t\t\t\tRandomizing. . .");
 	wxLogStatus("Randomizing. . .");
 	Randomize(rando);

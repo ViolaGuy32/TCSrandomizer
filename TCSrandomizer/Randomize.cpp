@@ -301,13 +301,14 @@ extern bool enemy;
 extern bool panelOp;
 extern bool hatOp;
 extern bool colorOp;
+extern bool bdOp;
 //extern bool enemyOp;
 //extern bool advanceMus;
 extern LogicType logicType;
 //extern std::unique_ptr<std::ofstream> loggingIt;
 
-extern std::mt19937_64* randoPTR;
-extern uint64_t seed;
+extern std::mt19937* randoPTR;
+extern uint32_t seed;
 extern std::string out;
 extern std::string vanillaDirectory;
 
@@ -324,7 +325,7 @@ Level* currentLev;
 int addressPointer;
 int junkCharacters;
 
-void Randomize(std::mt19937_64 rando) {
+void Randomize(std::mt19937 rando) {
 	addressPointer = 0x2B0;
 	junkCharacters = 0x3f1b6c;
 
@@ -409,7 +410,14 @@ negotiations:
 			goto negotiations;
 	} else {
 
-		if (!MultiAny({Jump, Flutter, Hovering}, 2)) goto negotiations;
+		if (!MultiAny({Jump, Flutter, Hovering}, 2)) {
+			bool NoJumpPast = 0;
+			//moving during the camera pan with a nonjumper
+			for (Playable* p : testing) {
+				if (p == mousedroid || p == destroyer) NoJumpPast = 1;
+			}
+			goto negotiations;
+		}
 
 		if (SuperJump()) goto invasion;
 		if (panel(2, 1) && panel(0, 2) && panel(0, 3)) goto invasion;
@@ -480,14 +488,34 @@ theed:
 			}
 			if (atrb(Choke) && p->chokeable) overGap.push_back(p);
 			if (atrb(Lightning) && p->lightningable) overGap.push_back(p);
+			if (atrb(LukeAlt) && p == gamorreanguard) overGap.push_back(p);
 		}
-		if (logicType != superGlitched) {
-			if (overGap.size() < 6) goto theed;
+		std::vector<Playable*> pastDoor;
+		if (overGap.size() == 6) pastDoor = overGap;
+		if (logicType == superGlitched) {
+			if (overGap.size() >= 5) pastDoor = overGap;
+			else {
+				for (Playable* p : overGap) {
+					for (Playable* x : overGap) {
+						if (p != x) {
+							if (x->jedi && p->pushable) pastDoor.push_back(p);
+							if (x->choke && p->chokeable) pastDoor.push_back(p);
+							if (x->lightning && p->lightningable) pastDoor.push_back(p);
+							if (x->lightning && p->resistZap) pastDoor.push_back(p);
+							if (x->zapper && p->zappable) pastDoor.push_back(p);
+							if (x->jedi && p->trickable) pastDoor.push_back(p);
+							if (x->astrozapper && p->storm) pastDoor.push_back(p);
+							if (x->landoAlt && p->leiaAlt) pastDoor.push_back(p);
+							if (x->lukeAlt && p == gamorreanguard) pastDoor.push_back(p);
+						}
+					}
+				}
+			}
 		}
-		if (SuperJump({}, overGap)) goto theed2;
 
-		if (panelOr(1, 0, {Fly, Grapple, HighJump})) goto theed2;
-		if (atrb(Jedi) && panelOr(1, 0, {Jump, Fly, Flutter})) goto theed2;
+		if (SuperJump({}, pastDoor)) goto theed2;
+		if (panel(1, 0, pastDoor)) goto theed2;
+
 		goto theed;
 
 	theed2:
@@ -497,7 +525,9 @@ theed:
 		if (!panel(0, 0) && !atrb(Jedi)) goto theed; //first room
 
 		if (!All({DoubleJump, Attack}) && !atrb(Shoot)) goto theed;
-		if (!atrb(HighJump) && !atrb(Jedi) && !SuperJump({Jump, Flutter})) goto theed;
+		if (!atrb(HighJump) && !atrb(Jedi) && !SuperJump({Jump, Flutter}) &&
+			!All({Shoot, DoubleJump}))
+			goto theed; //Theed 1. Shoot, DoubleJump is for Ackbar
 		goto maul;
 	}
 	goto theed;
@@ -642,9 +672,10 @@ chancellor:
 
 	if (!atrb(Jedi)) goto chancellor;
 
-	add(2);                            //r2
-	if (!panel(0, 2)) goto chancellor; //bomb, might be possible to skip
-	if (!panel(0, 3)) goto chancellor; //top of room
+	add(2);                                                   //r2
+	if (!panel(0, 2)) goto chancellor;                        //bomb, might be possible to skip
+	if (!panel(0, 3) && logicType != superGlitched) goto chancellor; //top of room
+	if (!panel(0, 3) && !LivingJedi()) goto chancellor;       //top of room
 
 	add(3); //palpatine
 	if (!Multi(Jedi, 2)) goto chancellor;
@@ -653,7 +684,8 @@ chancellor:
 
 	bool gasOff = false;
 	if (panelOr(3, 0, {Gas, Fly})) gasOff = true;
-	if (logicType != casual && panelOr(3, 0, {DoubleJump, Dive, Flop})) gasOff = true;
+	if (logicType != casual && panelOr(3, 0, {DoubleJump, Dive, Flop, SlightlyBetterJump}))
+		gasOff = true;
 	if (gasOff && panel(3, 1)) goto grievous;
 	if (panelAnd(3, 1, {Gas, Fly})) goto grievous;
 	if (logicType != casual && panelOr(3, 1, {DoubleJump, Dive, Flop})) goto grievous;
@@ -677,7 +709,8 @@ kashyyyk:
 	if (logicType == casual) {
 		if (!atrb(Grapple)) goto kashyyyk;
 	} else {
-		if (!MultiAny({Jump, Flutter}, 2)) goto kashyyyk;
+		if (!MultiAny({Jump, Flutter}, 2))
+			goto kashyyyk; //to get onto cliff thing for buttons, launch is TAS-only
 		if (logicType != superGlitched) {
 			//no enemies on buttons except in super glitched
 			if (!atrb(Grapple) && !atrb(YodaJump)) goto kashyyyk;
@@ -706,7 +739,11 @@ vader:
 
 secretplans:
 
-	auto plansthing = [](std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
+{
+	bool plansthinghallway = false;
+	mix(SecretPlans);
+	auto plansthing = [&plansthinghallway](
+						  std::vector<Playable*> current, Playable* shield, Playable* redGuy) {
 		//This is for scene 3 super jump
 		if (logicType != superGlitched) return false;
 
@@ -719,6 +756,7 @@ secretplans:
 					if (x->pushable && y->jedi) OOB = true;
 					else if (x->chokeable && y->choke) OOB = true;
 					else if (x->lightningable && y->lightning) OOB = true;
+					else if (x->lightningable && y->resistZap) OOB = true;
 					else if (x->trickable && y->jedi) OOB = true;
 					else if (x->zappable && y->zapper) OOB = true;
 					else if (x->storm && y->astrozapper) OOB = true;
@@ -733,6 +771,7 @@ secretplans:
 									if (x2->pushable && y2->jedi) OOB2 = true;
 									else if (x2->chokeable && y2->choke) OOB2 = true;
 									else if (x2->lightningable && y2->lightning) OOB2 = true;
+									else if (x2->lightningable && y2->resistZap) OOB2 = true;
 									else if (x2->trickable && y2->jedi) OOB2 = true;
 									else if (x2->zappable && y2->zapper) OOB2 = true;
 									else if (x2->storm && y2->astrozapper) OOB2 = true;
@@ -744,22 +783,23 @@ secretplans:
 							}
 						}
 						//HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS HATS
-						if (panel(2, 2, {x, shield})) return true;
+						if (panel(2, 2, {x, shield})) {
+							plansthinghallway = true;
+							return true; //end of hallway
+						}
 						if (panel(2, 1, {x, otherX}) && Any({Box, Bounty}, {x, otherX}))
-							return true;
+							return true; //into last scene
 						if (panel(2, 1, {redGuy}) &&
 							(Any({DoubleJump, Fly}, {x, otherX}) ||
 								(Any({Box, Bounty}, {x}) && atrb(Lever, {redGuy}))))
-							return true;
-						//								not sure
+							return true; //into last scene
+										 //								not sure
 					}
 				}
 			}
 		}
 		return false;
 	};
-
-	mix(SecretPlans);
 
 	if (logicType == casual) {
 		if (!All({Grapple, Build}) && !All({YodaJump, Build}) && !All({ExtraHighJump, Build}))
@@ -773,10 +813,13 @@ secretplans:
 		if (!atrb(Attack)) goto secretplans;
 		if (!atrb(Build)) goto secretplans;
 		if (!atrb(Lever)) goto secretplans;
-		if (((All({Grapple, Build}) || atrb(YodaJump) || //Both Yodas can build
+		if (((All({Grapple, Build}) || atrb(Jedi) || //All Jedi can build.
 				 All({ExtraHighJump, Build})) &&
-				(atrb(Shoot) || atrb(FakeShoot) || atrb(Block))) ||
-			SuperJump({Jump, Flutter}) || DoubleTransitionSkip({Jump, Flutter}))
+				(atrb(Shoot) ||
+					atrb(FakeShoot) /*|| atrb(Block)*/)) || //You can't actually deflect into the
+															//bombs without EBB.
+			SuperJump({Jump, Flutter}) ||
+			DoubleTransitionSkip({Jump, Flutter}))
 			goto secretplans2;
 		goto secretplans;
 	}
@@ -788,9 +831,9 @@ secretplans2:
 			goto secretplans;
 	} else {
 		//Bounties can get the car
-		if (Any({Jedi, Bounty}) && panel(2, 2, {SecretPlans->party[4]}))
-			;
-		goto secretplans3;
+		//panels for car not included because of the transition skip
+		if (Any({Jedi, Bounty}) && panel(2, 2, {SecretPlans->party[4]})) goto secretplans3;
+		if ((atrb(Jedi)  || atrb(Bounty)) && panelAnd(2, 2, {Jump, Flutter})) goto secretplans3;
 
 		if (atrb(Hat) && availableHats[0] == BountyHat && panel(2, 2, {SecretPlans->party[4]}))
 			goto secretplans3;
@@ -814,10 +857,12 @@ secretplans2:
 
 secretplans3:
 
-	testing.clear();
-	add(1); //midtro
-	add(3);
-	add(4);
+	if (!plansthinghallway) {
+		testing.clear();
+		add(1); //midtro
+		add(3);
+		add(4);
+	}
 	if (logicType == casual) {
 		if (!panel(2, 2)) goto secretplans;
 		if (panel(0, 1) || panel(0, 2) && All({Box, Lever}) &&
@@ -826,19 +871,27 @@ secretplans3:
 		if (!Any({Jedi, Fett}) && !(SecretPlans->party[2]->lever && Any({Box, Bounty})))
 			goto secretplans;
 	}
+	if (!panel(2, 1)) goto secretplans;
+
 secretplansx:
+	testing.clear();
+	add(1); //midtro
+	add(3);
+	add(4);
+
 	add(2); //rebel friend
 	if (!atrb(Lever)) goto secretplans;
 
 	if (atrb(Build)) goto secretplans4;
 
-	{
-		std::vector<Playable*> temp = testing;
-		testing.clear();
-		for (Playable* p : temp) {
-			if (p->jump || p->fly) testing.push_back(p);
-		}
-	}
+	//WHAT IS THIS???
+	//{
+	//	std::vector<Playable*> temp = testing;
+	//	testing.clear();
+	//	for (Playable* p : temp) {
+	//		if (p->jump || p->fly) testing.push_back(p);
+	//	}
+	//}
 
 secretplans4:
 	//escape pods
@@ -848,7 +901,7 @@ secretplans4:
 	if (!panel(3, 4)) goto secretplans;
 	if (!panel(3, 5)) goto secretplans;
 	if (!panel(3, 6)) goto secretplans;
-
+}
 jundland:
 	mix(Jundland);
 	if (logicType == casual) {
@@ -868,7 +921,8 @@ jundland4:
 		if (!Multi(Lever, 2)) goto jundland;
 	} else {
 		if (panel(0, 2)) goto jundland2;
-		if (InstantSuperJump()) //&& atrb(Proto)
+		//if (InstantSuperJump()) //&& atrb(Proto)
+		if (InstantSuperJump()) //cannot go directly into elevator
 			goto jundland2;
 		goto jundland;
 	}
@@ -882,8 +936,8 @@ jundland2:
 		for (Playable* p : testing) {
 			if (p->fly || p->doubleJump) temp.push_back(p);
 		}
-		if (panel(0, 3)) temp.push_back(Jundland->party[2]);
-		if (panel(0, 4)) goto spaceport;
+		if (panel(0, 3, temp)) temp.push_back(Jundland->party[2]);
+		if (panel(0, 4, temp)) goto spaceport;
 
 		goto jundland;
 	}
@@ -924,7 +978,7 @@ spaceport3:
 		if (!atrb(Jedi) && !panelAnd(0, 3, {Jump}) && !panelAnd(0, 4, {Jump})) goto spaceport;
 
 		if (atrb(Bounty)) goto spaceport2;
-		if (panel(1, 0) && panel(1, 1)) goto spaceport2;
+		if (panel(1, 0) && panel(1, 1) && atrb(Jedi)) goto spaceport2;
 
 		goto spaceport;
 	} else {
@@ -960,7 +1014,7 @@ princess:
 	addHat(0, 0);
 
 	if (logicType == casual) {
-		if (!panel(0, 1)) goto princess;
+		if (!panel(0, 0)) goto princess;
 		if (!panel(0, 2)) goto princess;
 	}
 
@@ -1037,9 +1091,15 @@ dse:
 	addHat(0, 0);
 
 	if (!atrb(Build)) goto dse;
-	if (!Multi(Lever, 2)) goto dse;
+	if (!Multi(Lever, 2)) goto dse; //maybe not in glitched?
 
 	//first area
+	if (SuperJump({Jump})) goto dse3;
+	if (logicType == superGlitched) { //Box Clip with the Service Car.
+		if (All({Grapple, Lever}) || All({DoubleJump, Lever})){
+			if (atrb(Box)) goto dse3;
+		}
+	}
 	if (panelAnd(0, 1, {Grapple})) goto dse3;
 	if (panelAnd(0, 1, {DoubleJump})) goto dse3;
 	goto dse;
@@ -1047,6 +1107,7 @@ dse:
 dse3:
 	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
+	if (!All({Lever, Grapple})) goto dse;
 	if (!panelAnd(1, 0, {Grapple})) goto dse;
 
 	if (logicType == casual) availableHats.clear();
@@ -1080,7 +1141,9 @@ echobase:
 		if (!atrb(Box)) goto echobase;
 		if (!Any({Attack, FakeShoot})) goto echobase;
 	} else {
-		if (atrb(Build) && atrb(Box) && Any({Attack, FakeShoot})) goto echobase2;
+		if (atrb(Build) && atrb(Box) && Any({Attack, FakeShoot})) {
+			goto echobase2;
+		}
 		if (panel(0, 0) && SuperJump()) goto echobase2;
 		goto echobase;
 	}
@@ -1088,6 +1151,7 @@ echobase:
 echobase2:
 	add(2); //3po
 
+	if (logicType == superGlitched) goto echobase3; //BOOM Skip
 	if (panel(0, 1)) goto echobase3;
 	if (SuperJump()) goto echobase3;
 	goto echobase;
@@ -1155,8 +1219,8 @@ dagobah2:
 		if (!Multi(Jedi, 2)) goto dagobah;
 
 		//you can easily double jump accross
-		if (!panelAnd(1, 0, {Fly}) && !All({Flutter, Attack}) && !All({Hovering, FakeShoot}))
-			goto dagobah;
+		//if (!panelAnd(1, 0, {Fly}) && !All({Flutter, Attack}) && !All({Hovering, FakeShoot}))
+		//	goto dagobah;
 		if (!panel(2, 0)) goto dagobah;
 
 	} else {
@@ -1173,7 +1237,7 @@ cct:
 		//probability of getting valid seed is so low that using the mix() function takes too long.
 
 	cctCasual:
-
+		//mix(CCT);
 		testing.clear();
 		availableHats.clear();
 
@@ -1264,7 +1328,9 @@ cct:
 
 		if (rPan(0, 5)) {
 			for (Playable* p : testing) {
-				if (panel(0, 7, {p})) balcony = testing;
+				for (Playable* q : testing) {
+					if (panel(0, 7, {p}) && atrb(Box, {q})) balcony = testing;
+				}
 			}
 		}
 
@@ -1316,9 +1382,9 @@ cct:
 		}
 
 		//second room
-		if (!atrb(Bounty) && !panel(0, 2) && logicType != superGlitched) goto cctGlitch;
+		if (!atrb(Bounty) && !panel(0, 2)) goto cctGlitch;
 		//you can skip panel at end of hallway with door clip pixel jump
-		//try hitting room 3 transition from OOB
+		if (!panel(0, 4) || !logicType == superGlitched) goto cctGlitch;
 
 		//dv1
 		addHat(0, 0);
@@ -1330,34 +1396,46 @@ cct:
 		//if you actually do the fight
 		if (panel(0, 5)) {
 			//go through door during camera pan
-			if (dv1.size() > 1 || Multi(Attack, 2)) {
-				if (logicType != superGlitched) {
-					availableHats.clear(); //cannot backtrack
+			if (panel(0, 6, {darthvader})) { //need Vader to open the panel
+				for (Playable* p : testing) {
+					for (Playable* q : testing) {
+						if (p != q) {
+							if (p->fly || p->realDoubleJump) {
+								if (q->attack) goto cct2;
+							}
+						}
+					}
 				}
-				goto cct2;
 			}
+			//if (dv1.size() > 1 || Multi(Attack, 2)) {
+			//goto cct2;
+			//}
 
 			dv1 = testing; //use crane
 		}
-		if (panel(0, 6, dv1)) goto cct2;
-		if (panel(0, 7, dv1)) {
-			//raise platform
-			//does not matter - need dj anyway
-			//for (Playable* p : testing) {
-			//	//see if this needs dj
-			//	if (p->jump) dv1.push_back(p);
-			//}
-		}
+		if (panel(0, 6, dv1) || SuperJump({}, dv1)) goto cct2; //can super jump to skip panel
+		//if (panel(0, 7, dv1)) {
+		//raise platform
+		//does not matter - need dj anyway
+		//for (Playable* p : testing) {
+		//	//see if this needs dj
+		//	if (p->jump) dv1.push_back(p);
+		//}
+		//}
 
 		goto cctGlitch;
 	cct2:
+		if (logicType != superGlitched) {
+			availableHats.clear(); //cannot backtrack
+		}
+
 		//dvt
 		//bounty and imperial panels have different hitbox, so you probably cannot do DV2 skip
 		if (CCT->panels[2].panels[1].type == AstroPanel && panel(2, 1) &&
 			logicType == superGlitched)
 			goto cct3;
-		if (SuperJump({Jump, Fly})) goto cct3;
-		if (atrb(Fett)) goto cct3; //can jump to vader to skip panels
+		if (SuperJump({Jump, Fly})) goto cct3; //DVT
+		if (atrb(Fett)) goto cct3;             //can jump to vader to skip panels
 		if (panel(2, 2) && panel(2, 3)) goto cct3;
 		goto cctGlitch;
 
@@ -1426,11 +1504,20 @@ bespin:
 							pastFight.push_back(Bespin->party[3]);
 							gotr2 = true;
 							r2Door = true;
+							goto bespin3po;
 						}
+					}
+					//superJump into BOOB room
+					if (logicType == superGlitched && Multi(Gas, 2)) {
+						add(3);
+						pastFight.push_back(Bespin->party[3]);
+						gotr2 = true;
+						goto bespin3po;
 					}
 				}
 			}
 
+		bespin3po:
 			//built 3po
 			if (!got3po) {
 				if (panel(0, 3, pastFight)) {
@@ -1471,6 +1558,8 @@ bespin:
 			tempHats.push_back(Bespin->dispensers[0].dispenser[1].type);
 			if (panel(0, 6, pastDoor, tempHats)) pastDoor = testing;
 			if (panel(0, 7, pastDoor, tempHats)) room2 = true;
+			if (panel(0, 6, pastDoor, tempHats) && Multi(Jump, 2) && logicType != casual)
+				room2 = true; //using the other elevator to clip
 
 			//if no advancements are made, seed must be bad
 			if (tempSize == testing.size() && availableHats.size() == hatSize) goto bespin;
@@ -1542,37 +1631,44 @@ jabbas:
 
 	//inside
 	addHat(0, 0);
-	std::vector<Playable*> pastGate;
 
-	if (panel(0, 2)) {
-		pastGate = testing;
-	} else if (logicType != casual) {
-		for (Playable* p : testing) {
-			if (p->yodaJump) pastGate.push_back(p);
+	if (SuperJump({Jump, Flutter})) goto jabbas2; //hit transition from OOB
 
-			if (logicType == superGlitched) {
-				for (Playable* x : testing) {
-					if (p != x) {
-						if (x->jedi && p->pushable) pastGate.push_back(p);
-						if (x->choke && p->chokeable) pastGate.push_back(p);
-						if (x->lightning && p->lightningable) pastGate.push_back(p);
-						if (x->zapper && p->zappable) pastGate.push_back(p);
-						if (x->jedi && p->trickable) pastGate.push_back(p);
-						if (x->astrozapper && p->storm) pastGate.push_back(p);
-						if (x->landoAlt && p->leiaAlt) pastGate.push_back(p);
-						if (x->lukeAlt && p == gamorreanguard) pastGate.push_back(p);
+	{
+		std::vector<Playable*> pastGate;
+		if (panel(0, 2)) {
+			pastGate = testing;
+		} else if (logicType != casual) {
+			for (Playable* p : testing) {
+				if (p->yodaJump) pastGate.push_back(p);
+
+				if (logicType == superGlitched) {
+					for (Playable* x : testing) {
+						if (p != x) {
+							if (x->jedi && p->pushable) pastGate.push_back(p);
+							if (x->choke && p->chokeable) pastGate.push_back(p);
+							if (x->lightning && p->lightningable) pastGate.push_back(p);
+							if (x->lightning && p->resistZap) pastGate.push_back(p);
+							if (x->zapper && p->zappable) pastGate.push_back(p);
+							if (x->jedi && p->trickable) pastGate.push_back(p);
+							if (x->astrozapper && p->storm) pastGate.push_back(p);
+							if (x->landoAlt && p->leiaAlt) pastGate.push_back(p);
+							if (x->lukeAlt && p == gamorreanguard) pastGate.push_back(p);
+						}
 					}
 				}
 			}
 		}
+
+		if (pastGate.size() != 0) pastGate.push_back(Jabbas->party[2]);
+
+		if (!panel(0, 1, pastGate)) goto jabbas;
+		if (!atrb(Build, pastGate)) goto jabbas;
 	}
-
-	if (pastGate.size() != 0) pastGate.push_back(Jabbas->party[2]);
-
-	if (!panel(0, 1, pastGate)) goto jabbas;
-	if (!atrb(Build, pastGate)) goto jabbas;
-
 jabbas2: //scene B
+	testing = {};
+	add(0);
+	add(1);
 	add(2);
 	if (logicType == casual) availableHats.clear();
 	addHat(1, 0);
@@ -1640,11 +1736,16 @@ jabbas3: //long room
 		if (panelAnd(2, 0, {DoubleJump})) goto jabbas4;
 		if (panelAnd(2, 0, {Dive})) goto jabbas4;
 
-		if (SuperJump({Jump, Flutter})) goto jabbas4;
+		if (SuperJump({Jump, Flutter})) goto jabbas5; //rancor warp
 		goto jabbas;
 	}
 
-jabbas4: //rancor
+jabbas4:
+	//panel or rancor warp backup
+	if (atrb(DoubleJump) || panel(2, 3)) goto jabbas5;
+	goto jabbas;
+
+jabbas5: //rancor
 
 	if (logicType != superGlitched) availableHats.clear();
 	else {
@@ -1698,15 +1799,19 @@ carkoon2: //second skiff
 		carkoon4:
 			//boba fight
 			if (atrb(Shoot)) goto carkoon5;
+			if (Multi(Lever, 2)) goto carkoon5;
 			if (All({DoubleJump, Attack})) goto carkoon5;
 			if (All({Fly, Attack})) goto carkoon5;
 			if (All({Dive, Attack})) goto carkoon5;
 
 			goto carkoon;
 		carkoon5:
-			if (All({DoubleJump, Lever})) goto carkoon3;
-			if (All({Fly, Lever})) goto carkoon3;
-			if (All({Dive, Lever})) goto carkoon3;
+			if (Any({DoubleJump, Fly, Dive})) goto carkoon3;
+
+			//need good enough run_speed to do the jump from the rope
+			for (Playable* p : testing) {
+				if (p->jump && p->speed >= 1.199) goto carkoon3;
+			}
 
 			goto carkoon;
 		}
@@ -1750,6 +1855,7 @@ endor:
 	//if (!atrb(Box)) goto endor;
 	if (!atrb(Build)) goto endor;
 	if (logicType == casual) {
+		if (!Multi(Lever, 2)) goto endor;
 		if (!panel(0, 0)) goto endor;
 		if (!panel(1, 0)) goto endor;
 		if (!panel(2, 0)) goto endor;
@@ -1778,6 +1884,7 @@ endor:
 			goto destiny;
 		if (panel(1, 0), atrb(Hatch) && MultiAny({Grapple, Hatch}, 4)) //left side
 			goto destiny;
+		if (Multi({Jump}, 6)) goto destiny;
 		goto endor;
 	}
 
@@ -1821,14 +1928,14 @@ anewhope:
 bhm:
 	mix(BHM);
 
-	logR("BOUNTIES MIXED");
-	for (Playable* p : BHM->party) {
-		logR(p->name + " player");
-	}
+	//logR("BOUNTIES MIXED");
+	//for (Playable* p : BHM->party) {
+	//	logR(p->name + " player");
+	//}
 
-	for (Playable* p : BHM->bonusCharacters) {
-		logR(p->name + " target");
-	}
+	//for (Playable* p : BHM->bonusCharacters) {
+	//	logR(p->name + " target");
+	//}
 
 	add(2);
 	add(3);
@@ -2444,7 +2551,7 @@ bhm:
 
 		scpMany('B', "PARTY",
 			{{2, {{15, 11}, {31, 11}}}, {3, {{11, 11}, {26, 11}}}, {4, {{7, 11}, {21, 11}}}});
-		scpIns('B', "LEVEL", 4, {7, 45});
+		scpIns('B', "LEVEL", 4, {7, 59});
 
 		multiPointer(JediBattle->party[2], {0xDFABF, 0x3fffa4});
 		multiPointer(JediBattle->party[3], {0xDFAAB, 0x3fffa0});
@@ -2472,10 +2579,11 @@ bhm:
 		scpIns('B', "R2D2", 2, {38, 74});
 
 		//tall room AI is stupid
-		if (!Chancellor->party[2]->astro) {
-			scpRep('B', "R2D2", "ReferenceScript", 16, {1, 1});
-		}
+		//if (!Chancellor->party[2]->astro) {
+		//	scpRep('B', "R2D2", "ReferenceScript", 16, {1, 1});
+		//}
 
+		//WHAT IS THIS
 		//std::ofstream party(Chancellor->directory('B', "PARTY.SCP"));
 		std::ofstream party(getSCP(Chancellor, 'B', "PARTY"));
 		party << "state Base {\n"
@@ -2675,7 +2783,7 @@ bhm:
 		   << "}\n";
 		os.close();
 
-		scpRep('E', "LEVEL", "\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n", 0, {4, 1});
+		scpRep('E', "LEVEL", "\t\tif FreePlay == 0 goto MakeSurePlayersNotDroids\n", 0, {3, 1});
 
 		scpAppend('E', "LEVEL",
 			"state MakeSurePlayersNotDroids {\n"
@@ -2699,11 +2807,12 @@ bhm:
 		scriptTxt('E', 5, 4);
 
 		currentLev = DSE;
-		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}});
+		playerInit({{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {0, 8, bonusCharacter}});
 
 		scpMany('A', "PARTY", {{4, {{15, 11}}}, {5, {{14, 11}}}});
 		scpMany('B', "PARTY", {{4, {{15, 11}}}, {5, {{14, 11}}}});
 		scpMany('C', "PARTY", {{4, {{12, 11}, {15, 11}}}, {5, {{6, 11}, {9, 11}}}});
+		ai2Write('C', 0, {0x4678}, bonusCharacter);
 
 		currentLev = RebelAttack;
 		playerInit({{0, 1}, {1, 2}});
@@ -2724,7 +2833,7 @@ bhm:
 			{{"if CategoryIs \"protocol\"", 13, {{23, 3}}}, {"category=protocol", 14, {{111, 29}}},
 				{"protocol", 4, {{112, 60}}}, {3, {{5, 11}}}});
 
-		scpIns('C', "Party", 3, {6, 11});
+		scpIns('C', "PARTY", 3, {6, 11});
 
 		scriptTxtRep('A', "ai_skeleton", "SKELETON", 5);
 		ai2Write('A', "ai_skeleton", {0x33FB, 0x34B0});
@@ -2853,7 +2962,7 @@ bhm:
 		else if ((Endor->party[4]->grapple)) leverGuy = 4;
 		else if ((Endor->party[5]->grapple)) leverGuy = 5;
 
-		scpIns('B', "PARTY", leverGuy, {5, 11});
+		scpRep('B', "PARTY", Endor->party[leverGuy]->name, hansolo_endor->name.length(), {5, 11});
 
 		currentLev = Destiny;
 		playerInit({{0, 1}, {1, 2}});

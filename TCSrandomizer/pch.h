@@ -1,6 +1,7 @@
 #pragma once
 //#ifdef WXWIDGETS
 #include <wx/wx.h>
+#include <wx/string.h>
 
 //#include <wx/log.h>
 #include <wx/filepicker.h>
